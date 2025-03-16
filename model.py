@@ -36,9 +36,6 @@ def get_batch(split):
         raise ValueError(f"Unknown split: {split}")
     
     X, Y = next_item['input_ids'], next_item['labels']
-    # print("X Y shapes")
-    # print(X.shape)
-    # print(Y.shape)
     return X.to(device), Y.to(device)
 
 @torch.no_grad()
