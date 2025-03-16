@@ -15,8 +15,6 @@ def main():
                         help='Create the model and run a training loop', required=False)
     parser.add_argument('--block_size', type=int, default=64, 
                         help='Block size for the model')
-    parser.add_argument('--tokenizer', type=str, default='bert-base-uncased',
-                        help='Tokenizer to use. See HuggingFace tokenizers for options', required=False)
     
     args = parser.parse_args()
     
@@ -25,7 +23,7 @@ def main():
     
     if args.generate_new_dataset:
         print(f"Generating new dataset with {args.num_samples} samples...")
-        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        tokenizer = AutoTokenizer.from_pretrained("gpt2")
         WikipediaDataset(tokenizer, 512, args.block_size, args.num_samples)
     
     if args.train_model:

@@ -5,10 +5,11 @@ import os
 
 class WikipediaDataset:
 
-    def __init__(self, tokenizer, max_len, block_size, num_samples=10000):
+    def __init__(self, tokenizer, max_len, block_size, regenerate=False, num_samples=10000):
         self.tokenizer = tokenizer
         self.max_len = max_len
         self.block_size = block_size
+        self.regenerate = regenerate
         self.num_samples = num_samples
         self.train_dataloader = None
         self.val_dataloader = None
@@ -25,18 +26,17 @@ class WikipediaDataset:
         return self.tokenizer(
             examples["text"], 
             truncation=True, 
-            padding="max_length", 
             max_length=self.max_len
         )
 
     def _get_tokenized_dataset(self):
-        tokenized_dataset_path = "data/wiki_data_tokenized"
+        tokenized_dataset_path = f"data/{self.tokenizer.name_or_path}/wiki_data_tokenized"
 
-        if not os.path.exists(tokenized_dataset_path):
+        if not os.path.exists(tokenized_dataset_path) or self.regenerate:
             print("Local cache of dataset not found, downloading and tokenizing dataset...")
             # Load dataset (small subset of num_samples samples)
             ds = load_dataset("wikimedia/wikipedia", "20231101.en", split="train")
-            ds = ds.shuffle(seed=42).select(range(self.num_samples))  # Select only a few samples
+            ds = ds.select(range(self.num_samples))
             # Select only the 'text' column
             ds = ds.remove_columns([col for col in ds.column_names if col != "text"])
             # Tokenize the dataset
@@ -83,9 +83,9 @@ class WikipediaDataset:
         return ds
 
     def _get_sliding_window_dataset(self, block_size=128):
-        dataset_path = "data/wiki_data_tokenized_sliding_window"
+        dataset_path = f"data/{self.tokenizer.name_or_path}/wiki_data_tokenized_sliding_window"
 
-        if not os.path.exists(dataset_path):
+        if not os.path.exists(dataset_path) or self.regenerate:
             print("Local cache of sliding window dataset not found, creating dataset...")
             ds = self._create_sliding_window_dataset(block_size)
             ds.save_to_disk(dataset_path)
