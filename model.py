@@ -1,46 +1,19 @@
-import os
-import time
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from tqdm import tqdm
 from transformers import AutoTokenizer
 from data import WikipediaDataset
 from trainer import Trainer
 
-# Define the model hyperparameters
-n_embd = 768
-n_head = 12
-n_layer = 12
-max_len = 1024
-dropout = 0.2
-block_size = 128
-batch_size = 32
-eval_iters = 100
-max_iters = 10000
-max_epochs = 10
-eval_interval = 100
-learning_rate = 1e-4
-checkpoint_dir = "./checkpoints"
-
-tokenizer = AutoTokenizer.from_pretrained("gpt2")
-vocab_size = tokenizer.vocab_size
-
-dataset = WikipediaDataset(tokenizer, max_len, block_size,  regenerate=False, num_samples=1000)
-
-device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu")
-print("Using device:", device)
-
 class Head(nn.Module):
     """ one head of self-attention """
     
-    def __init__(self, head_size):
+    def __init__(self, n_embd, head_size, block_size, dropout):
         super().__init__()
         self.key = nn.Linear(n_embd, head_size, bias=False)
         self.query = nn.Linear(n_embd, head_size, bias=False)
         self.value = nn.Linear(n_embd, head_size, bias=False)
         self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))
-
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
@@ -60,9 +33,9 @@ class Head(nn.Module):
 class MultiHeadAttention(nn.Module):
     """ multiple heads of self-attention in parallel """
 
-    def __init__(self, num_heads, head_size):
+    def __init__(self, n_embd, num_heads, head_size, block_size, dropout):
         super().__init__()
-        self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)])
+        self.heads = nn.ModuleList([Head(n_embd, head_size, block_size, dropout) for _ in range(num_heads)])
         self.proj = nn.Linear(n_embd, n_embd)
         self.dropout = nn.Dropout(dropout)
 
@@ -74,7 +47,7 @@ class MultiHeadAttention(nn.Module):
 class FeedForward(nn.Module):
     """ a simple linear layer followed by a non-linearity """
 
-    def __init__(self, n_embd):
+    def __init__(self, n_embd, dropout):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(n_embd, 4 * n_embd),
@@ -89,12 +62,12 @@ class FeedForward(nn.Module):
 class Block(nn.Module):
     """ Transformer block: communication followed by computation """
 
-    def __init__(self, n_embd, n_head):
+    def __init__(self, n_embd, n_head, block_size, dropout):
         # n_embd: embedding dimension, n_head: the number of heads we'd like
         super().__init__()
         head_size = n_embd // n_head
-        self.sa = MultiHeadAttention(n_head, head_size)
-        self.ffwd = FeedForward(n_embd)
+        self.sa = MultiHeadAttention(n_embd, n_head, head_size, block_size, dropout)
+        self.ffwd = FeedForward(n_embd, dropout)
         self.ln1 = nn.LayerNorm(n_embd)
         self.ln2 = nn.LayerNorm(n_embd)
 
@@ -103,13 +76,13 @@ class Block(nn.Module):
         x = x + self.ffwd(self.ln2(x))
         return x
 
-class WikiCompleteModel(nn.Module):
+class ModelCustomTransformer(nn.Module):
     def __init__(self, vocab_size, n_embd, n_head, n_layer, block_size, dropout=0.2):
         super().__init__()
         # each token directly reads off the logits for the next token from a lookup table
         self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
         self.position_embedding_table = nn.Embedding(block_size, n_embd)
-        self.blocks = nn.Sequential(*[Block(n_embd, n_head=n_head) for _ in range(n_layer)])
+        self.blocks = nn.Sequential(*[Block(n_embd, n_head, block_size, dropout) for _ in range(n_layer)])
         self.ln_f = nn.LayerNorm(n_embd) # final layer norm
         self.lm_head = nn.Linear(n_embd, vocab_size)
 
@@ -118,7 +91,7 @@ class WikiCompleteModel(nn.Module):
 
         # idx and targets are both (B, T) tensor of integers
         tok_emb = self.token_embedding_table(idx) # (B,T,C), or (batch_size, block_size, vocab_size)
-        pos_emb = self.position_embedding_table(torch.arange(T, device=device)) # (T,C)
+        pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device)) # (T,C)
         x = tok_emb + pos_emb # (B, T, C)
         x = self.blocks(x) # (B, T, C)
         x = self.ln_f(x) # (B, T, C)
@@ -128,15 +101,12 @@ class WikiCompleteModel(nn.Module):
             loss = None
         else:
             B, T, C = logits.shape
-            # print(logits.shape)
             logits = logits.view(B * T, C)
-            # print(logits.shape)
-            # print(targets.shape)
             targets = targets.view(B * T)
             loss = F.cross_entropy(logits, targets)
         return logits, loss
 
-    def generate(self, idx, max_new_tokens):
+    def generate(self, idx, max_new_tokens, block_size):
         # idx is (B, T) array of indices in the current context
         for _ in range(max_new_tokens):
             # crop idx to the last block_size tokens
@@ -152,9 +122,3 @@ class WikiCompleteModel(nn.Module):
             # append sampled index to the running sequence
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
-
-# torch.manual_seed(1337)
-model = WikiCompleteModel(vocab_size, n_embd, n_head, n_layer, block_size, dropout).to(device)
-
-trainer = Trainer(model, dataset, device, tokenizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_interval, learning_rate)
-trainer.train()
