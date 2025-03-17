@@ -1,5 +1,6 @@
 import argparse
 from regex import F
+import torch
 from transformers import AutoTokenizer
 from data import WikipediaDataset
 from engine import TextPredictor
@@ -13,11 +14,11 @@ def main():
                         help='Number of samples to generate if generate_new_dataset is true', required=False)
     parser.add_argument('--train_model', action='store_true', 
                         help='Create the model and run a training loop', required=False)
-    parser.add_argument('--block_size', type=int, default=64, 
-                        help='Block size for the model')
     
     args = parser.parse_args()
     
+    device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu")
+
     if args.generate_new_dataset and args.num_samples is None:
         parser.error("--num_samples is required when --generate_new_dataset is set")
     

@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from tqdm import tqdm
 from transformers import AutoTokenizer
 from data import WikipediaDataset
+from trainer import Trainer
 
 # Define the model hyperparameters
 n_embd = 768
@@ -26,36 +27,9 @@ tokenizer = AutoTokenizer.from_pretrained("gpt2")
 vocab_size = tokenizer.vocab_size
 
 dataset = WikipediaDataset(tokenizer, max_len, block_size,  regenerate=False, num_samples=1000)
-train_dataloader = dataset.get_test_train_dataloaders("train", batch_size)
-val_dataloader = dataset.get_test_train_dataloaders("val", batch_size)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu")
 print("Using device:", device)
-
-def get_batch(split):
-    if split == 'train':
-        next_item = next(iter(train_dataloader))
-    elif split == 'val':
-        next_item = next(iter(val_dataloader))
-    else:
-        raise ValueError(f"Unknown split: {split}")
-    
-    X, Y = next_item['input_ids'], next_item['labels']
-    return X.to(device), Y.to(device)
-
-@torch.no_grad()
-def estimate_loss(model):
-    out = {}
-    model.eval()
-    for split in ['train', 'val']:
-        losses = torch.zeros(eval_iters)
-        for k in range(eval_iters):
-            X, Y = get_batch(split)
-            _, loss = model(X, Y)
-            losses[k] = loss.item()
-        out[split] = losses.mean()
-    model.train()
-    return out
 
 class Head(nn.Module):
     """ one head of self-attention """
@@ -179,91 +153,8 @@ class WikiCompleteModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
 
-def save_checkpoint(model, optimizer, epoch, loss, checkpoint_dir):
-    if not os.path.exists(checkpoint_dir):
-        os.makedirs(checkpoint_dir)
-    checkpoint_path = os.path.join(checkpoint_dir, f"model_epoch_{epoch}.pt")
-    torch.save({
-        'epoch': epoch,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'loss': loss,
-    }, checkpoint_path)
-    print(f"Checkpoint saved: {checkpoint_path}")
-
-def load_checkpoint(model, optimizer, checkpoint_path):
-    checkpoint = torch.load(checkpoint_path)
-    model.load_state_dict(checkpoint['model_state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-    epoch = checkpoint['epoch']
-    loss = checkpoint['loss']
-    print(f"Checkpoint loaded: {checkpoint_path}")
-    return epoch, loss
-
-def get_completion(tokenizer, model, max_tokens):
-    model.eval()
-    # context = torch.zeros((1, 1), dtype=torch.long, device=device)
-    context = tokenizer.encode("Pakistan", return_tensors="pt").to(device)
-    out = model.generate(context, max_tokens)
-    # print(out)
-    decoded_text = tokenizer.decode(out[0].tolist(), skip_special_tokens=True)
-    return decoded_text
-
-def get_memory_usage():
-    if torch.cuda.is_available():
-        return f"GPU Memory: {torch.cuda.memory_allocated() / 1e6:.2f}MB"
-    return "Using CPU"
-
 # torch.manual_seed(1337)
 model = WikiCompleteModel(vocab_size, n_embd, n_head, n_layer, block_size, dropout).to(device)
 
-# create a PyTorch optimizer
-optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
-
-start_epoch = 0
-if os.path.exists(os.path.join(checkpoint_dir, "model_epoch_0.pt")):
-    start_epoch, _ = load_checkpoint(model, optimizer, os.path.join(checkpoint_dir, "model_epoch_0.pt"))
-
-for epoch in range(start_epoch, max_epochs):
-    print(f"Epoch {epoch}/{max_epochs}")
-    
-    model.train()
-    epoch_loss = 0
-    start_time = time.time()
-
-    # Use tqdm for progress tracking
-    progress_bar = tqdm(range(max_iters), desc=f"Epoch {epoch}", unit="batch")
-
-    for i in progress_bar:
-        xb, yb = get_batch('train')
-
-        # Evaluate the loss
-        logits, loss = model(xb, yb)
-        optimizer.zero_grad(set_to_none=True)
-        loss.backward()
-        optimizer.step()
-
-        # Accumulate loss for better monitoring
-        epoch_loss += loss.item()
-
-        # Show active feedback every few steps
-        if i % (eval_interval // 10) == 0:  # More frequent updates
-            progress_bar.set_postfix(loss=f"{loss.item():.4f}", mem=get_memory_usage())
-
-        # Periodic evaluation
-        if i % eval_interval == 0:
-            losses = estimate_loss(model)
-            elapsed_time = time.time() - start_time
-            eta = elapsed_time / (i + 1) * (max_iters - i)  # Estimated time remaining
-            
-            print(f"\n[Epoch {epoch} | Step {i}] Train Loss: {losses['train']:.4f}, Val Loss: {losses['val']:.4f} | ETA: {eta:.2f}s")
-            save_checkpoint(model, optimizer, epoch, losses['val'], checkpoint_dir)
-
-            # Generate a short sample to see model quality
-            print("Sample Output:")
-            print(get_completion(tokenizer, model, 100))  # Shorter text sample for quick feedback
-    
-    print(f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / max_iters:.4f}")
-
-
-print(get_completion(tokenizer, model, max_len))
+trainer = Trainer(model, dataset, device, tokenizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_interval, learning_rate)
+trainer.train()
