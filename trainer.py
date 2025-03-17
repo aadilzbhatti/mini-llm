@@ -72,6 +72,13 @@ class Trainer:
             print(f"Checkpoint loaded: {checkpoint_path}")
         return epoch, loss
 
+    def get_latest_checkpoint(self):
+        checkpoint_files = [f for f in os.listdir(self.checkpoint_dir) if f.startswith("model_epoch_") and f.endswith(".pt")]
+        if not checkpoint_files:
+            return None
+        latest_checkpoint = max(checkpoint_files, key=lambda f: int(f.split('_')[2].split('.')[0]))
+        return os.path.join(self.checkpoint_dir, latest_checkpoint)
+
     def get_memory_usage(self):
         if torch.cuda.is_available():
             return f"GPU Memory: {torch.cuda.memory_allocated() / 1e6:.2f}MB"
@@ -79,11 +86,11 @@ class Trainer:
 
     def train(self):
         start_epoch = 0
-        checkpoint_path = os.path.join(self.checkpoint_dir, "model_epoch_0.pt")
-        if os.path.exists(checkpoint_path):
+        latest_checkpoint_path = self.get_latest_checkpoint()
+        if latest_checkpoint_path:
             if self.verbose:
                 print("Checkpoint found, resuming training...")
-            start_epoch, _ = self.load_checkpoint(checkpoint_path)
+            start_epoch, _ = self.load_checkpoint(latest_checkpoint_path)
 
         for epoch in range(start_epoch, self.max_epochs):
             if self.verbose:

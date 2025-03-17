@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer
 from data import WikipediaDataset
 from model import ModelCustomTransformer
-from trainer import Trainer  # Assuming your Trainer class is in trainer.py
+from trainer import Trainer
 
 # Fixed hyperparameters
 max_len = 1024
@@ -30,15 +30,12 @@ class HyperparameterOptimizer:
     def objective(self, trial):
         # Hyperparameters to optimize
         n_embd = trial.suggest_categorical("n_embd", [384, 512, 768, 1024])
-        # Instead of filtering dynamically, define the full search space for n_head
         valid_n_head_options = {
             384: [4, 8, 12],
             512: [4, 8, 16],
             768: [8, 12, 16],
             1024: [8, 12, 16]
         }
-
-        # Ensure consistent value space by always suggesting from the full range
         n_head = trial.suggest_categorical("n_head", valid_n_head_options[n_embd])
         n_layer = trial.suggest_categorical("n_layer", [4, 8, 12, 16])
         dropout = trial.suggest_float("dropout", 0.1, 0.4)
@@ -74,8 +71,14 @@ class HyperparameterOptimizer:
         return trainer.estimate_loss()['val'].item()
 
     def optimize(self):
+        def before_trial(study, trial):
+            print(f"Starting trial {trial.number}")
+            print("  Params:")
+            for key, value in trial.params.items():
+                print(f"    {key}: {value}")
+
         study = optuna.create_study(direction="minimize")
-        study.optimize(self.objective, n_trials=self.n_trials, n_jobs=-1)
+        study.optimize(self.objective, n_trials=self.n_trials, n_jobs=-1, callbacks=[before_trial])
 
         print("Number of finished trials: {}".format(len(study.trials)))
         print("Best trial:")
@@ -89,7 +92,7 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
     dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=10000)
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu")
-    print("Using device ", device)
+    print("Using device", device)
 
     optimizer = HyperparameterOptimizer(
         dataset=dataset,
