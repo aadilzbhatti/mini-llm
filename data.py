@@ -108,7 +108,8 @@ class WikipediaDataset:
             collate_fn=lambda x: {
                 "input_ids": torch.stack([d['input_ids'] for d in x]),
                 "labels": torch.stack([d['labels'] for d in x])
-            }
+            },
+            num_workers=os.cpu_count()
         )
 
         val_dataloader = DataLoader(
@@ -117,7 +118,8 @@ class WikipediaDataset:
             collate_fn=lambda x: {
                 "input_ids": torch.stack([d['input_ids'] for d in x]),
                 "labels": torch.stack([d['labels'] for d in x])
-            }
+            },
+            num_workers=os.cpu_count()
         )
 
         self.train_dataloader = train_dataloader

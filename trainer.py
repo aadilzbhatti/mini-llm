@@ -6,7 +6,7 @@ from tqdm import tqdm
 from text_completer import TextCompleter
 
 class Trainer:
-    def __init__(self, model, dataset, device, tokenizer, optimizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_iters, eval_interval, learning_rate, verbose=True):
+    def __init__(self, model, dataset, device, tokenizer, optimizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_iters, eval_interval, learning_rate, verbose=True, use_tqdm=True):
         self.model = model
         self.device = device
         self.tokenizer = tokenizer
@@ -19,6 +19,7 @@ class Trainer:
         self.eval_interval = eval_interval
         self.learning_rate = learning_rate
         self.verbose = verbose
+        self.use_tqdm = use_tqdm
 
         self.train_dataloader = dataset.get_test_train_dataloaders("train", batch_size)
         self.val_dataloader = dataset.get_test_train_dataloaders("val", batch_size)
@@ -104,11 +105,14 @@ class Trainer:
             epoch_loss = 0
             start_time = time.time()
 
-            progress_bar = tqdm(range(self.max_iters), desc=f"Epoch {epoch}", unit="batch", disable=not self.verbose)
+            if self.use_tqdm and self.verbose: # Conditional tqdm usage
+                progress_bar = tqdm(range(self.max_iters), desc=f"Epoch {epoch}", unit="batch")
+            else:
+                progress_bar = range(self.max_iters) # if no tqdm, use range.
 
             current_val_loss = None
 
-            for i in progress_bar:
+            for i in progress_bar: # use either tqdm or range.
                 xb, yb = self.get_batch('train')
 
                 _, loss = self.model(xb, yb)
@@ -117,9 +121,6 @@ class Trainer:
                 self.optimizer.step()
 
                 epoch_loss += loss.item()
-
-                if i % (self.eval_interval // 10) == 0:
-                    progress_bar.set_postfix(loss=f"{loss.item():.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
 
                 if i % self.eval_interval == 0:
                     losses = self.estimate_loss()
@@ -131,6 +132,9 @@ class Trainer:
                         print(f"\n[Epoch {epoch} | Step {i}] Train Loss: {losses['train']:.4f}, Val Loss: {losses['val']:.4f} | ETA: {eta:.2f}s")
                         print(self.text_completer.get_text_completions(max_tokens=100))
                     self.save_checkpoint(epoch, losses['val'])
+
+                if self.use_tqdm and self.verbose and i % (self.eval_interval // 10) == 0: #only set postfix if tqdm is being used.
+                    progress_bar.set_postfix(loss=f"{loss.item():.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
 
             if self.verbose:
                 print(f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / self.max_iters:.4f}")

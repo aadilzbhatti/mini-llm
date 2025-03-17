@@ -15,10 +15,10 @@ batch_size = 32
 eval_iters = 100
 eval_interval = 100
 
-optuna.logging.set_verbosity(optuna.logging.INFO)
+optuna.logging.set_verbosity(optuna.logging.DEBUG)
 
 class HyperparameterOptimizer:
-    def __init__(self, dataset, device, tokenizer, checkpoint_dir="./optuna_checkpoints", n_trials=1, max_epochs=3, max_iters=1000):
+    def __init__(self, dataset, device, tokenizer, checkpoint_dir="./optuna_checkpoints", n_trials=50, max_epochs=3, max_iters=1000):
         self.dataset = dataset
         self.device = device
         self.tokenizer = tokenizer
@@ -29,14 +29,15 @@ class HyperparameterOptimizer:
 
     def objective(self, trial):
         # Hyperparameters to optimize
-        n_embd = trial.suggest_categorical("n_embd", [384, 512, 768, 1024])
-        valid_n_head_options = {
-            384: [4, 8, 12],
-            512: [4, 8, 16],
-            768: [8, 12, 16],
-            1024: [8, 12, 16]
-        }
-        n_head = trial.suggest_categorical("n_head", valid_n_head_options[n_embd])
+        n_embd_n_head_options = [
+            (384, 12),
+            (512, 8),
+            (768, 12),
+            (1024, 16)
+        ]
+
+        n_embd_n_head = trial.suggest_categorical("n_embd_n_head", n_embd_n_head_options)
+        n_embd, n_head = n_embd_n_head
         n_layer = trial.suggest_categorical("n_layer", [4, 8, 12, 16])
         dropout = trial.suggest_float("dropout", 0.1, 0.4)
         learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-3, log=True)
@@ -63,7 +64,8 @@ class HyperparameterOptimizer:
             eval_iters=eval_iters,
             eval_interval=eval_interval,
             learning_rate=learning_rate,
-            verbose=False
+            verbose=False,
+            use_tqdm=False
         )
 
         trainer.train()
@@ -71,14 +73,8 @@ class HyperparameterOptimizer:
         return trainer.estimate_loss()['val'].item()
 
     def optimize(self):
-        def before_trial(study, trial):
-            print(f"Starting trial {trial.number}")
-            print("  Params:")
-            for key, value in trial.params.items():
-                print(f"    {key}: {value}")
-
         study = optuna.create_study(direction="minimize")
-        study.optimize(self.objective, n_trials=self.n_trials, n_jobs=-1, callbacks=[before_trial])
+        study.optimize(self.objective, n_trials=self.n_trials, n_jobs=-1)
 
         print("Number of finished trials: {}".format(len(study.trials)))
         print("Best trial:")
@@ -97,6 +93,8 @@ if __name__ == "__main__":
     optimizer = HyperparameterOptimizer(
         dataset=dataset,
         device=device,
-        tokenizer=tokenizer)
+        tokenizer=tokenizer,
+        n_trials=5
+    )
     print("Starting hyperparameter optimization")
     optimizer.optimize()
