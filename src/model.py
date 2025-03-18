@@ -1,9 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from transformers import AutoTokenizer
-from data import WikipediaDataset
-from trainer import Trainer
 
 class Head(nn.Module):
     """ one head of self-attention """
@@ -85,14 +82,24 @@ class ModelCustomTransformer(nn.Module):
         self.blocks = nn.Sequential(*[Block(n_embd, n_head, block_size, dropout) for _ in range(n_layer)])
         self.ln_f = nn.LayerNorm(n_embd) # final layer norm
         self.lm_head = nn.Linear(n_embd, vocab_size)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, idx, targets=None):
+        idx = idx.to(self.token_embedding_table.weight.device)  # Ensure idx is on the correct device
+        if targets is not None:
+            targets = targets.to(self.token_embedding_table.weight.device)  # Ensure targets are on the correct device
         B, T = idx.shape
 
         # idx and targets are both (B, T) tensor of integers
         tok_emb = self.token_embedding_table(idx) # (B,T,C), or (batch_size, block_size, vocab_size)
         pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device)) # (T,C)
+
+        # Add assertions to check tensor shapes
+        assert tok_emb.shape == (B, T, tok_emb.size(-1)), f"Expected tok_emb shape {(B, T, tok_emb.size(-1))}, but got {tok_emb.shape}"
+        assert pos_emb.shape == (T, tok_emb.size(-1)), f"Expected pos_emb shape {(T, tok_emb.size(-1))}, but got {pos_emb.shape}"
+
         x = tok_emb + pos_emb # (B, T, C)
+        x = self.dropout(x)
         x = self.blocks(x) # (B, T, C)
         x = self.ln_f(x) # (B, T, C)
         logits = self.lm_head(x) # (B, T, vocab_size)
@@ -107,7 +114,7 @@ class ModelCustomTransformer(nn.Module):
         return logits, loss
 
     def generate(self, idx, max_new_tokens, block_size):
-        # idx is (B, T) array of indices in the current context
+        idx = idx.to(self.token_embedding_table.weight.device)  # Ensure idx is on the correct device
         for _ in range(max_new_tokens):
             # crop idx to the last block_size tokens
             idx_cond = idx[:, -block_size:]
