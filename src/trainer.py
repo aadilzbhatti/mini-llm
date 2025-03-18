@@ -1,4 +1,3 @@
-import dis
 import os
 import time
 import torch
@@ -7,16 +6,16 @@ from tqdm import tqdm
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from transformers import AutoTokenizer
-from data import WikipediaDataset
-from model import ModelCustomTransformer
-from text_completer import TextCompleter
+from .data import WikipediaDataset
+from .model import ModelCustomTransformer
+from .text_completer import TextCompleter
 from torch.profiler import profile, record_function, ProfilerActivity, tensorboard_trace_handler
 import argparse
 import signal
 from contextlib import nullcontext
 import json
 
-from utils import RankFilter
+from .utils import RankFilter
 from torch.optim import AdamW
 
 class Trainer:
@@ -240,7 +239,7 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
         dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=num_samples, verbose=verbose)
 
-        model = ModelCustomTransformer(tokenizer.vocab_size, 768, 12, 12, 128, 0.1).to(device)
+        model = ModelCustomTransformer(tokenizer.vocab_size, 768, 6, 6, 128, 0.1).to(device)
         if num_gpus > 1:
             model = DDP(model, device_ids=[rank], output_device=rank)
         optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)

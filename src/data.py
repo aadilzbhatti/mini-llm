@@ -9,7 +9,7 @@ import logging
 import random
 from filelock import FileLock
 
-from utils import RankFilter
+from .utils import RankFilter
 
 class WikipediaDataset:
 

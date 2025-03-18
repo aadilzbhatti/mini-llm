@@ -21,7 +21,7 @@ fi
 
 # Authenticate using GitHub CLI (fully automated)
 echo "Starting GitHub authentication..."
-echo -e "github.com\nHTTPS\nyes\nbrowser\n" | gh auth login --with-token || gh auth login --web
+gh auth login --with-token || gh auth login --web
 
 # Configure Git to use GitHub CLI for authentication
 echo "Configuring Git to use GitHub CLI credentials..."

@@ -14,12 +14,14 @@ def main():
     parser.add_argument('--max_epochs', type=int, default=10, help="Maximum number of epochs (default: 10)")
     parser.add_argument('--max_iters', type=int, default=1000, help="Maximum number of iterations (default: 1000)")
     parser.add_argument('--eval_interval', type=int, default=100, help="Evaluation interval (default: 100)")
+    parser.add_argument('--eval_iters', type=int, default=100, help="Evaluation iterations (default: 100)")
     parser.add_argument('--distributed', action='store_true', help="Use distributed training or tuning")
     parser.add_argument('--verbose', action='store_true', default=False, help="Enable verbose logging")
     parser.add_argument('--n_trials', type=int, help="Number of trials for hyperparameter tuning (required if mode is 'tune')")
     parser.add_argument('--enable_tqdm', action='store_true', default=False, help="Enable tqdm progress bar")
     parser.add_argument('--enable_profiling', action='store_true', default=False, help="Enable profiling during training")
     parser.add_argument('--max_new_tokens', type=int, help="Maximum number of new tokens to generate (required if mode is 'predict')")
+    parser.add_argument('--num_gpus', type=int, default=torch.cuda.device_count(), help="Number of GPUs to use (default: 1)")
     args = parser.parse_args()
 
     if args.mode == 'tune' and args.n_trials is None:
