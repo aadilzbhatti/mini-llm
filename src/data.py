@@ -68,7 +68,7 @@ class WikipediaDataset:
         return augmented
 
     def _get_tokenized_dataset(self):
-        tokenized_dataset_path = f"../data/{self.tokenizer.name_or_path}/wiki_data_tokenized_augmented" if self.augment_data else f"../data/{self.tokenizer.name_or_path}/wiki_data_tokenized"
+        tokenized_dataset_path = f"data/{self.tokenizer.name_or_path}/wiki_data_tokenized_augmented" if self.augment_data else f"../data/{self.tokenizer.name_or_path}/wiki_data_tokenized"
 
         if not os.path.exists(tokenized_dataset_path) or self.regenerate:
             self.log("Local cache of dataset not found, downloading and tokenizing dataset...")
@@ -130,7 +130,7 @@ class WikipediaDataset:
             return False
 
     def _get_sliding_window_dataset(self, block_size=128):
-        dataset_path = f"../data/{self.tokenizer.name_or_path}/wiki_data_tokenized_sliding_window_augmented" if self.augment_data else f"../data/{self.tokenizer.name_or_path}/wiki_data_tokenized_sliding_window"
+        dataset_path = f"data/{self.tokenizer.name_or_path}/wiki_data_tokenized_sliding_window_augmented" if self.augment_data else f"../data/{self.tokenizer.name_or_path}/wiki_data_tokenized_sliding_window"
         lock_path = f"{dataset_path}.lock"
 
         with FileLock(lock_path):

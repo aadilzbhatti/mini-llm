@@ -29,7 +29,7 @@ def set_seed(seed):
         torch.cuda.manual_seed_all(seed)
 
 class HyperparameterOptimizer:
-    def __init__(self, dataset, device, tokenizer, rank, world_size, checkpoint_dir="../models/optuna_checkpoints", n_trials=50, max_epochs=3, max_iters=1000):
+    def __init__(self, dataset, device, tokenizer, rank, world_size, checkpoint_dir="models/optuna_checkpoints", n_trials=50, max_epochs=3, max_iters=1000):
         self.dataset = dataset
         self.device = device
         self.tokenizer = tokenizer
@@ -134,7 +134,7 @@ class HyperparameterOptimizer:
         for key, value in trial.params.items():
             print("    {}: {}".format(key, value))
 
-def main(rank, num_gpus):
+def distributed_tuning(rank, num_gpus, n_trials=5, num_samples=10000, verbose=False):
     # os.environ['CUDA_LAUNCH_BLOCKING'] = "1"  # Uncomment for debugging
     os.environ['RANK'] = str(rank)
     os.environ['WORLD_SIZE'] = str(num_gpus)
@@ -153,7 +153,7 @@ def main(rank, num_gpus):
         device = torch.device(f"cuda:{rank}")  # Ensure each rank gets a unique GPU
         print(f"Rank {rank}: Using device {device}")  # Log the CUDA device for each rank
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
-        dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=10000, verbose=False)
+        dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=num_samples, verbose=verbose)
 
         optimizer = HyperparameterOptimizer(
             dataset=dataset,
@@ -161,13 +161,16 @@ def main(rank, num_gpus):
             tokenizer=tokenizer,
             rank=rank,
             world_size=num_gpus,
-            n_trials=5
+            n_trials=n_trials
         )
         print(f"Rank {rank}: Starting hyperparameter optimization")
         optimizer.optimize()
     finally:
         print(f"Rank {rank}: Destroying process group...")
         dist.destroy_process_group()
+
+def main(rank, num_gpus):
+    distributed_tuning(rank, num_gpus, n_trials=5, num_samples=10000, verbose=False)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Distributed Hyperparameter Tuning")

@@ -1,3 +1,4 @@
+import dis
 import os
 import time
 import torch
@@ -220,7 +221,7 @@ class Trainer:
                 if self.enable_profiling:
                     self.log(logging.INFO, self.profiler.key_averages().table(sort_by="cuda_time_total", row_limit=10))
 
-def main(rank, num_gpus):
+def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=10000, verbose=False, enable_profiling=False, enable_tqdm=False):
     os.environ['RANK'] = str(rank)
     os.environ['WORLD_SIZE'] = str(num_gpus)
     os.environ['MASTER_ADDR'] = 'localhost'
@@ -237,7 +238,7 @@ def main(rank, num_gpus):
     try:
         device = torch.device(f"cuda:{rank}")
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
-        dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=10000, verbose=False)
+        dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=num_samples, verbose=verbose)
 
         model = ModelCustomTransformer(tokenizer.vocab_size, 768, 12, 12, 128, 0.1).to(device)
         if num_gpus > 1:
@@ -250,19 +251,19 @@ def main(rank, num_gpus):
             device=device,
             tokenizer=tokenizer,
             optimizer=optimizer,
-            checkpoint_dir="../models/checkpoints",
+            checkpoint_dir="models/checkpoints",
             batch_size=32,
-            max_epochs=3,
-            max_iters=1000,
-            eval_iters=100,
-            eval_interval=100,
+            max_epochs=max_epochs,
+            max_iters=max_iters,
+            eval_iters=eval_iters,
+            eval_interval=eval_interval,
             learning_rate=1e-4,
             rank=rank,
             world_size=num_gpus,
-            verbose=False,
-            use_tqdm=True,
+            verbose=verbose,
+            use_tqdm=enable_tqdm,
             grad_accum_steps=4,
-            enable_profiling=False,
+            enable_profiling=enable_profiling,
             weight_decay=0.01
         )
 
@@ -273,6 +274,9 @@ def main(rank, num_gpus):
         if trainer.verbose:
             trainer.logger.info("Destroying process group...")
         dist.destroy_process_group()
+
+def main(num_gpus, rank):
+    distributed_training(rank, num_gpus, verbose=False, enable_profiling=False, enable_tqdm=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Distributed Training")
@@ -288,4 +292,4 @@ if __name__ == "__main__":
         print("CUDA is not available. Training on CPU...")
         args.num_gpus = 1  # Force to 1 GPU if CUDA is not available
 
-    torch.multiprocessing.spawn(main, args=(args.num_gpus,), nprocs=args.num_gpus, join=True)
+    torch.multiprocessing.spawn(distributed_training, args=(args.num_gpus,), nprocs=args.num_gpus, join=True)

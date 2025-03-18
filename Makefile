@@ -7,4 +7,4 @@ bootstrap-env:
 	./scripts/install_requirements.sh
 
 setup-git-auth:
-	./scripts/setup_git_auth.sh
+	./scripts/setup_github_auth.sh
