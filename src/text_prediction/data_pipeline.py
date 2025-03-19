@@ -118,19 +118,16 @@ class DataPipeline:
 
     @staticmethod
     def custom_collate(batch, tokenizer):
-        """
-        Custom collate function to stack sequences into a batch.
-        """
         inputs, labels = zip(*batch)
-        
-        # Ensure tokenizer has a valid pad token
-        pad_token_id = tokenizer.pad_token_id
-        if pad_token_id is None:
-            pad_token_id = tokenizer.eos_token_id  # Use EOS token as a fallback
-        
+        pad_token_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
         inputs = pad_sequence(inputs, batch_first=True, padding_value=pad_token_id)
-        labels = pad_sequence(labels, batch_first=True, padding_value=pad_token_id)    
-        return inputs, labels
+        labels = pad_sequence(labels, batch_first=True, padding_value=pad_token_id)
+
+        # Create attention masks
+        B, T = inputs.shape
+        tril_mask = torch.tril(torch.ones(T, T)).bool().to(inputs.device) #move tril to the same device as inputs
+        attention_mask = (inputs != pad_token_id).unsqueeze(1).repeat(1, T, 1) & tril_mask #create a causal mask.
+        return inputs, labels, attention_mask.to(inputs.device)
 
     def get_dataloader(self, batch_size, split="train", shuffle=True):
         # Ensure split is either "train" or "val"

@@ -18,6 +18,7 @@ import json
 
 from .utils import RankFilter
 from torch.optim import AdamW
+from torch.optim.lr_scheduler import StepLR  # Add this import
 
 class Trainer:
     def __init__(self, model, dataset, device, tokenizer, optimizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_iters, eval_interval, learning_rate, rank, world_size, verbose=True, use_tqdm=True, grad_accum_steps=1, enable_profiling=False, weight_decay=0.01, save_checkpoints=True):
@@ -44,6 +45,7 @@ class Trainer:
         self.val_losses = []
         self.metadata_file = os.path.join(checkpoint_dir, "training_metadata.json")
         self.save_checkpoints = save_checkpoints
+        self.scheduler = StepLR(self.optimizer, step_size=10, gamma=0.1)  # Initialize the scheduler
 
         logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO, format='%(asctime)s - %(message)s')
         self.logger = logging.getLogger(__name__)
@@ -75,9 +77,9 @@ class Trainer:
 
         self.log(logging.DEBUG, f"DataLoader iteration time: {time.time() - start_time:.2f}s")
 
-        X, Y = next_item
+        X, Y, attention_mask = next_item #get the attention mask
         self.log(logging.DEBUG, f"Batch loading time: {time.time() - start_time:.2f}s")
-        return X.to(self.device), Y.to(self.device)
+        return X.to(self.device), Y.to(self.device), attention_mask.to(self.device) #return the attention mask
 
     @torch.no_grad()
     def estimate_loss(self):
@@ -86,8 +88,8 @@ class Trainer:
         for split in ['train', 'val']:
             losses = torch.zeros(self.eval_iters).to(self.device)
             for k in range(self.eval_iters):
-                X, Y = self.get_batch(split)
-                _, loss = self.model(X, Y)
+                X, Y, attention_mask = self.get_batch(split)
+                _, loss = self.model(X, Y, attention_mask) #pass the attention mask
                 losses[k] = loss.item()
             out[split] = losses.mean().item()
         self.model.train()
@@ -137,10 +139,11 @@ class Trainer:
             return f"GPU Memory: {torch.cuda.memory_allocated() / 1e6:.2f}MB"
         return "Using CPU"
 
-    def save_metadata(self):
+    def save_metadata(self, grad_norms):
         metadata = {
             "train_losses": self.train_losses,
             "val_losses": self.val_losses,
+            "grad_norms": grad_norms,
             "batch_size": self.batch_size,
             "max_epochs": self.max_epochs,
             "max_iters": self.max_iters,
@@ -191,22 +194,27 @@ class Trainer:
             progress_bar = range(self.max_iters)
 
         current_val_loss = None
+        grad_norms = []
 
         with self.profiler if self.enable_profiling else nullcontext() as prof:
             for i in progress_bar:
                 self.log(logging.DEBUG, f"Starting iteration {i} of epoch {epoch}")
 
                 with record_function("get_batch"):
-                    xb, yb = self.get_batch('train')
+                    xb, yb, attention_mask = self.get_batch('train')
 
                 with record_function("forward_pass"):
-                    _, loss = self.model(xb, yb)
+                    _, loss = self.model(xb, yb, attention_mask)
                     loss = loss / self.grad_accum_steps
                     loss.backward()
+
+                    # Clip gradients
+                    grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
 
                     if (i + 1) % self.grad_accum_steps == 0:
                         with record_function("optimizer_step"):
                             self.optimizer.step()
+                            self.scheduler.step()  # Step the scheduler
                             self.optimizer.zero_grad(set_to_none=True)
 
                         epoch_loss += loss.item() * self.grad_accum_steps
@@ -214,24 +222,28 @@ class Trainer:
                 if i % self.eval_interval == 0:
                     self.log(logging.DEBUG, f"Evaluating at iteration {i} of epoch {epoch}")
                     losses = self.estimate_loss()
+                    grad_norms.append(grad_norm.item())
                     current_val_loss = losses['val']
                     elapsed_time = time.time() - start_time
                     eta = elapsed_time / (i + 1) * (self.max_iters - i)
 
                     self.log(logging.INFO, f"\n[Epoch {epoch} | Step {i}] Train Loss: {losses['train']:.4f}, Val Loss: {losses['val']:.4f} | ETA: {eta:.2f}s")
-                    self.log(logging.INFO, self.text_completer.get_text_completions(max_tokens=100))
                     self.save_checkpoint(epoch, losses['val'])
                     self.train_losses.append(losses['train'])
                     self.val_losses.append(losses['val'])
-                    self.save_metadata()
+                    self.save_metadata(grad_norms)  # Save metadata including grad_norms
 
                 if self.use_tqdm and self.verbose and i % (self.eval_interval // 10) == 0: #only set postfix if tqdm is being used.
                     progress_bar.set_postfix(loss=f"{loss.item() * self.grad_accum_steps:.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
 
             self.log(logging.INFO, f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / self.max_iters:.4f}")
+            self.log(logging.INFO, self.text_completer.get_text_completions(max_tokens=100))
 
             if self.enable_profiling:
                 self.log(logging.INFO, self.profiler.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+
+        # Save train losses and gradient norms to metadata at the end of the epoch
+        self.save_metadata(grad_norms)
 
 def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=10000, verbose=False, enable_profiling=False, enable_tqdm=False, save_checkpoints=True):
     os.environ['RANK'] = str(rank)
@@ -250,10 +262,10 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
     try:
         device = torch.device(f"cuda:{rank}")
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
-        # dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=num_samples, verbose=verbose)
         dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=10000, verbose=True, augment_data=False, parent_path=".")
 
-        model = ModelCustomTransformer(tokenizer.vocab_size, 768, 6, 6, 128, 0.1).to(device)
+        vocab_size = tokenizer.vocab_size + 2  # Add 2 for special tokens
+        model = ModelCustomTransformer(vocab_size, 768, 6, 6, 128, 0.1).to(device)
         if num_gpus > 1:
             model = DDP(model, device_ids=[rank], output_device=rank)
         optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
@@ -265,7 +277,7 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
             tokenizer=tokenizer,
             optimizer=optimizer,
             checkpoint_dir="models/checkpoints",
-            batch_size=32,
+            batch_size=64,
             max_epochs=max_epochs,
             max_iters=max_iters,
             eval_iters=eval_iters,
@@ -290,12 +302,12 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
         dist.destroy_process_group()
 
 def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_interval, eval_iters, verbose, enable_profiling, enable_tqdm, save_checkpoints):
-    device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
     print("Using device:", device)
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
     dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=num_samples, verbose=True, augment_data=False, parent_path=".")
-    model = ModelCustomTransformer(tokenizer.vocab_size, 768, 6, 6, 128, 0.1).to(device)
-    optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
+    model = ModelCustomTransformer(tokenizer.vocab_size + 2, 1024, 16, 24, 128, 0.2).to(device)
+    optimizer = AdamW(model.parameters(), lr=1e-3, weight_decay=0.01)
 
     trainer = Trainer(
         model=model,
@@ -309,12 +321,12 @@ def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_int
         max_iters=max_iters,
         eval_iters=eval_iters,
         eval_interval=eval_interval,
-        learning_rate=1e-4,
+        learning_rate=1e-3,
         rank=0,
         world_size=0,
         verbose=verbose,
         use_tqdm=enable_tqdm,
-        grad_accum_steps=1,
+        grad_accum_steps=4,
         enable_profiling=enable_profiling,
         weight_decay=0.01,
         save_checkpoints=save_checkpoints

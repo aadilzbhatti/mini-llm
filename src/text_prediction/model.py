@@ -13,18 +13,21 @@ class Head(nn.Module):
         self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, x):
+    def forward(self, x, mask):
         B, T, C = x.shape
-        k = self.key(x) # (B, T, C)
-        q = self.query(x) # (B, T, C)
-        # compute attention scores ("affinities")
-        wei = q @ k.transpose(-2, -1) * C**-0.5 # (B, T, C) @ (B, C, T) -> (B, T, T)
-        wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf')) # (B, T, T)
-        wei = F.softmax(wei, dim=-1) # (B, T, T)
+        k = self.key(x)
+        q = self.query(x)
+        wei = q @ k.transpose(-2, -1) * C**-0.5
+        wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
+        if mask is not None:
+            wei = wei.masked_fill(mask[:, :T, :T] == 0, float('-inf'))
+
+        wei = F.softmax(wei, dim=-1)
+        
         wei = self.dropout(wei)
-        # perform the weighted aggregation of the values
-        v = self.value(x) # (B, T, C)
-        out = wei @ v # (B, T, T) @ (B, T, C) -> (B, T, C)
+        v = self.value(x)
+        out = wei @ v
+
         return out
 
 class MultiHeadAttention(nn.Module):
@@ -33,11 +36,11 @@ class MultiHeadAttention(nn.Module):
     def __init__(self, n_embd, num_heads, head_size, block_size, dropout):
         super().__init__()
         self.heads = nn.ModuleList([Head(n_embd, head_size, block_size, dropout) for _ in range(num_heads)])
-        self.proj = nn.Linear(n_embd, n_embd)
+        self.proj = nn.Linear(head_size * num_heads, n_embd)
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, x):
-        out = torch.cat([h(x) for h in self.heads], dim=-1)
+    def forward(self, x, mask): #add mask
+        out = torch.cat([h(x, mask) for h in self.heads], dim=-1) #pass the mask
         out = self.dropout(self.proj(out))
         return out
 
@@ -68,8 +71,8 @@ class Block(nn.Module):
         self.ln1 = nn.LayerNorm(n_embd)
         self.ln2 = nn.LayerNorm(n_embd)
 
-    def forward(self, x):
-        x = x + self.sa(self.ln1(x))
+    def forward(self, x, mask): #add mask
+        x = x + self.sa(self.ln1(x), mask) #pass the mask
         x = x + self.ffwd(self.ln2(x))
         return x
 
@@ -80,29 +83,30 @@ class ModelCustomTransformer(nn.Module):
         self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
         self.position_embedding_table = nn.Embedding(block_size, n_embd)
         self.blocks = nn.Sequential(*[Block(n_embd, n_head, block_size, dropout) for _ in range(n_layer)])
-        self.ln_f = nn.LayerNorm(n_embd) # final layer norm
+        self.ln_f = nn.LayerNorm(n_embd)  # final layer norm
         self.lm_head = nn.Linear(n_embd, vocab_size)
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, idx, targets=None):
+    def forward(self, idx, targets=None, attention_mask=None): #add attention mask
         idx = idx.to(self.token_embedding_table.weight.device)  # Ensure idx is on the correct device
         if targets is not None:
             targets = targets.to(self.token_embedding_table.weight.device)  # Ensure targets are on the correct device
         B, T = idx.shape
 
         # idx and targets are both (B, T) tensor of integers
-        tok_emb = self.token_embedding_table(idx) # (B,T,C), or (batch_size, block_size, vocab_size)
-        pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device)) # (T,C)
+        tok_emb = self.token_embedding_table(idx)  # (B,T,C), or (batch_size, block_size, vocab_size)
+        pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device))  # (T,C)
 
         # Add assertions to check tensor shapes
         assert tok_emb.shape == (B, T, tok_emb.size(-1)), f"Expected tok_emb shape {(B, T, tok_emb.size(-1))}, but got {tok_emb.shape}"
         assert pos_emb.shape == (T, tok_emb.size(-1)), f"Expected pos_emb shape {(T, tok_emb.size(-1))}, but got {pos_emb.shape}"
 
-        x = tok_emb + pos_emb # (B, T, C)
+        x = tok_emb + pos_emb  # (B, T, C)
         x = self.dropout(x)
-        x = self.blocks(x) # (B, T, C)
-        x = self.ln_f(x) # (B, T, C)
-        logits = self.lm_head(x) # (B, T, vocab_size)
+        for block in self.blocks:
+            x = block(x, attention_mask) #pass the attention mask
+        x = self.ln_f(x)  # (B, T, C)
+        logits = self.lm_head(x)  # (B, T, vocab_size)
 
         if targets is None:
             loss = None
@@ -118,8 +122,7 @@ class ModelCustomTransformer(nn.Module):
         for _ in range(max_new_tokens):
             # crop idx to the last block_size tokens
             idx_cond = idx[:, -block_size:]
-            # get the predictions
-            logits, _ = self(idx_cond)
+            logits, _ = self(idx_cond, attention_mask=None)
             # focus only on the last time step
             logits = logits[:, -1, :] # becomes (B, C)
             # apply softmax to get probabilities

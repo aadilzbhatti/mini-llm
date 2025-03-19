@@ -86,7 +86,7 @@ class HyperparameterOptimizer:
             'weight_decay': trial_params_tensor[6].item()
         }
 
-        vocab_size = self.tokenizer.vocab_size
+        vocab_size = self.tokenizer.vocab_size + 2 
 
         model = ModelCustomTransformer(vocab_size, trial_params['n_embd'], trial_params['n_head'], trial_params['n_layer'], block_size, trial_params['dropout']).to(self.device)
         if self.world_size > 1:

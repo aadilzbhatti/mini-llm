@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--max_new_tokens', type=int, help="Maximum number of new tokens to generate (required if mode is 'predict')")
     parser.add_argument('--num_gpus', type=int, default=torch.cuda.device_count(), help="Number of GPUs to use (default: 1)")
     parser.add_argument('--save_checkpoints', action='store_true', default=False, help="Enable saving checkpoints")
+    # parser.add_argument('--scheduler_step_size', type=int, default=10, help="Step size for learning rate scheduler")
+    # parser.add_argument('--scheduler_gamma', type=float, default=0.1, help="Gamma for learning rate scheduler")
     args = parser.parse_args()
 
     if args.mode == 'tune' and args.n_trials is None:
@@ -35,8 +37,8 @@ def main():
         if args.num_gpus > torch.cuda.device_count():
             raise ValueError(f"Requested {args.num_gpus} GPUs, but only {torch.cuda.device_count()} are available.")
 
-        if torch.cuda.is_available():
-            print(f"CUDA is available. Starting training with {args.num_gpus} GPUs...")
+        if args.distributed and torch.cuda.is_available():
+            print(f"CUDA is available. Starting distributed training with {args.num_gpus} GPUs...")
             torch.multiprocessing.spawn(distributed_training, args=(
                 args.num_gpus,
                 args.max_epochs,
@@ -47,9 +49,11 @@ def main():
                 args.verbose,
                 args.enable_profiling,
                 args.enable_tqdm,
+                # args.scheduler_step_size,
+                # args.scheduler_gamma
             ), nprocs=args.num_gpus, join=True)
         else:
-            print("CUDA is not available. Training on CPU using single-threaded training...")
+            print("Disributed training not enabled. Starting single-threaded training...")
             single_thread_train(
                 num_samples=args.num_samples,
                 batch_size=args.batch_size,
@@ -60,7 +64,9 @@ def main():
                 verbose=args.verbose,
                 enable_profiling=args.enable_profiling,
                 enable_tqdm=args.enable_tqdm,
-                save_checkpoints=args.save_checkpoints
+                save_checkpoints=args.save_checkpoints,
+                # scheduler_step_size=args.scheduler_step_size,
+                # scheduler_gamma=args.scheduler_gamma
             )
         
     elif args.mode == 'tune':
