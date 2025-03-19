@@ -50,6 +50,7 @@ class WikipediaDataset:
         tokenized = self.tokenizer(
             examples["text"], 
             truncation=True, 
+            padding="max_length", 
             max_length=self.max_len
         )
         if self.augment_data:

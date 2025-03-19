@@ -7,6 +7,7 @@ import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from transformers import AutoTokenizer
 from .data import WikipediaDataset
+from .data_pipeline import DataPipeline
 from .model import ModelCustomTransformer
 from .text_completer import TextCompleter
 from torch.profiler import profile, record_function, ProfilerActivity, tensorboard_trace_handler
@@ -19,7 +20,7 @@ from .utils import RankFilter
 from torch.optim import AdamW
 
 class Trainer:
-    def __init__(self, model, dataset, device, tokenizer, optimizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_iters, eval_interval, learning_rate, rank, world_size, verbose=True, use_tqdm=True, grad_accum_steps=1, enable_profiling=False, weight_decay=0.01):
+    def __init__(self, model, dataset, device, tokenizer, optimizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_iters, eval_interval, learning_rate, rank, world_size, verbose=True, use_tqdm=True, grad_accum_steps=1, enable_profiling=False, weight_decay=0.01, save_checkpoints=True):
         self.model = model
         self.device = device
         self.tokenizer = tokenizer
@@ -42,6 +43,7 @@ class Trainer:
         self.train_losses = []
         self.val_losses = []
         self.metadata_file = os.path.join(checkpoint_dir, "training_metadata.json")
+        self.save_checkpoints = save_checkpoints
 
         logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO, format='%(asctime)s - %(message)s')
         self.logger = logging.getLogger(__name__)
@@ -49,8 +51,9 @@ class Trainer:
         for handler in self.logger.handlers:
             handler.addFilter(RankFilter(rank))
 
-        self.train_dataloader = dataset.get_test_train_dataloaders("train", batch_size, rank=rank, world_size=world_size)
-        self.val_dataloader = dataset.get_test_train_dataloaders("val", batch_size, rank=rank, world_size=world_size)
+
+        self.train_dataloader = dataset.get_dataloader(batch_size, split="train")
+        self.val_dataloader = dataset.get_dataloader(batch_size, split="val", shuffle=False)
 
         underlying_model = self.model.module if isinstance(self.model, DDP) else self.model
         self.text_completer = TextCompleter(underlying_model, self.tokenizer, self.device, block_size=128)
@@ -72,7 +75,7 @@ class Trainer:
 
         self.log(logging.DEBUG, f"DataLoader iteration time: {time.time() - start_time:.2f}s")
 
-        X, Y = next_item['input_ids'], next_item['labels']
+        X, Y = next_item
         self.log(logging.DEBUG, f"Batch loading time: {time.time() - start_time:.2f}s")
         return X.to(self.device), Y.to(self.device)
 
@@ -91,6 +94,8 @@ class Trainer:
         return out
 
     def save_checkpoint(self, epoch, loss):
+        if not self.save_checkpoints:
+            return
         if self.rank == 0:  # Save checkpoint only on rank 0
             if not os.path.exists(self.checkpoint_dir):
                 os.makedirs(self.checkpoint_dir)
@@ -104,6 +109,8 @@ class Trainer:
             self.log(logging.INFO, f"Checkpoint saved: {checkpoint_path}")
 
     def load_checkpoint(self, checkpoint_path):
+        if not self.save_checkpoints:
+            return 0, None
         checkpoint = torch.load(checkpoint_path, map_location=self.device)
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
@@ -113,6 +120,8 @@ class Trainer:
         return epoch, loss
 
     def get_latest_checkpoint(self):
+        if not self.save_checkpoints:
+            return None
         if self.rank == 0:  # Only rank 0 needs to find the latest checkpoint
             if not os.path.exists(self.checkpoint_dir):
                 os.makedirs(self.checkpoint_dir)
@@ -146,10 +155,11 @@ class Trainer:
 
     def train(self):
         start_epoch = 0
-        latest_checkpoint_path = self.get_latest_checkpoint()
-        if (latest_checkpoint_path):
-            self.log(logging.INFO, "Checkpoint found, resuming training...")
-            start_epoch, _ = self.load_checkpoint(latest_checkpoint_path)
+        if self.save_checkpoints:
+            latest_checkpoint_path = self.get_latest_checkpoint()
+            if latest_checkpoint_path:
+                self.log(logging.INFO, "Checkpoint found, resuming training...")
+                start_epoch, _ = self.load_checkpoint(latest_checkpoint_path)
 
         if self.enable_profiling:
             self.profiler = profile(
@@ -168,59 +178,62 @@ class Trainer:
             if torch.cuda.is_available():
                 torch.cuda.manual_seed(epoch)
 
-            self.model.train()
-            epoch_loss = 0
-            start_time = time.time()
+            self.train_one_epoch(epoch)
 
-            if self.use_tqdm:
-                progress_bar = tqdm(range(self.max_iters), desc=f"Epoch {epoch}", unit="batch")
-            else:
-                progress_bar = range(self.max_iters)
+    def train_one_epoch(self, epoch):
+        self.model.train()
+        epoch_loss = 0
+        start_time = time.time()
 
-            current_val_loss = None
+        if self.use_tqdm:
+            progress_bar = tqdm(range(self.max_iters), desc=f"Epoch {epoch}", unit="batch")
+        else:
+            progress_bar = range(self.max_iters)
 
-            with self.profiler if self.enable_profiling else nullcontext() as prof:
-                for i in progress_bar:
-                    self.log(logging.DEBUG, f"Starting iteration {i} of epoch {epoch}")
+        current_val_loss = None
 
-                    with record_function("get_batch"):
-                        xb, yb = self.get_batch('train')
+        with self.profiler if self.enable_profiling else nullcontext() as prof:
+            for i in progress_bar:
+                self.log(logging.DEBUG, f"Starting iteration {i} of epoch {epoch}")
 
-                    with record_function("forward_pass"):
-                        _, loss = self.model(xb, yb)
-                        loss = loss / self.grad_accum_steps
-                        loss.backward()
+                with record_function("get_batch"):
+                    xb, yb = self.get_batch('train')
 
-                        if (i + 1) % self.grad_accum_steps == 0:
-                            with record_function("optimizer_step"):
-                                self.optimizer.step()
-                                self.optimizer.zero_grad(set_to_none=True)
+                with record_function("forward_pass"):
+                    _, loss = self.model(xb, yb)
+                    loss = loss / self.grad_accum_steps
+                    loss.backward()
 
-                            epoch_loss += loss.item() * self.grad_accum_steps
+                    if (i + 1) % self.grad_accum_steps == 0:
+                        with record_function("optimizer_step"):
+                            self.optimizer.step()
+                            self.optimizer.zero_grad(set_to_none=True)
 
-                    if i % self.eval_interval == 0:
-                        self.log(logging.DEBUG, f"Evaluating at iteration {i} of epoch {epoch}")
-                        losses = self.estimate_loss()
-                        current_val_loss = losses['val']
-                        elapsed_time = time.time() - start_time
-                        eta = elapsed_time / (i + 1) * (self.max_iters - i)
+                        epoch_loss += loss.item() * self.grad_accum_steps
 
-                        self.log(logging.INFO, f"\n[Epoch {epoch} | Step {i}] Train Loss: {losses['train']:.4f}, Val Loss: {losses['val']:.4f} | ETA: {eta:.2f}s")
-                        self.log(logging.INFO, self.text_completer.get_text_completions(max_tokens=100))
-                        self.save_checkpoint(epoch, losses['val'])
-                        self.train_losses.append(losses['train'])
-                        self.val_losses.append(losses['val'])
-                        self.save_metadata()
+                if i % self.eval_interval == 0:
+                    self.log(logging.DEBUG, f"Evaluating at iteration {i} of epoch {epoch}")
+                    losses = self.estimate_loss()
+                    current_val_loss = losses['val']
+                    elapsed_time = time.time() - start_time
+                    eta = elapsed_time / (i + 1) * (self.max_iters - i)
 
-                    if self.use_tqdm and self.verbose and i % (self.eval_interval // 10) == 0: #only set postfix if tqdm is being used.
-                        progress_bar.set_postfix(loss=f"{loss.item() * self.grad_accum_steps:.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
+                    self.log(logging.INFO, f"\n[Epoch {epoch} | Step {i}] Train Loss: {losses['train']:.4f}, Val Loss: {losses['val']:.4f} | ETA: {eta:.2f}s")
+                    self.log(logging.INFO, self.text_completer.get_text_completions(max_tokens=100))
+                    self.save_checkpoint(epoch, losses['val'])
+                    self.train_losses.append(losses['train'])
+                    self.val_losses.append(losses['val'])
+                    self.save_metadata()
 
-                self.log(logging.INFO, f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / self.max_iters:.4f}")
+                if self.use_tqdm and self.verbose and i % (self.eval_interval // 10) == 0: #only set postfix if tqdm is being used.
+                    progress_bar.set_postfix(loss=f"{loss.item() * self.grad_accum_steps:.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
 
-                if self.enable_profiling:
-                    self.log(logging.INFO, self.profiler.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+            self.log(logging.INFO, f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / self.max_iters:.4f}")
 
-def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=10000, verbose=False, enable_profiling=False, enable_tqdm=False):
+            if self.enable_profiling:
+                self.log(logging.INFO, self.profiler.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+
+def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=10000, verbose=False, enable_profiling=False, enable_tqdm=False, save_checkpoints=True):
     os.environ['RANK'] = str(rank)
     os.environ['WORLD_SIZE'] = str(num_gpus)
     os.environ['MASTER_ADDR'] = 'localhost'
@@ -237,7 +250,8 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
     try:
         device = torch.device(f"cuda:{rank}")
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
-        dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=num_samples, verbose=verbose)
+        # dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=num_samples, verbose=verbose)
+        dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=10000, verbose=True, augment_data=False, parent_path=".")
 
         model = ModelCustomTransformer(tokenizer.vocab_size, 768, 6, 6, 128, 0.1).to(device)
         if num_gpus > 1:
@@ -246,7 +260,7 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
 
         trainer = Trainer(
             model=model,
-            dataset=dataset,
+            dataset=dp,
             device=device,
             tokenizer=tokenizer,
             optimizer=optimizer,
@@ -263,7 +277,8 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
             use_tqdm=enable_tqdm,
             grad_accum_steps=4,
             enable_profiling=enable_profiling,
-            weight_decay=0.01
+            weight_decay=0.01,
+            save_checkpoints=save_checkpoints
         )
 
         if trainer.verbose:
@@ -274,21 +289,61 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
             trainer.logger.info("Destroying process group...")
         dist.destroy_process_group()
 
-def main(num_gpus, rank):
-    distributed_training(rank, num_gpus, verbose=False, enable_profiling=False, enable_tqdm=True)
+def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_interval, eval_iters, verbose, enable_profiling, enable_tqdm, save_checkpoints):
+    device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    print("Using device:", device)
+    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=num_samples, verbose=True, augment_data=False, parent_path=".")
+    model = ModelCustomTransformer(tokenizer.vocab_size, 768, 6, 6, 128, 0.1).to(device)
+    optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Distributed Training")
+    trainer = Trainer(
+        model=model,
+        dataset=dp,
+        device=device,
+        tokenizer=tokenizer,
+        optimizer=optimizer,
+        checkpoint_dir="models/checkpoints",
+        batch_size=batch_size,
+        max_epochs=max_epochs,
+        max_iters=max_iters,
+        eval_iters=eval_iters,
+        eval_interval=eval_interval,
+        learning_rate=1e-4,
+        rank=0,
+        world_size=0,
+        verbose=verbose,
+        use_tqdm=enable_tqdm,
+        grad_accum_steps=1,
+        enable_profiling=enable_profiling,
+        weight_decay=0.01,
+        save_checkpoints=save_checkpoints
+    )
+
+    if trainer.verbose:
+        trainer.logger.info("Starting training...")
+    trainer.train()
+
+def main():
+    parser = argparse.ArgumentParser(description="Training")
     parser.add_argument("--num_gpus", type=int, default=torch.cuda.device_count(), help="Number of GPUs to use for training")
+    parser.add_argument("--save_checkpoints", action="store_true", help="Enable saving checkpoints")
+    parser.add_argument("--distributed", action="store_true", default=True, help="Enable distributed training")
     args = parser.parse_args()
 
     if args.num_gpus > torch.cuda.device_count():
         raise ValueError(f"Requested {args.num_gpus} GPUs, but only {torch.cuda.device_count()} are available.")
 
-    if torch.cuda.is_available():
-        print(f"CUDA is available. Starting training with {args.num_gpus} GPUs...")
+    if args.distributed:
+        if torch.cuda.is_available():
+            print(f"CUDA is available. Starting distributed training with {args.num_gpus} GPUs...")
+            torch.multiprocessing.spawn(distributed_training, args=(args.num_gpus, args.save_checkpoints), nprocs=args.num_gpus, join=True)
+        else:
+            print("CUDA is not available. Starting single-threaded training...")
+            single_thread_train(save_checkpoints=args.save_checkpoints)
     else:
-        print("CUDA is not available. Training on CPU...")
-        args.num_gpus = 1  # Force to 1 GPU if CUDA is not available
+        print("Starting single-threaded training...")
+        single_thread_train(save_checkpoints=args.save_checkpoints)
 
-    torch.multiprocessing.spawn(distributed_training, args=(args.num_gpus,), nprocs=args.num_gpus, join=True)
+if __name__ == "__main__":
+    main()

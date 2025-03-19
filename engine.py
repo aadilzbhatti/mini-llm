@@ -1,15 +1,15 @@
 import argparse
 import torch
-from src.trainer import distributed_training
-from src.hyperparam_tuning import HyperparameterOptimizer, distributed_tuning
-from src.text_completer import TextCompleter
+from text_prediction.trainer import distributed_training, single_thread_train
+from text_prediction.hyperparam_tuning import HyperparameterOptimizer, distributed_tuning
+from text_prediction.text_completer import TextCompleter
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 def main():
     parser = argparse.ArgumentParser(description="Train, tune hyperparameters, or generate text predictions for the WikiCompleteModel.")
     parser.add_argument('--mode', type=str, required=True, choices=['train', 'tune', 'predict'], help="Mode to run: 'train', 'tune', or 'predict'")
     parser.add_argument('--regenerate_dataset', action='store_true', help="Regenerate the dataset")
-    parser.add_argument('--num_samples', type=int, default=1000, help="Number of samples for the dataset (default: 1000)")
+    parser.add_argument('--num_samples', type=int, default=10000, help="Number of samples for the dataset (default: 10000)")
     parser.add_argument('--batch_size', type=int, default=32, help="Batch size (default: 32)")
     parser.add_argument('--max_epochs', type=int, default=10, help="Maximum number of epochs (default: 10)")
     parser.add_argument('--max_iters', type=int, default=1000, help="Maximum number of iterations (default: 1000)")
@@ -22,6 +22,7 @@ def main():
     parser.add_argument('--enable_profiling', action='store_true', default=False, help="Enable profiling during training")
     parser.add_argument('--max_new_tokens', type=int, help="Maximum number of new tokens to generate (required if mode is 'predict')")
     parser.add_argument('--num_gpus', type=int, default=torch.cuda.device_count(), help="Number of GPUs to use (default: 1)")
+    parser.add_argument('--save_checkpoints', action='store_true', default=False, help="Enable saving checkpoints")
     args = parser.parse_args()
 
     if args.mode == 'tune' and args.n_trials is None:
@@ -36,21 +37,31 @@ def main():
 
         if torch.cuda.is_available():
             print(f"CUDA is available. Starting training with {args.num_gpus} GPUs...")
+            torch.multiprocessing.spawn(distributed_training, args=(
+                args.num_gpus,
+                args.max_epochs,
+                args.max_iters,
+                args.eval_iters,
+                args.eval_interval,
+                args.num_samples,
+                args.verbose,
+                args.enable_profiling,
+                args.enable_tqdm,
+            ), nprocs=args.num_gpus, join=True)
         else:
-            print("CUDA is not available. Training on CPU...")
-            args.num_gpus = 1  # Force to 1 GPU if CUDA is not available
-
-        torch.multiprocessing.spawn(distributed_training, args=(
-            args.num_gpus,
-            args.max_epochs,
-            args.max_iters,
-            args.eval_iters,
-            args.eval_interval,
-            args.num_samples,
-            args.verbose,
-            args.enable_profiling,
-            args.enable_tqdm,
-        ), nprocs=args.num_gpus, join=True)
+            print("CUDA is not available. Training on CPU using single-threaded training...")
+            single_thread_train(
+                num_samples=args.num_samples,
+                batch_size=args.batch_size,
+                max_epochs=args.max_epochs,
+                max_iters=args.max_iters,
+                eval_interval=args.eval_interval,
+                eval_iters=args.eval_iters,
+                verbose=args.verbose,
+                enable_profiling=args.enable_profiling,
+                enable_tqdm=args.enable_tqdm,
+                save_checkpoints=args.save_checkpoints
+            )
         
     elif args.mode == 'tune':
         if args.distributed:
