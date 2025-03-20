@@ -15,8 +15,13 @@ def live_plot(metadata_file, iterations=10, interval=5):
     train_line, = ax.plot([], [], label='Train Loss')
     val_line, = ax.plot([], [], label='Val Loss')
     gap_line, = ax.plot([], [], label='Gap (Val - Train)')
-    grad_norm_line, = ax.plot([], [], label='Gradient Norm')
-    ax.legend()
+    
+    ax2 = ax.twinx()  # Create a secondary y-axis
+    ax2.set_ylabel('Gradient Norm')
+    grad_norm_line, = ax2.plot([], [], label='Gradient Norm', color='tab:green')
+    
+    ax.legend(loc='upper left')
+    ax2.legend(loc='upper right')
 
     for _ in range(iterations):
         with open(metadata_file, 'r') as f:
@@ -36,7 +41,12 @@ def live_plot(metadata_file, iterations=10, interval=5):
 
         ax.relim()
         ax.autoscale_view()
-        ax.legend([f'Train Loss: {train_losses[-1]:.4f}', f'Val Loss: {val_losses[-1]:.4f}', f'Gap: {gap[-1]:.4f}', f'Grad Norm: {grad_norms[-1]:.4f}' if grad_norms else 'Grad Norm: N/A'])
+        ax2.relim()
+        ax2.autoscale_view()
+        
+        ax.legend([f'Train Loss: {train_losses[-1]:.4f}', f'Val Loss: {val_losses[-1]:.4f}', f'Gap: {gap[-1]:.4f}'], loc='upper left')
+        ax2.legend([f'Grad Norm: {grad_norms[-1]:.4f}' if grad_norms else 'Grad Norm: N/A'], loc='upper right')
+        
         clear_output(wait=True)
         display(fig)
         time.sleep(interval)  # Update every interval seconds

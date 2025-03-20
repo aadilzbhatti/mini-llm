@@ -87,10 +87,10 @@ class ModelCustomTransformer(nn.Module):
         self.lm_head = nn.Linear(n_embd, vocab_size)
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, idx, targets=None, attention_mask=None): #add attention mask
-        idx = idx.to(self.token_embedding_table.weight.device)  # Ensure idx is on the correct device
+    def forward(self, idx, targets=None, attention_mask=None):
+        idx = idx.to(self.token_embedding_table.weight.device)
         if targets is not None:
-            targets = targets.to(self.token_embedding_table.weight.device)  # Ensure targets are on the correct device
+            targets = targets.to(self.token_embedding_table.weight.device)
         B, T = idx.shape
 
         # idx and targets are both (B, T) tensor of integers

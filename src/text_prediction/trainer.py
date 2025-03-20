@@ -5,6 +5,7 @@ import os
 import signal
 import time
 from contextlib import nullcontext
+import hashlib
 
 import torch
 import torch.distributed as dist
@@ -14,10 +15,11 @@ from torch.profiler import ProfilerActivity, profile, record_function, tensorboa
 from tqdm import tqdm
 from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 
-from .data_pipeline import DataPipeline
-from .model import ModelCustomTransformer
-from .text_completer import TextCompleter
-from .utils import RankFilter
+from text_prediction.streaming_data_pipeline import StreamingDataPipeline
+from text_prediction.data_pipeline import DataPipeline
+from text_prediction.model import ModelCustomTransformer
+from text_prediction.text_completer import TextCompleter
+from text_prediction.utils import RankFilter
 
 if torch.cuda.is_available():
     from torch.amp import GradScaler, autocast
@@ -25,49 +27,61 @@ else:
     GradScaler = None
     autocast = nullcontext
 
+def get_checkpoint_dir(hyperparams, checkpoint_dir):
+    hyperparams_str = json.dumps(hyperparams, sort_keys=True)
+    hyperparams_hash = hashlib.md5(hyperparams_str.encode()).hexdigest()
+    checkpoint_dir = os.path.join(checkpoint_dir, hyperparams_hash)
+    return checkpoint_dir
+
 class Trainer:
-    def __init__(self, model, dataset, device, tokenizer, optimizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_iters, eval_interval, learning_rate, rank, world_size, verbose=True, use_tqdm=True, grad_accum_steps=1, enable_profiling=False, weight_decay=0.01, save_checkpoints=True):
+    def __init__(self, model, dataset, device, tokenizer, optimizer, rank, world_size, hyperparams, training_params):
         self.model = model
+        self.dataset = dataset
         self.device = device
         self.tokenizer = tokenizer
         self.optimizer = optimizer
-        self.checkpoint_dir = checkpoint_dir
-        self.batch_size = batch_size
-        self.max_epochs = max_epochs
-        self.max_iters = max_iters
-        self.eval_iters = eval_iters
-        self.eval_interval = eval_interval
-        self.learning_rate = learning_rate
+        self.checkpoint_dir = get_checkpoint_dir(hyperparams, training_params["checkpoint_dir"])
         self.rank = rank
         self.world_size = world_size
-        self.verbose = verbose
-        self.use_tqdm = use_tqdm
-        self.grad_accum_steps = grad_accum_steps
-        self.enable_profiling = enable_profiling
-        self.weight_decay = weight_decay
+        self.hyperparams = hyperparams
+        self.grad_accum_steps = hyperparams["grad_accum_steps"]
+
+        self.max_epochs = training_params["max_epochs"]
+        self.max_iters = training_params["max_iters"]
+        self.eval_iters = training_params["eval_iters"]
+        self.eval_interval = training_params["eval_interval"]
+        self.verbose = training_params["verbose"]
+        self.use_tqdm = training_params["use_tqdm"]
+        self.enable_profiling = training_params["enable_profiling"]
+        self.save_checkpoints = training_params["save_checkpoints"]
+
         self.profiler = None
         self.train_losses = []
         self.val_losses = []
-        self.metadata_file = os.path.join(checkpoint_dir, "training_metadata.json")
-        self.save_checkpoints = save_checkpoints
+        self.metadata_file = os.path.join(self.checkpoint_dir, "training_metadata.json")
         self.scheduler = get_linear_schedule_with_warmup(
             self.optimizer, 
-            num_warmup_steps=int(0.1 * max_iters),  # 10% of total iterations for warmup
-            num_training_steps=max_iters
+            num_warmup_steps=int(0.1 * self.max_iters),  # 10% of total iterations for warmup
+            num_training_steps=self.max_iters
         )
         self.scaler = GradScaler() if torch.cuda.is_available() else None
 
-        logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO, format='%(asctime)s - %(message)s')
+        logging.basicConfig(level=logging.DEBUG if self.verbose else logging.INFO, format='%(asctime)s - %(message)s')
         self.logger = logging.getLogger(__name__)
         self.logger.addFilter(RankFilter(rank))
         for handler in self.logger.handlers:
             handler.addFilter(RankFilter(rank))
 
-        self.train_dataloader = dataset.get_dataloader(batch_size, split="train")
-        self.val_dataloader = dataset.get_dataloader(batch_size, split="val", shuffle=False)
+        if isinstance(dataset, DataPipeline):
+            self.train_dataloader = dataset.get_dataloader(self.hyperparams["batch_size"], split="train")
+            self.val_dataloader = dataset.get_dataloader(self.hyperparams["batch_size"], split="val", shuffle=False)
+        elif isinstance(dataset, StreamingDataPipeline):
+            self.train_dataloader_generator = dataset.get_dataloader_generator(self.hyperparams["batch_size"], split="train")
+            self.val_dataloader_generator = dataset.get_dataloader_generator(self.hyperparams["batch_size"], split="val", shuffle=False)
 
         underlying_model = self.model.module if isinstance(self.model, DDP) else self.model
-        self.text_completer = TextCompleter(underlying_model, self.tokenizer, self.device, block_size=128)
+        self.text_completer = TextCompleter(underlying_model, self.tokenizer, self.device, block_size=self.hyperparams["block_size"])
+        self.training_params = training_params
 
     def log(self, level, msg):
         if self.verbose:
@@ -78,17 +92,28 @@ class Trainer:
         self.log(logging.DEBUG, f"Starting get_batch for split: {split}")
 
         if split == 'train':
-            next_item = next(iter(self.train_dataloader))
+            if isinstance(self.dataset, DataPipeline):
+                next_item = next(iter(self.train_dataloader))
+            else:
+                next_item = next(self.example_from_dataloader_generator(self.train_dataloader_generator))
         elif split == 'val':
-            next_item = next(iter(self.val_dataloader))
+            if isinstance(self.dataset, DataPipeline):
+                next_item = next(iter(self.val_dataloader))
+            else:
+                next_item = next(self.example_from_dataloader_generator(self.val_dataloader_generator))
         else:
-            raise ValueError(f"Unknown split: {split}")
+            raise ValueError(f"Unknown split: {split}") 
 
         self.log(logging.DEBUG, f"DataLoader iteration time: {time.time() - start_time:.2f}s")
 
         X, Y, attention_mask = next_item
         self.log(logging.DEBUG, f"Batch loading time: {time.time() - start_time:.2f}s")
         return X.to(self.device), Y.to(self.device), attention_mask.to(self.device)
+
+    def example_from_dataloader_generator(self, dataloader_generator):
+        for dataloader in dataloader_generator:
+            for X, Y, attention_mask in dataloader:
+                yield X, Y, attention_mask
 
     @torch.no_grad()
     def estimate_loss(self):
@@ -153,14 +178,8 @@ class Trainer:
             "train_losses": self.train_losses,
             "val_losses": self.val_losses,
             "grad_norms": grad_norms,
-            "batch_size": self.batch_size,
-            "max_epochs": self.max_epochs,
-            "max_iters": self.max_iters,
-            "eval_iters": self.eval_iters,
-            "eval_interval": self.eval_interval,
-            "learning_rate": self.learning_rate,
-            "grad_accum_steps": self.grad_accum_steps,
-            "weight_decay": self.weight_decay,
+            "hyperparams": self.hyperparams,
+            "training_params": self.training_params
         }
         with open(self.metadata_file, 'w') as f:
             json.dump(metadata, f)
@@ -261,7 +280,10 @@ class Trainer:
 
         self.save_metadata(grad_norms)
 
-def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=10000, verbose=False, enable_profiling=False, enable_tqdm=False, save_checkpoints=True):
+def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=None, verbose=False, enable_profiling=False, enable_tqdm=False, save_checkpoints=True):
+    device = torch.device(f"cuda:{rank}" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+
     os.environ['RANK'] = str(rank)
     os.environ['WORLD_SIZE'] = str(num_gpus)
     os.environ['MASTER_ADDR'] = 'localhost'
@@ -275,16 +297,43 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
 
     signal.signal(signal.SIGTERM, signal_handler)
 
-    try:
-        device = torch.device(f"cuda:{rank}" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-        tokenizer = AutoTokenizer.from_pretrained("gpt2")
-        dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=10000, verbose=True, augment_data=False, parent_path=".")
+    hyperparams = {
+        "max_len": 1024,
+        "block_size": 128,
+        "num_samples": num_samples if num_samples else 10000,
+        "vocab_size": tokenizer.vocab_size + 2,
+        "hidden_size": 768,
+        "num_layers": 6,
+        "num_heads": 6,
+        "dropout": 0.1,
+        "learning_rate": 5e-5,
+        "weight_decay": 0.01,
+        "batch_size": 64,
+        "grad_accum_steps": 4
+    }
 
-        vocab_size = tokenizer.vocab_size + 2
-        model = ModelCustomTransformer(vocab_size, 768, 6, 6, 128, 0.1).to(device)
+    training_params = {
+        "max_epochs": max_epochs,
+        "max_iters": max_iters,
+        "eval_iters": eval_iters,
+        "eval_interval": eval_interval,
+        "verbose": verbose,
+        "use_tqdm": enable_tqdm,
+        "enable_profiling": enable_profiling,
+        "save_checkpoints": save_checkpoints,
+        "checkpoint_dir": "models/checkpoints"
+    }
+
+    try:
+        if num_samples:
+            dp = DataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], regenerate=False, num_samples=hyperparams["num_samples"], verbose=True, augment_data=False, parent_path=".")
+        else:
+            dp = StreamingDataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], verbose=True, augment_data=False, parent_path=".")
+        
+        model = ModelCustomTransformer(hyperparams["vocab_size"], hyperparams["hidden_size"], hyperparams["num_layers"], hyperparams["num_heads"], hyperparams["block_size"], hyperparams["dropout"]).to(device)
         if num_gpus > 1:
             model = DDP(model, device_ids=[rank], output_device=rank)
-        optimizer = AdamW(model.parameters(), lr=5e-5, weight_decay=0.01)
+        optimizer = AdamW(model.parameters(), lr=hyperparams["learning_rate"], weight_decay=hyperparams["weight_decay"])
 
         trainer = Trainer(
             model=model,
@@ -292,21 +341,10 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
             device=device,
             tokenizer=tokenizer,
             optimizer=optimizer,
-            checkpoint_dir="models/checkpoints",
-            batch_size=64,
-            max_epochs=max_epochs,
-            max_iters=max_iters,
-            eval_iters=eval_iters,
-            eval_interval=eval_interval,
-            learning_rate=1e-4,
             rank=rank,
             world_size=num_gpus,
-            verbose=verbose,
-            use_tqdm=enable_tqdm,
-            grad_accum_steps=4,
-            enable_profiling=enable_profiling,
-            weight_decay=0.01,
-            save_checkpoints=save_checkpoints
+            hyperparams=hyperparams,
+            training_params=training_params
         )
 
         if trainer.verbose:
@@ -321,9 +359,43 @@ def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_int
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
     print("Using device:", device)
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
-    dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=20000, verbose=True, augment_data=False, parent_path=".")
-    model = ModelCustomTransformer(tokenizer.vocab_size + 2, 768, 6, 12, 128, 0.2).to(device)
-    optimizer = AdamW(model.parameters(), lr=5e-4, weight_decay=0.01)
+    
+    hyperparams = {
+        "max_len": 1024,
+        "block_size": 128,
+        "num_samples": num_samples if num_samples else 20000,
+        "vocab_size": tokenizer.vocab_size + 2,
+        "hidden_size": 1024,
+        "num_layers": 16,
+        "num_heads": 36,
+        "dropout": 0.2,
+        "learning_rate": 1e-2,
+        "weight_decay": 0.01,
+        "batch_size": batch_size,
+        "grad_accum_steps": 4
+    }
+
+    training_params = {
+        "max_epochs": max_epochs,
+        "max_iters": max_iters,
+        "eval_iters": eval_iters,
+        "eval_interval": eval_interval,
+        "verbose": verbose,
+        "use_tqdm": enable_tqdm,
+        "enable_profiling": enable_profiling,
+        "save_checkpoints": save_checkpoints,
+        "checkpoint_dir": "models/checkpoints"
+    }
+
+    if num_samples:
+        dp = DataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], regenerate=False, num_samples=hyperparams["num_samples"], verbose=True, augment_data=False, parent_path=".")
+    else:
+        print("Using streamed dataset")
+        dp = StreamingDataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], verbose=True, augment_data=False, parent_path=".")
+    
+    model = ModelCustomTransformer(hyperparams["vocab_size"], hyperparams["hidden_size"], hyperparams["num_layers"], hyperparams["num_heads"], hyperparams["block_size"], hyperparams["dropout"]).to(device)
+    print(f"Model parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
+    optimizer = AdamW(model.parameters(), lr=hyperparams["learning_rate"], weight_decay=hyperparams["weight_decay"])
 
     trainer = Trainer(
         model=model,
@@ -331,21 +403,10 @@ def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_int
         device=device,
         tokenizer=tokenizer,
         optimizer=optimizer,
-        checkpoint_dir="models/checkpoints",
-        batch_size=batch_size,
-        max_epochs=max_epochs,
-        max_iters=max_iters,
-        eval_iters=eval_iters,
-        eval_interval=eval_interval,
-        learning_rate=1e-3,
         rank=0,
         world_size=0,
-        verbose=verbose,
-        use_tqdm=enable_tqdm,
-        grad_accum_steps=4,
-        enable_profiling=enable_profiling,
-        weight_decay=0.01,
-        save_checkpoints=save_checkpoints
+        hyperparams=hyperparams,
+        training_params=training_params
     )
 
     if trainer.verbose:

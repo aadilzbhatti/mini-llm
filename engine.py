@@ -9,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description="Train, tune hyperparameters, or generate text predictions for the WikiCompleteModel.")
     parser.add_argument('--mode', type=str, required=True, choices=['train', 'tune', 'predict'], help="Mode to run: 'train', 'tune', or 'predict'")
     parser.add_argument('--regenerate_dataset', action='store_true', help="Regenerate the dataset")
-    parser.add_argument('--num_samples', type=int, default=10000, help="Number of samples for the dataset (default: 10000)")
+    parser.add_argument('--num_samples', type=int, help="Number of samples for the dataset (default: 10000)")
     parser.add_argument('--batch_size', type=int, default=32, help="Batch size (default: 32)")
     parser.add_argument('--max_epochs', type=int, default=10, help="Maximum number of epochs (default: 10)")
     parser.add_argument('--max_iters', type=int, default=1000, help="Maximum number of iterations (default: 1000)")

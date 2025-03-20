@@ -1,39 +1,15 @@
 import torch
-from torch.utils.data import DataLoader, DistributedSampler, Dataset as TDataset
+from torch.utils.data import DataLoader, DistributedSampler, Dataset as TorchDataset
 from torch.nn.utils.rnn import pad_sequence
-from datasets import load_dataset, load_from_disk, Dataset
+from datasets import load_dataset, load_from_disk
 import os
 import pyarrow as pa
-from torch.utils.data import Dataset as TorchDataset
 import logging
 import random
 import re
 
-from text_prediction.utils import RankFilter
-
-class TokenizedDataset(TorchDataset):
-    def __init__(self, tokenized_dataset, block_size, device="cpu"):
-        """
-        tokenized_examples: List of tokenized sequences (each a list of token IDs).
-        block_size: Length of each input sequence.
-        """
-        self.device = device
-        self.block_size = block_size
-
-        self._data = [torch.tensor(example['input_ids'], dtype=torch.long) for example in tokenized_dataset if len(example['input_ids']) > block_size]
-        
-    def __len__(self):
-        return len(self._data) - self.block_size  # Max index to sample from
-
-    def __getitem__(self, idx):
-        """
-        Return a single sample (input and target sequences)
-        """
-        example = self._data[idx]
-        ix = torch.randint(0, len(example) - self.block_size, (1,)).item()
-        input_seq = example[ix:ix + self.block_size]
-        label_seq = example[ix + 1:ix + self.block_size + 1]
-        return input_seq.to(self.device), label_seq.to(self.device)
+from text_prediction.tokenized_dataset import TokenizedDataset
+from text_prediction.utils import RankFilter, sanitize_text
 
 class DataPipeline:
 
@@ -59,40 +35,11 @@ class DataPipeline:
         if self.verbose:
             self.logger.log(level, message)
 
-    def _sanitize_text(self, text):
-        """Sanitizes the text while preserving meaningful dashes, numerical values with units, and hyperlink text."""
-        
-        # Preserve Markdown-style and HTML links by keeping only the text
-        text = re.sub(r'\[([^\]]+)\]\(http\S+\)', r'\1', text)  # Handles Markdown links
-        text = re.sub(r'<a\s+href=["\']http\S+["\']>(.*?)</a>', r'\1', text, flags=re.IGNORECASE)  # Handles HTML links
-
-        # Remove standalone URLs
-        text = re.sub(r'http\S+|www\S+', '', text, flags=re.MULTILINE)
-
-        # Ensure we preserve dashes in hyphenated place names (e.g., Indianapolis–Carmel–Anderson)
-        text = re.sub(r'(\w)\s*[-–]\s*(\w)', r'\1–\2', text)  # Normalize hyphens and remove unwanted spaces around them
-
-        # Keep valid numerical values with units (e.g., "3.0 square miles (7.8 km2)")
-        text = re.sub(r'(\d+(\.\d+)?)\s*([a-zA-Z²]+)', r'\1 \3', text)  # Ensures numbers and units stay together
-        text = re.sub(r'\((\d+(\.\d+)?\s*[a-zA-Z²]+)\)', r'(\1)', text)  # Ensures parenthetical units remain intact
-
-        # Preserve valid year ranges (e.g., 1992-2002)
-        text = re.sub(r'(?<!\d)(\d{4})-(\d{4})(?!\d)', r'\1-\2', text)  # Ensure valid formatting
-
-        # Remove unwanted characters but keep punctuation, parentheses, and percentage signs
-        text = re.sub(r'[^a-zA-Z0-9\s.,!?\'\"()%-²]', '', text)
-
-        # Normalize spaces
-        text = re.sub(r'\s+', ' ', text).strip()
-
-        return text
-
-
     def _tokenize_function(self, examples):
         """Tokenizes the examples, adds special tokens, and optionally augments data."""
         
         # Sanitize text data
-        sanitized_texts = [self._sanitize_text(text) for text in examples["text"]]
+        sanitized_texts = [sanitize_text(text) for text in examples["text"]]
 
         # Add special tokens to the beginning and end of each text
         texts_with_special_tokens = [
