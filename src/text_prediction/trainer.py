@@ -10,10 +10,9 @@ import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import AdamW
-from torch.optim.lr_scheduler import StepLR
 from torch.profiler import ProfilerActivity, profile, record_function, tensorboard_trace_handler
 from tqdm import tqdm
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 
 from .data_pipeline import DataPipeline
 from .model import ModelCustomTransformer
@@ -51,7 +50,11 @@ class Trainer:
         self.val_losses = []
         self.metadata_file = os.path.join(checkpoint_dir, "training_metadata.json")
         self.save_checkpoints = save_checkpoints
-        self.scheduler = StepLR(self.optimizer, step_size=10, gamma=0.1)
+        self.scheduler = get_linear_schedule_with_warmup(
+            self.optimizer, 
+            num_warmup_steps=int(0.1 * max_iters),  # 10% of total iterations for warmup
+            num_training_steps=max_iters
+        )
         self.scaler = GradScaler() if torch.cuda.is_available() else None
 
         logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO, format='%(asctime)s - %(message)s')
@@ -251,7 +254,7 @@ class Trainer:
                     progress_bar.set_postfix(loss=f"{loss.item() * self.grad_accum_steps:.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
 
             self.log(logging.INFO, f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / self.max_iters:.4f}")
-            self.log(logging.INFO, self.text_completer.get_text_completions(max_tokens=100))
+            self.log(logging.INFO, self.text_completer.get_text_completions(max_tokens=100, context="<ARTICLE_START>"))
 
             if self.enable_profiling:
                 self.log(logging.INFO, self.profiler.key_averages().table(sort_by="cuda_time_total", row_limit=10))
@@ -319,7 +322,7 @@ def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_int
     print("Using device:", device)
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
     dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=20000, verbose=True, augment_data=False, parent_path=".")
-    model = ModelCustomTransformer(tokenizer.vocab_size + 2, 1024, 16, 36, 128, 0.2).to(device)
+    model = ModelCustomTransformer(tokenizer.vocab_size + 2, 768, 6, 12, 128, 0.2).to(device)
     optimizer = AdamW(model.parameters(), lr=5e-4, weight_decay=0.01)
 
     trainer = Trainer(

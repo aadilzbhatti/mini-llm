@@ -1,6 +1,5 @@
 setup.py
 src/text_prediction/__init__.py
-src/text_prediction/data.py
 src/text_prediction/data_pipeline.py
 src/text_prediction/hyperparam_tuning.py
 src/text_prediction/live_plotter.py
