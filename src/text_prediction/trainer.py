@@ -1,24 +1,30 @@
-import os
-import time
-import torch
+import argparse
+import json
 import logging
-from tqdm import tqdm
+import os
+import signal
+import time
+from contextlib import nullcontext
+
+import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.optim import AdamW
+from torch.optim.lr_scheduler import StepLR
+from torch.profiler import ProfilerActivity, profile, record_function, tensorboard_trace_handler
+from tqdm import tqdm
 from transformers import AutoTokenizer
-from .data import WikipediaDataset
+
 from .data_pipeline import DataPipeline
 from .model import ModelCustomTransformer
 from .text_completer import TextCompleter
-from torch.profiler import profile, record_function, ProfilerActivity, tensorboard_trace_handler
-import argparse
-import signal
-from contextlib import nullcontext
-import json
-
 from .utils import RankFilter
-from torch.optim import AdamW
-from torch.optim.lr_scheduler import StepLR  # Add this import
+
+if torch.cuda.is_available():
+    from torch.amp import GradScaler, autocast
+else:
+    GradScaler = None
+    autocast = nullcontext
 
 class Trainer:
     def __init__(self, model, dataset, device, tokenizer, optimizer, checkpoint_dir, batch_size, max_epochs, max_iters, eval_iters, eval_interval, learning_rate, rank, world_size, verbose=True, use_tqdm=True, grad_accum_steps=1, enable_profiling=False, weight_decay=0.01, save_checkpoints=True):
@@ -45,14 +51,14 @@ class Trainer:
         self.val_losses = []
         self.metadata_file = os.path.join(checkpoint_dir, "training_metadata.json")
         self.save_checkpoints = save_checkpoints
-        self.scheduler = StepLR(self.optimizer, step_size=10, gamma=0.1)  # Initialize the scheduler
+        self.scheduler = StepLR(self.optimizer, step_size=10, gamma=0.1)
+        self.scaler = GradScaler() if torch.cuda.is_available() else None
 
         logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO, format='%(asctime)s - %(message)s')
         self.logger = logging.getLogger(__name__)
         self.logger.addFilter(RankFilter(rank))
         for handler in self.logger.handlers:
             handler.addFilter(RankFilter(rank))
-
 
         self.train_dataloader = dataset.get_dataloader(batch_size, split="train")
         self.val_dataloader = dataset.get_dataloader(batch_size, split="val", shuffle=False)
@@ -77,9 +83,9 @@ class Trainer:
 
         self.log(logging.DEBUG, f"DataLoader iteration time: {time.time() - start_time:.2f}s")
 
-        X, Y, attention_mask = next_item #get the attention mask
+        X, Y, attention_mask = next_item
         self.log(logging.DEBUG, f"Batch loading time: {time.time() - start_time:.2f}s")
-        return X.to(self.device), Y.to(self.device), attention_mask.to(self.device) #return the attention mask
+        return X.to(self.device), Y.to(self.device), attention_mask.to(self.device)
 
     @torch.no_grad()
     def estimate_loss(self):
@@ -89,7 +95,7 @@ class Trainer:
             losses = torch.zeros(self.eval_iters).to(self.device)
             for k in range(self.eval_iters):
                 X, Y, attention_mask = self.get_batch(split)
-                _, loss = self.model(X, Y, attention_mask) #pass the attention mask
+                _, loss = self.model(X, Y, attention_mask)
                 losses[k] = loss.item()
             out[split] = losses.mean().item()
         self.model.train()
@@ -98,7 +104,7 @@ class Trainer:
     def save_checkpoint(self, epoch, loss):
         if not self.save_checkpoints:
             return
-        if self.rank == 0:  # Save checkpoint only on rank 0
+        if self.rank == 0:
             if not os.path.exists(self.checkpoint_dir):
                 os.makedirs(self.checkpoint_dir)
             checkpoint_path = os.path.join(self.checkpoint_dir, f"model_epoch_{epoch}.pt")
@@ -124,7 +130,7 @@ class Trainer:
     def get_latest_checkpoint(self):
         if not self.save_checkpoints:
             return None
-        if self.rank == 0:  # Only rank 0 needs to find the latest checkpoint
+        if self.rank == 0:
             if not os.path.exists(self.checkpoint_dir):
                 os.makedirs(self.checkpoint_dir)
             checkpoint_files = [f for f in os.listdir(self.checkpoint_dir) if f.startswith("model_epoch_") and f.endswith(".pt")]
@@ -204,17 +210,25 @@ class Trainer:
                     xb, yb, attention_mask = self.get_batch('train')
 
                 with record_function("forward_pass"):
-                    _, loss = self.model(xb, yb, attention_mask)
-                    loss = loss / self.grad_accum_steps
-                    loss.backward()
+                    with autocast(device_type='cuda') if torch.cuda.is_available() else nullcontext():
+                        _, loss = self.model(xb, yb, attention_mask)
+                        loss = loss / self.grad_accum_steps
 
-                    # Clip gradients
+                    if self.scaler:
+                        self.scaler.scale(loss).backward()
+                    else:
+                        loss.backward()
+
                     grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
 
                     if (i + 1) % self.grad_accum_steps == 0:
                         with record_function("optimizer_step"):
-                            self.optimizer.step()
-                            self.scheduler.step()  # Step the scheduler
+                            if self.scaler:
+                                self.scaler.step(self.optimizer)
+                                self.scaler.update()
+                            else:
+                                self.optimizer.step()
+                            self.scheduler.step()
                             self.optimizer.zero_grad(set_to_none=True)
 
                         epoch_loss += loss.item() * self.grad_accum_steps
@@ -231,9 +245,9 @@ class Trainer:
                     self.save_checkpoint(epoch, losses['val'])
                     self.train_losses.append(losses['train'])
                     self.val_losses.append(losses['val'])
-                    self.save_metadata(grad_norms)  # Save metadata including grad_norms
+                    self.save_metadata(grad_norms)
 
-                if self.use_tqdm and self.verbose and i % (self.eval_interval // 10) == 0: #only set postfix if tqdm is being used.
+                if self.use_tqdm and self.verbose and i % (self.eval_interval // 10) == 0:
                     progress_bar.set_postfix(loss=f"{loss.item() * self.grad_accum_steps:.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
 
             self.log(logging.INFO, f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / self.max_iters:.4f}")
@@ -242,7 +256,6 @@ class Trainer:
             if self.enable_profiling:
                 self.log(logging.INFO, self.profiler.key_averages().table(sort_by="cuda_time_total", row_limit=10))
 
-        # Save train losses and gradient norms to metadata at the end of the epoch
         self.save_metadata(grad_norms)
 
 def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=10000, verbose=False, enable_profiling=False, enable_tqdm=False, save_checkpoints=True):
@@ -250,7 +263,7 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
     os.environ['WORLD_SIZE'] = str(num_gpus)
     os.environ['MASTER_ADDR'] = 'localhost'
     os.environ['MASTER_PORT'] = '12357'
-    dist.init_process_group(backend="nccl")  # Initialize distributed training
+    dist.init_process_group(backend="nccl")
 
     def signal_handler(sig, frame):
         print(f"Rank {rank}: Received signal {sig}. Cleaning up...")
@@ -260,15 +273,15 @@ def distributed_training(rank, num_gpus, max_epochs=3, max_iters=1000, eval_iter
     signal.signal(signal.SIGTERM, signal_handler)
 
     try:
-        device = torch.device(f"cuda:{rank}")
+        device = torch.device(f"cuda:{rank}" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
         dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=10000, verbose=True, augment_data=False, parent_path=".")
 
-        vocab_size = tokenizer.vocab_size + 2  # Add 2 for special tokens
+        vocab_size = tokenizer.vocab_size + 2
         model = ModelCustomTransformer(vocab_size, 768, 6, 6, 128, 0.1).to(device)
         if num_gpus > 1:
             model = DDP(model, device_ids=[rank], output_device=rank)
-        optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
+        optimizer = AdamW(model.parameters(), lr=5e-5, weight_decay=0.01)
 
         trainer = Trainer(
             model=model,
@@ -305,9 +318,9 @@ def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_int
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
     print("Using device:", device)
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
-    dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=num_samples, verbose=True, augment_data=False, parent_path=".")
-    model = ModelCustomTransformer(tokenizer.vocab_size + 2, 1024, 16, 24, 128, 0.2).to(device)
-    optimizer = AdamW(model.parameters(), lr=1e-3, weight_decay=0.01)
+    dp = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=20000, verbose=True, augment_data=False, parent_path=".")
+    model = ModelCustomTransformer(tokenizer.vocab_size + 2, 1024, 16, 36, 128, 0.2).to(device)
+    optimizer = AdamW(model.parameters(), lr=5e-4, weight_decay=0.01)
 
     trainer = Trainer(
         model=model,

@@ -4,7 +4,7 @@ import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from transformers import AutoTokenizer
-from .data import WikipediaDataset
+from .data_pipeline import DataPipeline
 from .model import ModelCustomTransformer
 from .trainer import Trainer
 import argparse
@@ -153,7 +153,7 @@ def distributed_tuning(rank, num_gpus, n_trials=5, num_samples=10000, verbose=Fa
         device = torch.device(f"cuda:{rank}")  # Ensure each rank gets a unique GPU
         print(f"Rank {rank}: Using device {device}")  # Log the CUDA device for each rank
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
-        dataset = WikipediaDataset(tokenizer, 1024, 128, regenerate=False, num_samples=num_samples, verbose=verbose)
+        dataset = DataPipeline(tokenizer, max_len=1024, block_size=128, regenerate=False, num_samples=num_samples, verbose=True, augment_data=False, parent_path=".")
 
         optimizer = HyperparameterOptimizer(
             dataset=dataset,
