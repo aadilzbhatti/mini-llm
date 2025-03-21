@@ -13,6 +13,11 @@ class Head(nn.Module):
         self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))
         self.dropout = nn.Dropout(dropout)
 
+        # Xavier initialization
+        nn.init.xavier_uniform_(self.key.weight)
+        nn.init.xavier_uniform_(self.query.weight)
+        nn.init.xavier_uniform_(self.value.weight)
+
     def forward(self, x, mask):
         B, T, C = x.shape
         k = self.key(x)
@@ -39,6 +44,9 @@ class MultiHeadAttention(nn.Module):
         self.proj = nn.Linear(head_size * num_heads, n_embd)
         self.dropout = nn.Dropout(dropout)
 
+        # Xavier initialization
+        nn.init.xavier_uniform_(self.proj.weight)
+
     def forward(self, x, mask): #add mask
         out = torch.cat([h(x, mask) for h in self.heads], dim=-1) #pass the mask
         out = self.dropout(self.proj(out))
@@ -55,6 +63,11 @@ class FeedForward(nn.Module):
             nn.Linear(4 * n_embd, n_embd),
             nn.Dropout(dropout),
         )
+
+        # Xavier initialization
+        for layer in self.net:
+            if isinstance(layer, nn.Linear):
+                nn.init.xavier_uniform_(layer.weight)
 
     def forward(self, x):
         return self.net(x)
@@ -86,6 +99,14 @@ class ModelCustomTransformer(nn.Module):
         self.ln_f = nn.LayerNorm(n_embd)  # final layer norm
         self.lm_head = nn.Linear(n_embd, vocab_size)
         self.dropout = nn.Dropout(dropout)
+
+        self.init_weights()
+
+    def init_weights(self):
+        nn.init.normal_(self.token_embedding_table.weight, mean=0, std=0.02)
+        nn.init.normal_(self.position_embedding_table.weight, mean=0, std=0.02)
+        nn.init.xavier_uniform_(self.lm_head.weight)
+        nn.init.constant_(self.lm_head.bias, 0)
 
     def forward(self, idx, targets=None, attention_mask=None):
         idx = idx.to(self.token_embedding_table.weight.device)
