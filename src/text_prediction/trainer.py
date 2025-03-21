@@ -27,6 +27,8 @@ else:
     GradScaler = None
     autocast = nullcontext
 
+from torch.utils.data import DistributedSampler
+
 def get_checkpoint_dir(hyperparams, checkpoint_dir):
     hyperparams_str = json.dumps(hyperparams, sort_keys=True)
     hyperparams_hash = hashlib.md5(hyperparams_str.encode()).hexdigest()
@@ -81,8 +83,10 @@ class Trainer:
             handler.addFilter(RankFilter(rank))
 
         if isinstance(dataset, DataPipeline):
-            self.train_dataloader = dataset.get_dataloader(self.hyperparams["batch_size"], split="train")
-            self.val_dataloader = dataset.get_dataloader(self.hyperparams["batch_size"], split="val", shuffle=False)
+            self.train_sampler = DistributedSampler(dataset.get_dataset(split="train"), num_replicas=world_size, rank=rank) if world_size > 1 else None
+            self.val_sampler = DistributedSampler(dataset.get_dataset(split="val"), num_replicas=world_size, rank=rank, shuffle=False) if world_size > 1 else None
+            self.train_dataloader = dataset.get_dataloader(self.hyperparams["batch_size"], split="train", sampler=self.train_sampler)
+            self.val_dataloader = dataset.get_dataloader(self.hyperparams["batch_size"], split="val", sampler=self.val_sampler)
         elif isinstance(dataset, StreamingDataPipeline):
             self.train_dataloader_generator = dataset.get_dataloader_generator(self.hyperparams["batch_size"], split="train")
             self.val_dataloader_generator = dataset.get_dataloader_generator(self.hyperparams["batch_size"], split="val", shuffle=False)
@@ -222,6 +226,9 @@ class Trainer:
             if torch.cuda.is_available():
                 torch.cuda.manual_seed(epoch)
 
+            if isinstance(self.dataset, DataPipeline):
+                self.train_sampler.set_epoch(epoch)
+
             self.train_one_epoch(epoch)
 
             # Early stopping check
@@ -310,8 +317,8 @@ def initialize_training_params(num_samples, batch_size, max_epochs, max_iters, e
         "block_size": 128,
         "vocab_size": AutoTokenizer.from_pretrained("gpt2").vocab_size + 2,
         "hidden_size": 1024,
-        "num_layers": 16,
-        "num_heads": 36,
+        "num_layers": 64,
+        "num_heads": 64,
         "dropout": 0.2,
         "learning_rate": 5e-5,
         "weight_decay": 0.01,
@@ -396,7 +403,7 @@ def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_int
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
     
     hyperparams, training_params = initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_profiling, enable_tqdm, save_checkpoints, early_stopping_patience, early_stopping_min_delta)
-    trainer = initialize_trainer(0, 0, device, tokenizer, hyperparams, training_params)
+    trainer = initialize_trainer(0, 1, device, tokenizer, hyperparams, training_params)
 
     if trainer.verbose:
         trainer.logger.info("Starting training...")

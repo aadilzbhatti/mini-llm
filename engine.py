@@ -23,8 +23,8 @@ def main():
     parser.add_argument('--max_new_tokens', type=int, help="Maximum number of new tokens to generate (required if mode is 'predict')")
     parser.add_argument('--num_gpus', type=int, default=torch.cuda.device_count(), help="Number of GPUs to use (default: 1)")
     parser.add_argument('--save_checkpoints', action='store_true', default=False, help="Enable saving checkpoints")
-    # parser.add_argument('--scheduler_step_size', type=int, default=10, help="Step size for learning rate scheduler")
-    # parser.add_argument('--scheduler_gamma', type=float, default=0.1, help="Gamma for learning rate scheduler")
+    parser.add_argument('--early_stopping_patience', type=int, default=5, help="Number of epochs with no improvement after which training will be stopped")
+    parser.add_argument('--early_stopping_min_delta', type=float, default=0.001, help="Minimum change in the monitored quantity to qualify as an improvement")
     args = parser.parse_args()
 
     if args.mode == 'tune' and args.n_trials is None:
@@ -41,6 +41,7 @@ def main():
             print(f"CUDA is available. Starting distributed training with {args.num_gpus} GPUs...")
             torch.multiprocessing.spawn(distributed_training, args=(
                 args.num_gpus,
+                args.batch_size,
                 args.max_epochs,
                 args.max_iters,
                 args.eval_iters,
@@ -49,11 +50,12 @@ def main():
                 args.verbose,
                 args.enable_profiling,
                 args.enable_tqdm,
-                # args.scheduler_step_size,
-                # args.scheduler_gamma
+                args.save_checkpoints,
+                args.early_stopping_patience,
+                args.early_stopping_min_delta
             ), nprocs=args.num_gpus, join=True)
         else:
-            print("Disributed training not enabled. Starting single-threaded training...")
+            print("Distributed training not enabled. Starting single-threaded training...")
             single_thread_train(
                 num_samples=args.num_samples,
                 batch_size=args.batch_size,
@@ -65,8 +67,8 @@ def main():
                 enable_profiling=args.enable_profiling,
                 enable_tqdm=args.enable_tqdm,
                 save_checkpoints=args.save_checkpoints,
-                # scheduler_step_size=args.scheduler_step_size,
-                # scheduler_gamma=args.scheduler_gamma
+                early_stopping_patience=args.early_stopping_patience,
+                early_stopping_min_delta=args.early_stopping_min_delta
             )
         
     elif args.mode == 'tune':

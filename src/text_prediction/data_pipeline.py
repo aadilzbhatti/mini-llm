@@ -109,7 +109,7 @@ class DataPipeline:
         attention_mask = (inputs != pad_token_id).unsqueeze(1).repeat(1, T, 1) & tril_mask #create a causal mask.
         return inputs, labels, attention_mask.to(inputs.device)
 
-    def get_dataloader(self, batch_size, split="train", shuffle=True):
+    def get_dataset(self, split="train"):
         # Ensure split is either "train" or "val"
         if split not in ["train", "val"]:
             raise ValueError("split must be either 'train' or 'val'")
@@ -121,11 +121,15 @@ class DataPipeline:
         split_datasets = tds.train_test_split(test_size=0.2, seed=42)
         selected_dataset = split_datasets["train" if split == "train" else "test"]
         
-        dataset = TokenizedDataset(selected_dataset, self.block_size, self.device)
+        return TokenizedDataset(selected_dataset, self.block_size, self.device)
+
+    def get_dataloader(self, batch_size, split="train", shuffle=True, sampler=None):
+        dataset = self.get_dataset(split)
         
         return DataLoader(
             dataset,
             batch_size=batch_size,
-            shuffle=shuffle,
+            shuffle=(sampler is None) and shuffle,
+            sampler=sampler,
             collate_fn=lambda batch: DataPipeline.custom_collate(batch, self.tokenizer),
         )
