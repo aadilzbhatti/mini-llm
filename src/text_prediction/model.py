@@ -14,9 +14,9 @@ class Head(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
         # Xavier initialization
-        nn.init.xavier_uniform_(self.key.weight)
-        nn.init.xavier_uniform_(self.query.weight)
-        nn.init.xavier_uniform_(self.value.weight)
+        nn.init.xavier_normal_(self.key.weight)
+        nn.init.xavier_normal_(self.query.weight)
+        nn.init.xavier_normal_(self.value.weight)
 
     def forward(self, x, mask):
         B, T, C = x.shape
@@ -45,7 +45,7 @@ class MultiHeadAttention(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
         # Xavier initialization
-        nn.init.xavier_uniform_(self.proj.weight)
+        nn.init.xavier_normal_(self.proj.weight)
 
     def forward(self, x, mask): #add mask
         out = torch.cat([h(x, mask) for h in self.heads], dim=-1) #pass the mask
@@ -64,10 +64,12 @@ class FeedForward(nn.Module):
             nn.Dropout(dropout),
         )
 
-        # Xavier initialization
+        # He initialization for ReLU
         for layer in self.net:
             if isinstance(layer, nn.Linear):
-                nn.init.xavier_uniform_(layer.weight)
+                nn.init.kaiming_normal_(layer.weight, nonlinearity='relu') #He initialization
+                if layer.bias is not None:
+                    nn.init.constant_(layer.bias, 0) #Initialize bias to zero.
 
     def forward(self, x):
         return self.net(x)
@@ -105,7 +107,7 @@ class ModelCustomTransformer(nn.Module):
     def init_weights(self):
         nn.init.normal_(self.token_embedding_table.weight, mean=0, std=0.02)
         nn.init.normal_(self.position_embedding_table.weight, mean=0, std=0.02)
-        nn.init.xavier_uniform_(self.lm_head.weight)
+        nn.init.xavier_normal_(self.lm_head.weight)
         nn.init.constant_(self.lm_head.bias, 0)
 
     def forward(self, idx, targets=None, attention_mask=None):

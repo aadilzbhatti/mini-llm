@@ -317,8 +317,8 @@ def initialize_training_params(num_samples, batch_size, max_epochs, max_iters, e
         "block_size": 128,
         "vocab_size": AutoTokenizer.from_pretrained("gpt2").vocab_size + 2,
         "hidden_size": 1024,
-        "num_layers": 64,
-        "num_heads": 64,
+        "num_layers": 12,
+        "num_heads": 16,
         "dropout": 0.2,
         "learning_rate": 5e-5,
         "weight_decay": 0.01,
@@ -350,8 +350,12 @@ def initialize_trainer(rank, num_gpus, device, tokenizer, hyperparams, training_
         dp = StreamingDataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], verbose=True, augment_data=False, parent_path=".")
     
     model = ModelCustomTransformer(hyperparams["vocab_size"], hyperparams["hidden_size"], hyperparams["num_heads"], hyperparams["num_layers"], hyperparams["block_size"], hyperparams["dropout"]).to(device)
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Total number of parameters in the model: {total_params}")
     if num_gpus > 1:
+        print(f"process {rank} setting DDP(model)")
         model = DDP(model, device_ids=[rank], output_device=rank)
+    print(f"process {rank} initialized model")
     optimizer = AdamW(model.parameters(), lr=hyperparams["learning_rate"], weight_decay=hyperparams["weight_decay"])
 
     trainer = Trainer(
@@ -370,13 +374,15 @@ def initialize_trainer(rank, num_gpus, device, tokenizer, hyperparams, training_
 
 def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=None, verbose=False, enable_profiling=False, enable_tqdm=False, save_checkpoints=True, early_stopping_patience=5, early_stopping_min_delta=0.001):
     device = torch.device(f"cuda:{rank}" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+    print("Using device:", device)
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
     os.environ['RANK'] = str(rank)
     os.environ['WORLD_SIZE'] = str(num_gpus)
     os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '12357'
+    os.environ['MASTER_PORT'] = '12358'
     dist.init_process_group(backend="nccl")
+    print(f"Process {rank} initialized the process group.")
 
     def signal_handler(sig, frame):
         print(f"Rank {rank}: Received signal {sig}. Cleaning up...")
@@ -396,6 +402,7 @@ def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=100
         if trainer.verbose:
             trainer.logger.info("Destroying process group...")
         dist.destroy_process_group()
+        print(f"Process {rank} destroyed the process group.")
 
 def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_interval, eval_iters, verbose, enable_profiling, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
