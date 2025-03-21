@@ -7,6 +7,7 @@ import pyarrow as pa
 import logging
 import random
 import re
+import torch.distributed as dist
 
 from text_prediction.tokenized_dataset import TokenizedDataset
 from text_prediction.utils import RankFilter, sanitize_text
