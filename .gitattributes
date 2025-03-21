@@ -1,2 +1,0 @@
-*.pt filter=lfs diff=lfs merge=lfs -text
-models/checkpoints/model_epoch_4.pt filter=lfs diff=lfs merge=lfs -text

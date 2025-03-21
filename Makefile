@@ -9,3 +9,6 @@ bootstrap-env:
 
 setup-git-auth:
 	./scripts/setup_github_auth.sh
+
+setup-hf:
+	./scripts/setup_hf.sh

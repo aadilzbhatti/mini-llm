@@ -1,3 +1,3 @@
-[submodule "checkpoints"]
-	path = models/checkpoints 
-	url = https://huggingface.co/aadilzb/mini-llm
+[submodule "models/wiki-llm"]
+	path = models/wiki-llm
+	url = https://huggingface.co/aadilzb/wiki-llm.git
