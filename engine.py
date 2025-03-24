@@ -21,7 +21,6 @@ def main():
     parser.add_argument('--verbose', action='store_true', default=False, help="Enable verbose logging")
     parser.add_argument('--n_trials', type=int, help="Number of trials for hyperparameter tuning (required if mode is 'tune')")
     parser.add_argument('--enable_tqdm', action='store_true', default=False, help="Enable tqdm progress bar")
-    parser.add_argument('--enable_profiling', action='store_true', default=False, help="Enable profiling during training")
     parser.add_argument('--max_new_tokens', type=int, help="Maximum number of new tokens to generate (required if mode is 'inference')")
     parser.add_argument('--num_gpus', type=int, default=torch.cuda.device_count(), help="Number of GPUs to use (default: 1)")
     parser.add_argument('--save_checkpoints', action='store_true', default=False, help="Enable saving checkpoints")
@@ -50,7 +49,6 @@ def main():
                 args.eval_interval,
                 args.num_samples,
                 args.verbose,
-                args.enable_profiling,
                 args.enable_tqdm,
                 args.save_checkpoints,
                 args.early_stopping_patience,
@@ -66,7 +64,6 @@ def main():
                 eval_interval=args.eval_interval,
                 eval_iters=args.eval_iters,
                 verbose=args.verbose,
-                enable_profiling=args.enable_profiling,
                 enable_tqdm=args.enable_tqdm,
                 save_checkpoints=args.save_checkpoints,
                 early_stopping_patience=args.early_stopping_patience,
@@ -120,9 +117,10 @@ def main():
             n_head=params["num_heads"],
             dropout=params["dropout"]
         )
-        model.load_state_dict(torch.load("models/wiki-llm/best/model_epoch_3.pt", weights_only=False))
+        checkpoint = torch.load("models/wiki-llm/best/curr_best.pt", map_location=device)
+        model.load_state_dict(checkpoint["model_state_dict"])
         model.to(device)
-        text_completer = TextCompleter(model, tokenizer, device)
+        text_completer = TextCompleter(model, tokenizer, device, params["block_size"])
 
         while True:
             context = input("Enter context (or 'exit' to quit): ")

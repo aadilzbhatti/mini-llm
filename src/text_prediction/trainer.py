@@ -12,6 +12,7 @@ import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import AdamW
 from torch.profiler import ProfilerActivity, profile, record_function, tensorboard_trace_handler
+from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 
@@ -42,6 +43,7 @@ class Trainer:
         self.device = device
         self.tokenizer = tokenizer
         self.optimizer = optimizer
+        self.training_params = training_params
         self.checkpoint_dir = get_checkpoint_dir(hyperparams, training_params["checkpoint_dir"])
         self.rank = rank
         self.world_size = world_size
@@ -55,7 +57,6 @@ class Trainer:
         self.eval_interval = training_params["eval_interval"]
         self.verbose = training_params["verbose"]
         self.use_tqdm = training_params["use_tqdm"]
-        self.enable_profiling = training_params["enable_profiling"]
         self.save_checkpoints = training_params["save_checkpoints"]
 
         self.early_stopping_patience = training_params.get("early_stopping_patience", 5)
@@ -85,15 +86,20 @@ class Trainer:
         if isinstance(dataset, DataPipeline):
             self.train_sampler = DistributedSampler(dataset.get_dataset(split="train"), num_replicas=world_size, rank=rank) if world_size > 1 else None
             self.val_sampler = DistributedSampler(dataset.get_dataset(split="val"), num_replicas=world_size, rank=rank, shuffle=False) if world_size > 1 else None
-            self.train_dataloader = dataset.get_dataloader(self.hyperparams["batch_size"], split="train", sampler=self.train_sampler)
-            self.val_dataloader = dataset.get_dataloader(self.hyperparams["batch_size"], split="val", sampler=self.val_sampler)
+            self.train_dataloader = dataset.get_dataloader(self.training_params["batch_size"], split="train", sampler=self.train_sampler)
+            self.val_dataloader = dataset.get_dataloader(self.training_params["batch_size"], split="val", sampler=self.val_sampler)
         elif isinstance(dataset, StreamingDataPipeline):
-            self.train_dataloader_generator = dataset.get_dataloader_generator(self.hyperparams["batch_size"], split="train")
-            self.val_dataloader_generator = dataset.get_dataloader_generator(self.hyperparams["batch_size"], split="val", shuffle=False)
+            self.train_dataloader_generator = dataset.get_dataloader_generator(self.training_params["batch_size"], split="train")
+            self.val_dataloader_generator = dataset.get_dataloader_generator(self.training_params["batch_size"], split="val", shuffle=False)
 
         underlying_model = self.model.module if isinstance(self.model, DDP) else self.model
         self.text_completer = TextCompleter(underlying_model, self.tokenizer, self.device, block_size=self.hyperparams["block_size"])
-        self.training_params = training_params
+
+        # Initialize TensorBoard writer
+        if self.rank == 0:
+            self.writer = SummaryWriter(log_dir=os.path.join(self.checkpoint_dir, 'tensorboard'))
+        else:
+            self.writer = None
 
     def log(self, level, msg):
         if self.verbose:
@@ -209,16 +215,6 @@ class Trainer:
                 self.log(logging.INFO, "Checkpoint found, resuming training...")
                 start_epoch, _ = self.load_checkpoint(latest_checkpoint_path)
 
-        if self.enable_profiling:
-            self.profiler = profile(
-                activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
-                schedule=torch.profiler.schedule(wait=1, warmup=1, active=3, repeat=2),
-                on_trace_ready=tensorboard_trace_handler('./log_dir'),
-                record_shapes=True,
-                profile_memory=True,
-                with_stack=True
-            )
-
         for epoch in range(start_epoch, self.max_epochs):
             self.log(logging.INFO, f"Epoch {epoch}/{self.max_epochs}")
 
@@ -248,81 +244,78 @@ class Trainer:
 
         current_val_loss = None
 
-        with self.profiler if self.enable_profiling else nullcontext() as prof:
-            for i in progress_bar:
-                self.log(logging.DEBUG, f"Starting iteration {i} of epoch {epoch}")
+        for i in progress_bar:
+            self.log(logging.DEBUG, f"Starting iteration {i} of epoch {epoch}")
+            xb, yb, attention_mask = self.get_batch('train')
+            
+            with autocast(device_type='cuda') if torch.cuda.is_available() else nullcontext():
+                _, loss = self.model(xb, yb, attention_mask)
+                loss = loss / self.grad_accum_steps
+            if self.scaler:
+                self.scaler.scale(loss).backward()
+            else:
+                loss.backward()
 
-                with record_function("get_batch"):
-                    xb, yb, attention_mask = self.get_batch('train')
+            if (i + 1) % self.grad_accum_steps == 0:
+                if self.scaler:
+                    self.scaler.unscale_(self.optimizer)
+                    self.scaler.step(self.optimizer)
+                    self.scaler.update()
+                else:
+                    self.optimizer.step()
+                
+                grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                self.grad_norms.append(grad_norm.item())
+                self.writer.add_scalar("grad_norm", grad_norm.item(), i)
+                
+                self.scheduler.step()
+                self.optimizer.zero_grad(set_to_none=True)
+                epoch_loss += loss.item() * self.grad_accum_steps
 
-                with record_function("forward_pass"):
-                    with autocast(device_type='cuda') if torch.cuda.is_available() else nullcontext():
-                        _, loss = self.model(xb, yb, attention_mask)
-                        loss = loss / self.grad_accum_steps
+            if i % self.eval_interval == 0:
+                self.log(logging.DEBUG, f"Evaluating at iteration {i} of epoch {epoch}")
+                losses = self.estimate_loss()
+                current_val_loss = losses['val']
+                elapsed_time = time.time() - start_time
+                eta = elapsed_time / (i + 1) * (self.max_iters - i)
+                self.log(logging.INFO, f"\n[Epoch {epoch} | Step {i}] Train Loss: {losses['train']:.4f}, Val Loss: {losses['val']:.4f} | ETA: {eta:.2f}s")
+                self.save_checkpoint(epoch, losses['val'])
+                self.train_losses.append(losses['train'])
+                self.val_losses.append(losses['val'])
+                self.save_metadata()
+                self.writer.add_scalar('Loss/train', losses['train'], epoch * self.max_iters + i)
+                self.writer.add_scalar('Loss/val', losses['val'], epoch * self.max_iters + i)
+                self.writer.add_scalar("learning_rate", self.scheduler.get_last_lr()[0], i)
+                for name, param in self.model.named_parameters():
+                    if param.grad is not None:
+                        self.writer.add_histogram(f'gradients/{name}', param.grad, epoch * self.max_iters + i)
+                    self.writer.add_histogram(f'weights/{name}', param, epoch * self.max_iters + i)
+                # Early stopping logic
+                if current_val_loss < self.best_val_loss - self.early_stopping_min_delta:
+                    self.best_val_loss = current_val_loss
+                    self.early_stopping_counter = 0
+                else:
+                    self.early_stopping_counter += 1
+            if self.use_tqdm and self.verbose and i % (self.eval_interval // 10) == 0:
+                progress_bar.set_postfix(loss=f"{loss.item() * self.grad_accum_steps:.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
 
-                    if self.scaler:
-                        self.scaler.scale(loss).backward()
-                    else:
-                        loss.backward()
-
-                    grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
-
-                    if (i + 1) % self.grad_accum_steps == 0:
-                        with record_function("optimizer_step"):
-                            if self.scaler:
-                                self.scaler.step(self.optimizer)
-                                self.scaler.update()
-                            else:
-                                self.optimizer.step()
-                            self.scheduler.step()
-                            self.optimizer.zero_grad(set_to_none=True)
-
-                        epoch_loss += loss.item() * self.grad_accum_steps
-
-                if i % self.eval_interval == 0:
-                    self.log(logging.DEBUG, f"Evaluating at iteration {i} of epoch {epoch}")
-                    losses = self.estimate_loss()
-                    self.grad_norms.append(grad_norm.item())
-                    current_val_loss = losses['val']
-                    elapsed_time = time.time() - start_time
-                    eta = elapsed_time / (i + 1) * (self.max_iters - i)
-
-                    self.log(logging.INFO, f"\n[Epoch {epoch} | Step {i}] Train Loss: {losses['train']:.4f}, Val Loss: {losses['val']:.4f} | ETA: {eta:.2f}s")
-                    self.save_checkpoint(epoch, losses['val'])
-                    self.train_losses.append(losses['train'])
-                    self.val_losses.append(losses['val'])
-                    self.save_metadata()
-
-                    # Early stopping logic
-                    if current_val_loss < self.best_val_loss - self.early_stopping_min_delta:
-                        self.best_val_loss = current_val_loss
-                        self.early_stopping_counter = 0
-                    else:
-                        self.early_stopping_counter += 1
-
-                if self.use_tqdm and self.verbose and i % (self.eval_interval // 10) == 0:
-                    progress_bar.set_postfix(loss=f"{loss.item() * self.grad_accum_steps:.4f}", val_loss=f"{current_val_loss:.4f}" if current_val_loss else "N/A", mem=self.get_memory_usage())
-
-            self.log(logging.INFO, f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / self.max_iters:.4f}")
-            self.log(logging.INFO, self.text_completer.get_text_completions(max_tokens=100, context="<ARTICLE_START>"))
-
-            if self.enable_profiling:
-                self.log(logging.INFO, self.profiler.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+        self.log(logging.INFO, f"Epoch {epoch} completed in {time.time() - start_time:.2f}s | Avg Loss: {epoch_loss / self.max_iters:.4f}")
+        self.log(logging.INFO, self.text_completer.get_text_completions(max_tokens=100, context="<ARTICLE_START>"))
 
         self.save_metadata()
+        self.writer.close()
 
-def initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_profiling, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001):
+def initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001):
     hyperparams = {
         "max_len": 1024,
-        "block_size": 128,
+        "block_size": 256,
         "vocab_size": AutoTokenizer.from_pretrained("gpt2").vocab_size + 2,
-        "hidden_size": 1024,
-        "num_layers": 64,
-        "num_heads": 64,
+        "hidden_size": 768,
+        "num_layers": 12,
+        "num_heads": 12,
         "dropout": 0.2,
         "learning_rate": 5e-5,
         "weight_decay": 0.01,
-        "batch_size": batch_size,
         "grad_accum_steps": 4
     }
 
@@ -333,18 +326,18 @@ def initialize_training_params(num_samples, batch_size, max_epochs, max_iters, e
         "eval_interval": eval_interval,
         "verbose": verbose,
         "use_tqdm": enable_tqdm,
-        "enable_profiling": enable_profiling,
         "save_checkpoints": save_checkpoints,
         "checkpoint_dir": "models/wiki-llm/checkpoints",
-        "num_samples": num_samples if num_samples else 10000,
+        "num_samples": num_samples,
         "early_stopping_patience": early_stopping_patience,
-        "early_stopping_min_delta": early_stopping_min_delta
+        "early_stopping_min_delta": early_stopping_min_delta,
+        "batch_size": batch_size,
     }
 
     return hyperparams, training_params
 
 def initialize_trainer(rank, num_gpus, device, tokenizer, hyperparams, training_params):
-    if training_params["num_samples"]:
+    if training_params["num_samples"] is not None:
         dp = DataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], regenerate=False, num_samples=training_params["num_samples"], verbose=True, augment_data=False, parent_path=".")
     else:
         dp = StreamingDataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], verbose=True, augment_data=False, parent_path=".")
@@ -368,7 +361,7 @@ def initialize_trainer(rank, num_gpus, device, tokenizer, hyperparams, training_
 
     return trainer
 
-def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=None, verbose=False, enable_profiling=False, enable_tqdm=False, save_checkpoints=True, early_stopping_patience=5, early_stopping_min_delta=0.001):
+def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=None, verbose=False, enable_tqdm=False, save_checkpoints=True, early_stopping_patience=5, early_stopping_min_delta=0.001):
     device = torch.device(f"cuda:{rank}" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
@@ -385,7 +378,7 @@ def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=100
 
     signal.signal(signal.SIGTERM, signal_handler)
 
-    hyperparams, training_params = initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_profiling, enable_tqdm, save_checkpoints, early_stopping_patience, early_stopping_min_delta)
+    hyperparams, training_params = initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_tqdm, save_checkpoints, early_stopping_patience, early_stopping_min_delta)
     trainer = initialize_trainer(rank, num_gpus, device, tokenizer, hyperparams, training_params)
 
     try:
@@ -397,12 +390,12 @@ def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=100
             trainer.logger.info("Destroying process group...")
         dist.destroy_process_group()
 
-def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_interval, eval_iters, verbose, enable_profiling, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001):
+def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_interval, eval_iters, verbose, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
     print("Using device:", device)
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
     
-    hyperparams, training_params = initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_profiling, enable_tqdm, save_checkpoints, early_stopping_patience, early_stopping_min_delta)
+    hyperparams, training_params = initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_tqdm, save_checkpoints, early_stopping_patience, early_stopping_min_delta)
     trainer = initialize_trainer(0, 1, device, tokenizer, hyperparams, training_params)
 
     if trainer.verbose:

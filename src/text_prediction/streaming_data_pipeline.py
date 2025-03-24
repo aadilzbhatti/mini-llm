@@ -24,6 +24,7 @@ class StreamingDataPipeline:
         self.logger = logging.getLogger(__name__)
         self.logger.addFilter(RankFilter(0))
         self.tokenizer.add_special_tokens({"additional_special_tokens": ["<ARTICLE_START>", "<ARTICLE_END>"]})
+        random.seed(42)
 
     def log(self, message, level=logging.INFO):
         if self.verbose:
@@ -56,10 +57,9 @@ class StreamingDataPipeline:
         attention_mask = (inputs != pad_token_id).unsqueeze(1).repeat(1, T, 1) & tril_mask
         return inputs, labels, attention_mask.to(inputs.device)
 
-    def is_train(self, example, seed=42, test_size=0.2):
+    def is_train(self, example, test_size=0.2):
         example_str = str(example)
         hash_val = int(hashlib.md5(example_str.encode()).hexdigest(), 16)
-        random.seed(seed)
         random_val = random.random()
         return random_val > test_size * (hash_val % 1000 / 1000)
 

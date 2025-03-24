@@ -13,3 +13,10 @@ setup-hf:
 
 run-tensorboard:
 	python scripts/run_tensorboard.py
+
+pull-models:
+	pushd models/wiki-llm/
+	yes | sudo apt-get install git-lfs
+	git-lfs install
+	git-lfs pull
+	popd
