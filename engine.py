@@ -1,13 +1,15 @@
 import argparse
 import torch
+import json
+from text_prediction.model import ModelCustomTransformer
 from text_prediction.trainer import distributed_training, single_thread_train
 from text_prediction.hyperparam_tuning import HyperparameterOptimizer, distributed_tuning
 from text_prediction.text_completer import TextCompleter
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer
 
 def main():
     parser = argparse.ArgumentParser(description="Train, tune hyperparameters, or generate text predictions for the WikiCompleteModel.")
-    parser.add_argument('--mode', type=str, required=True, choices=['train', 'tune', 'predict'], help="Mode to run: 'train', 'tune', or 'predict'")
+    parser.add_argument('--mode', type=str, required=True, choices=['train', 'tune', 'inference'], help="Mode to run: 'train', 'tune', or 'inference'")
     parser.add_argument('--regenerate_dataset', action='store_true', help="Regenerate the dataset")
     parser.add_argument('--num_samples', type=int, help="Number of samples for the dataset (default: 10000)")
     parser.add_argument('--batch_size', type=int, default=32, help="Batch size (default: 32)")
@@ -20,7 +22,7 @@ def main():
     parser.add_argument('--n_trials', type=int, help="Number of trials for hyperparameter tuning (required if mode is 'tune')")
     parser.add_argument('--enable_tqdm', action='store_true', default=False, help="Enable tqdm progress bar")
     parser.add_argument('--enable_profiling', action='store_true', default=False, help="Enable profiling during training")
-    parser.add_argument('--max_new_tokens', type=int, help="Maximum number of new tokens to generate (required if mode is 'predict')")
+    parser.add_argument('--max_new_tokens', type=int, help="Maximum number of new tokens to generate (required if mode is 'inference')")
     parser.add_argument('--num_gpus', type=int, default=torch.cuda.device_count(), help="Number of GPUs to use (default: 1)")
     parser.add_argument('--save_checkpoints', action='store_true', default=False, help="Enable saving checkpoints")
     parser.add_argument('--early_stopping_patience', type=int, default=5, help="Number of epochs with no improvement after which training will be stopped")
@@ -30,8 +32,8 @@ def main():
     if args.mode == 'tune' and args.n_trials is None:
         parser.error("--n_trials is required when mode is 'tune'")
     
-    if args.mode == 'predict' and args.max_new_tokens is None:
-        parser.error("--max_new_tokens is required when mode is 'predict'")
+    if args.mode == 'inference' and args.max_new_tokens is None:
+        parser.error("--max_new_tokens is required when mode is 'inference'")
 
     if args.mode == 'train':
         if args.num_gpus > torch.cuda.device_count():
@@ -100,10 +102,27 @@ def main():
             )
             optimizer.optimize()
     
-    elif args.mode == 'predict':
+    elif args.mode == 'inference':
+        print("Starting inference...")
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
-        model = AutoModelForCausalLM.from_pretrained("gpt2").to("cuda" if torch.cuda.is_available() else "cpu")
-        text_completer = TextCompleter(model, tokenizer, "cuda" if torch.cuda.is_available() else "cpu", args.max_new_tokens)
+        device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+        print("Using device:", device)
+        
+        # Load hyperparameters from JSON file
+        with open("models/wiki-llm/best/curr_best_params.json", "r") as f:
+            params = json.load(f)["hyperparams"]
+
+        model = ModelCustomTransformer(
+            block_size=params["block_size"],
+            vocab_size=params["vocab_size"],
+            n_embd=params["hidden_size"],
+            n_layer=params["num_layers"],
+            n_head=params["num_heads"],
+            dropout=params["dropout"]
+        )
+        model.load_state_dict(torch.load("models/wiki-llm/best/model_epoch_3.pt", weights_only=False))
+        model.to(device)
+        text_completer = TextCompleter(model, tokenizer, device)
 
         while True:
             context = input("Enter context (or 'exit' to quit): ")

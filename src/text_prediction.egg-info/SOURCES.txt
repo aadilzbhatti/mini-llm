@@ -3,7 +3,6 @@ src/text_prediction/__init__.py
 src/text_prediction/data_pipeline.py
 src/text_prediction/hyperparam_tuning.py
 src/text_prediction/live_plotter.py
-src/text_prediction/main.py
 src/text_prediction/model.py
 src/text_prediction/streaming_data_pipeline.py
 src/text_prediction/text_completer.py

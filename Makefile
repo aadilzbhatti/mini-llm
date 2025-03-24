@@ -8,8 +8,5 @@ bootstrap-env:
 	git submodule init
 	git submodule update
 
-setup-git-auth:
-	./scripts/setup_github_auth.sh
-
 setup-hf:
 	./scripts/setup_hf.sh
