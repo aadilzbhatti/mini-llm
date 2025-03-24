@@ -10,3 +10,6 @@ bootstrap-env:
 
 setup-hf:
 	./scripts/setup_hf.sh
+
+run-tensorboard:
+	python scripts/run_tensorboard.py
