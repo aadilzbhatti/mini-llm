@@ -7,18 +7,18 @@ import time
 from contextlib import nullcontext
 import hashlib
 
+from numpy import isin
 import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import AdamW
-from torch.profiler import ProfilerActivity, profile, record_function, tensorboard_trace_handler
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 
 from text_prediction.streaming_data_pipeline import StreamingDataPipeline
 from text_prediction.data_pipeline import DataPipeline
-from text_prediction.model import ModelCustomTransformer
+from text_prediction.model import FeedForward, Head, ModelCustomTransformer
 from text_prediction.text_completer import TextCompleter
 from text_prediction.utils import RankFilter
 
@@ -49,6 +49,9 @@ class Trainer:
         self.world_size = world_size
         self.hyperparams = hyperparams
         self.grad_accum_steps = hyperparams["grad_accum_steps"]
+        self.grad_norm_clip_value = hyperparams["grad_norm_clip_value"]
+
+        self.batch_size = training_params["batch_size"]
         self.num_samples = training_params["num_samples"]
 
         self.max_epochs = training_params["max_epochs"]
@@ -249,7 +252,7 @@ class Trainer:
             xb, yb, attention_mask = self.get_batch('train')
             
             with autocast(device_type='cuda') if torch.cuda.is_available() else nullcontext():
-                _, loss = self.model(xb, yb, attention_mask)
+                _, loss = self.model(xb, yb, attention_mask, self.writer, i)
                 loss = loss / self.grad_accum_steps
             if self.scaler:
                 self.scaler.scale(loss).backward()
@@ -264,7 +267,7 @@ class Trainer:
                 else:
                     self.optimizer.step()
                 
-                grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                grad_norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.grad_norm_clip_value)
                 self.grad_norms.append(grad_norm.item())
                 self.writer.add_scalar("grad_norm", grad_norm.item(), i)
                 
@@ -283,13 +286,37 @@ class Trainer:
                 self.train_losses.append(losses['train'])
                 self.val_losses.append(losses['val'])
                 self.save_metadata()
+
+                # profiling information
                 self.writer.add_scalar('Loss/train', losses['train'], epoch * self.max_iters + i)
                 self.writer.add_scalar('Loss/val', losses['val'], epoch * self.max_iters + i)
                 self.writer.add_scalar("learning_rate", self.scheduler.get_last_lr()[0], i)
                 for name, param in self.model.named_parameters():
                     if param.grad is not None:
                         self.writer.add_histogram(f'gradients/{name}', param.grad, epoch * self.max_iters + i)
+                        self.writer.add_scalar(f"gradients/{name}_max", param.grad.max().item(), i)
+                        self.writer.add_scalar(f"gradients/{name}_min", param.grad.min().item(), i)
+                        self.writer.add_scalar(f"gradients/{name}_mean", param.grad.mean().item(), i)
                     self.writer.add_histogram(f'weights/{name}', param, epoch * self.max_iters + i)
+
+                # Log activations
+                for name, module in self.model.named_modules():
+                    if isinstance(module, FeedForward) and module.gelu_activation is not None:
+                        activation = module.gelu_activation
+                        self.writer.add_histogram(f"activations/{name}", activation, i)
+                        self.writer.add_scalar(f"activations_mean/{name}", activation.mean().item(), i)
+                        self.writer.add_scalar(f"activations_std/{name}", activation.std().item(), i)
+                    if isinstance(module, ModelCustomTransformer):
+                        if hasattr(module, 'tok_embedding_values'):
+                            self.writer.add_histogram("tok_embedding_values", module.tok_embedding_values, i)
+                        if hasattr(module, 'pos_embedding_values'):
+                            self.writer.add_histogram("pos_embedding_values", module.pos_embedding_values, i)
+                    if isinstance(module, Head):
+                        if hasattr(module, 'attention_values'):
+                            self.writer.add_histogram("attention_values", module.attention_values, i)
+                            self.writer.add_scalar("attention_mean", module.attention_values.mean().item(), i)
+                            self.writer.add_scalar("attention_std", module.attention_values.std().item(), i)
+
                 # Early stopping logic
                 if current_val_loss < self.best_val_loss - self.early_stopping_min_delta:
                     self.best_val_loss = current_val_loss
@@ -305,18 +332,19 @@ class Trainer:
         self.save_metadata()
         self.writer.close()
 
-def initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001):
+def initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001, grad_norm_clip_value=1.0):
     hyperparams = {
         "max_len": 1024,
         "block_size": 256,
         "vocab_size": AutoTokenizer.from_pretrained("gpt2").vocab_size + 2,
         "hidden_size": 768,
-        "num_layers": 12,
+        "num_layers": 8,
         "num_heads": 12,
-        "dropout": 0.2,
-        "learning_rate": 5e-5,
-        "weight_decay": 0.01,
-        "grad_accum_steps": 4
+        "dropout": 0.1,
+        "learning_rate": 1e-3,
+        "weight_decay": 0.0001,
+        "grad_accum_steps": 4,
+        "grad_norm_clip_value": grad_norm_clip_value 
     }
 
     training_params = {
@@ -361,7 +389,7 @@ def initialize_trainer(rank, num_gpus, device, tokenizer, hyperparams, training_
 
     return trainer
 
-def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=None, verbose=False, enable_tqdm=False, save_checkpoints=True, early_stopping_patience=5, early_stopping_min_delta=0.001):
+def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=1000, eval_iters=100, eval_interval=100, num_samples=None, verbose=False, enable_tqdm=False, save_checkpoints=True, early_stopping_patience=5, early_stopping_min_delta=0.001, grad_norm_clip_value=1.0):
     device = torch.device(f"cuda:{rank}" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
@@ -378,7 +406,7 @@ def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=100
 
     signal.signal(signal.SIGTERM, signal_handler)
 
-    hyperparams, training_params = initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_tqdm, save_checkpoints, early_stopping_patience, early_stopping_min_delta)
+    hyperparams, training_params = initialize_training_params(num_samples, batch_size, max_epochs, max_iters, eval_iters, eval_interval, verbose, enable_tqdm, save_checkpoints, early_stopping_patience, early_stopping_min_delta, grad_norm_clip_value)
     trainer = initialize_trainer(rank, num_gpus, device, tokenizer, hyperparams, training_params)
 
     try:
@@ -390,7 +418,7 @@ def distributed_training(rank, num_gpus, batch_size, max_epochs=3, max_iters=100
             trainer.logger.info("Destroying process group...")
         dist.destroy_process_group()
 
-def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_interval, eval_iters, verbose, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001):
+def single_thread_train(num_samples, batch_size, max_epochs, max_iters, eval_interval, eval_iters, verbose, enable_tqdm, save_checkpoints, early_stopping_patience=5, early_stopping_min_delta=0.001, grad_norm_clip_value=1.0):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
     print("Using device:", device)
     tokenizer = AutoTokenizer.from_pretrained("gpt2")

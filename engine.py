@@ -13,6 +13,7 @@ def main():
     parser.add_argument('--regenerate_dataset', action='store_true', help="Regenerate the dataset")
     parser.add_argument('--num_samples', type=int, help="Number of samples for the dataset (default: 10000)")
     parser.add_argument('--batch_size', type=int, default=32, help="Batch size (default: 32)")
+    parser.add_argument('--grad_norm_clip_value', type=float, default=1.0, help="Gradient norm clip value (default: 1.0)")
     parser.add_argument('--max_epochs', type=int, default=10, help="Maximum number of epochs (default: 10)")
     parser.add_argument('--max_iters', type=int, default=1000, help="Maximum number of iterations (default: 1000)")
     parser.add_argument('--eval_interval', type=int, default=100, help="Evaluation interval (default: 100)")
@@ -52,7 +53,8 @@ def main():
                 args.enable_tqdm,
                 args.save_checkpoints,
                 args.early_stopping_patience,
-                args.early_stopping_min_delta
+                args.early_stopping_min_delta,
+                args.grad_norm_clip_value
             ), nprocs=args.num_gpus, join=True)
         else:
             print("Distributed training not enabled. Starting single-threaded training...")
@@ -67,7 +69,8 @@ def main():
                 enable_tqdm=args.enable_tqdm,
                 save_checkpoints=args.save_checkpoints,
                 early_stopping_patience=args.early_stopping_patience,
-                early_stopping_min_delta=args.early_stopping_min_delta
+                early_stopping_min_delta=args.early_stopping_min_delta,
+                grad_norm_clip_value=args.grad_norm_clip_value
             )
         
     elif args.mode == 'tune':

@@ -17,7 +17,7 @@ def get_latest_checkpoint_dir_remote():
         result = subprocess.run(remote_command, shell=True, capture_output=True, text=True, check=True)
         checkpoint_dir = result.stdout.strip()
         return checkpoint_dir
-        # print(checkpoint_dir)
+        # for some reason the below doesn't work, so make sure the dir is valid :)
         # if os.path.isdir(checkpoint_dir):
         #     return checkpoint_dir
         # else:
