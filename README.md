@@ -22,4 +22,4 @@ We train the model by getting batches of data (usually 32 or 64) from the datase
 
 I only have an MPS GPU on my local machine and so I have been relying on Lambda Labs' GPU instances for proper validation. I have achieved my best performance after running for 8-10 hours on a single GH200 GPU:
 
-![Pay no attention to the exploded grad norm (it vanished in later runs)](/models/wiki-llm/best/best_plot.png)
+![Pay no attention to the exploded grad norm (it vanished in later runs)](best_plot.png)
