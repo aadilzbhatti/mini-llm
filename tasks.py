@@ -56,12 +56,14 @@ def install_requirements(ctx):
 
 @task
 def setup_hf(ctx):
-    """Installs transformers and configures Hugging Face CLI login."""
-    run("pip install transformers huggingface_hub", echo=True)
+    """Configures Hugging Face CLI login."""
+    run("pip install huggingface_hub", echo=True)
     run("git config --global credential.helper store", echo=True)
     run("huggingface-cli login", echo=True)
     run("git submodule init", echo=True)
     run("git submodule update --remote", echo=True)
+    run("sudo apt-get install -y git-lfs", echo=True)
+    run("git lfs install", echo=True)
 
 @task
 def run_tensorboard(ctx):

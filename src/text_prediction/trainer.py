@@ -74,7 +74,7 @@ class Trainer:
         self.metadata_file = os.path.join(self.checkpoint_dir, "training_metadata.json")
         self.scheduler = get_linear_schedule_with_warmup(
             self.optimizer, 
-            num_warmup_steps=int(0.1 * self.max_iters),  # 10% of total iterations for warmup
+            num_warmup_steps=int(0.05 * self.max_iters),  # 10% of total iterations for warmup
             num_training_steps=self.max_iters
         )
         self.scaler = GradScaler() if torch.cuda.is_available() else None
@@ -144,13 +144,16 @@ class Trainer:
     def estimate_loss(self):
         out = {}
         self.model.eval()
-        for split in ['train', 'val']:
+        for split in ['val']:
             losses = torch.zeros(self.eval_iters).to(self.device)
             for k in range(self.eval_iters):
                 X, Y, attention_mask = self.get_batch(split)
                 _, loss = self.model(X, Y)
                 losses[k] = loss.item()
             out[split] = losses.mean().item()
+            if self.rank == 0 and self.writer:
+                gpu_memory = self.get_memory_usage()
+                self.writer.add_scalar(f"GPU/Memory_Usage_MB_{split}", gpu_memory, self.eval_iters)
         self.model.train()
         return out
 
@@ -195,8 +198,8 @@ class Trainer:
 
     def get_memory_usage(self):
         if torch.cuda.is_available():
-            return f"GPU Memory: {torch.cuda.memory_allocated() / 1e6:.2f}MB"
-        return "Using CPU"
+            return torch.cuda.memory_allocated() / 1e6  # Memory in MB
+        return 0  # Return 0 for CPU
 
     def save_metadata(self):
         metadata = {
@@ -275,10 +278,15 @@ class Trainer:
                 self.optimizer.zero_grad(set_to_none=True)
                 epoch_loss += loss.item() * self.grad_accum_steps
 
+                if self.rank == 0 and self.writer:
+                    gpu_memory = self.get_memory_usage()
+                    self.writer.add_scalar("GPU/Memory_Usage_MB", gpu_memory, i)
+
             if i % self.eval_interval == 0:
                 self.log(logging.DEBUG, f"Evaluating at iteration {i} of epoch {epoch}")
                 losses = self.estimate_loss()
                 current_val_loss = losses['val']
+                losses['train'] = loss.item() * self.grad_accum_steps
                 elapsed_time = time.time() - start_time
                 eta = elapsed_time / (i + 1) * (self.max_iters - i)
                 self.log(logging.INFO, f"\n[Epoch {epoch} | Step {i}] Train Loss: {losses['train']:.4f}, Val Loss: {losses['val']:.4f} | ETA: {eta:.2f}s")
@@ -286,6 +294,10 @@ class Trainer:
                 self.train_losses.append(losses['train'])
                 self.val_losses.append(losses['val'])
                 self.save_metadata()
+
+                if self.rank == 0 and self.writer:
+                    gpu_memory = self.get_memory_usage()
+                    self.writer.add_scalar("GPU/Memory_Usage_MB", gpu_memory, epoch * self.max_iters + i)
 
                 # profiling information
                 self.writer.add_scalar('Loss/train', losses['train'], epoch * self.max_iters + i)
@@ -341,9 +353,9 @@ def initialize_training_params(num_samples, batch_size, max_epochs, max_iters, e
         "num_layers": 8,
         "num_heads": 12,
         "dropout": 0.1,
-        "learning_rate": 1e-3,
-        "weight_decay": 0.0001,
-        "grad_accum_steps": 4,
+        "learning_rate": 5e-5,
+        "weight_decay": 0.01,
+        "grad_accum_steps": 8,
         "grad_norm_clip_value": grad_norm_clip_value 
     }
 
