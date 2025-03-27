@@ -16,16 +16,31 @@ class ModelTorchTransformer(nn.Module):
         self.lm_head = nn.Linear(n_embd, vocab_size, bias=False)
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, idx, targets=None, attention_mask=None):
+    def forward(self, idx, targets=None, attention_mask=None, writer=None, step=None):
         B, T = idx.shape
         token_embeddings = self.token_embedding(idx)  # (B, T, n_embd)
         position_embeddings = self.position_embedding(torch.arange(T, device=idx.device))  # (T, n_embd)
         x = token_embeddings + position_embeddings.unsqueeze(0)  # (B, T, n_embd)
 
+        # Process attention_mask to match the expected shape
+        if attention_mask is not None:
+            # Ensure attention_mask is 2D (T, T) or 3D (B, T, T)
+            if attention_mask.dim() == 2:
+                attention_mask = attention_mask.unsqueeze(0)  # Add batch dimension
+            elif attention_mask.dim() == 3 and attention_mask.size(0) != B:
+                raise ValueError(f"Expected attention_mask batch size {B}, but got {attention_mask.size(0)}")
+
+        # Use x as memory if no external memory is provided
+        memory = x  # (B, T, n_embd)
+
         # Apply TransformerDecoder
-        x = self.decoder(x, memory=None, tgt_mask=attention_mask)  # (B, T, n_embd)
+        x = self.decoder(x, memory=memory, tgt_mask=attention_mask)  # (B, T, n_embd)
         x = self.dropout(x)
         logits = self.lm_head(x)  # (B, T, vocab_size)
+
+        # Optionally log to TensorBoard
+        if writer is not None and step is not None:
+            writer.add_scalar("logits_mean", logits.mean().item(), step)
 
         if targets is None:
             return logits, None

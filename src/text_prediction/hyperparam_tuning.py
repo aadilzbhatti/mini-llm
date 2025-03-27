@@ -4,9 +4,9 @@ import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from transformers import AutoTokenizer
-from .data_pipeline import DataPipeline
-from .model import ModelCustomTransformer
-from .trainer import Trainer
+from text_prediction.data_pipeline import DataPipeline
+from text_prediction.model_custom_transformer import ModelCustomTransformer
+from text_prediction.trainer import Trainer
 import argparse
 import signal
 import random

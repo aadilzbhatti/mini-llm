@@ -1,12 +1,34 @@
 import datetime
 from invoke import task, run
 import subprocess
+import sys
 
 @task
 def bootstrap_env(ctx):
-    """Sets up the virtual environment and installs dependencies."""
-    run("python -m venv .venv", echo=True)
-    run("source .venv/bin/activate && ./scripts/install_requirements.sh", shell=True, echo=True)
+    """Sets up the virtual environment and installs dependencies using Poetry."""
+    required_version = (3, 13)
+    if sys.version_info < required_version:
+        print(f"Python {required_version[0]}.{required_version[1]} or higher is required.")
+        print("Attempting to install the required Python version...")
+
+        # Add deadsnakes PPA and install Python 3.13
+        run("sudo add-apt-repository -y ppa:deadsnakes/ppa", echo=True)
+        run("sudo apt update", echo=True)
+        run("sudo apt install -y python3.13", echo=True)
+
+        # Update alternatives to use Python 3.13
+        run("sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.13 1", echo=True)
+        print("Python 3.13 installed. Please restart your terminal and try again.")
+        return
+
+    # Ensure Poetry is installed without the --user flag
+    run("pip install poetry", echo=True)
+
+    # Use Poetry to create the virtual environment and install dependencies
+    run("poetry env use python", echo=True)
+    run("poetry install", echo=True)
+
+    # Initialize and update git submodules
     run("git submodule init", echo=True)
     run("git submodule update", echo=True)
 

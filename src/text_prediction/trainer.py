@@ -7,7 +7,6 @@ import time
 from contextlib import nullcontext
 import hashlib
 
-from numpy import isin
 import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -18,7 +17,8 @@ from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 
 from text_prediction.streaming_data_pipeline import StreamingDataPipeline
 from text_prediction.data_pipeline import DataPipeline
-from text_prediction.model import FeedForward, Head, ModelCustomTransformer
+from text_prediction.model_custom_transformer import FeedForward, Head, ModelCustomTransformer
+from text_prediction.model_torch_transformer import ModelTorchTransformer
 from text_prediction.text_completer import TextCompleter
 from text_prediction.utils import RankFilter
 
@@ -148,7 +148,7 @@ class Trainer:
             losses = torch.zeros(self.eval_iters).to(self.device)
             for k in range(self.eval_iters):
                 X, Y, attention_mask = self.get_batch(split)
-                _, loss = self.model(X, Y, attention_mask)
+                _, loss = self.model(X, Y)
                 losses[k] = loss.item()
             out[split] = losses.mean().item()
         self.model.train()
@@ -252,7 +252,7 @@ class Trainer:
             xb, yb, attention_mask = self.get_batch('train')
             
             with autocast(device_type='cuda') if torch.cuda.is_available() else nullcontext():
-                _, loss = self.model(xb, yb, attention_mask, self.writer, i)
+                _, loss = self.model(xb, yb, writer=self.writer, step=i)
                 loss = loss / self.grad_accum_steps
             if self.scaler:
                 self.scaler.scale(loss).backward()
@@ -369,8 +369,9 @@ def initialize_trainer(rank, num_gpus, device, tokenizer, hyperparams, training_
         dp = DataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], regenerate=False, num_samples=training_params["num_samples"], verbose=True, augment_data=False, parent_path=".")
     else:
         dp = StreamingDataPipeline(tokenizer, max_len=hyperparams["max_len"], block_size=hyperparams["block_size"], verbose=True, augment_data=False, parent_path=".")
-    
-    model = ModelCustomTransformer(hyperparams["vocab_size"], hyperparams["hidden_size"], hyperparams["num_heads"], hyperparams["num_layers"], hyperparams["block_size"], hyperparams["dropout"]).to(device)
+
+    model = ModelTorchTransformer(hyperparams["vocab_size"], hyperparams["hidden_size"], hyperparams["num_heads"], hyperparams["num_layers"], hyperparams["block_size"], hyperparams["dropout"]).to(device) 
+    # model = ModelCustomTransformer(hyperparams["vocab_size"], hyperparams["hidden_size"], hyperparams["num_heads"], hyperparams["num_layers"], hyperparams["block_size"], hyperparams["dropout"]).to(device)
     if num_gpus > 1:
         model = DDP(model, device_ids=[rank], output_device=rank)
     optimizer = AdamW(model.parameters(), lr=hyperparams["learning_rate"], weight_decay=hyperparams["weight_decay"])

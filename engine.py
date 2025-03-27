@@ -1,7 +1,7 @@
 import argparse
 import torch
 import json
-from text_prediction.model import ModelCustomTransformer
+from text_prediction.model_custom_transformer import ModelCustomTransformer
 from text_prediction.trainer import distributed_training, single_thread_train
 from text_prediction.hyperparam_tuning import HyperparameterOptimizer, distributed_tuning
 from text_prediction.text_completer import TextCompleter
