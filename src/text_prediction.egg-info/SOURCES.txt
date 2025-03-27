@@ -1,3 +1,5 @@
+README.md
+pyproject.toml
 setup.py
 src/text_prediction/__init__.py
 src/text_prediction/data_pipeline.py

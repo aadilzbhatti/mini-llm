@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "wiki-llm"
+version = "0.1.0"
+description = "A project for training, tuning, and generating text predictions with a custom transformer model."
+authors = ["Aadil Bhatti <aadilzbhatti@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+torch = "^2.6.0"
+transformers = "^4.49.0"
+datasets = "^3.4.0"
+optuna = "^3.0.0"
+tqdm = "^4.67.1"
+matplotlib = "^3.5.1"
+ipywidgets = "^7.6.5"
+pyarrow = "^19.0.1"
+tensorboard = "^2.18.0"
+torchvision = "^0.21.0"
+torchaudio = "^2.6.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0.0"
+black = "^22.3.0"
+flake8 = "^4.0.1"
+
+[tool.poetry.scripts]
+wiki-llm = "engine:main"
+
+[[tool.poetry.packages]]
+include = "text_prediction"
+from = "src"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

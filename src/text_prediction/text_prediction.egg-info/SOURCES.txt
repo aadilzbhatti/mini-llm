@@ -1,5 +1,0 @@
-setup.py
-src/text_prediction/text_prediction.egg-info/PKG-INFO
-src/text_prediction/text_prediction.egg-info/SOURCES.txt
-src/text_prediction/text_prediction.egg-info/dependency_links.txt
-src/text_prediction/text_prediction.egg-info/top_level.txt

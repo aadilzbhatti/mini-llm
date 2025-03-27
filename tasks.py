@@ -1,3 +1,4 @@
+import datetime
 from invoke import task, run
 import subprocess
 
@@ -63,8 +64,8 @@ def process_infinity(value_as_string):
         return value_as_string
 
 @task
-def train_engine(ctx, batch_size=64, max_iters=5000, max_epochs=20, eval_iters=100, eval_interval=100, grad_norm_clip_value=1.0):
-    """Trains the engine with specified parameters."""
+def train_engine(ctx, batch_size=64, max_iters=5000, max_epochs=20, eval_iters=100, eval_interval=100, grad_norm_clip_value=1.0, background=False):
+    """Trains the engine with specified parameters, optionally in the background with timestamped logging."""
     grad_norm_clip_value = process_infinity(grad_norm_clip_value)
 
     command = [
@@ -81,4 +82,18 @@ def train_engine(ctx, batch_size=64, max_iters=5000, max_epochs=20, eval_iters=1
         f"--eval_interval={eval_interval}",
         f"--grad_norm_clip_value={grad_norm_clip_value}"
     ]
-    run(" ".join(command), echo=True)
+
+    command_str = " ".join(command)
+
+    if background:
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_file = f"train_engine_{timestamp}.log"
+        pid_file = f"train_engine_{timestamp}.pid"
+        background_command = f"nohup {command_str} > {log_file} 2>&1 & echo $! > {pid_file}"
+        run(background_command, echo=True)
+        with open(pid_file, "r") as file:
+            pid = file.read().strip()
+        print(f"Training engine started in the background. Output logged to: {log_file}. PID: {pid}")
+        run(f"rm {pid_file}", echo=True)
+    else:
+        run(command_str, echo=True)
