@@ -18,7 +18,7 @@ class ModelConfig:
     n_layer: int = 2
     dropout: float = 0.0
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, int | float]:
         return asdict(self)
 
 

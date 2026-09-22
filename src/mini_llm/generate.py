@@ -3,20 +3,23 @@
 import argparse
 
 import torch
+from transformers import PreTrainedTokenizerBase
 
 from mini_llm.config import ModelConfig, build_model
-from mini_llm.data import get_tokenizer
+from mini_llm.data import decode, encode, get_tokenizer
 from mini_llm.device import select_device
+from mini_llm.model import ModelCustomTransformer
 
 
 @torch.no_grad()
 def generate_text(
-    model,
-    tokenizer,
+    model: ModelCustomTransformer,
+    tokenizer: PreTrainedTokenizerBase,
     prompt: str,
     max_new_tokens: int,
     block_size: int,
     device: torch.device | str,
+    greedy: bool = False,
 ) -> str:
     """Encode prompt -> model.generate() -> decode.
 
@@ -25,13 +28,15 @@ def generate_text(
     block_size tokens, softmaxes the final position and samples with
     torch.multinomial.
     """
-    model.eval()
-    idx = tokenizer.encode(prompt, return_tensors="pt").to(device)
-    out = model.generate(idx, max_new_tokens, block_size)
-    return tokenizer.decode(out[0].tolist())
+    # FIX (#8): no model.eval() here any more. model.generate() now switches
+    # to eval itself and restores the caller's mode afterwards, so calling
+    # this mid-training no longer leaves the model stuck in eval.
+    idx = encode(prompt, tokenizer).unsqueeze(0).to(device)
+    out = model.generate(idx, max_new_tokens, block_size, greedy=greedy)
+    return decode(out[0], tokenizer)
 
 
-def parse_args(argv=None):
+def parse_args(argv: list[str] | None = None):
     p = argparse.ArgumentParser(description="Generate text from a tiny model.")
     p.add_argument("--prompt", default="\n", help="Prompt text.")
     p.add_argument("--max-new-tokens", type=int, default=32)
@@ -46,10 +51,13 @@ def parse_args(argv=None):
     p.add_argument("--n-head", type=int, default=4)
     p.add_argument("--n-layer", type=int, default=2)
     p.add_argument("--dropout", type=float, default=0.0)
+    p.add_argument("--interactive", action="store_true", help="Run in interactive mode.")
+    p.add_argument("--greedy", action="store_true", help="Use greedy decoding instead of sampling.")
     return p.parse_args(argv)
 
 
-def main(argv=None) -> None:
+
+def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
     device = select_device()
     print(f"Using device: {device}")
@@ -59,6 +67,7 @@ def main(argv=None) -> None:
     if args.checkpoint:
         ckpt = torch.load(args.checkpoint, map_location=device)
         cfg = ModelConfig(**ckpt["config"])
+        print(f"Config: {cfg.to_dict()}")
         model = build_model(cfg).to(device)
         model.load_state_dict(ckpt["model_state_dict"])
     else:
@@ -70,9 +79,21 @@ def main(argv=None) -> None:
             n_layer=args.n_layer,
             dropout=args.dropout,
         )
+        print(f"Config: {cfg.to_dict()}")
         model = build_model(cfg).to(device)
 
-    print(generate_text(model, tokenizer, args.prompt, args.max_new_tokens, cfg.block_size, device))
+    if args.interactive:
+        while True:
+            prompt = input("Enter a prompt (or 'quit' to exit): ")
+            if not prompt:
+                prompt = "\n"
+            if prompt == "exit":
+                break
+            if prompt == "quit":
+                break
+            print(generate_text(model, tokenizer, prompt, args.max_new_tokens, cfg.block_size, device, greedy=args.greedy))
+    else:
+        print(generate_text(model, tokenizer, args.prompt, args.max_new_tokens, cfg.block_size, device, greedy=args.greedy))
 
 
 if __name__ == "__main__":

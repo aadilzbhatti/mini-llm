@@ -13,7 +13,7 @@ project's src/text_prediction/tokenized_dataset.py:
 from pathlib import Path
 
 import torch
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
 DEFAULT_TEXT_PATH = Path("data/tiny.txt")
 
@@ -24,7 +24,7 @@ FALLBACK_TEXT = (
 )
 
 
-def get_tokenizer(name: str = "gpt2"):
+def get_tokenizer(name: str = "gpt2") -> PreTrainedTokenizerBase:
     """GPT-2 tokenizer, as in the original project.
 
     The original also registered <ARTICLE_START> / <ARTICLE_END> special
@@ -44,16 +44,27 @@ def load_text(path: str | Path | None = None) -> str:
     return FALLBACK_TEXT
 
 
-def encode(text: str, tokenizer) -> torch.Tensor:
+def encode(text: str, tokenizer: PreTrainedTokenizerBase) -> torch.Tensor:
     """Text -> 1-D LongTensor of token ids."""
     return torch.tensor(tokenizer.encode(text), dtype=torch.long)
 
 
-def decode(ids, tokenizer) -> str:
+def decode(ids: torch.Tensor, tokenizer: PreTrainedTokenizerBase) -> str:
     """Token ids (1-D tensor or list) -> text."""
-    if isinstance(ids, torch.Tensor):
-        ids = ids.tolist()
-    return tokenizer.decode(ids)
+    text = tokenizer.decode(ids)
+    assert isinstance(text, str)
+    return text
+
+
+def load_tokens(path: str | Path) -> torch.Tensor:
+    """Load a pre-tokenized 1-D token tensor from disk.
+
+    Agnostic to whatever dataset or text produced it — this just reads
+    tensors written by `torch.save`, e.g. by `mini_llm.prepare_dataset`.
+    """
+    tokens = torch.load(Path(path), weights_only=True)
+    assert isinstance(tokens, torch.Tensor)
+    return tokens
 
 
 def make_batch(
