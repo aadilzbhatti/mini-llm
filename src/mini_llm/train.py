@@ -1,15 +1,43 @@
 """Minimal training loop: forward -> loss -> zero_grad -> backward -> step.
 
-No scheduler, no AMP, no grad accumulation, no clipping. Add those back
-deliberately when you want them.
+No AMP, no grad accumulation, no clipping. Add those back deliberately when
+you want them.
+
+LR schedule: linear warmup (--warmup-steps) then cosine decay from --lr down
+to --min-lr, over this run's total step horizon (start_step + --steps, so a
+--resume decays across its own new horizon rather than the original run's).
+--min-lr is the actual decay knob -- set it equal to --lr to disable decay
+and train at a constant rate; --warmup-steps defaults to 0 (no warmup).
 
 Reproducibility: --seed drives (a) model init, via torch.manual_seed before
 the model is built, and (b) the training batch sequence, via a dedicated
 Generator so it doesn't depend on how many random draws init happened to
-consume. Validation always runs over the *entire* val set (every
-non-overlapping window), so it needs no seed of its own and is identical
-across runs for a given val-tokens file. The train/val split itself is
-decided once, upstream, by `mini_llm.prepare_dataset --seed`.
+consume. Train/val split itself is decided once, upstream, by
+`mini_llm.prepare_dataset --seed`.
+
+Eval: the per-step "loss" printed during the loop is one noisy training
+batch mid-backprop -- not comparable to a val loss. So at every
+--eval-interval checkpoint we instead compute eval_train_loss and
+eval_val_loss the *same* way: both are the average loss over
+--eval-batches batches, both in eval() mode, under no_grad. Those batches
+are sampled once, at init, and then reused unchanged at every checkpoint --
+step 500, 1000, 1500, ... all evaluate the exact same tokens. Resampling a
+fresh eval set each time would confound "the model changed" with "the
+measuring stick changed"; a fixed one isolates the former.
+
+--eval-seed picks that fixed set and is deliberately separate from --seed:
+--seed is for the *model* (init + training batch order), so sweeping it
+across experiments compares different models on the *same* measuring stick.
+--eval-seed only needs to change if you deliberately want a different eval
+sample. (Resuming with the same --batch-size/--eval-batches/--eval-seed
+regenerates the identical set, since it's a pure function of those plus the
+token file.)
+
+full_val_loss is a third, separate metric: the exhaustive loss over *every*
+window in the validation set (not a --eval-batches sample of it). It's the
+true number, but expensive, so it only runs every --full-eval-interval
+steps and always once at the end of training -- not at --eval-interval
+cadence like eval_val_loss.
 
 Checkpoint resume: --resume loads model + optimizer + batch-generator state
 and the running loss history, then continues from the saved step count.
@@ -20,6 +48,7 @@ through.
 """
 
 import argparse
+import math
 from pathlib import Path
 
 import torch
@@ -32,6 +61,43 @@ from mini_llm.generate import generate_text
 
 PLOTS_DIR = Path("plots")
 CHECKPOINTS_DIR = Path("checkpoints")
+DEFAULT_EVAL_SEED = 1234
+
+
+def sample_eval_batches(
+    tokens: torch.Tensor,
+    batch_size: int,
+    block_size: int,
+    device: torch.device | str,
+    num_batches: int,
+    seed: int,
+) -> list[tuple[torch.Tensor, torch.Tensor]]:
+    """Sample a fixed set of batches, once, to reuse at every eval checkpoint.
+
+    Its own throwaway generator, seeded independently of the training batch
+    sequence, so building this set never perturbs training.
+    """
+    generator = torch.Generator().manual_seed(seed)
+    return [
+        make_batch(tokens, batch_size, block_size, device=device, generator=generator)
+        for _ in range(num_batches)
+    ]
+
+
+@torch.no_grad()
+def evaluate_fixed(model: torch.nn.Module, batches: list[tuple[torch.Tensor, torch.Tensor]]) -> float:
+    """Average loss over a fixed, pre-sampled set of batches.
+
+    Reusing the same batches at every checkpoint means successive
+    evaluations measure how the model changed, not how the sample did.
+    """
+    model.eval()
+    total_loss = 0.0
+    for x, y in batches:
+        _, loss = model(x, y)
+        total_loss += loss.item()
+    model.train()
+    return total_loss / len(batches)
 
 
 @torch.no_grad()
@@ -42,10 +108,11 @@ def evaluate_full(
     block_size: int,
     device: torch.device | str,
 ) -> float:
-    """Average loss over every non-overlapping (x, y) window in `tokens`.
+    """Average loss over every non-overlapping window in `tokens`.
 
-    Exhaustive rather than sampled, so it's the same every time for a given
-    val-tokens file, model, and block_size -- no seed needed.
+    Exhaustive, not sampled -- the true loss over the whole set, at the
+    cost of a full pass. Meant to run infrequently (--full-eval-interval),
+    as a periodic sanity check against the cheaper fixed-sample estimate.
     """
     n_windows = (tokens.numel() - 1) // block_size
     if n_windows == 0:
@@ -66,6 +133,22 @@ def evaluate_full(
     return total_loss / total_windows
 
 
+def lr_at_step(step: int, total_steps: int, lr: float, min_lr: float, warmup_steps: int) -> float:
+    """Linear warmup for `warmup_steps`, then cosine decay from `lr` to `min_lr`.
+
+    `total_steps` is the horizon the cosine curve spans; `min_lr == lr`
+    collapses this to a constant rate regardless of warmup.
+    """
+    if warmup_steps > 0 and step < warmup_steps:
+        return lr * (step + 1) / warmup_steps
+    if total_steps <= warmup_steps:
+        return min_lr
+    progress = (step - warmup_steps) / (total_steps - warmup_steps)
+    progress = min(max(progress, 0.0), 1.0)
+    coeff = 0.5 * (1.0 + math.cos(math.pi * progress))
+    return min_lr + coeff * (lr - min_lr)
+
+
 def hyperparam_slug(cfg: ModelConfig, optim_cfg: dict[str, object], total_steps: int) -> str:
     """Compact identifier for a run's model + optimization hyperparams.
 
@@ -82,6 +165,7 @@ def hyperparam_slug(cfg: ModelConfig, optim_cfg: dict[str, object], total_steps:
             f"bs{optim_cfg['batch_size']}",
             f"steps{total_steps}",
             f"lr{optim_cfg['lr']:g}",
+            f"minlr{optim_cfg['min_lr']:g}",
             f"seed{optim_cfg['seed']}",
         ]
     )
@@ -95,45 +179,115 @@ def default_checkpoint_name(cfg: ModelConfig, optim_cfg: dict[str, object], tota
     return f"ckpt_{hyperparam_slug(cfg, optim_cfg, total_steps)}.pt"
 
 
+def print_dataset_stats(
+    train_tokens: int,
+    val_tokens: int | None,
+    batch_tokens: int,
+    steps: int,
+    tokens_processed: int,
+    effective_epochs: float,
+) -> None:
+    """Startup summary: dataset size vs. how much of it this run will touch.
+
+    effective_epochs = tokens_processed / train_tokens -- how many times, on
+    average, this run sweeps the training set (batches are random crops, not
+    an epoch iterator, so this is an expectation, not an exact pass count).
+    """
+    rows = [
+        ("Train tokens", f"{train_tokens:,}"),
+        ("Validation tokens", f"{val_tokens:,}" if val_tokens is not None else "n/a"),
+        ("Batch tokens", f"{batch_tokens:,}"),
+        ("Training steps", f"{steps:,}"),
+        ("Tokens processed", f"{tokens_processed:,}"),
+        ("Effective epochs", f"{effective_epochs:.2f}"),
+    ]
+    label_width = max(len(label) for label, _ in rows) + 1
+    value_width = max(len(value) for _, value in rows)
+    for label, value in rows:
+        print(f"{label + ':':<{label_width}} {value:>{value_width}}")
+
+
 def plot_loss(
     train_history: list[tuple[int, float]],
     val_history: list[tuple[int, float]],
+    full_val_history: list[tuple[int, float]] | None,
     path: str | Path,
     hyperparams: dict[str, object] | None = None,
+    lr_history: list[tuple[int, float]] | None = None,
 ) -> None:
-    """Save a PNG of train (and optional val) loss vs. step.
+    """Save a PNG of eval_train_loss, eval_val_loss, and full_val_loss vs. step.
 
-    Each line's legend entry reports its best (lowest) and last loss. The
-    run's hyperparams are printed under the plot so a saved PNG can be
-    matched back to the run that produced it.
+    eval_train_loss/eval_val_loss are the same metric -- average loss over N
+    sampled batches, in eval() mode -- so they're directly comparable, not
+    train's noisy per-step loss against val's averaged one. full_val_loss is
+    the exhaustive loss over the entire validation set, plotted sparsely
+    (markers, dashed) since it only runs every --full-eval-interval steps --
+    a periodic ground-truth check against the cheaper sampled estimate. Its
+    exact values are also rendered as a side table, since reading them off
+    a handful of sparse markers is imprecise. Each line's legend entry
+    reports its best (lowest) and last loss. The run's hyperparams are
+    printed under the plot so a saved PNG can be matched back to the run
+    that produced it.
+
+    lr_history, when given, is drawn on a secondary log-scale y-axis --
+    loss and LR live on completely different scales, so sharing an axis
+    would flatten the LR line to near-invisible.
     """
     import matplotlib
 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    def plot_series(history: list[tuple[int, float]], name: str) -> None:
-        steps, losses = zip(*history)
-        best, last = min(losses), losses[-1]
-        plt.plot(steps, losses, label=f"{name} (best {best:.4f}, last {last:.4f})")
+    if full_val_history:
+        fig, (ax1, ax_table) = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={"width_ratios": [3, 1]})
+        ax_table.axis("off")
+        ax_table.set_title("full_val_loss", fontsize=9)
+        table = ax_table.table(
+            cellText=[[f"{step:,}", f"{loss:.4f}"] for step, loss in full_val_history],
+            colLabels=["step", "loss"],
+            cellLoc="center",
+            loc="upper center",
+        )
+        table.auto_set_font_size(False)
+        table.set_fontsize(8)
+        table.scale(1, 1.4)
+    else:
+        fig, ax1 = plt.subplots()
 
-    plt.figure()
-    plot_series(train_history, "train")
+    def plot_series(ax, history: list[tuple[int, float]], name: str, **kwargs: object):
+        steps, values = zip(*history)
+        best, last = min(values), values[-1]
+        return ax.plot(steps, values, label=f"{name} (best {best:.4f}, last {last:.4f})", **kwargs)[0]
+
+    lines = [plot_series(ax1, train_history, "eval_train_loss")]
     if val_history:
-        plot_series(val_history, "val")
-    plt.xlabel("step")
-    plt.ylabel("loss")
-    plt.title("Training loss")
-    plt.legend()
+        lines.append(plot_series(ax1, val_history, "eval_val_loss"))
+    if full_val_history:
+        lines.append(plot_series(ax1, full_val_history, "full_val_loss", marker="o", linestyle="--"))
+    ax1.set_xlabel("step")
+    ax1.set_ylabel("loss")
+
+    if lr_history:
+        ax2 = ax1.twinx()
+        steps, lrs = zip(*lr_history)
+        (line_lr,) = ax2.plot(
+            steps, lrs, color="gray", alpha=0.6, linestyle=":", label=f"lr (max {max(lrs):.2e}, min {min(lrs):.2e})"
+        )
+        ax2.set_ylabel("learning rate")
+        ax2.set_yscale("log")
+        lines.append(line_lr)
+
+    ax1.set_title("Eval loss (sampled) vs. full validation loss (exhaustive)")
+    ax1.legend(handles=lines, loc="best")
 
     if hyperparams:
         text = ", ".join(f"{k}={v}" for k, v in hyperparams.items())
-        plt.figtext(0.5, -0.05, text, ha="center", va="top", fontsize=7, wrap=True)
+        fig.text(0.5, -0.05, text, ha="center", va="top", fontsize=7, wrap=True)
 
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(path, bbox_inches="tight")
-    plt.close()
+    fig.savefig(path, bbox_inches="tight")
+    plt.close(fig)
 
 
 def parse_args(argv: list[str] | None = None):
@@ -161,8 +315,21 @@ def parse_args(argv: list[str] | None = None):
     p.add_argument("--batch-size", type=int, default=4)
     p.add_argument("--steps", type=int, default=100)
     p.add_argument("--lr", type=float, default=1e-3)
+    p.add_argument(
+        "--min-lr",
+        type=float,
+        default=None,
+        help="Cosine decay target for the LR schedule. Defaults to --lr (no decay). Set "
+        "below --lr to enable decay, e.g. --min-lr 0 to decay fully to zero.",
+    )
+    p.add_argument(
+        "--warmup-steps",
+        type=int,
+        default=0,
+        help="Linear warmup length before the cosine decay begins. 0 = no warmup.",
+    )
     p.add_argument("--weight-decay", type=float, default=0.0)
-    p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--seed", type=int, default=42)
     p.add_argument(
         "--fixed-batch",
         action="store_true",
@@ -177,7 +344,30 @@ def parse_args(argv: list[str] | None = None):
     )
     # reporting / output
     p.add_argument("--log-interval", type=int, default=10)
-    p.add_argument("--eval-interval", type=int, default=100, help="How often to compute val loss.")
+    p.add_argument("--eval-interval", type=int, default=100, help="How often to compute eval loss.")
+    p.add_argument(
+        "--eval-batches",
+        type=int,
+        default=20,
+        help="Batches to average over for eval_train_loss/eval_val_loss at each --eval-interval.",
+    )
+    p.add_argument(
+        "--eval-seed",
+        type=int,
+        default=DEFAULT_EVAL_SEED,
+        help="Seed for the fixed eval batches (train + val), independent of --seed. Fixed by "
+        "default so sweeping --seed across experiments compares models on the same measuring "
+        "stick; only change this if you deliberately want a different eval sample.",
+    )
+    p.add_argument(
+        "--full-eval-interval",
+        type=int,
+        default=5000,
+        help="How often to run an exhaustive full_val_loss over the entire validation set "
+        "(in addition to always running one at the end of training). Only runs if "
+        "--val-tokens is set; 0 disables the periodic runs (the end-of-training one still "
+        "runs).",
+    )
     p.add_argument("--sample-tokens", type=int, default=0, help="Generate N tokens after training.")
     p.add_argument("--save", action="store_true", help="Save a checkpoint after training.")
     p.add_argument(
@@ -209,7 +399,7 @@ def main(argv: list[str] | None = None) -> None:
 
     tokenizer = get_tokenizer()
     tokens = load_tokens(args.tokens) if args.tokens else encode(load_text(args.text), tokenizer)
-    print(f"Tokens: {tokens.numel()}")
+    val_tokens = load_tokens(args.val_tokens) if args.val_tokens else None
 
     cfg = ModelConfig(
         vocab_size=len(tokenizer),
@@ -224,6 +414,20 @@ def main(argv: list[str] | None = None) -> None:
     n_params = sum(p.numel() for p in model.parameters())
     print(f"Model: {n_params:,} parameters")
 
+    batch_tokens = args.batch_size * cfg.block_size
+    tokens_processed = args.steps * batch_tokens
+    effective_epochs = tokens_processed / tokens.numel()
+    print_dataset_stats(
+        tokens.numel(),
+        val_tokens.numel() if val_tokens is not None else None,
+        batch_tokens,
+        args.steps,
+        tokens_processed,
+        effective_epochs,
+    )
+
+    min_lr = args.min_lr if args.min_lr is not None else args.lr
+
     optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
     batch = None
@@ -236,12 +440,29 @@ def main(argv: list[str] | None = None) -> None:
     # (or anything else before the loop) happened to consume.
     batch_rng = torch.Generator().manual_seed(args.seed)
 
+    # Fixed once, at init, and reused unchanged at every eval checkpoint --
+    # see the module docstring on why these aren't resampled per checkpoint.
+    train_eval_batches = sample_eval_batches(
+        tokens, args.batch_size, cfg.block_size, device, args.eval_batches, args.eval_seed
+    )
+    val_eval_batches = (
+        sample_eval_batches(val_tokens, args.batch_size, cfg.block_size, device, args.eval_batches, args.eval_seed)
+        if val_tokens is not None
+        else None
+    )
+
     start_step = 0
     train_history: list[tuple[int, float]] = []
     val_history: list[tuple[int, float]] = []
+    full_val_history: list[tuple[int, float]] = []
+    lr_history: list[tuple[int, float]] = []
 
     if args.resume:
-        ckpt = torch.load(args.resume, map_location=device)
+        # Load to CPU regardless of `device`: batch_rng is a CPU generator
+        # and set_state() requires a CPU ByteTensor. model/optimizer
+        # load_state_dict both copy onto the existing (already-on-device)
+        # tensors, so this doesn't block GPU/MPS training.
+        ckpt = torch.load(args.resume, map_location="cpu")
         ckpt_cfg = ModelConfig(**ckpt["config"])
         if ckpt_cfg.to_dict() != cfg.to_dict():
             raise ValueError(
@@ -256,27 +477,37 @@ def main(argv: list[str] | None = None) -> None:
         start_step = ckpt["step"]
         train_history = ckpt["train_history"]
         val_history = ckpt["val_history"]
+        full_val_history = ckpt.get("full_val_history", [])
+        lr_history = ckpt.get("lr_history", [])
         print(f"Resumed from {args.resume} at step {start_step}")
 
     total_steps = start_step + args.steps
-    tokens_processed = args.steps * args.batch_size * cfg.block_size
     optim_cfg = {
         "batch_size": args.batch_size,
         "steps": args.steps,
         "total_steps": total_steps,
         "lr": args.lr,
+        "min_lr": min_lr,
+        "warmup_steps": args.warmup_steps,
         "weight_decay": args.weight_decay,
         "seed": args.seed,
         "fixed_batch": args.fixed_batch,
+        "eval_batches": args.eval_batches,
+        "eval_seed": args.eval_seed,
+        "full_eval_interval": args.full_eval_interval,
         "tokens_processed": tokens_processed,
     }
     print(f"Optimization: {optim_cfg}")
 
-    val_tokens = load_tokens(args.val_tokens) if args.val_tokens else None
-
     model.train()
     for local_step in range(args.steps):
         step = start_step + local_step
+
+        current_lr = lr_at_step(step, total_steps, args.lr, min_lr, args.warmup_steps)
+        for param_group in optimizer.param_groups:
+            param_group["lr"] = current_lr
+        lr_history.append((step, current_lr))
+
         x, y = batch if batch is not None else make_batch(
             tokens, args.batch_size, cfg.block_size, device=device, generator=batch_rng
         )
@@ -288,23 +519,40 @@ def main(argv: list[str] | None = None) -> None:
 
         is_last_step = local_step == args.steps - 1
         log_now = step % args.log_interval == 0 or is_last_step
-        eval_now = val_tokens is not None and (step % args.eval_interval == 0 or is_last_step)
-
-        val_loss = None
-        if eval_now:
-            val_loss = evaluate_full(model, val_tokens, args.batch_size, cfg.block_size, device)
-            val_history.append((step, val_loss))
+        eval_now = step % args.eval_interval == 0 or is_last_step
+        full_eval_now = val_tokens is not None and (
+            is_last_step or (args.full_eval_interval > 0 and step % args.full_eval_interval == 0)
+        )
 
         if log_now:
-            train_history.append((step, loss.item()))
-            msg = f"step {step:5d} | loss {loss.item():.4f}"
-            if val_loss is not None:
-                msg += f" | val_loss {val_loss:.4f}"
+            print(f"step {step:5d} | loss {loss.item():.4f} | lr {current_lr:.2e}")
+
+        if eval_now:
+            eval_train_loss = evaluate_fixed(model, train_eval_batches)
+            train_history.append((step, eval_train_loss))
+            msg = f"step {step:5d} | eval_train_loss {eval_train_loss:.4f}"
+            if val_eval_batches is not None:
+                eval_val_loss = evaluate_fixed(model, val_eval_batches)
+                val_history.append((step, eval_val_loss))
+                msg += f" | eval_val_loss {eval_val_loss:.4f}"
             print(msg)
 
+        if full_eval_now:
+            full_val_loss = evaluate_full(model, val_tokens, args.batch_size, cfg.block_size, device)
+            full_val_history.append((step, full_val_loss))
+            print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
+
     if args.plot_loss:
+        decay_active = min_lr != args.lr or args.warmup_steps > 0
         plot_path = PLOTS_DIR / (args.plot_name or default_plot_name(cfg, optim_cfg, total_steps))
-        plot_loss(train_history, val_history, plot_path, hyperparams={**cfg.to_dict(), **optim_cfg})
+        plot_loss(
+            train_history,
+            val_history,
+            full_val_history,
+            plot_path,
+            hyperparams={**cfg.to_dict(), **optim_cfg},
+            lr_history=lr_history if decay_active else None,
+        )
         print(f"Saved loss plot to {plot_path}")
 
     if args.save:
@@ -319,6 +567,8 @@ def main(argv: list[str] | None = None) -> None:
                 "step": total_steps,
                 "train_history": train_history,
                 "val_history": val_history,
+                "full_val_history": full_val_history,
+                "lr_history": lr_history,
             },
             save_path,
         )
