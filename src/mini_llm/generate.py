@@ -28,9 +28,6 @@ def generate_text(
     block_size tokens, softmaxes the final position and samples with
     torch.multinomial.
     """
-    # FIX (#8): no model.eval() here any more. model.generate() now switches
-    # to eval itself and restores the caller's mode afterwards, so calling
-    # this mid-training no longer leaves the model stuck in eval.
     idx = encode(prompt, tokenizer).unsqueeze(0).to(device)
     out = model.generate(idx, max_new_tokens, block_size, greedy=greedy)
     return decode(out[0], tokenizer)

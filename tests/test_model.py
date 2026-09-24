@@ -116,3 +116,20 @@ def test_overfits_one_batch(model: ModelCustomTransformer):
     with torch.no_grad():
         _, loss = model(x, y)
     assert loss.item() < 1e-2, f"Loss did not decrease enough: {loss.item()}"
+
+
+def test_weight_tying_shares_parameter(model: ModelCustomTransformer):
+    """lm_head.weight and token_embedding_table.weight must be the literal
+    same tensor object, not just equal in value."""
+    assert model.lm_head.weight is model.token_embedding_table.weight
+
+
+def test_weight_tying_appears_once_in_named_parameters(model: ModelCustomTransformer):
+    """A tied parameter is one nn.Parameter referenced from two places, so
+    named_parameters() should list it once -- under the embedding table's
+    name, not duplicated under lm_head.weight too."""
+    shared = model.token_embedding_table.weight
+    matches = [name for name, p in model.named_parameters() if p is shared]
+    assert matches == ["token_embedding_table.weight"]
+
+

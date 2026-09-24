@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.aadil.mini-llm-runner</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/aadil/dev/wiki-llm/.venv/bin/python</string>
+        <string>/Users/aadil/dev/wiki-llm/runner/run_queue.py</string>
+        <string>--repo</string>
+        <string>/Users/aadil/dev/wiki-llm</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/aadil/dev/wiki-llm</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/aadil/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>PYTHONUNBUFFERED</key>
+        <string>1</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>ProcessType</key>
+    <string>Standard</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/aadil/dev/wiki-llm/runner/runner.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/aadil/dev/wiki-llm/runner/runner.log</string>
+</dict>
+</plist>

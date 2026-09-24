@@ -138,19 +138,15 @@ class ModelCustomTransformer(nn.Module):
         super().__init__()
         self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
         self.position_embedding_table = nn.Embedding(block_size, n_embd)
-        # FIX (#4): nn.ModuleList, not nn.Sequential. Sequential advertises
-        # that you can call self.blocks(x), and the loop in forward is what
-        # actually runs. ModuleList says "a list of submodules, called by
-        # hand" -- which is the truth. Parameter names are unchanged
-        # ("blocks.0.sa..."), so old checkpoints still load.
         self.blocks = nn.ModuleList([Block(n_embd, n_head, block_size, dropout) for _ in range(n_layer)])
         self.ln_f = nn.LayerNorm(n_embd)  # final layer norm
         self.lm_head = nn.Linear(n_embd, vocab_size)
         self.dropout = nn.Dropout(dropout)
-        # FIX (#7): self.step was set and never read. Step counting belongs to
-        # the training loop, not the model.
 
         self.init_weights()
+
+        self.lm_head.weight = self.token_embedding_table.weight  # weight tying
+
 
     def init_weights(self):
         nn.init.xavier_uniform_(self.token_embedding_table.weight)
@@ -159,21 +155,11 @@ class ModelCustomTransformer(nn.Module):
         for layer in self.modules():
             if isinstance(layer, nn.Linear):
                 nn.init.xavier_uniform_(layer.weight)
-        nn.init.constant_(self.lm_head.bias, 0)
-        # FIX (#3): re-run the submodules' own init AFTER the generic pass.
-        # Head.init_weights sets q/k/v with xavier_normal_, but the loop above
-        # used to run last and silently overwrote all three with
-        # xavier_uniform_, so the normal init never reached the weights. Now
-        # the specific choice wins over the generic default, which is what the
-        # per-module init_weights methods were written to express.
+        nn.init.constant_(self.lm_head.bias, 0) # no need to init bias, it's not used in lm_head
         for module in self.modules():
             if module is not self and hasattr(module, "init_weights"):
                 module.init_weights()
 
-    # FIX (#2): attention_mask parameter dropped -- nothing ever applied it.
-    # FIX (#6): inputs are no longer silently moved onto the weights' device.
-    # The old `idx = idx.to(...)` made a device mismatch invisible (and copied
-    # every batch, every step). Callers move the batch; a mismatch now raises.
     def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
         B, T = idx.shape
 
@@ -212,13 +198,6 @@ class ModelCustomTransformer(nn.Module):
         return logits, loss
 
     def generate(self, idx: torch.Tensor, max_new_tokens: int, block_size: int, greedy: bool = False) -> torch.Tensor:
-        # FIX (#8): put the model in eval mode here (dropout off -- sampling
-        # through dropout is not what inference should do) and restore the
-        # previous mode on the way out. generate_text() used to call .eval()
-        # and never switch back, so generating mid-training silently left the
-        # model in eval mode for the rest of the run.
-        # FIX (#6): idx is no longer moved onto the weights' device for you;
-        # the caller owns placement, as in forward().
         was_training = self.training
         self.eval()
         try:

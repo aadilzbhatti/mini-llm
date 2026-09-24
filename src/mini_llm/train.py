@@ -3,11 +3,12 @@
 No AMP, no grad accumulation, no clipping. Add those back deliberately when
 you want them.
 
-LR schedule: linear warmup (--warmup-steps) then cosine decay from --lr down
-to --min-lr, over this run's total step horizon (start_step + --steps, so a
---resume decays across its own new horizon rather than the original run's).
---min-lr is the actual decay knob -- set it equal to --lr to disable decay
-and train at a constant rate; --warmup-steps defaults to 0 (no warmup).
+LR schedule: linear warmup (--warmup-steps, default 500) then cosine decay
+from --lr (default 1e-3) down to --min-lr (default 2e-6), over this run's
+total step horizon (start_step + --steps, so a --resume decays across its
+own new horizon rather than the original run's). --min-lr is the actual
+decay knob -- set it equal to --lr to disable decay and train at a constant
+rate; --warmup-steps 0 disables warmup.
 
 Reproducibility: --seed drives (a) model init, via torch.manual_seed before
 the model is built, and (b) the training batch sequence, via a dedicated
@@ -58,6 +59,7 @@ from mini_llm.config import ModelConfig, build_model
 from mini_llm.data import encode, fixed_batch, get_tokenizer, load_text, load_tokens, make_batch
 from mini_llm.device import select_device
 from mini_llm.generate import generate_text
+from mini_llm.report import write_sample_report
 
 PLOTS_DIR = Path("plots")
 CHECKPOINTS_DIR = Path("checkpoints")
@@ -171,8 +173,9 @@ def hyperparam_slug(cfg: ModelConfig, optim_cfg: dict[str, object], total_steps:
     )
 
 
-def default_plot_name(cfg: ModelConfig, optim_cfg: dict[str, object], total_steps: int) -> str:
-    return f"loss_{hyperparam_slug(cfg, optim_cfg, total_steps)}.png"
+def default_plot_name(cfg: ModelConfig, optim_cfg: dict[str, object], total_steps: int, suffix: str = "") -> str:
+    suffix_part = f"_{suffix}" if suffix else ""
+    return f"loss_{hyperparam_slug(cfg, optim_cfg, total_steps)}{suffix_part}.png"
 
 
 def default_checkpoint_name(cfg: ModelConfig, optim_cfg: dict[str, object], total_steps: int) -> str:
@@ -309,7 +312,7 @@ def parse_args(argv: list[str] | None = None):
     p.add_argument("--block-size", type=int, default=64)
     p.add_argument("--n-embd", type=int, default=128)
     p.add_argument("--n-head", type=int, default=4)
-    p.add_argument("--n-layer", type=int, default=2)
+    p.add_argument("--n-layer", type=int, default=4)
     p.add_argument("--dropout", type=float, default=0.0)
     # optimization
     p.add_argument("--batch-size", type=int, default=4)
@@ -318,14 +321,13 @@ def parse_args(argv: list[str] | None = None):
     p.add_argument(
         "--min-lr",
         type=float,
-        default=None,
-        help="Cosine decay target for the LR schedule. Defaults to --lr (no decay). Set "
-        "below --lr to enable decay, e.g. --min-lr 0 to decay fully to zero.",
+        default=2e-6,
+        help="Cosine decay target for the LR schedule. Set equal to --lr to disable decay.",
     )
     p.add_argument(
         "--warmup-steps",
         type=int,
-        default=0,
+        default=500,
         help="Linear warmup length before the cosine decay begins. 0 = no warmup.",
     )
     p.add_argument("--weight-decay", type=float, default=0.0)
@@ -371,6 +373,13 @@ def parse_args(argv: list[str] | None = None):
     p.add_argument("--sample-tokens", type=int, default=0, help="Generate N tokens after training.")
     p.add_argument("--save", action="store_true", help="Save a checkpoint after training.")
     p.add_argument(
+        "--sample-report",
+        action="store_true",
+        help="After training, generate from a fixed prompt battery under fixed decoding "
+        "settings and write the result to checkpoints/<checkpoint stem>.md. Uses the same "
+        "name as --save-name, so a checkpoint and its report stay paired.",
+    )
+    p.add_argument(
         "--save-name",
         default=None,
         help="Filename for the checkpoint when --save is set, saved under checkpoints/. "
@@ -386,6 +395,12 @@ def parse_args(argv: list[str] | None = None):
         default=None,
         help="Filename for the loss plot when --plot-loss is set, saved under plots/. "
         "Defaults to a name generated from the run's hyperparams.",
+    )
+    p.add_argument(
+        "--plot-suffix",
+        default=None,
+        help="Extra suffix appended to the generated plot filename (ignored if --plot-name "
+        "is set), e.g. --plot-suffix notes gives loss_..._notes.png.",
     )
     return p.parse_args(argv)
 
@@ -426,7 +441,7 @@ def main(argv: list[str] | None = None) -> None:
         effective_epochs,
     )
 
-    min_lr = args.min_lr if args.min_lr is not None else args.lr
+    min_lr = args.min_lr
 
     optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
@@ -544,7 +559,9 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.plot_loss:
         decay_active = min_lr != args.lr or args.warmup_steps > 0
-        plot_path = PLOTS_DIR / (args.plot_name or default_plot_name(cfg, optim_cfg, total_steps))
+        plot_path = PLOTS_DIR / (
+            args.plot_name or default_plot_name(cfg, optim_cfg, total_steps, args.plot_suffix or "")
+        )
         plot_loss(
             train_history,
             val_history,
@@ -573,6 +590,30 @@ def main(argv: list[str] | None = None) -> None:
             save_path,
         )
         print(f"Saved to {save_path}")
+
+    if args.sample_report:
+        # Same name as the checkpoint so the two stay paired, whether or not
+        # --save was passed (without it, the report is still named for the run).
+        report_target = CHECKPOINTS_DIR / (
+            args.save_name or default_checkpoint_name(cfg, optim_cfg, total_steps)
+        )
+        report_file = write_sample_report(
+            model,
+            tokenizer,
+            cfg.block_size,
+            device,
+            report_target,
+            meta={
+                "checkpoint": str(report_target) if args.save else "(not saved)",
+                "step": total_steps,
+                "params": f"{n_params:,}",
+                "config": cfg.to_dict(),
+                "eval_train_loss": train_history[-1][1] if train_history else None,
+                "eval_val_loss": val_history[-1][1] if val_history else None,
+                "full_val_loss": full_val_history[-1][1] if full_val_history else None,
+            },
+        )
+        print(f"Saved sample report to {report_file}")
 
     if args.sample_tokens:
         print(generate_text(model, tokenizer, "\n", args.sample_tokens, cfg.block_size, device))

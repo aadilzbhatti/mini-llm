@@ -1,0 +1,20 @@
+{
+  "name": "emb192-seed7",
+  "args": {
+    "n-embd": 192,
+    "n-head": 4,
+    "n-layer": 2,
+    "block-size": 64,
+    "batch-size": 4,
+    "steps": 20000,
+    "lr": 0.001,
+    "min-lr": 0.0001,
+    "warmup-steps": 500,
+    "seed": 7,
+    "eval-interval": 100,
+    "eval-batches": 20,
+    "eval-seed": 1234,
+    "full-eval-interval": 5000,
+    "plot-suffix": "emb192"
+  }
+}
