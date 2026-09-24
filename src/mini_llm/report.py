@@ -31,13 +31,16 @@ import torch
 import torch.nn.functional as F
 
 from mini_llm.data import decode, encode
-from mini_llm.generate import generate_text
 
 REPORT_SEED = 1234
 REPORT_MAX_NEW_TOKENS = 128
 REPORT_SAMPLES_PER_PROMPT = 2
 REPORT_TEMPERATURE = 0.8
 REPORT_TOP_K = 50
+# GPT-2's <|endoftext|>. Hardcoded because a tokenizer loaded from a bare
+# local directory can report eos_token_id = None; prepare_dataset.py writes
+# this same id between documents, so it is what the model was trained on.
+EOS_TOKEN_ID = 50256
 
 # (label, prompt). Chosen against what is ACTUALLY in the corpus, not what the
 # repo name suggests. prepare_dataset.py pulls HuggingFaceTB/smollm-corpus,
@@ -115,46 +118,67 @@ def context_note(n_prompt: int, block_size: int, max_new_tokens: int) -> str:
 
 
 @torch.no_grad()
-def generate_temp_topk(
+def generate_until_eos(
     model,
     idx: torch.Tensor,
     max_new_tokens: int,
     block_size: int,
-    temperature: float,
-    top_k: int,
-) -> torch.Tensor:
-    """Temperature + top-k sampling.
+    greedy: bool = False,
+    temperature: float | None = None,
+    top_k: int | None = None,
+    eos_token_id: int | None = EOS_TOKEN_ID,
+) -> tuple[torch.Tensor, bool]:
+    """Generate, stopping as soon as EOS is sampled. Returns (idx, hit_eos).
 
     Implemented here, NOT in the model: ModelCustomTransformer.generate() is
-    the preserved original and only does argmax or plain multinomial. This
-    mirrors its context cropping exactly (last block_size tokens, logits from
-    the final position) and differs only in how the next token is picked --
-    divide by temperature, keep the top_k logits, renormalise, sample.
+    the preserved original and runs a fixed token budget with no stop
+    condition. The context cropping and the greedy/multinomial arithmetic
+    mirror it exactly, so a generation that never emits EOS is identical to
+    what generate() would have produced.
+
+    Why stopping matters: EOS is a document boundary. The corpus is an
+    EOS-separated stream of documents, so once the model emits it, it has
+    said "this document is finished" -- and every token after it is the
+    model starting a NEW document from nothing. Continuing past it and then
+    judging whether the model held the prompt's subject measures the wrong
+    thing entirely. The EOS token itself is not appended to the output.
     """
     was_training = model.training
     model.eval()
     try:
         for _ in range(max_new_tokens):
             logits, _ = model(idx[:, -block_size:])
-            logits = logits[:, -1, :] / temperature
+            logits = logits[:, -1, :]
+            if temperature is not None:
+                logits = logits / temperature
             if top_k:
                 k = min(top_k, logits.size(-1))
                 kth = torch.topk(logits, k, dim=-1).values[:, -1:]
                 logits = logits.masked_fill(logits < kth, float("-inf"))
             probs = F.softmax(logits, dim=-1)
-            idx = torch.cat((idx, torch.multinomial(probs, num_samples=1)), dim=1)
-        return idx
+            nxt = torch.argmax(probs, dim=-1, keepdim=True) if greedy else torch.multinomial(probs, num_samples=1)
+            if eos_token_id is not None and int(nxt.item()) == eos_token_id:
+                return idx, True
+            idx = torch.cat((idx, nxt), dim=1)
+        return idx, False
     finally:
         model.train(was_training)
 
 
-def generate_text_temp_topk(
-    model, tokenizer, prompt: str, max_new_tokens: int, block_size: int, device,
-    temperature: float, top_k: int,
-) -> str:
+def generate_sample(
+    model, tokenizer, prompt: str, max_new_tokens: int, block_size: int, device, **kwargs
+) -> tuple[str, int, bool]:
+    """-> (text, tokens generated, stopped at EOS)"""
     idx = encode(prompt, tokenizer).unsqueeze(0).to(device)
-    out = generate_temp_topk(model, idx, max_new_tokens, block_size, temperature, top_k)
-    return decode(out[0], tokenizer)
+    n_prompt = idx.size(1)
+    out, hit_eos = generate_until_eos(model, idx, max_new_tokens, block_size, **kwargs)
+    return decode(out[0], tokenizer), out.size(1) - n_prompt, hit_eos
+
+
+def _footer(n: int, hit_eos: bool, budget: int) -> str:
+    if hit_eos:
+        return f"[stopped at EOS after {n} of {budget} tokens -- the model ended the document]"
+    return f"[{n} tokens, no EOS]"
 
 
 def sample_report(
@@ -181,6 +205,9 @@ def sample_report(
         f"- block_size: {block_size}",
         f"- device: {device}",
         "",
+        f"Generation stops when EOS ({EOS_TOKEN_ID}) is sampled: EOS is a document "
+        f"boundary, so text past it would be the model starting a new document.",
+        "",
         f"Context note: the window holds {block_size} tokens, so with "
         f"{max_new_tokens} new tokens every prompt has left the window by generated "
         f"token {block_size}; everything after that continues the model's own output only.",
@@ -190,16 +217,24 @@ def sample_report(
     ]
 
     for label, prompt in PROMPTS:
-        text = generate_text(model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=True)
-        lines += [f"### {label}", "", f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", "", "```", text, "```", ""]
+        text, n, eos = generate_sample(
+            model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=True
+        )
+        lines += [
+            f"### {label}", "",
+            f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", "",
+            "```", text, "```", _footer(n, eos, max_new_tokens), "",
+        ]
 
     lines += ["## Sampled", ""]
     torch.manual_seed(seed)  # once, then draw sequentially -- see module docstring
     for label, prompt in PROMPTS:
         lines += [f"### {label}", "", f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", ""]
         for i in range(samples_per_prompt):
-            text = generate_text(model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=False)
-            lines += [f"draw {i + 1}:", "", "```", text, "```", ""]
+            text, n, eos = generate_sample(
+                model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=False
+            )
+            lines += [f"draw {i + 1}:", "", "```", text, "```", _footer(n, eos, max_new_tokens), ""]
 
     # Third regime, added after the first two so their RNG streams are
     # untouched -- greedy and plain sampling are longitudinal benchmarks and
@@ -214,10 +249,11 @@ def sample_report(
             "",
         ]
         for i in range(samples_per_prompt):
-            text = generate_text_temp_topk(
-                model, tokenizer, prompt, max_new_tokens, block_size, device, temperature, top_k
+            text, n, eos = generate_sample(
+                model, tokenizer, prompt, max_new_tokens, block_size, device,
+                temperature=temperature, top_k=top_k,
             )
-            lines += [f"draw {i + 1}:", "", "```", text, "```", ""]
+            lines += [f"draw {i + 1}:", "", "```", text, "```", _footer(n, eos, max_new_tokens), ""]
 
     return "\n".join(lines)
 
