@@ -333,6 +333,16 @@ def parse_args(argv: list[str] | None = None):
     p.add_argument("--steps", type=int, default=100)
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument(
+        "--restart-lr",
+        type=float,
+        default=None,
+        help="Only with --resume. The learning rate the continuation STARTS at. The "
+        "continuation then cosine-decays from it to --min-lr over --steps, as its own "
+        "schedule, with no warmup. Without this flag a resumed run continues the "
+        "ORIGINAL cosine over [0, start_step + --steps], so it picks up partway down "
+        "and --lr is not the rate it begins at.",
+    )
+    p.add_argument(
         "--min-lr",
         type=float,
         default=2e-6,
@@ -422,6 +432,9 @@ def parse_args(argv: list[str] | None = None):
 def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
     torch.manual_seed(args.seed)
+
+    if args.restart_lr is not None and not args.resume:
+        raise SystemExit("--restart-lr only means something with --resume; there is no run to restart.")
 
     device = select_device()
     print(f"Using device: {device}")
@@ -526,13 +539,38 @@ def main(argv: list[str] | None = None) -> None:
         "full_eval_interval": args.full_eval_interval,
         "tokens_processed": tokens_processed,
     }
+    if args.resume:
+        # A resumed run's raw --lr is a schedule parameter, not a rate the run
+        # ever uses: the cosine spans [0, total_steps], so a continuation picks
+        # it up partway down and starts well below --lr. Recording only `lr`
+        # makes a restart's plot footer describe the arithmetic used to set the
+        # run up rather than the run itself -- and, worse, look like an
+        # ordinary high-LR run. Record what actually happened alongside it.
+        optim_cfg["resumed_from"] = Path(args.resume).name
+        optim_cfg["resumed_at_step"] = start_step
+        if lr_history:  # loaded from the checkpoint, so this is the original peak
+            optim_cfg["initial_max_lr"] = max(v for _, v in lr_history)
+        optim_cfg["continuation_restart_lr"] = (
+            args.restart_lr
+            if args.restart_lr is not None
+            else lr_at_step(start_step, total_steps, args.lr, min_lr, args.warmup_steps)
+        )
+        optim_cfg["restart_schedule"] = "own cosine" if args.restart_lr is not None else "original cosine tail"
+        optim_cfg["continuation_steps"] = args.steps
     print(f"Optimization: {optim_cfg}")
 
     model.train()
     for local_step in range(args.steps):
         step = start_step + local_step
 
-        current_lr = lr_at_step(step, total_steps, args.lr, min_lr, args.warmup_steps)
+        if args.restart_lr is not None:
+            # Own schedule for this leg: a full cosine from --restart-lr down to
+            # --min-lr across --steps, so the first step runs at exactly
+            # --restart-lr. No warmup -- the model is already trained, and a
+            # measured 50x restart jump produced no loss spike at all.
+            current_lr = lr_at_step(step - start_step, args.steps, args.restart_lr, min_lr, 0)
+        else:
+            current_lr = lr_at_step(step, total_steps, args.lr, min_lr, args.warmup_steps)
         for param_group in optimizer.param_groups:
             param_group["lr"] = current_lr
         lr_history.append((step, current_lr))

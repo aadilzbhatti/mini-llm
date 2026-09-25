@@ -55,6 +55,7 @@ FLOAT_FLAGS: dict[str, tuple[float, float]] = {
     "dropout": (0.0, 1.0),
     "lr": (1e-8, 10.0),
     "min-lr": (1e-9, 10.0),
+    "restart-lr": (1e-9, 10.0),
     "weight-decay": (0.0, 10.0),
 }
 
