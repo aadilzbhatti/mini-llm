@@ -139,10 +139,17 @@ def lr_at_step(step: int, total_steps: int, lr: float, min_lr: float, warmup_ste
     """Linear warmup for `warmup_steps`, then cosine decay from `lr` to `min_lr`.
 
     `total_steps` is the horizon the cosine curve spans; `min_lr == lr`
-    collapses this to a constant rate regardless of warmup.
+    collapses this to a constant rate regardless of warmup. `min_lr` is a
+    genuine floor -- the warmup ramp is clamped to it, so no step ever runs
+    below it.
     """
     if warmup_steps > 0 and step < warmup_steps:
-        return lr * (step + 1) / warmup_steps
+        # Clamp to min_lr: without this the ramp starts at lr/warmup_steps,
+        # which for a small peak sits BELOW the floor (peak 3e-4 over 500
+        # warmup steps starts at 6e-7 against a 2e-6 floor). It went unnoticed
+        # for a long time because peak 1e-3 over 500 steps starts at exactly
+        # 2e-6 -- numerically identical to the usual floor, by coincidence.
+        return max(min_lr, lr * (step + 1) / warmup_steps)
     if total_steps <= warmup_steps:
         return min_lr
     progress = (step - warmup_steps) / (total_steps - warmup_steps)
@@ -273,8 +280,15 @@ def plot_loss(
     if lr_history:
         ax2 = ax1.twinx()
         steps, lrs = zip(*lr_history)
+        # Label the CONFIGURED floor, not min(lrs): the smallest value on the
+        # curve is the first warmup step, not the annealing floor, and showing
+        # it under the name "min" reads as the run having annealed somewhere
+        # it did not.
+        floor = (hyperparams or {}).get("min_lr")
+        floor_txt = f"floor {float(floor):.2e}" if floor is not None else f"min {min(lrs):.2e}"
         (line_lr,) = ax2.plot(
-            steps, lrs, color="gray", alpha=0.6, linestyle=":", label=f"lr (max {max(lrs):.2e}, min {min(lrs):.2e})"
+            steps, lrs, color="gray", alpha=0.6, linestyle=":",
+            label=f"lr (peak {max(lrs):.2e}, {floor_txt})",
         )
         ax2.set_ylabel("learning rate")
         ax2.set_yscale("log")
