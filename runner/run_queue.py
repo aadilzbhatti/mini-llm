@@ -49,6 +49,7 @@ INT_FLAGS: dict[str, tuple[int, int]] = {
     "eval-seed": (0, 2**31 - 1),
     "full-eval-interval": (0, 1_000_000),
     "sample-tokens": (0, 10_000),
+    "sample-report-tokens": (1, 10_000),
 }
 
 FLOAT_FLAGS: dict[str, tuple[float, float]] = {
@@ -67,12 +68,13 @@ PATH_FLAGS = {"tokens", "val-tokens", "text", "resume"}
 # plot name, so it gets the same character rules.
 NAME_FLAGS = {"plot-name", "save-name", "plot-suffix"}
 
-BOOL_FLAGS = {"fixed-batch", "plot-loss", "save", "sample-report"}
+BOOL_FLAGS = {"fixed-batch", "plot-loss", "save", "sample-report", "baseline"}
 
 DEFAULT_ARGS: dict[str, object] = {
     "tokens": "data/train.pt",
     "val-tokens": "data/val.pt",
     "plot-loss": True,
+    "baseline": True,
 }
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")

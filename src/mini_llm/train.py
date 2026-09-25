@@ -46,15 +46,23 @@ Model hyperparams (--block-size, --n-embd, etc.) must match what the
 checkpoint was trained with -- resume checks this and refuses to load a
 mismatched config rather than silently producing shape errors partway
 through.
+
+--baseline upserts this run into baselines.md (see mini_llm.baselines),
+keyed by run name (--save-name/--plot-name, or the generated hyperparam
+name if neither is set) so a --resume continuation replaces its own
+earlier row rather than duplicating it. Re-sorted by best loss on every
+write, so the table always reads best-run-first.
 """
 
 import argparse
 import math
+from datetime import datetime, timezone
 from pathlib import Path
 
 import torch
 from torch.optim import AdamW
 
+from mini_llm.baselines import update_baselines
 from mini_llm.config import ModelConfig, build_model
 from mini_llm.data import encode, fixed_batch, get_tokenizer, load_text, load_tokens, make_batch
 from mini_llm.device import select_device
@@ -397,6 +405,12 @@ def parse_args(argv: list[str] | None = None):
     p.add_argument("--sample-tokens", type=int, default=0, help="Generate N tokens after training.")
     p.add_argument("--save", action="store_true", help="Save a checkpoint after training.")
     p.add_argument(
+        "--sample-report-tokens",
+        type=int,
+        default=None,
+        help="Override the sample report's token budget. Default is 2 x --block-size.",
+    )
+    p.add_argument(
         "--sample-report",
         action="store_true",
         help="After training, generate from a fixed prompt battery under fixed decoding "
@@ -425,6 +439,13 @@ def parse_args(argv: list[str] | None = None):
         default=None,
         help="Extra suffix appended to the generated plot filename (ignored if --plot-name "
         "is set), e.g. --plot-suffix notes gives loss_..._notes.png.",
+    )
+    p.add_argument(
+        "--baseline",
+        action="store_true",
+        help="Upsert this run into baselines.md (and baselines.json next to it) at the end "
+        "of training, keyed by --save-name/--plot-name (or the generated hyperparam name if "
+        "neither is set) and re-sorted by best loss.",
     )
     return p.parse_args(argv)
 
@@ -609,6 +630,9 @@ def main(argv: list[str] | None = None) -> None:
             full_val_history.append((step, full_val_loss))
             print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
 
+    plot_path: Path | None = None
+    save_path: Path | None = None
+
     if args.plot_loss:
         decay_active = min_lr != args.lr or args.warmup_steps > 0
         plot_path = PLOTS_DIR / (
@@ -655,6 +679,7 @@ def main(argv: list[str] | None = None) -> None:
             cfg.block_size,
             device,
             report_target,
+            max_new_tokens=args.sample_report_tokens,
             meta={
                 "checkpoint": str(report_target) if args.save else "(not saved)",
                 "step": total_steps,
@@ -666,6 +691,32 @@ def main(argv: list[str] | None = None) -> None:
             },
         )
         print(f"Saved sample report to {report_file}")
+
+    if args.baseline:
+        run_name = args.save_name or args.plot_name or default_checkpoint_name(cfg, optim_cfg, total_steps)
+        baselines_path = update_baselines(
+            {
+                "run": run_name,
+                "date": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                "steps": total_steps,
+                "params": n_params,
+                "n_layer": cfg.n_layer,
+                "n_embd": cfg.n_embd,
+                "n_head": cfg.n_head,
+                "block_size": cfg.block_size,
+                "batch_size": optim_cfg["batch_size"],
+                "lr": optim_cfg["lr"],
+                "min_lr": optim_cfg["min_lr"],
+                "warmup_steps": optim_cfg["warmup_steps"],
+                "seed": optim_cfg["seed"],
+                "eval_train_loss": train_history[-1][1] if train_history else None,
+                "eval_val_loss": val_history[-1][1] if val_history else None,
+                "full_val_loss": full_val_history[-1][1] if full_val_history else None,
+                "checkpoint": str(save_path) if save_path is not None else None,
+                "plot": str(plot_path) if plot_path is not None else None,
+            }
+        )
+        print(f"Updated {baselines_path}")
 
     if args.sample_tokens:
         print(generate_text(model, tokenizer, "\n", args.sample_tokens, cfg.block_size, device))

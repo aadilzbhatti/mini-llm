@@ -33,7 +33,12 @@ import torch.nn.functional as F
 from mini_llm.data import decode, encode
 
 REPORT_SEED = 1234
-REPORT_MAX_NEW_TOKENS = 128
+# Token budget defaults to 2x block_size, so a report always runs exactly one
+# full context past the point where the prompt has scrolled out -- half the
+# generation conditioned on the prompt, half on the model's own output. At
+# block_size 64 this is 128, identical to the previous fixed default, so
+# existing reports stay comparable; at 128 it becomes 256 automatically.
+REPORT_TOKENS_PER_BLOCK = 2
 REPORT_SAMPLES_PER_PROMPT = 2
 REPORT_TEMPERATURE = 0.8
 REPORT_TOP_K = 50
@@ -187,13 +192,15 @@ def sample_report(
     block_size: int,
     device: torch.device | str,
     meta: dict[str, object] | None = None,
-    max_new_tokens: int = REPORT_MAX_NEW_TOKENS,
+    max_new_tokens: int | None = None,
     seed: int = REPORT_SEED,
     samples_per_prompt: int = REPORT_SAMPLES_PER_PROMPT,
     temperature: float = REPORT_TEMPERATURE,
     top_k: int = REPORT_TOP_K,
 ) -> str:
     """Build the report text. Leaves the model in whatever mode it was in."""
+    if max_new_tokens is None:
+        max_new_tokens = REPORT_TOKENS_PER_BLOCK * block_size
     n_tokens = {label: encode(prompt, tokenizer).numel() for label, prompt in PROMPTS}
 
     lines: list[str] = ["# Sample report", ""]
@@ -291,7 +298,8 @@ def main(argv: list[str] | None = None) -> None:
 
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--checkpoint", required=True)
-    p.add_argument("--max-new-tokens", type=int, default=REPORT_MAX_NEW_TOKENS)
+    p.add_argument("--max-new-tokens", type=int, default=None,
+                   help="Default: 2 x block_size.")
     p.add_argument("--seed", type=int, default=REPORT_SEED)
     p.add_argument("--device", default=None, help="Override the auto-selected device.")
     args = p.parse_args(argv)
