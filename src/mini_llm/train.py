@@ -1,7 +1,7 @@
 """Minimal training loop: forward -> loss -> zero_grad -> backward -> step.
 
-No AMP, no grad accumulation, no clipping. Add those back deliberately when
-you want them.
+No AMP (unless --bf16 on CUDA), no grad accumulation, no clipping. Add those
+back deliberately when you want them.
 
 LR schedule: linear warmup (--warmup-steps, default 500) then cosine decay
 from --lr (default 1e-3) down to --min-lr (default 2e-6), over this run's
@@ -61,15 +61,28 @@ scale the LR, change eval/log cadence, pause, force an eval or checkpoint, or
 stop early. Commands only ever apply between steps, and each one is logged
 with its step to runs/<run id>.events.jsonl and to TensorBoard, so a steered
 run is still reproducible from its launch args plus its events.
+
+Multi-GPU (DDP, see mini_llm.distributed): launched under torchrun, each
+process trains a full model copy on its own shard of --tokens, with
+--batch-size meaning the GLOBAL batch (each rank takes batch_size /
+world_size of it) so the same flags mean the same optimization on 1 or N
+devices. Eval uses the same fixed batches as a single device, split across
+ranks and summed back, so eval numbers stay comparable with local runs. Only
+rank 0 prints, writes TensorBoard, checkpoints, plots and reports. Live
+control is off under DDP. --bf16 turns on bf16 autocast for the training
+forward pass (CUDA only). Without torchrun none of this applies and the run
+is exactly the single-device loop.
 """
 
 import argparse
+import contextlib
 import math
 import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 import torch
+from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import AdamW
 
 from mini_llm.baselines import update_baselines
@@ -77,6 +90,15 @@ from mini_llm.config import ModelConfig, build_model
 from mini_llm.control import ControlState, RunControl
 from mini_llm.data import encode, fixed_batch, get_tokenizer, load_text, load_tokens, make_batch
 from mini_llm.device import select_device
+from mini_llm.distributed import (
+    DistInfo,
+    all_reduce_mean,
+    all_reduce_sum,
+    cleanup_distributed,
+    gather_objects,
+    setup_distributed,
+    shard_tokens,
+)
 from mini_llm.generate import generate_text
 from mini_llm.report import write_sample_report
 
@@ -107,17 +129,40 @@ def sample_eval_batches(
 
 
 @torch.no_grad()
-def evaluate_fixed(model: torch.nn.Module, batches: list[tuple[torch.Tensor, torch.Tensor]]) -> float:
+def evaluate_fixed(
+    model: torch.nn.Module,
+    batches: list[tuple[torch.Tensor, torch.Tensor]],
+    info: DistInfo = DistInfo(),
+) -> float:
     """Average loss over a fixed, pre-sampled set of batches.
 
     Reusing the same batches at every checkpoint means successive
     evaluations measure how the model changed, not how the sample did.
+
+    Under DDP this is a collective: every rank must call it.
     """
     model.eval()
     total_loss = 0.0
     for x, y in batches:
+        weight = 1.0
+        if info.enabled:
+            # DDP: every rank holds the SAME fixed batches (same --eval-seed,
+            # same global --batch-size) and evaluates only its own contiguous
+            # block of rows of each. A batch's loss is a mean over its rows,
+            # so weighting this rank's mean by its share of the rows, then
+            # summing across ranks below, rebuilds exactly the full-batch
+            # mean a single device would get. Same measuring stick, split N
+            # ways. (A contiguous block, not rows rank::N: the model .view()s
+            # its targets, which fails on a strided slice.)
+            n_rows = x.shape[0]
+            x = torch.tensor_split(x, info.world_size)[info.rank]
+            y = torch.tensor_split(y, info.world_size)[info.rank]
+            weight = x.shape[0] / n_rows
+            if weight == 0:  # fewer rows than ranks: nothing for this rank
+                continue
         _, loss = model(x, y)
-        total_loss += loss.item()
+        total_loss += loss.item() * weight
+    (total_loss,) = all_reduce_sum([total_loss], info)
     model.train()
     return total_loss / len(batches)
 
@@ -129,12 +174,15 @@ def evaluate_full(
     batch_size: int,
     block_size: int,
     device: torch.device | str,
+    info: DistInfo = DistInfo(),
 ) -> float:
     """Average loss over every non-overlapping window in `tokens`.
 
     Exhaustive, not sampled -- the true loss over the whole set, at the
     cost of a full pass. Meant to run infrequently (--full-eval-interval),
     as a periodic sanity check against the cheaper fixed-sample estimate.
+
+    Under DDP this is a collective: every rank must call it.
     """
     n_windows = (tokens.numel() - 1) // block_size
     if n_windows == 0:
@@ -144,13 +192,18 @@ def evaluate_full(
 
     model.eval()
     total_loss, total_windows = 0.0, 0
-    for start in range(0, n_windows, batch_size):
+    # DDP: chunks are dealt round-robin (rank r takes chunks r, r+N, r+2N, ...)
+    # so the N ranks cover every window exactly once between them. The
+    # (loss sum, window count) pairs are summed across ranks below, so the
+    # result is the same exhaustive average as on one device.
+    for start in range(info.rank * batch_size, n_windows, batch_size * info.world_size):
         offsets = [i * block_size for i in range(start, min(start + batch_size, n_windows))]
         x = torch.stack([tokens[o : o + block_size] for o in offsets]).to(device)
         y = torch.stack([tokens[o + 1 : o + block_size + 1] for o in offsets]).to(device)
         _, loss = model(x, y)
         total_loss += loss.item() * len(offsets)
         total_windows += len(offsets)
+    total_loss, total_windows = all_reduce_sum([total_loss, total_windows], info)
     model.train()
     return total_loss / total_windows
 
@@ -220,8 +273,19 @@ def save_checkpoint(
     val_history: list[tuple[int, float]],
     full_val_history: list[tuple[int, float]],
     lr_history: list[tuple[int, float]],
+    batch_rng_states: list[object] | None = None,
 ) -> Path:
+    """`model` must be the bare module, never the DDP wrapper: DDP's own
+    state_dict prefixes every key with "module.", which a plain
+    ModelCustomTransformer (e.g. on the Mac) then refuses to load.
+
+    `batch_rng_states` (DDP only) holds every rank's batch generator, in rank
+    order, so a resume at the same world size continues each rank's own crop
+    sequence. `batch_rng_state` stays rank 0's, so a single device can still
+    resume from a DDP checkpoint.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
+    extra = {"batch_rng_states": batch_rng_states} if batch_rng_states is not None else {}
     torch.save(
         {
             "config": cfg.to_dict(),
@@ -233,6 +297,7 @@ def save_checkpoint(
             "val_history": val_history,
             "full_val_history": full_val_history,
             "lr_history": lr_history,
+            **extra,
         },
         path,
     )
@@ -381,7 +446,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--n-layer", type=int, default=4)
     p.add_argument("--dropout", type=float, default=0.0)
     # optimization
-    p.add_argument("--batch-size", type=int, default=4)
+    p.add_argument(
+        "--batch-size",
+        type=int,
+        default=4,
+        help="Global batch size per optimizer step. Under torchrun each of the N ranks "
+        "takes batch_size / N of it, so it must divide evenly.",
+    )
+    p.add_argument(
+        "--bf16",
+        action="store_true",
+        help="bf16 autocast for the training forward pass. CUDA only; ignored (with a "
+        "notice) on MPS/CPU. Eval stays fp32 so eval losses remain comparable across runs.",
+    )
     p.add_argument("--steps", type=int, default=100)
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument(
@@ -512,19 +589,67 @@ def parse_args(argv: list[str] | None = None):
     return build_parser().parse_args(argv)
 
 
+class _SilentControl(RunControl):
+    """RunControl for DDP ranks other than 0: the same state and interface, so
+    the loop needs no rank checks, but it writes no files, heartbeats or
+    TensorBoard events (its _tb stays None, so scalar/text/close are no-ops)."""
+
+    def __post_init__(self) -> None:
+        self.paths = {}
+
+    def heartbeat(self, *args: object, **kwargs: object) -> None:
+        pass
+
+
 def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
+    # Under torchrun: join the process group. Otherwise a no-op, and
+    # dist_info.enabled is False everywhere below.
+    dist_info = setup_distributed()
+    try:
+        run_training(args, dist_info)
+    finally:
+        # Always leave the process group, even on an exception, so NCCL
+        # doesn't warn about a leaked group at exit.
+        cleanup_distributed(dist_info)
+
+
+def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     torch.manual_seed(args.seed)
 
     if args.restart_lr is not None and not args.resume:
         raise SystemExit("--restart-lr only means something with --resume; there is no run to restart.")
 
-    device = select_device()
+    # DDP: the device is fixed by LOCAL_RANK (cuda:N, or cpu under gloo), not
+    # picked. Single device: the usual MPS -> CUDA -> CPU choice.
+    device = dist_info.device if dist_info.enabled else select_device()
     print(f"Using device: {device}")
+    if dist_info.enabled:
+        print(f"DDP: world_size={dist_info.world_size}, backend={torch.distributed.get_backend()}")
+        if args.batch_size % dist_info.world_size:
+            raise SystemExit(
+                f"--batch-size {args.batch_size} is the global batch and must divide evenly "
+                f"across {dist_info.world_size} ranks."
+            )
+    # --batch-size is the global batch. DDP averages gradients across ranks,
+    # so N ranks x (batch_size / N) rows gives the same gradient as one device
+    # with batch_size rows: same LR, same schedule, just faster.
+    per_rank_batch = args.batch_size // dist_info.world_size
+
+    use_bf16 = args.bf16 and device.type == "cuda"
+    if args.bf16 and not use_bf16:
+        print(f"--bf16 ignored: bf16 autocast is only enabled on CUDA, and this run is on {device.type}.")
+    # bf16 has fp32's exponent range, so unlike fp16 it needs no GradScaler.
+    autocast = (lambda: torch.autocast("cuda", dtype=torch.bfloat16)) if use_bf16 else contextlib.nullcontext
 
     tokenizer = get_tokenizer()
     tokens = load_tokens(args.tokens) if args.tokens else encode(load_text(args.text), tokenizer)
     val_tokens = load_tokens(args.val_tokens) if args.val_tokens else None
+    # DDP: each rank trains only on its own contiguous 1/N of the stream, so
+    # no two ranks ever see the same training tokens. `tokens` itself stays
+    # whole: the fixed eval batches are sampled from it identically on every
+    # rank. Single device: train_tokens is just tokens.
+    train_tokens = shard_tokens(tokens, dist_info)
 
     cfg = ModelConfig(
         vocab_size=len(tokenizer),
@@ -536,6 +661,12 @@ def main(argv: list[str] | None = None) -> None:
     )
     print(f"Config: {cfg.to_dict()}")
     model = build_model(cfg).to(device)
+    if dist_info.enabled:
+        # Every rank seeded the same above, so every rank built the same
+        # initial weights (DDP would broadcast rank 0's anyway). From here on,
+        # give each rank its own RNG stream, or all ranks would draw identical
+        # dropout masks for their different rows.
+        torch.manual_seed(args.seed + dist_info.rank)
     n_params = sum(p.numel() for p in model.parameters())
     print(f"Model: {n_params:,} parameters")
 
@@ -558,12 +689,19 @@ def main(argv: list[str] | None = None) -> None:
     batch = None
     if args.fixed_batch:
         batch = fixed_batch(tokens, args.batch_size, cfg.block_size, device=device, seed=args.seed)
+        if dist_info.enabled:
+            # DDP: the fixed batch is the global one; each rank trains on its
+            # own contiguous block of per_rank_batch rows of it.
+            lo = dist_info.rank * per_rank_batch
+            batch = (batch[0][lo : lo + per_rank_batch], batch[1][lo : lo + per_rank_batch])
         print("Training on one fixed batch.")
 
     # Dedicated generator for the resampled-batch case: the batch sequence
     # then depends only on --seed, not on how many random draws model init
     # (or anything else before the loop) happened to consume.
-    batch_rng = torch.Generator().manual_seed(args.seed)
+    # DDP: seed + rank, so each rank draws its own crop positions. Rank 0
+    # keeps plain --seed, which is also the single-device stream.
+    batch_rng = torch.Generator().manual_seed(args.seed + dist_info.rank)
 
     # Fixed once, at init, and reused unchanged at every eval checkpoint --
     # see the module docstring on why these aren't resampled per checkpoint.
@@ -598,7 +736,17 @@ def main(argv: list[str] | None = None) -> None:
             )
         model.load_state_dict(ckpt["model_state_dict"])
         optimizer.load_state_dict(ckpt["optimizer_state_dict"])
-        batch_rng.set_state(ckpt["batch_rng_state"])
+        rng_states = ckpt.get("batch_rng_states")
+        if dist_info.enabled and rng_states is not None and len(rng_states) == dist_info.world_size:
+            # DDP resume at the same world size: each rank picks up its own stream.
+            batch_rng.set_state(rng_states[dist_info.rank])
+        elif dist_info.rank == 0:
+            batch_rng.set_state(ckpt["batch_rng_state"])
+        else:
+            # The checkpoint came from a different world size (e.g. a Mac run),
+            # so there's no saved stream for this rank: it keeps its fresh
+            # seed + rank one.
+            print("resume: no saved batch generator for this rank; using a fresh one", force=True)  # pyright: ignore[reportCallIssue]
         start_step = ckpt["step"]
         train_history = ckpt["train_history"]
         val_history = ckpt["val_history"]
@@ -622,6 +770,12 @@ def main(argv: list[str] | None = None) -> None:
         "full_eval_interval": args.full_eval_interval,
         "tokens_processed": tokens_processed,
     }
+    # Recorded only when they apply, so single-device runs log exactly as before.
+    if dist_info.enabled:
+        optim_cfg["world_size"] = dist_info.world_size
+        optim_cfg["per_rank_batch_size"] = per_rank_batch
+    if use_bf16:
+        optim_cfg["bf16"] = True
     if args.resume:
         # A resumed run's raw --lr is a schedule parameter, not a rate the run
         # ever uses: the cosine spans [0, total_steps], so a continuation picks
@@ -646,7 +800,17 @@ def main(argv: list[str] | None = None) -> None:
         f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{hyperparam_slug(cfg, optim_cfg, total_steps)}"
     )
     print(f"Run id: {run_id}")
-    control = RunControl(
+    control_poll = args.control_poll
+    if dist_info.enabled and control_poll > 0:
+        # Live control is single-process only. A command that rank 0 alone
+        # read (stop, pause, a new eval_interval) would send the ranks down
+        # different code paths, and the next collective would hang forever.
+        # Making it safe means broadcasting ControlState from rank 0 at every
+        # poll. Not worth it for remote runs nobody can reach mid-flight.
+        print("Live control disabled under DDP.")
+        control_poll = 0
+    # Only rank 0 writes heartbeat/events files and TensorBoard.
+    control = (RunControl if dist_info.is_main else _SilentControl)(
         run_id=run_id,
         runs_dir=RUNS_DIR,
         state=ControlState(
@@ -666,11 +830,24 @@ def main(argv: list[str] | None = None) -> None:
     control.heartbeat(start_step, total_steps, force=True)
     stopped_at: int | None = None
 
+    # DDP wraps the model for the TRAINING forward/backward only. Wrapping
+    # broadcasts rank 0's weights so every replica starts identical, then
+    # hooks backward() to all-reduce (average) gradients across ranks, so
+    # every rank's optimizer.step() makes the same update. `model` stays the
+    # bare module (it is train_model.module): eval, generation and checkpoints
+    # use it directly, so they trigger no DDP collectives, and saved
+    # state_dicts have no "module." key prefix.
+    train_model = (
+        DDP(model, device_ids=[device.index] if device.type == "cuda" else None)
+        if dist_info.enabled
+        else model
+    )
+
     model.train()
     for local_step in range(args.steps):
         step = start_step + local_step
 
-        if args.control_poll > 0:
+        if control_poll > 0:
             control.poll(step)
             if ctl.paused:
                 print(f"step {step:5d} | paused", flush=True)
@@ -693,12 +870,15 @@ def main(argv: list[str] | None = None) -> None:
         lr_history.append((step, current_lr))
 
         x, y = batch if batch is not None else make_batch(
-            tokens, args.batch_size, cfg.block_size, device=device, generator=batch_rng
+            train_tokens, per_rank_batch, cfg.block_size, device=device, generator=batch_rng
         )
 
-        _, loss = model(x, y)
+        # Autocast wraps the forward pass only. backward() then runs each op
+        # in whatever dtype its forward used.
+        with autocast():
+            _, loss = train_model(x, y)
         optimizer.zero_grad(set_to_none=True)
-        loss.backward()
+        loss.backward()  # DDP: gradients are all-reduced across ranks in here
         optimizer.step()
 
         # A stop command ends the run *here*, as if this had been the last
@@ -715,17 +895,21 @@ def main(argv: list[str] | None = None) -> None:
         )
 
         if log_now:
-            loss_value = loss.item()
+            # DDP: each rank's loss covers only its rows of the batch, so
+            # average across ranks to log the global-batch loss. This is a
+            # collective, which is safe because log_now comes out the same on
+            # every rank (same step, same intervals, live control off).
+            loss_value = all_reduce_mean(loss.item(), dist_info)
             print(f"step {step:5d} | loss {loss_value:.4f} | lr {current_lr:.2e}")
             control.scalar("train/batch_loss", loss_value, step)
             control.scalar("train/lr", current_lr, step)
 
         if eval_now:
-            eval_train_loss = evaluate_fixed(model, train_eval_batches)
+            eval_train_loss = evaluate_fixed(model, train_eval_batches, dist_info)
             train_history.append((step, eval_train_loss))
             msg = f"step {step:5d} | eval_train_loss {eval_train_loss:.4f}"
             if val_eval_batches is not None:
-                eval_val_loss = evaluate_fixed(model, val_eval_batches)
+                eval_val_loss = evaluate_fixed(model, val_eval_batches, dist_info)
                 val_history.append((step, eval_val_loss))
                 msg += f" | eval_val_loss {eval_val_loss:.4f}"
                 control.scalar("eval/val_loss", eval_val_loss, step)
@@ -733,7 +917,10 @@ def main(argv: list[str] | None = None) -> None:
             print(msg)
 
         if full_eval_now:
-            full_val_loss = evaluate_full(model, val_tokens, args.batch_size, cfg.block_size, device)
+            # Chunk size doesn't change the (exhaustive) result, only memory,
+            # so each rank uses its training batch size. Single device:
+            # per_rank_batch == --batch-size.
+            full_val_loss = evaluate_full(model, val_tokens, per_rank_batch, cfg.block_size, device, dist_info)
             full_val_history.append((step, full_val_loss))
             print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
             control.scalar("eval/full_val_loss", full_val_loss, step)
@@ -772,6 +959,16 @@ def main(argv: list[str] | None = None) -> None:
         optim_cfg["total_steps"] = total_steps
         optim_cfg["stopped_early_at"] = total_steps
 
+    # DDP: everything from here on writes files, so it's rank 0 only. The
+    # one thing rank 0 needs from the others is their batch generator states
+    # for the checkpoint, and gathering them is a collective, so every rank
+    # takes part before the others leave.
+    batch_rng_states = (
+        gather_objects(batch_rng.get_state(), dist_info) if args.save and dist_info.enabled else None
+    )
+    if not dist_info.is_main:
+        return
+
     plot_path: Path | None = None
     save_path: Path | None = None
 
@@ -795,6 +992,7 @@ def main(argv: list[str] | None = None) -> None:
             CHECKPOINTS_DIR / (args.save_name or default_checkpoint_name(cfg, optim_cfg, total_steps)),
             cfg, model, optimizer, batch_rng, total_steps,
             train_history, val_history, full_val_history, lr_history,
+            batch_rng_states=batch_rng_states,
         )
         print(f"Saved to {save_path}")
 
