@@ -159,10 +159,19 @@ runs/tb/<id>/   TensorBoard events
 Fetch a run (it's safe to repeat on a live run, since outputs are committed every 5 min):
 
 ```bash
-scripts/fetch_modal_run.sh                   # list runs
-scripts/fetch_modal_run.sh <run_id>          # -> ./runs/<run_id>
+scripts/fetch_modal_run.sh                              # list runs
+scripts/fetch_modal_run.sh <run_id>                     # -> ./runs/<run_id>, then import
+scripts/fetch_modal_run.sh <run_id> --repo ~/dev/wiki-llm   # import into another checkout
+scripts/fetch_modal_run.sh <run_id> --no-import         # fetch only
 uv run tensorboard --logdir runs/<run_id>/runs/tb
 ```
+
+A finished run is then imported like a local `--baseline` run
+(`mini-llm-import-run`): checkpoint and sample report go to
+`checkpoints/modal_<config name>_seed<N>.pt|.md`, the plot to `plots/`, and a
+row to `baselines.md`, ranked with local runs on `full_val_loss`. The run id,
+GPUs and git sha are kept in `baselines.json` only. Re-importing replaces the
+row instead of adding a second one. Unfinished runs are fetched but not imported.
 
 A checkpoint resumes locally as usual (`--resume runs/<run_id>/checkpoints/...`),
 or remotely with `--args "--resume /runs/<run_id>/checkpoints/<file>.pt"`.

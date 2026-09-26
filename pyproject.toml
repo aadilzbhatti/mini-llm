@@ -21,6 +21,7 @@ mini-llm-train = "mini_llm.train:main"
 mini-llm-generate = "mini_llm.generate:main"
 mini-llm-prepare-data = "mini_llm.prepare_dataset:main"
 mini-llm-control = "mini_llm.server:main"
+mini-llm-import-run = "mini_llm.import_run:main"
 
 [dependency-groups]
 dev = ["pytest>=8.0", "httpx>=0.27"]
