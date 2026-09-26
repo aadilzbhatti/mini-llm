@@ -37,6 +37,8 @@ not a size knob -- --val-examples controls the actual count.
 
 import argparse
 import hashlib
+import os
+import sys
 from pathlib import Path
 from typing import cast
 
@@ -207,6 +209,24 @@ def main(argv: list[str] | None = None) -> None:
     )
     print(f"Saved train tokens to {train_path}")
     print(f"Saved val tokens to {val_path}")
+
+    # Force-exit here rather than returning normally. load_subset()
+    # deliberately `break`s out of the streaming iterator early, once both
+    # quotas are filled, rather than exhausting it -- and `datasets`'
+    # streaming backend can leave a non-daemon background thread alive from
+    # that (observed directly: the process sat at 0% CPU for 15+ minutes
+    # after both "Saved ... tokens" lines above had already printed and the
+    # files were fully written to disk). Normal interpreter shutdown waits
+    # for every non-daemon thread to finish, so the process never returns
+    # control to the shell. This has to live in main() itself, not behind
+    # `if __name__ == "__main__"` -- the installed console script imports
+    # main and calls it directly, so that guard never runs. All real work
+    # (the token files) is already durably written by this point via
+    # torch.save, so there's nothing left to lose by skipping Python's
+    # normal cleanup.
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(0)
 
 
 if __name__ == "__main__":

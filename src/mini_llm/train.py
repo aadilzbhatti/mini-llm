@@ -52,10 +52,20 @@ keyed by run name (--save-name/--plot-name, or the generated hyperparam
 name if neither is set) so a --resume continuation replaces its own
 earlier row rather than duplicating it. Re-sorted by best loss on every
 write, so the table always reads best-run-first.
+
+Live control and TensorBoard (see mini_llm.control): every run gets a run id
+(MINI_LLM_RUN_ID from the queue runner, else a timestamp + hyperparam slug).
+Scalars go to TensorBoard under --tensorboard-dir/<run id>, and every
+--control-poll steps the loop drains runs/<run id>.commands.jsonl, which can
+scale the LR, change eval/log cadence, pause, force an eval or checkpoint, or
+stop early. Commands only ever apply between steps, and each one is logged
+with its step to runs/<run id>.events.jsonl and to TensorBoard, so a steered
+run is still reproducible from its launch args plus its events.
 """
 
 import argparse
 import math
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -64,6 +74,7 @@ from torch.optim import AdamW
 
 from mini_llm.baselines import update_baselines
 from mini_llm.config import ModelConfig, build_model
+from mini_llm.control import ControlState, RunControl
 from mini_llm.data import encode, fixed_batch, get_tokenizer, load_text, load_tokens, make_batch
 from mini_llm.device import select_device
 from mini_llm.generate import generate_text
@@ -71,6 +82,7 @@ from mini_llm.report import write_sample_report
 
 PLOTS_DIR = Path("plots")
 CHECKPOINTS_DIR = Path("checkpoints")
+RUNS_DIR = Path("runs")
 DEFAULT_EVAL_SEED = 1234
 
 
@@ -195,6 +207,36 @@ def default_plot_name(cfg: ModelConfig, optim_cfg: dict[str, object], total_step
 
 def default_checkpoint_name(cfg: ModelConfig, optim_cfg: dict[str, object], total_steps: int) -> str:
     return f"ckpt_{hyperparam_slug(cfg, optim_cfg, total_steps)}.pt"
+
+
+def save_checkpoint(
+    path: Path,
+    cfg: ModelConfig,
+    model: torch.nn.Module,
+    optimizer: torch.optim.Optimizer,
+    batch_rng: torch.Generator,
+    step: int,
+    train_history: list[tuple[int, float]],
+    val_history: list[tuple[int, float]],
+    full_val_history: list[tuple[int, float]],
+    lr_history: list[tuple[int, float]],
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(
+        {
+            "config": cfg.to_dict(),
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "batch_rng_state": batch_rng.get_state(),
+            "step": step,
+            "train_history": train_history,
+            "val_history": val_history,
+            "full_val_history": full_val_history,
+            "lr_history": lr_history,
+        },
+        path,
+    )
+    return path
 
 
 def print_dataset_stats(
@@ -441,6 +483,20 @@ def parse_args(argv: list[str] | None = None):
         "is set), e.g. --plot-suffix notes gives loss_..._notes.png.",
     )
     p.add_argument(
+        "--tensorboard-dir",
+        default="runs/tb",
+        help="TensorBoard log root; this run logs to <dir>/<run id>. Point `tensorboard "
+        "--logdir` at the root to compare runs.",
+    )
+    p.add_argument("--no-tensorboard", action="store_true", help="Skip TensorBoard logging.")
+    p.add_argument(
+        "--control-poll",
+        type=int,
+        default=25,
+        help="Check runs/<run id>.commands.jsonl for live commands every N steps "
+        "(see mini_llm.control). 0 disables live control.",
+    )
+    p.add_argument(
         "--baseline",
         action="store_true",
         help="Upsert this run into baselines.md (and baselines.json next to it) at the end "
@@ -580,9 +636,40 @@ def main(argv: list[str] | None = None) -> None:
         optim_cfg["continuation_steps"] = args.steps
     print(f"Optimization: {optim_cfg}")
 
+    run_id = os.environ.get("MINI_LLM_RUN_ID") or (
+        f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{hyperparam_slug(cfg, optim_cfg, total_steps)}"
+    )
+    print(f"Run id: {run_id}")
+    control = RunControl(
+        run_id=run_id,
+        runs_dir=RUNS_DIR,
+        state=ControlState(
+            log_interval=args.log_interval,
+            eval_interval=args.eval_interval,
+            full_eval_interval=args.full_eval_interval,
+        ),
+        poll_every=max(args.control_poll, 1),
+        tensorboard_dir=None if args.no_tensorboard else Path(args.tensorboard_dir) / run_id,
+    )
+    ctl = control.state
+    control.text(
+        "config",
+        "\n".join(f"    {k}: {v}" for k, v in {**cfg.to_dict(), **optim_cfg, "run_id": run_id}.items()),
+        start_step,
+    )
+    control.heartbeat(start_step, total_steps, force=True)
+    stopped_at: int | None = None
+
     model.train()
     for local_step in range(args.steps):
         step = start_step + local_step
+
+        if args.control_poll > 0:
+            control.poll(step)
+            if ctl.paused:
+                print(f"step {step:5d} | paused", flush=True)
+                control.wait_while_paused(step)
+                print(f"step {step:5d} | resumed", flush=True)
 
         if args.restart_lr is not None:
             # Own schedule for this leg: a full cosine from --restart-lr down to
@@ -592,6 +679,9 @@ def main(argv: list[str] | None = None) -> None:
             current_lr = lr_at_step(step - start_step, args.steps, args.restart_lr, min_lr, 0)
         else:
             current_lr = lr_at_step(step, total_steps, args.lr, min_lr, args.warmup_steps)
+        # Live LR scaling (control knob). 1.0 unless someone changed it mid-run;
+        # recorded in lr_history, so the plot shows the LR that actually ran.
+        current_lr *= ctl.lr_scale
         for param_group in optimizer.param_groups:
             param_group["lr"] = current_lr
         lr_history.append((step, current_lr))
@@ -605,15 +695,24 @@ def main(argv: list[str] | None = None) -> None:
         loss.backward()
         optimizer.step()
 
-        is_last_step = local_step == args.steps - 1
-        log_now = step % args.log_interval == 0 or is_last_step
-        eval_now = step % args.eval_interval == 0 or is_last_step
+        # A stop command ends the run *here*, as if this had been the last
+        # step, so the final eval/plot/save/report all still happen.
+        is_last_step = local_step == args.steps - 1 or ctl.stop
+        forced_eval = ctl.eval_now
+        ctl.eval_now = False
+        log_now = step % ctl.log_interval == 0 or is_last_step
+        eval_now = step % ctl.eval_interval == 0 or is_last_step or forced_eval
         full_eval_now = val_tokens is not None and (
-            is_last_step or (args.full_eval_interval > 0 and step % args.full_eval_interval == 0)
+            is_last_step
+            or forced_eval
+            or (ctl.full_eval_interval > 0 and step % ctl.full_eval_interval == 0)
         )
 
         if log_now:
-            print(f"step {step:5d} | loss {loss.item():.4f} | lr {current_lr:.2e}")
+            loss_value = loss.item()
+            print(f"step {step:5d} | loss {loss_value:.4f} | lr {current_lr:.2e}")
+            control.scalar("train/batch_loss", loss_value, step)
+            control.scalar("train/lr", current_lr, step)
 
         if eval_now:
             eval_train_loss = evaluate_fixed(model, train_eval_batches)
@@ -623,12 +722,49 @@ def main(argv: list[str] | None = None) -> None:
                 eval_val_loss = evaluate_fixed(model, val_eval_batches)
                 val_history.append((step, eval_val_loss))
                 msg += f" | eval_val_loss {eval_val_loss:.4f}"
+                control.scalar("eval/val_loss", eval_val_loss, step)
+            control.scalar("eval/train_loss", eval_train_loss, step)
             print(msg)
 
         if full_eval_now:
             full_val_loss = evaluate_full(model, val_tokens, args.batch_size, cfg.block_size, device)
             full_val_history.append((step, full_val_loss))
             print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
+            control.scalar("eval/full_val_loss", full_val_loss, step)
+
+        if ctl.checkpoint_now:
+            ctl.checkpoint_now = False
+            stem = Path(args.save_name).stem if args.save_name else f"ckpt_{run_id}"
+            mid_path = save_checkpoint(
+                CHECKPOINTS_DIR / f"{stem}.step{step + 1}.pt", cfg, model, optimizer, batch_rng,
+                step + 1, train_history, val_history, full_val_history, lr_history,
+            )
+            print(f"step {step:5d} | saved mid-run checkpoint to {mid_path}", flush=True)
+            control.text("control/events", f"step {step}: checkpoint -> {mid_path}", step)
+
+        if log_now or eval_now or step % control.poll_every == 0:
+            control.heartbeat(
+                step + 1,
+                total_steps,
+                extra={
+                    "lr": current_lr,
+                    "eval_train_loss": train_history[-1][1] if train_history else None,
+                    "eval_val_loss": val_history[-1][1] if val_history else None,
+                    "full_val_loss": full_val_history[-1][1] if full_val_history else None,
+                },
+            )
+
+        if ctl.stop:
+            stopped_at = step
+            print(f"step {step:5d} | stopped early by control command", flush=True)
+            break
+
+    if stopped_at is not None:
+        # Name and record the run by the training it actually got, not the
+        # horizon it was launched with.
+        total_steps = stopped_at + 1
+        optim_cfg["total_steps"] = total_steps
+        optim_cfg["stopped_early_at"] = total_steps
 
     plot_path: Path | None = None
     save_path: Path | None = None
@@ -649,21 +785,10 @@ def main(argv: list[str] | None = None) -> None:
         print(f"Saved loss plot to {plot_path}")
 
     if args.save:
-        save_path = CHECKPOINTS_DIR / (args.save_name or default_checkpoint_name(cfg, optim_cfg, total_steps))
-        save_path.parent.mkdir(parents=True, exist_ok=True)
-        torch.save(
-            {
-                "config": cfg.to_dict(),
-                "model_state_dict": model.state_dict(),
-                "optimizer_state_dict": optimizer.state_dict(),
-                "batch_rng_state": batch_rng.get_state(),
-                "step": total_steps,
-                "train_history": train_history,
-                "val_history": val_history,
-                "full_val_history": full_val_history,
-                "lr_history": lr_history,
-            },
-            save_path,
+        save_path = save_checkpoint(
+            CHECKPOINTS_DIR / (args.save_name or default_checkpoint_name(cfg, optim_cfg, total_steps)),
+            cfg, model, optimizer, batch_rng, total_steps,
+            train_history, val_history, full_val_history, lr_history,
         )
         print(f"Saved to {save_path}")
 
@@ -691,6 +816,10 @@ def main(argv: list[str] | None = None) -> None:
             },
         )
         print(f"Saved sample report to {report_file}")
+        try:
+            control.text("sample_report", Path(report_file).read_text(), total_steps)
+        except OSError:
+            pass
 
     if args.baseline:
         run_name = args.save_name or args.plot_name or default_checkpoint_name(cfg, optim_cfg, total_steps)
@@ -720,6 +849,20 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.sample_tokens:
         print(generate_text(model, tokenizer, "\n", args.sample_tokens, cfg.block_size, device))
+
+    if control.tb is not None:
+        hparams = {
+            k: v for k, v in {**cfg.to_dict(), **optim_cfg}.items()
+            if isinstance(v, (int, float, str, bool))
+        }
+        metrics = {
+            "hparam/eval_train_loss": train_history[-1][1] if train_history else float("nan"),
+            "hparam/eval_val_loss": val_history[-1][1] if val_history else float("nan"),
+            "hparam/full_val_loss": full_val_history[-1][1] if full_val_history else float("nan"),
+        }
+        control.tb.add_hparams(hparams, metrics, run_name=".")
+    control.heartbeat(total_steps, total_steps, extra={"finished": True}, force=True)
+    control.close()
 
 
 if __name__ == "__main__":

@@ -22,6 +22,13 @@
         <string>/Users/aadil/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
         <key>PYTHONUNBUFFERED</key>
         <string>1</string>
+        <!-- Push notifications on job start/finish/failure via ntfy.sh. Pick an
+             unguessable topic, subscribe to it in the ntfy phone app, then uncomment.
+        <key>NTFY_TOPIC</key>
+        <string>mini-llm-CHANGE-ME-to-something-random</string>
+        <key>NTFY_CLICK_URL</key>
+        <string>https://YOUR-MAC.YOUR-TAILNET.ts.net/</string>
+        -->
     </dict>
 
     <key>RunAtLoad</key>

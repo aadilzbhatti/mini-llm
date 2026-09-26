@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#111418">
+<title>mini-llm control</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --fg:#15181c; --mut:#6a717b; --line:#e3e6ea; --acc:#2f6fdb; --ok:#1f8a4c; --bad:#c9372c; --warn:#b7791f; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111418; --card:#1a1e24; --fg:#e8eaed; --mut:#98a0aa; --line:#2a3038; --acc:#6ea0ff; --ok:#4cc27f; --bad:#ff6b5e; --warn:#e0a84a; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.4 -apple-system, system-ui, sans-serif; padding:0 12px calc(24px + env(safe-area-inset-bottom)); }
+  header { position:sticky; top:0; background:var(--bg); padding:calc(10px + env(safe-area-inset-top)) 0 8px; display:flex; gap:8px; align-items:center; z-index:2; }
+  header h1 { font-size:17px; margin:0; flex:1; }
+  nav { display:flex; gap:6px; margin-bottom:10px; overflow-x:auto; }
+  nav button { flex:1; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:10px; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .mut { color:var(--mut); font-size:13px; }
+  .num { font-variant-numeric:tabular-nums; }
+  button, select, input, textarea { font:inherit; color:var(--fg); background:var(--bg); border:1px solid var(--line); border-radius:9px; padding:8px 11px; }
+  button { cursor:pointer; }
+  button.pri { background:var(--acc); border-color:var(--acc); color:#fff; }
+  button.danger { color:var(--bad); border-color:var(--bad); }
+  button.on { outline:2px solid var(--acc); }
+  textarea { width:100%; min-height:190px; font:13px/1.35 ui-monospace, Menlo, monospace; }
+  input { min-width:0; }
+  a { color:var(--acc); }
+  .bar { height:6px; background:var(--line); border-radius:3px; overflow:hidden; margin:8px 0; }
+  .bar > div { height:100%; background:var(--acc); }
+  .grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:4px 12px; margin:6px 0; }
+  .pill { font-size:12px; padding:1px 8px; border-radius:99px; border:1px solid currentColor; }
+  .s-running { color:var(--acc); } .s-completed { color:var(--ok); } .s-failed, .s-rejected { color:var(--bad); } .s-interrupted { color:var(--warn); }
+  pre { white-space:pre-wrap; word-break:break-word; font:12px/1.35 ui-monospace, Menlo, monospace; background:var(--bg); padding:8px; border-radius:8px; max-height:60vh; overflow:auto; margin:8px 0 0; }
+  .hidden { display:none !important; }
+  img.plot { display:block; width:100%; margin-top:8px; border-radius:8px; background:#fff; }
+  #toast { position:fixed; left:12px; right:12px; bottom:calc(14px + env(safe-area-inset-bottom)); background:var(--fg); color:var(--bg); padding:10px 12px; border-radius:10px; opacity:0; transition:opacity .2s; pointer-events:none; }
+  #toast.show { opacity:.95; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  td, th { text-align:left; padding:4px 6px; border-bottom:1px solid var(--line); }
+  .scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:12px; }
+  table.best { width:auto; min-width:100%; }
+  table.best th { cursor:pointer; white-space:nowrap; user-select:none; padding:8px; }
+  table.best td { white-space:nowrap; padding:6px 8px; }
+  table.best th:first-child, table.best td:first-child { position:sticky; left:0; background:var(--card); white-space:normal; min-width:120px; max-width:150px; overflow-wrap:anywhere; font-size:12px; box-shadow:1px 0 0 var(--line); z-index:1; }
+</style>
+</head>
+<body>
+<header>
+  <h1>mini-llm <span id="updated" class="mut" style="font-weight:400; font-size:12px"></span></h1>
+  <a id="tb" class="hidden" target="_blank" rel="noopener"><button>TensorBoard ↗</button></a>
+  <button onclick="refresh()">↻</button>
+</header>
+<nav>
+  <button data-tab="live" class="on">Live</button>
+  <button data-tab="queue">Queue</button>
+  <button data-tab="history">History</button>
+  <button data-tab="best">Best</button>
+</nav>
+
+<section id="live"></section>
+
+<section id="queue" class="hidden">
+  <div id="queued"></div>
+  <div class="card">
+    <div class="row" style="margin-bottom:8px">
+      <strong style="flex:1">New job</strong>
+      <select id="kind" onchange="template()"><option>train</option><option>prepare-data</option></select>
+    </div>
+    <textarea id="jobjson" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="pri" onclick="submitJob()">Queue it</button>
+      <span class="mut" id="jobhint">flags without the leading --</span>
+    </div>
+    <pre id="jobresult" class="hidden"></pre>
+  </div>
+</section>
+
+<section id="history" class="hidden"></section>
+<section id="best" class="hidden"></section>
+
+<div id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+let META = null, RUNS = [], timer = null;
+
+function tok() { try { return localStorage.getItem('mini-llm-token') || ''; } catch { return ''; } }
+async function api(path, opts = {}) {
+  const headers = { 'content-type': 'application/json' };
+  if (tok()) headers.authorization = 'Bearer ' + tok();
+  const r = await fetch(path, { ...opts, headers });
+  if (r.status === 401) {
+    const t = prompt('API token');
+    if (t) { try { localStorage.setItem('mini-llm-token', t); } catch {} return api(path, opts); }
+  }
+  const text = await r.text();
+  let body; try { body = JSON.parse(text); } catch { body = text; }
+  if (!r.ok) throw new Error(body && body.detail ? (typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail)) : r.statusText);
+  return body;
+}
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600); }
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f4 = v => v == null ? '–' : Number(v).toFixed(4);
+function dur(sec) { if (sec == null) return '–'; sec = Math.round(sec); const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60); return h ? `${h}h ${m}m` : `${m}m ${sec%60}s`; }
+function ago(iso) { if (!iso) return ''; const s = (Date.now() - Date.parse(iso)) / 1000; return s < 90 ? `${Math.round(s)}s ago` : s < 5400 ? `${Math.round(s/60)}m ago` : s < 129600 ? `${Math.round(s/3600)}h ago` : `${Math.round(s/86400)}d ago`; }
+
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('section').forEach(s => s.classList.toggle('hidden', s.id !== b.dataset.tab));
+  try { localStorage.setItem('mini-llm-tab', b.dataset.tab); } catch {}
+});
+
+async function cmd(runId, body, label) {
+  try { await api(`/api/runs/${runId}/commands`, { method: 'POST', body: JSON.stringify(body) }); toast(`${label} sent — applies at the next step boundary`); setTimeout(refresh, 1500); }
+  catch (e) { toast('Error: ' + e.message); }
+}
+function setKnob(runId, knob, value) { cmd(runId, { type: 'set', knob, value: Number(value) }, `${knob} = ${value}`); }
+
+function liveCard(r) {
+  const L = r.live || {};
+  const pct = L.total_steps ? Math.min(100, 100 * L.step / L.total_steps) : 0;
+  const stale = L.updated && (Date.now() - Date.parse(L.updated)) > 120000;
+  const id = esc(r.run_id);
+  if (r.kind === 'prepare-data') return `<div class="card" data-run="${id}"><div class="row"><strong style="flex:1">${esc(r.name)}</strong><span class="pill s-running">building data</span></div>
+    <div class="mut">started ${ago(r.started)}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
+  return `<div class="card" data-run="${id}">
+    <div class="row"><strong style="flex:1">${esc(r.name)}</strong><span class="pill s-running">${L.paused ? 'paused' : 'running'}</span></div>
+    <div class="bar"><div style="width:${pct.toFixed(1)}%"></div></div>
+    <div class="grid num">
+      <div class="mut">step</div><div>${(L.step ?? 0).toLocaleString()} / ${(L.total_steps ?? 0).toLocaleString()}</div>
+      <div class="mut">ETA</div><div>${L.paused ? 'paused' : dur(L.eta_sec)} <span class="mut">${L.steps_per_sec ? L.steps_per_sec.toFixed(1) + ' it/s' : ''}</span></div>
+      <div class="mut">lr</div><div>${L.lr != null ? Number(L.lr).toExponential(2) : '–'} <span class="mut">×${L.lr_scale ?? 1}</span></div>
+      <div class="mut">eval train / val</div><div>${f4(L.eval_train_loss)} / ${f4(L.eval_val_loss)}</div>
+      <div class="mut">full val</div><div>${f4(L.full_val_loss)}</div>
+      <div class="mut">heartbeat</div><div>${ago(L.updated)}${stale ? ' ⚠︎' : ''}</div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      ${L.paused ? `<button class="pri" onclick="cmd('${id}', {type:'resume'}, 'Resume')">Resume</button>` : `<button onclick="cmd('${id}', {type:'pause'}, 'Pause')">Pause</button>`}
+      <button onclick="cmd('${id}', {type:'eval_now'}, 'Eval')">Eval now</button>
+      <button onclick="cmd('${id}', {type:'checkpoint'}, 'Checkpoint')">Checkpoint</button>
+      <button class="danger" onclick="if (confirm('Stop this run early? It still saves, plots and reports.')) cmd('${id}', {type:'stop'}, 'Stop')">Stop</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <span class="mut">lr ×</span>
+      ${[0.5, 0.8, 1, 1.25, 2].map(v => `<button onclick="setKnob('${id}', 'lr_scale', ${v})" class="${(L.lr_scale ?? 1) == v ? 'on' : ''}">${v}</button>`).join('')}
+    </div>
+    <div class="row" style="margin-top:8px">
+      <select id="k-${id}">${Object.keys(META?.knobs || {}).map(k => `<option>${k}</option>`).join('')}</select>
+      <input id="v-${id}" inputmode="decimal" placeholder="value" style="width:90px">
+      <button onclick="setKnob('${id}', $('#k-${id}').value, $('#v-${id}').value)">Set</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button onclick="showLog('${id}', this)">Log</button>
+      <button onclick="showEvents('${id}', this)">Commands</button>
+    </div>
+    <pre class="hidden"></pre>
+  </div>`;
+}
+
+function mark(btn, kind) { const c = btn.closest('.card'); c.dataset.open = kind; return c; }
+async function showLog(id, btn) { const pre = mark(btn, 'log').querySelector('pre'); pre.classList.remove('hidden'); pre.textContent = 'loading…'; try { pre.textContent = await api(`/api/runs/${id}/log?tail=60`); pre.scrollTop = pre.scrollHeight; } catch (e) { pre.textContent = e.message; } }
+async function showEvents(id, btn) { const pre = mark(btn, 'events').querySelector('pre'); pre.classList.remove('hidden'); try { const e = await api(`/api/runs/${id}/events`); pre.textContent = e.applied.length ? e.applied.map(x => `step ${x.step}  ${x.ok ? '✓' : '✗'} ${x.result || x.error}`).join('\n') : 'no commands applied yet' + (e.sent.length ? ` (${e.sent.length} pending)` : ''); } catch (e) { pre.textContent = e.message; } }
+async function showReport(id, btn) { const pre = mark(btn, 'report').querySelector('pre'); pre.classList.remove('hidden'); pre.textContent = 'loading…'; try { pre.textContent = await api(`/api/runs/${id}/report`); } catch (e) { pre.textContent = e.message; } }
+async function showDetail(id, btn) {
+  const pre = mark(btn, 'detail').querySelector('pre'); pre.classList.remove('hidden');
+  try { const s = await api(`/api/runs/${id}`); const m = { ...(s.metrics || {}) }; delete m.full_val_curve;
+    pre.textContent = JSON.stringify({ args: s.args, metrics: m, full_val_curve: s.metrics?.full_val_curve?.map(([a, b]) => `${a}: ${b}`), forecast_error: s.forecast_error, error: s.error }, null, 2);
+  } catch (e) { pre.textContent = e.message; }
+}
+async function cloneJob(id) {
+  const s = await api(`/api/runs/${id}`);
+  $('#kind').value = s.kind || 'train';
+  $('#jobjson').value = JSON.stringify({ name: (s.name || 'job') + '-v2', kind: s.kind || 'train', args: s.args || {} }, null, 2);
+  document.querySelector('nav button[data-tab=queue]').click();
+  toast('Copied into a new job — edit and queue');
+}
+
+function histCard(r) {
+  const id = esc(r.run_id);
+  return `<div class="card" data-run="${id}">
+    <div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(r.name || r.run_id)}</strong><span class="pill s-${esc(r.status)}">${esc(r.status)}</span></div>
+    <div class="mut num">${r.started ? new Date(r.started).toLocaleString() : ''} · ${dur(r.duration_sec)}${r.full_val_loss != null ? ` · full val <strong style="color:var(--fg)">${f4(r.full_val_loss)}</strong>` : ''}${r.kind === 'prepare-data' ? ' · dataset' : ''}</div>
+    ${r.error ? `<div class="mut" style="color:var(--bad)">${esc(r.error)}</div>` : ''}
+    <div class="row" style="margin-top:8px">
+      <button onclick="showDetail('${id}', this)">Details</button>
+      ${r.kind !== 'prepare-data' ? `<button onclick="showPlot('${id}', this)">Plot</button><button onclick="showReport('${id}', this)">Samples</button>` : ''}
+      <button onclick="showLog('${id}', this)">Log</button>
+      <button onclick="cloneJob('${id}')">Clone</button>
+    </div>
+    <img class="plot hidden" alt="loss plot" onclick="window.open(this.src)">
+    <pre class="hidden"></pre>
+  </div>`;
+}
+
+async function showPlot(id, btn) {
+  const card = btn.closest('.card'), img = card.querySelector('img.plot');
+  if (!img.classList.contains('hidden')) { img.classList.add('hidden'); delete card.dataset.plot; return; }
+  card.dataset.plot = '1';
+  try {
+    // fetch (not <img src>) so the bearer token, if any, is sent
+    const headers = tok() ? { authorization: 'Bearer ' + tok() } : {};
+    const r = await fetch(`/api/runs/${id}/plot`, { headers });
+    if (!r.ok) { const b = await r.json().catch(() => ({})); throw new Error(b.detail || r.statusText); }
+    if (img.src) URL.revokeObjectURL(img.src);
+    img.src = URL.createObjectURL(await r.blob());
+    img.classList.remove('hidden');
+  } catch (e) { toast(e.message); }
+}
+
+const TEMPLATES = {
+  'train': { name: 'my-run', kind: 'train', args: { steps: 20000, 'n-embd': 256, 'n-layer': 4, lr: 0.0003, tokens: 'data/data10k/train.pt', 'val-tokens': 'data/data10k/val.pt', 'full-eval-interval': 5000, save: true, 'save-name': 'my-run.pt', 'sample-report': true } },
+  'prepare-data': { name: 'data20k', kind: 'prepare-data', args: { 'num-examples': 20000, 'val-examples': 200, 'out-dir': 'data/data20k' } },
+};
+function template() { $('#jobjson').value = JSON.stringify(TEMPLATES[$('#kind').value], null, 2); }
+
+async function submitJob() {
+  const out = $('#jobresult'); out.classList.remove('hidden');
+  let body; try { body = JSON.parse($('#jobjson').value); } catch (e) { out.textContent = 'Not valid JSON: ' + e.message; return; }
+  body.kind = body.kind || $('#kind').value;
+  try { const r = await api('/api/jobs', { method: 'POST', body: JSON.stringify(body) });
+    const f = r.forecast && !r.forecast.error ? `\nforecast: ~${Number(r.forecast.time_hours).toFixed(1)}h${r.forecast.loss != null ? `, full_val ≈ ${Number(r.forecast.loss).toFixed(3)}` : ''}` : '';
+    out.textContent = `queued as ${r.file}${f}\n\n${r.argv.join(' ')}`; toast('Queued'); refresh();
+  } catch (e) { out.textContent = 'Rejected: ' + e.message; }
+}
+async function cancelJob(file) { try { await api(`/api/queue/${encodeURIComponent(file)}`, { method: 'DELETE' }); toast('Cancelled'); refresh(); } catch (e) { toast('Error: ' + e.message); } }
+
+const PANELS = { log: showLog, events: showEvents, report: showReport, detail: showDetail };
+function openState(sel) {
+  const st = {};
+  document.querySelectorAll(`${sel} .card[data-run]`).forEach(c => { if (c.dataset.open || c.dataset.plot) st[c.dataset.run] = { open: c.dataset.open, plot: !!c.dataset.plot }; });
+  return st;
+}
+function restore(sel, st) {
+  document.querySelectorAll(`${sel} .card[data-run]`).forEach(c => {
+    const s = st[c.dataset.run]; if (!s) return;
+    if (s.open && PANELS[s.open]) PANELS[s.open](c.dataset.run, c);
+    if (s.plot) showPlot(c.dataset.run, c);
+  });
+}
+let HIST_SIG = '', LAST = 0;
+function editing() { return document.activeElement?.matches('input, select, textarea'); }
+
+async function refresh() {
+  try {
+    if (!META) { META = await api('/api/meta'); $('#tb').href = META.tensorboard_url || `${location.protocol}//${location.hostname}:8443/`; $('#tb').classList.remove('hidden'); }
+    const [runs, queue] = await Promise.all([api('/api/runs?limit=60'), api('/api/queue')]);
+    RUNS = runs;
+    const live = runs.filter(r => r.status === 'running');
+    if (!editing()) { const st = openState('#live'); $('#live').innerHTML = live.length ? live.map(liveCard).join('') : `<div class="card mut">Nothing running. ${queue.length ? queue.length + ' job(s) queued.' : 'Queue a job from the Queue tab.'}</div>`; restore('#live', st); }
+    $('#queued').innerHTML = queue.map(q => `<div class="card"><div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(q.job?.name || q.file)}</strong><span class="mut">${esc(q.job?.kind || 'train')}</span><button class="danger" onclick="cancelJob('${esc(q.file)}')">Cancel</button></div><div class="mut" style="overflow-wrap:anywhere">${esc(JSON.stringify(q.job?.args || {}))}</div></div>`).join('') || '<div class="card mut">Queue is empty.</div>';
+    const hist = runs.filter(r => r.status !== 'running');
+    const sig = JSON.stringify(hist.map(r => [r.run_id, r.status]));
+    if (sig !== HIST_SIG) {  // only rebuild when a run appears or changes status, so open plots stay put
+      const st = openState('#history');
+      $('#history').innerHTML = hist.map(histCard).join('') || '<div class="card mut">No runs yet.</div>';
+      restore('#history', st); HIST_SIG = sig;
+    }
+    {
+      const b = await api('/api/baselines');
+      BEST = b || []; renderBest();
+    }
+    LAST = Date.now(); tick();
+  } catch (e) { toast('Error: ' + e.message); }
+}
+// --- Best tab: every hyperparameter, sortable, run name pinned while scrolling sideways ---
+let BEST = [], BEST_SORT = { key: 'full_val_loss', dir: 1 };
+try { BEST_SORT = JSON.parse(localStorage.getItem('mini-llm-best-sort')) || BEST_SORT; } catch {}
+const sci = v => v == null ? '–' : Number(v).toExponential(0).replace('e-', 'e-');
+const int = v => v == null ? '–' : Number(v).toLocaleString();
+const mil = v => v == null ? '–' : (v / 1e6).toFixed(1) + 'M';
+const dataset = x => (String(x.plot || '') + ' ' + String(x.run || '')).match(/data\d+k/)?.[0] || '–';
+const BEST_COLS = [
+  ['full_val_loss', 'full val', x => f4(x.full_val_loss)],
+  ['eval_val_loss', 'eval val', x => f4(x.eval_val_loss)],
+  ['eval_train_loss', 'eval train', x => f4(x.eval_train_loss)],
+  ['data', 'data', dataset],
+  ['steps', 'steps', x => int(x.steps)],
+  ['params', 'params', x => mil(x.params)],
+  ['n_layer', 'layers', x => x.n_layer ?? '–'],
+  ['n_embd', 'embd', x => x.n_embd ?? '–'],
+  ['n_head', 'heads', x => x.n_head ?? '–'],
+  ['block_size', 'block', x => x.block_size ?? '–'],
+  ['batch_size', 'batch', x => x.batch_size ?? '–'],
+  ['lr', 'lr', x => sci(x.lr)],
+  ['min_lr', 'min lr', x => sci(x.min_lr)],
+  ['warmup_steps', 'warmup', x => int(x.warmup_steps)],
+  ['seed', 'seed', x => x.seed ?? '–'],
+  ['date', 'date', x => esc(String(x.date || '').replace(' UTC', '').slice(5))],
+];
+function sortBest(key) {
+  BEST_SORT = BEST_SORT.key === key ? { key, dir: -BEST_SORT.dir } : { key, dir: 1 };
+  try { localStorage.setItem('mini-llm-best-sort', JSON.stringify(BEST_SORT)); } catch {}
+  renderBest();
+}
+function renderBest() {
+  const { key, dir } = BEST_SORT;
+  const val = x => key === 'data' ? dataset(x) : x[key];
+  const rows = [...BEST].sort((a, b) => {
+    const va = val(a), vb = val(b);
+    if (va == null || va === '–') return 1; if (vb == null || vb === '–') return -1;
+    return (typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb))) * dir;
+  });
+  const wrap = $('#best .scroll'), left = wrap ? wrap.scrollLeft : 0;
+  const arrow = k => k === key ? (dir > 0 ? ' ▲' : ' ▼') : '';
+  $('#best').innerHTML = `<div class="card" style="padding:0"><div class="scroll"><table class="best">
+    <tr><th onclick="sortBest('run')">run${arrow('run')}</th>${BEST_COLS.map(([k, label]) => `<th onclick="sortBest('${k}')">${label}${arrow(k)}</th>`).join('')}</tr>
+    ${rows.map(x => `<tr><td>${esc(x.run)}</td>${BEST_COLS.map(([k, , f]) => `<td class="num">${f(x)}</td>`).join('')}</tr>`).join('')}
+  </table></div></div><div class="mut" style="padding:0 4px">Tap a column to sort. Scroll sideways for more.</div>`;
+  $('#best .scroll').scrollLeft = left;
+}
+
+function tick() { const s = Math.round((Date.now() - LAST) / 1000); $('#updated').textContent = LAST ? (s < 5 ? 'updated now' : `updated ${s}s ago`) : ''; }
+
+template();
+try { const t = localStorage.getItem('mini-llm-tab'); if (t) document.querySelector(`nav button[data-tab=${t}]`)?.click(); } catch {}
+refresh();
+// Auto-refresh every 30s while the page is on screen; catch up immediately when you come back to it.
+const REFRESH_MS = 30000;
+timer = setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, REFRESH_MS);
+setInterval(tick, 5000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Date.now() - LAST > 5000) refresh(); });
+</script>
+</body>
+</html>

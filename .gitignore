@@ -11,3 +11,4 @@ runs/
 queue/*.json
 queue/done/
 queue/failed/
+queue/cancelled/

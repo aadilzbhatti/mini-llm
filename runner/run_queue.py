@@ -11,6 +11,15 @@ Deliberately paranoid about input: a job file can only ever turn into a
 paths. No shell, no arbitrary commands, no writes outside the repo. The
 worst a malformed or hostile job file can do is train a silly model.
 
+Two job kinds: "train" (the default) runs mini-llm-train, and
+"prepare-data" runs mini-llm-prepare-data to build a new token set under
+data/. Both go through the same allowlist treatment.
+
+Each training process gets MINI_LLM_RUN_ID in its environment, so its
+TensorBoard logs and live-control files (runs/<run_id>.commands.jsonl etc.,
+see mini_llm.control) share the run id used here. If NTFY_TOPIC is set, job
+start/finish/failure is pushed to https://ntfy.sh/<topic> (or NTFY_SERVER).
+
 Usage (normally via launchd, see README.md):
     python3 runner/run_queue.py [--repo PATH] [--once] [--poll SECONDS]
 """
@@ -76,6 +85,22 @@ DEFAULT_ARGS: dict[str, object] = {
     "plot-loss": True,
     "baseline": True,
 }
+
+# --- prepare-data jobs ------------------------------------------------------
+
+PREP_INT_FLAGS: dict[str, tuple[int, int]] = {
+    "num-examples": (1, 5_000_000),
+    "val-examples": (1, 1_000_000),
+    "seed": (0, 2**31 - 1),
+}
+PREP_FLOAT_FLAGS: dict[str, tuple[float, float]] = {
+    "val-pool-fraction": (0.001, 0.9),
+}
+# HF ids and names: plain identifier characters (plus / for "org/name").
+PREP_STR_FLAGS = {"dataset", "config", "split", "text-field", "tokenizer"}
+HF_NAME = re.compile(r"^[A-Za-z0-9._/-]{1,200}$")
+
+JOB_KINDS = {"train", "prepare-data"}
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
 JOB_ID = re.compile(r"^[A-Za-z0-9._-]{1,80}$")
@@ -145,23 +170,84 @@ def build_command(args: dict, repo: Path, uv: str) -> list[str]:
     return cmd
 
 
+def build_prepare_command(args: dict, repo: Path, uv: str) -> list[str]:
+    """argv for a prepare-data job. out-dir is required and must live under data/."""
+    cmd = [uv, "run", "--project", str(repo), "mini-llm-prepare-data"]
+    if "out-dir" not in args:
+        raise JobError("prepare-data jobs need an out-dir, e.g. \"data/data20k\"")
+    for flag, value in sorted(args.items()):
+        if flag in PREP_INT_FLAGS:
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise JobError(f"--{flag} must be an integer, got {value!r}")
+            low, high = PREP_INT_FLAGS[flag]
+            if not low <= value <= high:
+                raise JobError(f"--{flag}={value} outside allowed range [{low}, {high}]")
+            cmd += [f"--{flag}", str(value)]
+        elif flag in PREP_FLOAT_FLAGS:
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise JobError(f"--{flag} must be a number, got {value!r}")
+            low, high = PREP_FLOAT_FLAGS[flag]
+            if not low <= float(value) <= high:
+                raise JobError(f"--{flag}={value} outside allowed range [{low}, {high}]")
+            cmd += [f"--{flag}", repr(float(value))]
+        elif flag in PREP_STR_FLAGS:
+            if not isinstance(value, str) or not HF_NAME.match(value) or ".." in value:
+                raise JobError(f"--{flag} must be a plain dataset/tokenizer name, got {value!r}")
+            cmd += [f"--{flag}", value]
+        elif flag == "out-dir":
+            if not isinstance(value, str) or not value:
+                raise JobError("--out-dir must be a non-empty string")
+            path = Path(value)
+            if path.is_absolute() or ".." in path.parts or not path.parts or path.parts[0] != "data" \
+                    or len(path.parts) < 2 or not all(SAFE_NAME.match(part) for part in path.parts):
+                raise JobError(f"--out-dir must be a new folder under data/, got {value!r}")
+            cmd += ["--out-dir", value]
+        else:
+            raise JobError(f"unknown option {flag!r} for a prepare-data job (not in the allowlist)")
+    return cmd
+
+
+def validate_job(raw: object, repo: Path, uv: str, default_name: str = "job") -> tuple[str, str, list[str], dict]:
+    """Validate a job object -> (name, kind, argv, args). Raises JobError.
+
+    Shared with the control API, which validates before it ever writes a job
+    file, so a bad request is rejected at submit time rather than in queue/.
+    """
+    if not isinstance(raw, dict):
+        raise JobError("job must be a JSON object")
+
+    name = raw.get("name") or default_name
+    if not isinstance(name, str) or not JOB_ID.match(name):
+        raise JobError(f"invalid job name {name!r} (letters, digits, . _ - only)")
+
+    kind = raw.get("kind", "train")
+    if kind not in JOB_KINDS:
+        raise JobError(f"unknown job kind {kind!r}; expected one of {sorted(JOB_KINDS)}")
+
+    args = raw.get("args", {k: v for k, v in raw.items() if k not in ("name", "kind")})
+    if not isinstance(args, dict):
+        raise JobError("'args' must be a JSON object")
+
+    if kind == "prepare-data":
+        return name, kind, build_prepare_command(args, repo, uv), args
+    return name, kind, build_command(args, repo, uv), args
+
+
 def parse_job(path: Path, repo: Path, uv: str) -> tuple[str, list[str], dict]:
     try:
         raw = json.loads(path.read_text())
     except json.JSONDecodeError as exc:
         raise JobError(f"not valid JSON: {exc}") from exc
-    if not isinstance(raw, dict):
-        raise JobError("job must be a JSON object")
+    name, _kind, cmd, args = validate_job(raw, repo, uv, default_name=path.stem)
+    return name, cmd, args
 
-    name = raw.get("name") or path.stem
-    if not isinstance(name, str) or not JOB_ID.match(name):
-        raise JobError(f"invalid job name {name!r} (letters, digits, . _ - only)")
 
-    args = raw.get("args", {k: v for k, v in raw.items() if k != "name"})
-    if not isinstance(args, dict):
-        raise JobError("'args' must be a JSON object")
-
-    return name, build_command(args, repo, uv), args
+def job_kind(path: Path) -> str:
+    try:
+        raw = json.loads(path.read_text())
+        return raw.get("kind", "train") if isinstance(raw, dict) else "train"
+    except (OSError, json.JSONDecodeError):
+        return "train"
 
 
 # --- metrics --------------------------------------------------------------
@@ -267,6 +353,71 @@ def forecast_error(pred: dict, status: dict) -> dict:
     return out
 
 
+# --- notifications ---------------------------------------------------------
+
+def notify(title: str, message: str, tags: str = "", priority: str = "default") -> None:
+    """Best-effort push via ntfy (https://ntfy.sh). No-op unless NTFY_TOPIC is set."""
+    topic = os.environ.get("NTFY_TOPIC")
+    if not topic:
+        return
+    import urllib.request
+
+    server = os.environ.get("NTFY_SERVER", "https://ntfy.sh").rstrip("/")
+    req = urllib.request.Request(
+        f"{server}/{topic}",
+        data=message.encode(),
+        headers={"Title": title, "Tags": tags, "Priority": priority},
+        method="POST",
+    )
+    click = os.environ.get("NTFY_CLICK_URL")
+    if click:
+        req.add_header("Click", click)
+    try:
+        urllib.request.urlopen(req, timeout=10).read()
+    except Exception as exc:  # noqa: BLE001 - never let a push failure touch a job
+        log(f"  ntfy push failed: {exc}")
+
+
+def _alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+        return True
+    except PermissionError:
+        return True
+    except OSError:
+        return False
+
+
+def mark_interrupted(repo: Path) -> None:
+    """At startup, any status still 'running' belongs to a process that's gone
+    (the Mac slept, rebooted, or the watcher was restarted). Say so, instead of
+    leaving it looking live forever."""
+    for status_path in (repo / "runs").glob("*.status.json"):
+        try:
+            status = json.loads(status_path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        if status.get("status") == "running":
+            pid = status.get("runner_pid")
+            if pid and pid != os.getpid() and _alive(pid):
+                continue  # another watcher (e.g. a manual --once) owns it
+            status["status"] = "interrupted"
+            status["finished"] = now()
+            status_path.write_text(json.dumps(status, indent=2))
+            log(f"marked {status_path.name} interrupted (was running when the watcher started)")
+
+
+def with_caffeinate(cmd: list[str]) -> list[str]:
+    """On macOS, hold an idle-sleep assertion for the life of the job.
+
+    Doesn't stop lid-close sleep (nothing short of clamshell mode does), but
+    does stop the Mac idling to sleep mid-run while it's on power.
+    """
+    if sys.platform == "darwin" and Path("/usr/bin/caffeinate").exists():
+        return ["/usr/bin/caffeinate", "-i", *cmd]
+    return cmd
+
+
 # --- the loop -------------------------------------------------------------
 
 
@@ -301,6 +452,7 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
         name, cmd, args = parse_job(job_path, repo, uv)
     except JobError as exc:
         log(f"REJECTED {job_path.name}: {exc}")
+        notify(f"rejected: {job_path.name}", str(exc), tags="warning")
         dest = queue / "failed" / f"{stamp}-{job_path.name}"
         shutil.move(str(job_path), dest)
         (runs / f"{stamp}-{job_path.stem}.status.json").write_text(
@@ -311,10 +463,12 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
     run_id = f"{stamp}-{name}"
     log_path = runs / f"{run_id}.log"
     status_path = runs / f"{run_id}.status.json"
+    kind = job_kind(job_path)
 
-    pred = forecast_for(repo, args)
+    pred = forecast_for(repo, args) if kind == "train" else None
     status = {
         "run_id": run_id,
+        "kind": kind,
         "forecast": pred,
         "name": name,
         "status": "running",
@@ -322,6 +476,7 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
         "cmd": cmd,
         "log": str(log_path.relative_to(repo)),
         "started": now(),
+        "runner_pid": os.getpid(),
     }
     status_path.write_text(json.dumps(status, indent=2))
     log(f"RUNNING {run_id}: {' '.join(cmd)}")
@@ -329,12 +484,17 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
         loss_txt = f"{pred['loss']:.4f}" if pred.get("loss") is not None else "n/a (no family data)"
         log(f"  forecast: {pred['time_hours']:.1f}h, full_val {loss_txt}")
 
-    env = dict(os.environ, PYTHONUNBUFFERED="1")  # so the log streams live
+    notify(f"started: {name}", f"{kind} job {run_id}", tags="arrow_forward")
+
+    # PYTHONUNBUFFERED so the log streams live; MINI_LLM_RUN_ID so the trainer's
+    # TensorBoard dir and control files use this same id.
+    env = dict(os.environ, PYTHONUNBUFFERED="1", MINI_LLM_RUN_ID=run_id)
     started = time.time()
     try:
         with log_path.open("w") as sink:
             proc = subprocess.run(
-                cmd, cwd=repo, stdout=sink, stderr=subprocess.STDOUT, env=env, check=False
+                with_caffeinate(cmd), cwd=repo, stdout=sink, stderr=subprocess.STDOUT, env=env,
+                check=False,
             )
         returncode = proc.returncode
     except Exception as exc:  # noqa: BLE001 - want the message in the status file
@@ -358,12 +518,23 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
 
     with (runs / "index.jsonl").open("a") as index:
         index.write(json.dumps({k: status[k] for k in
-                                ("run_id", "status", "started", "finished", "args", "metrics",
+                                ("run_id", "kind", "status", "started", "finished", "args", "metrics",
                                  "forecast", "forecast_error")
                                 if k in status}) + "\n")
 
     shutil.move(str(job_path), str(queue / "done" / f"{stamp}-{job_path.name}"))
     log(f"{status['status'].upper()} {run_id} in {status['duration_sec']}s")
+
+    met = status["metrics"]
+    hours = status["duration_sec"] / 3600
+    if status["status"] == "completed":
+        body = f"{hours:.1f}h"
+        if met.get("full_val_loss") is not None:
+            body += f", full_val_loss {met['full_val_loss']:.4f}"
+        notify(f"done: {name}", body, tags="white_check_mark")
+    else:
+        notify(f"FAILED: {name}", f"exit {returncode} after {hours:.1f}h -- see runs/{run_id}.log",
+               tags="x", priority="high")
 
 
 def main() -> int:
@@ -383,6 +554,7 @@ def main() -> int:
         return 1
 
     log(f"watching {queue} (repo={repo}, uv={opts.uv})")
+    mark_interrupted(repo)
 
     while True:
         jobs = sorted(p for p in queue.glob("*.json") if p.is_file())
