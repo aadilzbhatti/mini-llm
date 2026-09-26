@@ -24,6 +24,8 @@ mini-llm-control = "mini_llm.server:main"
 
 [dependency-groups]
 dev = ["pytest>=8.0", "httpx>=0.27"]
+# Only for launching remote runs: `uv run --group modal modal run ...` (see README).
+modal = ["modal>=1.5.5"]
 
 [build-system]
 requires = ["hatchling"]

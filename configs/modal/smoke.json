@@ -1,0 +1,16 @@
+{
+  "name": "smoke",
+  "args": {
+    "text": "data/tiny.txt",
+    "block-size": 32,
+    "n-embd": 64,
+    "n-head": 2,
+    "n-layer": 1,
+    "batch-size": 8,
+    "steps": 50,
+    "warmup-steps": 0,
+    "eval-interval": 25,
+    "eval-batches": 2,
+    "bf16": true
+  }
+}
