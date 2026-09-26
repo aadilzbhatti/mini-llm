@@ -19,7 +19,9 @@ the "Decision log" at the bottom.
   {config, gpu, trainer, report, diagnose}.py + `thresholds.toml`; tests in
   `tests/autolab/`. Run the suite with `AUTOLAB_FORCE_CPU=1 uv run pytest`
   while the owner's runner is training.
-- Milestones 3–6 are not started.
+- Milestones 3–6 are not started. They were re-planned on 2026-09-26 around
+  AlphaEvolve (see "Design pivot" under Milestone guidance), which overrides
+  BRIEF §4–§5 and parts of §6–§9.
 
 ## Decisions (override the brief where they conflict)
 
@@ -31,7 +33,7 @@ the "Decision log" at the bottom.
    `data/data10k/val.pt` (90% of its docs are in data20k train).
 2. **Starting train set.** Copy `~/dev/wiki-llm/data/data20k/train.pt` to
    `autolab/data/datasets/data20k/train.pt` (20.5M tokens, 20k docs).
-3. **build_dataset** runs `mini-llm-prepare-data` into a scratch dir under
+3. **build_dataset** (between sessions only since the design pivot) runs `mini-llm-prepare-data` into a scratch dir under
    `autolab/data/datasets/<id>/` with `--val-examples 0`, and deletes the
    `val.pt` it writes. It then checks the new train file against the frozen
    val by doc hash (reuse `mini_llm.token_overlap`) and rejects it on any
@@ -129,116 +131,214 @@ the "Decision log" at the bottom.
 - Real check: one run of about 5 minutes at the default small config on data20k +
   frozen val → report.json + diagnosis. Show both in the milestone report.
 
-### M3: orchestrator + config/data actions
-- Serializable request/response dataclasses for every action (BRIEF §11).
-  JSON round-trip tests.
-- **Budget:** `{tokens, wall_clock_s}`. Convert tokens to `--steps`, and enforce
-  wall-clock with the stop command. Record whether the run hit the token or time limit.
-  Default: about 10 min per full trial and about 2–3 min per screening run. Make both configurable.
-- **Default model:** pick the smallest sensible one and justify it in the
-  decision log. The brief's 10-min default at emb128/L4 gives about 2M tokens,
-  about 0.3 tok/param, and about 0.1 epochs of data20k. So almost every run will read
-  `still_improving`, and `data_limited` can't fire. Consider a
-  `train_subset_tokens` option (a prefix at a doc boundary) so the planner can
-  create regimes where data limits are observable. Document whatever you choose.
-- **lr_range_test** without editing the schedule: run at constant LR
-  (`--min-lr == --lr`, `--warmup-steps 0`) with a high base LR (e.g. 1e-2), and
-  step `lr_scale` up exponentially through the control inbox (allowed range
-  1e-4 to 10, so 1e-6 to 1e-1 effective). Read loss vs LR from `train/batch_loss`
-  and `train/lr`. Return LR at min smoothed loss and at divergence (loss above 4× min, or NaN).
-- **ablation:** `half_data` = first half of the champion's train tokens,
-  cut at a doc boundary. `wider_model` = next n_embd step up (e.g. 128→192),
-  same data and budget.
-- **hparam_search:** Optuna TPE + MedianPruner, storage in SQLite under
-  `autolab/state/`. Report intermediate `eval/val_loss` by polling TB or the
-  live heartbeat, and stop pruned trials with the stop command. LR bounds come
-  from lr_range_test. Batch size varies at a fixed token budget.
-- **Noise:** run the champion on 3 seeds at session start and after any
-  dataset change. Store mean/std per (champion, dataset).
-- **Acceptance** (BRIEF §7): screening first. A candidate goes to full budget
-  only if its screen is within `screen_margin` (configurable) of the champion's
-  screen. Accept only if the mean over at least 2 seeds beats the champion by
-  more than 2× the noise std. After adding data, re-baseline the champion first.
-- **Orchestrator:** `autolab start|resume|status|stop` (a console script in
-  pyproject). State lives in `autolab/state/state.json`, written atomically after
-  every step. `stop` writes a flag file checked between actions (and
-  stops the active run). Caps from BRIEF §10. Checkpoints: keep the
-  champion's and the latest 3; delete the rest.
-- **Notebook:** `autolab/notebook.jsonl` + regenerated `autolab/NOTEBOOK.md`.
-  Accepted changes are committed on `autolab` with the hypothesis and result in the
-  message.
-- **E2E test** (CPU, a few minutes at most): tiny model (n_embd 32, n_layer 1,
-  block 32, bs 4) on about 200k tokens sliced from data20k, tiny budgets. Run
-  start → a few RulePlanner actions → stop → resume → finish, and check
-  state/notebook consistency. Force CPU in tests (e.g. env var read by a
-  small marked hook in `device.py`, or monkeypatch).
+### Design pivot (2026-09-26): AlphaEvolve-style evolution
 
-### M4: LLMPlanner
-- Check `claude --help` for current flags. Expected shape:
-  `claude -p "<prompt>" --output-format json` with a JSON-schema option if
-  one exists, no tool access for planning (disallow all tools), `--max-turns`
-  small, and a subprocess timeout.
-- Input: champion summary, latest report summary (not raw curves), diagnosis,
-  last N notebook entries, allowed actions with arg schemas, remaining
-  budget/caps. Output must validate against a jsonschema:
-  `{action, args, hypothesis, expected_effect}`. Also validate args per action.
-- Fall back to RulePlanner on timeout, non-zero exit, bad JSON, schema
-  failure or a disallowed action. Log the fallback reason in the notebook.
-- Tests: mocked subprocess for each failure mode, plus one real call (mark it
-  so it can be skipped offline). Log each call's prompt/response under `autolab/state/llm/`.
+The owner wants autolab to reproduce AlphaEvolve (Novikov et al., 2025,
+"AlphaEvolve: A coding agent for scientific and algorithmic discovery") at
+laptop scale. This replaces BRIEF §4–§5 (fixed action menu + planner) and
+reshapes §6–§9. BRIEF §2–§3 (reports, diagnosis), §6's gates, §7's fairness
+rules and §10's caps still apply.
 
-### M5: code edits
-- Add `# AUTOLAB-EDITABLE-BEGIN <name>` / `# AUTOLAB-EDITABLE-END <name>`
-  markers around: `Head` + `MultiHeadAttention` (attention), `FeedForward`
-  (MLP), `Block` (norm placement/residual wiring), positional embedding
-  creation and its use at the top of `forward` (the region must end before
-  the logits/loss code), `init_weights` methods, and in train.py a new
-  `build_optimizer(model, args)` (move the AdamW line into it, marked) and
-  `lr_at_step`. Commit this refactor on its own, confirm the existing suite still
-  passes, and confirm a fixed-seed short run gives identical losses before and after.
-- Protected paths (never editable): data.py, prepare_dataset.py,
+The paper's loop (its Fig. 2) is:
+
+    parent, inspirations = database.sample()
+    prompt = prompt_sampler.build(parent, inspirations)
+    diff   = llm.generate(prompt)           # SEARCH/REPLACE blocks
+    child  = apply_diff(parent, diff)
+    results = evaluator.execute(child)     # evaluation cascade -> dict of scores
+    database.add(child, results)
+
+Mapping to autolab:
+
+| AlphaEvolve | autolab |
+| --- | --- |
+| `# EVOLVE-BLOCK-START/END` markers | the same markers in model.py / train.py (they replace the planned `AUTOLAB-EDITABLE` markers) |
+| program | base commit + the contents of every EVOLVE block + a hyperparameter patch (JSON) |
+| `evaluate()` → dict of scalars | the cascade below, returning `neg_val_loss`, `tokens_per_sec`, `params`, …; the M2 report.json is the "rendered evaluation result" |
+| evaluation cascade | static checks → CPU gates → smoke → screen → full → extra seeds |
+| program database (MAP-Elites + islands) | a small version: SQLite under `autolab/state/` |
+| prompt sampler (+ stochastic formatting, explicit context) | parent + inspirations + their reports/diagnoses + recent failures |
+| LLM ensemble (Flash + Pro) | `claude -p` with a configurable model mix |
+| async pipeline, many evaluators | one GPU: overlap LLM calls and CPU gates for the next child with GPU training of the current one |
+
+What changes because we have one shared MacBook GPU, not a cluster:
+- **Evaluations are the scarce resource**: tens per night, not thousands.
+  LLM latency is irrelevant next to a 3–10 min training run. So the model mix
+  should lean toward the strongest model (the paper used the fast model for
+  volume; our volume is capped by the GPU). Spend effort on gates that reject
+  bad children before they touch the GPU.
+- **Score noise is comparable to real improvements.** Programs are ranked by
+  mean over evaluated seeds, and "best" claims need extra seeds (BRIEF §7).
+- **Data is part of the evaluator, not the program.** A session fixes the
+  train set, frozen val, token budget and `block_size` (loss at different
+  context lengths isn't comparable). `build_dataset`, Optuna `hparam_search`,
+  `lr_range_test` and the ablations are retired from the loop.
+  Hyperparameters are evolved by the LLM through the hparam patch instead
+  (the paper's Fig. 3 evolves a `sweep()` the same way). Changing data is a
+  between-sessions decision.
+- **The M2 diagnosis becomes prompt context**, not an action selector. As in
+  the paper, the LLM decides what to change; it sees the parent's report
+  summary and diagnosis labels with evidence.
+
+### M3: evaluator + cascade (the `h` function)
+Build this first; everything else hill-climbs on it.
+- **Markers.** Add `# EVOLVE-BLOCK-START <name>` / `# EVOLVE-BLOCK-END <name>`
+  around: `Head` + `MultiHeadAttention` (attention), `FeedForward` (mlp),
+  `Block` (block wiring/norms), positional embedding creation and its use at the top
+  of `forward` (ending before the logits/loss lines), the `init_weights` methods, and
+  in train.py a new `build_optimizer(model, args)` (move the AdamW line into it)
+  and `lr_at_step`. Commit this refactor on its own. Confirm the existing suite
+  passes and that a fixed-seed short CPU run gives identical losses before and after.
+- **Protected** (never inside a block): data.py, prepare_dataset.py,
   token_overlap.py, the eval functions and loop in train.py, the loss lines in
   model.py, `src/autolab/`, `tests/`, `autolab/data/`.
-- **Worktrees:** `git worktree add ../wiki-llm-autolab-wt/cand-<n> -b
-  autolab/cand-<n> <champion commit>`. To run gates against the worktree's code
-  without a new venv, use this repo's `.venv` python with
-  `PYTHONPATH=<worktree>/src` (it takes precedence over the editable install).
-  Verify that with a check (e.g. print `mini_llm.__file__`).
-- **Editing:** `claude -p` in the worktree with Read/Edit tools only
-  (no Bash, no web), a small max-turns, and a prompt containing the
-  hypothesis, the allowed regions and "minimal diff".
-- **Scope check:** diff the candidate against the champion. Every changed line
-  must fall strictly inside a BEGIN/END pair that exists unchanged in both,
-  marker lines must be unchanged, and no files outside model.py/train.py may change.
-- **Gates** in order (BRIEF §6): pytest (from the worktree, excluding nothing),
-  shape test, then the new protected causal-leak test
-  (`tests/autolab/test_causal_leak.py`). That test: eval mode, dropout 0,
-  several random sequences; for each of several t, randomize all tokens > t and
-  assert logits[:, :t+1] match (atol 1e-5). Then param/throughput checks
-  (default +10% params unless the planner declared a capacity change) and the smoke run
-  (a few hundred steps, no NaN, throughput at least 0.7× the champion's).
-- **Test with deliberately bad edits** as hand-written patches, not via
-  Claude, so the tests are deterministic: (a) a causal leak (drop the tril mask),
-  (b) a shape bug, (c) an edit outside the allowed regions (e.g. in the loss line),
-  (d) a param blow-up. Each must be rejected at the right gate with a clear
-  reason. Also run one good patch (e.g. RMSNorm swap) end-to-end.
-- Remove finished worktrees; keep their branches.
+- **Program representation.** `Program{id, parent_id, base_commit, blocks:
+  {name: text}, hparams: {..}, rationale, created_by (llm model | mutation),
+  scores, stage_reached, reports: [run_id...]}`. Store block texts, not branches.
+  Materialize a program by writing its blocks into a fresh worktree at
+  `base_commit` (`git worktree add --detach ../wiki-llm-autolab-wt/<id>`), run with
+  this repo's `.venv` python and `PYTHONPATH=<worktree>/src`. Verify that with a
+  check (print `mini_llm.__file__`). Remove the worktree after evaluation.
+- **Hparam patch.** Allowed keys and ranges in a config file: lr, min_lr,
+  warmup_steps, weight_decay, dropout, batch_size, n_embd, n_head, n_layer.
+  Fixed by the session: block_size, token budget, eval settings, data, val.
+- **Diff application.** Parse `<<<<<<< SEARCH / ======= / >>>>>>> REPLACE`
+  blocks. Each SEARCH must match exactly once, inside one EVOLVE block of the
+  parent. After applying, re-check scope: block markers unchanged, no text outside
+  blocks changed, no files outside model.py/train.py touched. Reject with a
+  specific reason otherwise.
+- **Cascade**, stopping at the first failure. Every stage's outcome and reason is
+  recorded on the program.
+  0. static: diff applies; scope check; `python -c "import mini_llm.model, mini_llm.train"`.
+  1. CPU gates (`AUTOLAB_FORCE_CPU=1`): pytest from the worktree (full suite),
+     shape test, then the protected causal-leak test
+     (`tests/autolab/test_causal_leak.py`: eval mode, dropout 0, several random
+     sequences; for several t randomize all tokens > t and assert logits[:, :t+1]
+     match, atol 1e-5). Must also pass on the program's own hparams (n_embd etc.).
+  2. params/throughput: record params. Params above a configurable cap
+     (default 1.5× the initial program) are rejected. The wall-clock cap
+     handles speed.
+  3. smoke (GPU): a few hundred steps, no NaN/divergence, throughput ≥ 0.5× the
+     initial program (configurable).
+  4. screen: `screen_tokens` (default about 2 min of the initial program's
+     throughput), 1 seed.
+  5. full: `full_tokens` (default about 8–10 min), only if the screen is within
+     `screen_margin` of the best screen in the database (or of the parent's).
+  6. confirm: extra seeds (to ≥ 2, 3 for a new best) only for programs whose full
+     score would make them the best.
+- **Budget fairness.** Stages 4–5 use a fixed token budget with a wall-clock cap
+  of `1.25 ×` the initial program's time for that budget. A slower child that hits
+  the cap is scored on what it trained (fewer tokens, final full eval still
+  runs), so speed is paid for in loss. Record which limit was hit.
+- **Scores** (maximize, as in the paper): `neg_full_val_loss` (primary, mean over
+  evaluated seeds, with `n_seeds` and std), `tokens_per_sec`, `neg_params`,
+  and the screen score. The report.json + diagnosis are stored alongside.
+- **Noise.** At session start, run the initial program at the screen and full
+  budgets on 3 seeds. Store mean/std per (base program, dataset, budget). A
+  "new best" needs its mean over ≥2 seeds to beat the incumbent by > 2× std
+  (BRIEF §7). Until then it's recorded as a "contender".
+- **Screen vs full ranking check** (the M3 real-data deliverable). Before
+  trusting screens, evaluate about 4 hand-written variants (e.g. LR ×0.3/×3,
+  batch size 16, RMSNorm) at both budgets and report the rank agreement. If the
+  screen ranks poorly, lengthen it or drop the stage. Record the result in the
+  decision log.
+- **Default model and budgets.** Pick the smallest sensible model and budgets
+  so a night holds ≳ 40 screens. Justify in the decision log (throughput
+  numbers: see "Facts").
+- **Bad-patch tests** (hand-written SEARCH/REPLACE, deterministic): (a) causal
+  leak (drop the tril mask) → stage 1 causal test; (b) shape bug → stage 1;
+  (c) edit outside a block (the loss line) → stage 0 scope; (d) param blow-up →
+  stage 2; (e) SEARCH text not found / ambiguous → stage 0. One good patch
+  (RMSNorm swap) must pass stages 0–2 on CPU.
 
-### M6: short real session
-- Before starting, make sure the owner's runner is idle (see the shared-GPU rule).
-- Pick the smallest sensible model and trial length so an hour holds about 8–12
-  trials after the 3-seed noise baseline. Set caps to match (max wall-clock
-  60 min, max runs, max consecutive rejections).
-- Launch in the background with `caffeinate -i nohup uv run autolab start ... &`,
-  and poll `autolab status` every few minutes. Don't babysit with long sleeps
-  inside a single tool call.
+### M4: program database + prompt sampler + LLM proposer
+- **Database** (SQLite in `autolab/state/`): programs, scores, lineage, failures.
+  Scaled-down MAP-Elites + islands:
+  - Islands: `n_islands` (default 2) evolve independently. Every
+    `migrate_every` accepted children, copy each island's best to the others.
+  - MAP-Elites grid per island over two descriptors, bucketed: params and
+    tokens/sec. Each cell keeps its best program by the primary score.
+  - `sample()`: parent = the island's best with prob `p_exploit` (0.5), else a
+    uniformly random occupied cell's elite. Inspirations = top-k (2) by score,
+    plus 1 random elite from another cell, excluding the parent.
+  - Failed children are stored with their failure stage and reason. They
+    never become parents, but the prompt shows the recent ones.
+- **Prompt sampler** (template files under `src/autolab/prompts/`):
+  - Explicit context: task statement (decoder-only LM on Wikipedia text,
+    minimize full val loss at a fixed token budget on an M-series MacBook Air
+    with MPS), the fixed session settings, the hparam keys/ranges, the rules for
+    SEARCH/REPLACE and EVOLVE blocks, and "keep throughput".
+  - Prior programs: each inspiration's changed blocks and hparams (as a diff vs
+    the initial program to save context), with scores.
+  - Current program: full EVOLVE blocks + hparams + scores + a report summary
+    (final losses, gap, slopes, tokens/param, spikes, grad-norm stats) +
+    diagnosis labels with evidence.
+  - Recent failures: the last N children's rationale + failure reason (e.g.
+    "causal-leak test failed", "OOM", "diverged at step 900").
+  - Stochastic formatting: a few template alternatives for the task
+    instruction (e.g. "propose a new idea…" / "make a targeted fix to the
+    diagnosed problem…" / "simplify…"), picked by configured probabilities.
+  - Meta-prompt evolution: out of scope for now. Log it as a follow-up.
+- **LLM call.** `claude -p` with `--output-format json`, `--json-schema` for a
+  reply `{rationale, diffs: [{search, replace}], hparams: {…}}`, all tools disabled
+  (`--tools ""` or `--disallowed-tools`; check `claude --help`), `--model` from
+  a weighted mix in config (e.g. 80% the strongest model, 20% a faster one;
+  record which model made each child), and a subprocess timeout. Log every
+  prompt/response under `autolab/state/llm/`.
+  Diffs are applied by autolab (M3), never by Claude editing files. This
+  replaces the old M5 plan of Claude using Read/Edit tools in a worktree.
+- **Fallback mutation operator** (no LLM): perturb 1–2 hparams within ranges
+  (log-scale for lr/wd). Used on LLM failure (timeout, non-zero exit, bad JSON,
+  schema failure, a diff that doesn't apply), in tests, and as a "no LLM" baseline.
+  Record the fallback reason.
+- Tests: database sampling/migration/elite replacement (deterministic with a
+  seed), prompt rendering snapshot, mocked subprocess for each LLM failure mode,
+  and one real `claude -p` call (skippable offline).
+
+### M5: controller loop, persistence, notebook
+- `autolab start|resume|status|stop` (console script). State in
+  `autolab/state/state.json` + the SQLite db, written atomically after every
+  step. `stop` writes a flag file checked between stages (and sends a stop to
+  the active run).
+- **Pipeline:** one GPU worker runs stages 3–6 serially. A producer keeps up to
+  `prefetch` (default 2) children that have passed stages 0–2 ready, so LLM
+  calls and CPU gates overlap GPU training. Threads or asyncio, either is fine.
+  Obey the shared-GPU rule before every GPU stage (`autolab.gpu.wait_for_gpu`)
+  and log time spent waiting.
+- **Caps** (BRIEF §10): max wall-clock, max GPU evaluations, max LLM calls,
+  max consecutive children failing stage ≤ 2 (a sign the prompt is broken), disk.
+  Checkpoints: don't `--save` except for the current best.
+- **Notebook**: `autolab/notebook.jsonl` gets one entry per child: parent,
+  inspirations, model, rationale, diffs summary, hparams, stage reached,
+  scores, failure reason. Keep `action` (= `evolve` | `mutate` | `baseline`),
+  `accepted` and `improved` for diagnose(). Regenerate `autolab/NOTEBOOK.md` with
+  the best-so-far curve vs evaluations and the lineage of the best program.
+- **Git:** when a new best is confirmed over noise, write its blocks onto
+  `autolab` and commit with its rationale, scores vs the incumbent, and lineage
+  in the message, then push. Individual children are not branches.
+- **E2E test** (CPU, a few minutes at most): tiny model (n_embd 32, n_layer 1,
+  block 32, bs 4) on ~200k tokens sliced from data20k, tiny budgets, a mocked LLM
+  that returns a fixed sequence of good/bad diffs. Run start → a few children →
+  stop → resume → finish. Check that the db, state and notebook agree and at
+  least one child beats the initial program.
+
+### M6: real session
+- Make sure the owner's runner is idle (shared-GPU rule). The owner's queue
+  can be busy for many hours, so prefer an overnight window.
+- First a ~1 h pilot (noise baseline + a handful of children) to catch prompt
+  and gate problems, then a longer run with caps set to fit the window.
+- Launch in the background with `caffeinate -i nohup uv run autolab start ... &`
+  and poll `autolab status` every few minutes. Don't babysit with long sleeps.
 - Final report in `autolab/SESSION_1.md` (and in chat):
-  - what the agent tried, in order, with hypotheses;
-  - what it accepted/rejected and why, with numbers vs noise;
-  - how often the LLM planner fell back;
-  - wall-clock breakdown (training vs overhead vs waiting on the GPU);
-  - failure modes observed;
-  - concrete recommendations for the next session.
+  - best-so-far score vs number of GPU evaluations, against the initial
+    program's seed noise;
+  - the best program's lineage with each step's rationale and diff;
+  - cascade funnel: how many children reached/failed each stage and why;
+  - LLM stats: calls, fallbacks and reasons, per-model success rate;
+  - wall-clock breakdown (training vs gates vs LLM vs waiting on the GPU);
+  - failure modes and recommendations.
+- Follow-up (not in M6 unless time allows): the paper's "no evolution"
+  ablation (always sample the initial program as parent) at equal GPU budget.
 
 ## Decision log
 - 2026-09-26: frozen val = data20k/val.pt copy; train start = data20k/train.pt;
@@ -282,3 +382,8 @@ the "Decision log" at the bottom.
 - 2026-09-26 (M2): caveat. With cosine-to-min_lr, the last 20% of a run is
   low-LR annealing, so flat tails are partly the schedule. diagnose() notes it
   when final LR < 5% of peak. M3 should keep this in mind when choosing budgets.
+- 2026-09-26: design pivot. The owner wants an AlphaEvolve-style loop (program
+  database + LLM-proposed SEARCH/REPLACE diffs in EVOLVE blocks + an evaluation
+  cascade) instead of the brief's fixed action menu and planner. M3–M6 are
+  rewritten. The M2 report and diagnosis are kept as the evaluator's output and
+  as prompt context.
