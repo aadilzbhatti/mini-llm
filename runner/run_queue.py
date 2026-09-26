@@ -110,7 +110,7 @@ class JobError(ValueError):
     """A job file that we refuse to run, with a reason worth reporting."""
 
 
-def _check_relative_path(value: object, repo: Path, flag: str) -> str:
+def _check_relative_path(value: object, repo: Path, flag: str, pending: frozenset[str] = frozenset()) -> str:
     if not isinstance(value, str) or not value:
         raise JobError(f"--{flag} must be a non-empty string")
     path = Path(value)
@@ -119,15 +119,29 @@ def _check_relative_path(value: object, repo: Path, flag: str) -> str:
     resolved = (repo / path).resolve()
     if not str(resolved).startswith(str(repo.resolve())):
         raise JobError(f"--{flag} escapes the repo: {value!r}")
-    if not resolved.exists():
+    if not resolved.exists() and value not in pending:
         raise JobError(f"--{flag} points at a file that does not exist: {value}")
     return value
 
 
-def build_command(args: dict, repo: Path, uv: str) -> list[str]:
-    """Turn a validated job dict into an argv list. Raises JobError."""
+def build_command(args: dict, repo: Path, uv: str, pending: frozenset[str] = frozenset()) -> list[str]:
+    """Turn a validated job dict into an argv list. Raises JobError.
+
+    `pending` holds repo-relative paths that don't exist yet but will by the
+    time this job runs -- the checkpoint a queued or running job is going to
+    save -- so a continuation can be queued behind the run it continues. The
+    runner itself always validates with an empty set, so at run time the file
+    really has to be there.
+    """
     merged: dict[str, object] = dict(DEFAULT_ARGS)
     merged.update(args)
+
+    # Cross-field rules train.py would otherwise only enforce after startup.
+    if "restart-lr" in merged and "resume" not in merged:
+        raise JobError("restart-lr only applies to a continuation; set resume too")
+    n_embd, n_head = merged.get("n-embd", 128), merged.get("n-head", 4)
+    if isinstance(n_embd, int) and isinstance(n_head, int) and n_head > 0 and n_embd % n_head:
+        raise JobError(f"n-embd ({n_embd}) must be divisible by n-head ({n_head})")
 
     cmd = [uv, "run", "--project", str(repo), "mini-llm-train"]
 
@@ -149,7 +163,7 @@ def build_command(args: dict, repo: Path, uv: str) -> list[str]:
             cmd += [f"--{flag}", repr(float(value))]
 
         elif flag in PATH_FLAGS:
-            cmd += [f"--{flag}", _check_relative_path(value, repo, flag)]
+            cmd += [f"--{flag}", _check_relative_path(value, repo, flag, pending)]
 
         elif flag in NAME_FLAGS:
             if not isinstance(value, str) or not SAFE_NAME.match(value):
@@ -207,7 +221,8 @@ def build_prepare_command(args: dict, repo: Path, uv: str) -> list[str]:
     return cmd
 
 
-def validate_job(raw: object, repo: Path, uv: str, default_name: str = "job") -> tuple[str, str, list[str], dict]:
+def validate_job(raw: object, repo: Path, uv: str, default_name: str = "job",
+                 pending: frozenset[str] = frozenset()) -> tuple[str, str, list[str], dict]:
     """Validate a job object -> (name, kind, argv, args). Raises JobError.
 
     Shared with the control API, which validates before it ever writes a job
@@ -230,7 +245,7 @@ def validate_job(raw: object, repo: Path, uv: str, default_name: str = "job") ->
 
     if kind == "prepare-data":
         return name, kind, build_prepare_command(args, repo, uv), args
-    return name, kind, build_command(args, repo, uv), args
+    return name, kind, build_command(args, repo, uv, pending), args
 
 
 def parse_job(path: Path, repo: Path, uv: str) -> tuple[str, list[str], dict]:
@@ -476,6 +491,7 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
         "cmd": cmd,
         "log": str(log_path.relative_to(repo)),
         "started": now(),
+        "job_file": job_path.name,
         "runner_pid": os.getpid(),
     }
     status_path.write_text(json.dumps(status, indent=2))

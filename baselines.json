@@ -1,5 +1,25 @@
 [
   {
+    "run": "data20k_160k_emb256_blk128_lr3e-4_seed42.pt",
+    "date": "2026-09-26 15:36 UTC",
+    "steps": 160000,
+    "params": 16105297,
+    "n_layer": 4,
+    "n_embd": 256,
+    "n_head": 4,
+    "block_size": 128,
+    "batch_size": 4,
+    "lr": 0.0003,
+    "min_lr": 2e-06,
+    "warmup_steps": 500,
+    "seed": 42,
+    "eval_train_loss": 4.417576575279236,
+    "eval_val_loss": 4.783841705322265,
+    "full_val_loss": 4.756320179746196,
+    "checkpoint": "checkpoints/data20k_160k_emb256_blk128_lr3e-4_seed42.pt",
+    "plot": "plots/loss_blk128_emb256_head4_layer4_bs4_steps160000_lr0.0003_minlr2e-06_seed42_data20k.png"
+  },
+  {
     "run": "data10k_160k_emb256_blk128_lr3e-4_seed42",
     "date": "2026-09-26 04:21 UTC",
     "steps": 160000,

@@ -108,3 +108,42 @@ def test_plot_served_from_plots_dir_only(repo):
     r = c.get("/api/runs/r3/plot")
     assert r.status_code == 200 and r.headers["content-type"] == "image/png"
     assert c.get("/api/runs/r4/plot").status_code == 404
+
+
+def test_dry_run_validates_without_queueing(repo):
+    c = client(repo)
+    r = c.post("/api/jobs?dry_run=true", json={"name": "a", "args": {"steps": 10}})
+    assert r.status_code == 200 and r.json()["ok"]
+    assert list((repo / "queue").glob("*.json")) == []
+    bad = c.post("/api/jobs?dry_run=true", json={"name": "a", "args": {"n-embd": 100, "n-head": 3}})
+    assert bad.status_code == 422 and "divisible" in bad.json()["detail"]
+    assert c.post("/api/jobs?dry_run=true", json={"name": "a", "args": {"restart-lr": 1e-4}}).status_code == 422
+
+
+def test_continuation_of_running_run_validates_against_pending_checkpoint(repo):
+    c = client(repo)
+    (repo / "queue" / "j.json").write_text(json.dumps({"name": "big", "args": {"steps": 160000, "save": True, "save-name": "big_160k_x.pt", "n-embd": 256}}))
+    running(repo, "r9", name="big", job_file="j.json", args={"steps": 160000, "save": True, "save-name": "big_160k_x.pt", "n-embd": 256})
+    q = c.get("/api/queue").json()
+    assert q[0]["running"] is True
+    assert c.delete("/api/queue/j.json").status_code == 409          # can't cancel what's running
+    job = c.get("/api/runs/r9/continuation").json()
+    assert job["args"]["resume"] == "checkpoints/big_160k_x.pt"
+    assert job["args"]["n-embd"] == 256 and job["args"]["save-name"] == "big_200k_x_resume.pt"
+    # checkpoint doesn't exist yet, but it's pending, so the continuation queues
+    r = c.post("/api/jobs", json=job)
+    assert r.status_code == 200, r.text
+    assert c.get("/api/queue/j.json/continuation").json()["args"]["resume"] == "checkpoints/big_160k_x.pt"
+
+
+def test_resume_of_nonexistent_non_pending_checkpoint_rejected(repo):
+    r = client(repo).post("/api/jobs", json={"name": "a", "args": {"resume": "checkpoints/nope.pt", "steps": 5}})
+    assert r.status_code == 422
+
+
+def test_meta_form_schema(repo):
+    form = client(repo).get("/api/meta").json()["form"]
+    fields = {f["flag"]: f for f in form["train"]}
+    assert fields["tokens"]["type"] == "path" and "data/d1/train.pt" in fields["tokens"]["choices"]
+    assert fields["lr"]["min"] > 0 and fields["save"]["type"] == "bool"
+    assert {f["flag"] for f in form["prepare-data"]} >= {"out-dir", "dataset", "num-examples"}

@@ -357,7 +357,9 @@ def plot_loss(
     plt.close(fig)
 
 
-def parse_args(argv: list[str] | None = None):
+def build_parser() -> argparse.ArgumentParser:
+    """The CLI definition, separate from parsing so the control API can read
+    every flag's default and help text to build its job form."""
     p = argparse.ArgumentParser(description="Train the tiny custom Transformer.")
     # data
     p.add_argument("--text", default=None, help="Path to a local .txt file (default: data/tiny.txt).")
@@ -503,7 +505,11 @@ def parse_args(argv: list[str] | None = None):
         "of training, keyed by --save-name/--plot-name (or the generated hyperparam name if "
         "neither is set) and re-sorted by best loss.",
     )
-    return p.parse_args(argv)
+    return p
+
+
+def parse_args(argv: list[str] | None = None):
+    return build_parser().parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> None:
