@@ -207,6 +207,66 @@ def summarize(log_path: Path) -> dict:
     return out
 
 
+# --- forecasting -----------------------------------------------------------
+#
+# Every job records what the closed-form models expected before it ran, and on
+# completion its own error against that. Over time runs/ becomes a calibration
+# record rather than just a log -- and a model that drifts is visible instead
+# of quietly wrong. Loaded by path so this stays stdlib-only and hermetic:
+# importing mini_llm as a package would pull in torch.
+
+def _load_predict(repo: Path):
+    import importlib.util
+    path = repo / "src" / "mini_llm" / "predict.py"
+    if not path.exists():
+        return None
+    try:
+        spec = importlib.util.spec_from_file_location("_predict", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+    except Exception:
+        return None
+
+
+def forecast_for(repo: Path, args: dict):
+    """Best-effort: a broken forecast must never stop a job from running."""
+    mod = _load_predict(repo)
+    if mod is None:
+        return None
+    try:
+        runs = mod.load_runs(repo / "runs")
+        if not runs:
+            return None
+        g = lambda k, d: args.get(k, d)
+        cfg = dict(n_embd=int(g("n-embd", 128)), n_head=int(g("n-head", 4)),
+                   n_layer=int(g("n-layer", 4)), block_size=int(g("block-size", 64)),
+                   batch_size=int(g("batch-size", 4)), steps=int(args["steps"]),
+                   lr=float(g("lr", 1e-3)), min_lr=float(g("min-lr", 2e-6)),
+                   warmup_steps=int(g("warmup-steps", 500)))
+        return mod.forecast(cfg, runs)
+    except Exception as exc:  # noqa: BLE001
+        return {"error": f"{type(exc).__name__}: {exc}"}
+
+
+def forecast_error(pred: dict, status: dict) -> dict:
+    """Signed error of the forecast, once the truth is in."""
+    if not pred or "error" in pred:
+        return {}
+    out = {}
+    met = status.get("metrics") or {}
+    actual_sec = status.get("duration_sec")
+    if pred.get("time_sec") and actual_sec:
+        out["time_pct"] = round(100 * (pred["time_sec"] - actual_sec) / actual_sec, 1)
+        out["time_actual_sec"] = actual_sec
+    if pred.get("loss") is not None and met.get("full_val_loss") is not None:
+        out["loss_nats"] = round(pred["loss"] - met["full_val_loss"], 4)
+        out["loss_actual"] = met["full_val_loss"]
+    if pred.get("params_est") and met.get("params"):
+        out["params_pct"] = round(100 * (pred["params_est"] - met["params"]) / met["params"], 2)
+    return out
+
+
 # --- the loop -------------------------------------------------------------
 
 
@@ -252,8 +312,10 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
     log_path = runs / f"{run_id}.log"
     status_path = runs / f"{run_id}.status.json"
 
+    pred = forecast_for(repo, args)
     status = {
         "run_id": run_id,
+        "forecast": pred,
         "name": name,
         "status": "running",
         "args": args,
@@ -263,6 +325,9 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
     }
     status_path.write_text(json.dumps(status, indent=2))
     log(f"RUNNING {run_id}: {' '.join(cmd)}")
+    if pred and "error" not in pred:
+        loss_txt = f"{pred['loss']:.4f}" if pred.get("loss") is not None else "n/a (no family data)"
+        log(f"  forecast: {pred['time_hours']:.1f}h, full_val {loss_txt}")
 
     env = dict(os.environ, PYTHONUNBUFFERED="1")  # so the log streams live
     started = time.time()
@@ -286,11 +351,15 @@ def run_job(job_path: Path, repo: Path, uv: str) -> None:
             "metrics": summarize(log_path),
         }
     )
+    status["forecast_error"] = forecast_error(pred, status)
     status_path.write_text(json.dumps(status, indent=2))
+    if status["forecast_error"]:
+        log(f"  forecast error: {status['forecast_error']}")
 
     with (runs / "index.jsonl").open("a") as index:
         index.write(json.dumps({k: status[k] for k in
-                                ("run_id", "status", "started", "finished", "args", "metrics")
+                                ("run_id", "status", "started", "finished", "args", "metrics",
+                                 "forecast", "forecast_error")
                                 if k in status}) + "\n")
 
     shutil.move(str(job_path), str(queue / "done" / f"{stamp}-{job_path.name}"))
