@@ -10,7 +10,8 @@ the "Decision log" at the bottom.
 
 - Repo: `~/dev/wiki-llm-autolab`, branch `autolab`, cloned from
   `~/dev/wiki-llm` (branch `minimal`, commit d4257f0). `origin` is the GitHub
-  repo, but its push URL is deliberately `DISABLED-autolab-never-pushes`.
+  repo (github.com/aadilzbhatti/mini-llm). Pushing the `autolab` branch there is
+  allowed (see standing rules).
 - Milestone 1 (discovery) is done: `autolab/REPO_NOTES.md`.
 - Milestones 2–6 are not started. No code in `src/autolab/` yet.
 - Milestone 1 was done from a Linux VM that can't run MPS or long processes,
@@ -44,7 +45,19 @@ the "Decision log" at the bottom.
 ## Standing rules
 
 - **Never modify `~/dev/wiki-llm`.** Reading and copying from it is fine. Never
-  run uv, git or anything that writes inside it. Never push.
+  run uv, git or anything that writes inside it. The owner works there and his
+  launchd runner executes that checkout.
+- **Pushing:** the owner allows pushing the `autolab` branch to `origin`. The
+  first time, use `git push -u origin autolab`, and push after each commit that
+  lands on `autolab`. Never force-push. Never push any other branch (`main`,
+  `minimal`, etc.). `autolab/cand-*` branches stay local unless the owner asks.
+  Never commit data, checkpoints or run outputs (`*.pt` is already
+  gitignored; keep it that way).
+- **Within this clone** you're free to modify whatever the milestones need,
+  subject to the protected-path rules the gates enforce on *candidate* edits
+  (BRIEF §6). Those rules govern what the agent may change when proposing model
+  edits, not your own build work. Still keep changes to existing training code
+  small and marked, so the owner can follow them.
 - **Shared GPU.** The owner's queue runner trains on this same Mac. Before
   starting any training run (including smoke runs and gates that train),
   check `~/dev/wiki-llm/runs/*.live.json`. If any file's `updated` is less than
@@ -227,3 +240,5 @@ the "Decision log" at the bottom.
 ## Decision log
 - 2026-09-26: frozen val = data20k/val.pt copy; train start = data20k/train.pt;
   real runs native on macOS; autolab yields the GPU to the owner's queue runner.
+- 2026-09-26: owner allows pushing the `autolab` branch to origin (no force-push,
+  no other branches). This overrides BRIEF §0/§10 "never push".
