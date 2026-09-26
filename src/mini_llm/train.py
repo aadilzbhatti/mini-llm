@@ -693,6 +693,15 @@ def main(argv: list[str] | None = None) -> None:
         _, loss = model(x, y)
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
+        # AUTOLAB: total grad norm (no clipping) for run reports, only on log-interval steps
+        # so non-log steps don't pay for the extra device sync.
+        grad_norm = (
+            torch.linalg.vector_norm(
+                torch.stack([torch.linalg.vector_norm(p.grad) for p in model.parameters() if p.grad is not None])
+            ).item()
+            if step % ctl.log_interval == 0
+            else None
+        )
         optimizer.step()
 
         # A stop command ends the run *here*, as if this had been the last
@@ -713,6 +722,8 @@ def main(argv: list[str] | None = None) -> None:
             print(f"step {step:5d} | loss {loss_value:.4f} | lr {current_lr:.2e}")
             control.scalar("train/batch_loss", loss_value, step)
             control.scalar("train/lr", current_lr, step)
+            if grad_norm is not None:  # AUTOLAB: see above
+                control.scalar("train/grad_norm", grad_norm, step)
 
         if eval_now:
             eval_train_loss = evaluate_fixed(model, train_eval_batches)

@@ -1,0 +1,43 @@
+# Every number the report summaries and diagnose() use. Loss is in nats.
+# "window" = the last `tail_fraction` of the eval points of a run.
+
+[report]
+max_curve_points = 200      # curves are subsampled to at most this many points
+ema_alpha = 0.3             # EMA over eval points for the "final smoothed" losses
+tail_fraction = 0.2         # slopes and gap trend use the last 20% of eval points
+spike_window = 21           # rolling-median window over train/batch_loss points
+spike_mad_k = 3.0           # spike = residual > k * 1.4826 * MAD of residuals
+
+[diagnose]
+min_tail_points = 4         # fewer eval points in the window -> inconclusive
+
+# A curve is "falling" when the fitted drop across the window is at least
+# `falling_rel_drop` of the loss AND the slope's t-stat <= -`t_min`;
+# "flat" when the relative drop is below `flat_rel_drop` (or t > -t_min);
+# "rising" when the fitted rise is at least `rising_rel` and t >= t_min.
+t_min = 3.0
+falling_rel_drop = 0.005
+flat_rel_drop = 0.002
+rising_rel = 0.002
+
+# Gap = val - train (EMA). "small" below gap_small; "growing" when the fitted
+# change of the gap across the window exceeds gap_growth with t >= t_min.
+gap_small = 0.05
+gap_growth = 0.01
+
+# data_limited support: epochs over the train set, or tokens per parameter.
+epochs_support = 1.0
+tokens_per_param_ref = 20.0
+
+# unstable
+spike_rate_max = 0.02        # fraction of logged batch losses that are spikes
+divergence_rel = 0.03        # final smoothed val above best val by this fraction
+grad_norm_max_over_median = 50.0
+
+# If seed noise std is known (history), window drops smaller than
+# `noise_mult` x std don't count as a trend.
+noise_mult = 1.0
+
+# capacity_limited prerequisites (from history/notebook)
+lr_tuning_actions = ["lr_range_test", "hparam_search"]
+data_actions = ["build_dataset"]

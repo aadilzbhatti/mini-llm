@@ -12,3 +12,8 @@ queue/*.json
 queue/done/
 queue/failed/
 queue/cancelled/
+
+# autolab (data, run outputs and orchestrator state stay local)
+autolab/data/
+autolab/runs/
+autolab/state/

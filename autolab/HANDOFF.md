@@ -13,10 +13,13 @@ the "Decision log" at the bottom.
   repo (github.com/aadilzbhatti/mini-llm). Pushing the `autolab` branch there is
   allowed (see standing rules).
 - Milestone 1 (discovery) is done: `autolab/REPO_NOTES.md`.
-- Milestones 2–6 are not started. No code in `src/autolab/` yet.
-- Milestone 1 was done from a Linux VM that can't run MPS or long processes,
-  so no tests have been run in this clone yet. Start with `uv sync` and
-  `uv run pytest` to get a baseline of the existing suite.
+- Setup on the Mac is done: `uv sync`; baseline suite 47 passed; data copied
+  into `autolab/data/` (gitignored); frozen val sha256 in `autolab/config.toml`.
+- Milestone 2 (reports + diagnosis) code and tests are done: `src/autolab/`
+  {config, gpu, trainer, report, diagnose}.py + `thresholds.toml`; tests in
+  `tests/autolab/`. Run the suite with `AUTOLAB_FORCE_CPU=1 uv run pytest`
+  while the owner's runner is training.
+- Milestones 3–6 are not started.
 
 ## Decisions (override the brief where they conflict)
 
@@ -242,3 +245,40 @@ the "Decision log" at the bottom.
   real runs native on macOS; autolab yields the GPU to the owner's queue runner.
 - 2026-09-26: owner allows pushing the `autolab` branch to origin (no force-push,
   no other branches). This overrides BRIEF §0/§10 "never push".
+- 2026-09-26 (M2): frozen val sha256 (file bytes) `28b1041a…569ee` lives in
+  `autolab/config.toml`, checked by `autolab.config.check_frozen_val` before
+  every run. The token-buffer hash `08f241fd…` from REPO_NOTES is recorded next to it.
+- 2026-09-26 (M2): report slopes are loss per 1k steps plus the fitted change
+  across the tail window (absolute and relative), not "per log-step", so
+  they don't depend on the eval interval. diagnose() thresholds use the relative change.
+- 2026-09-26 (M2): non-embedding params = total − (vocab + block_size) × n_embd
+  (tied token table + learned position table). The lm_head bias counts as non-embedding.
+  Params, device and dataset size are parsed from the trainer's stdout, so they stay
+  right for edited candidate code.
+- 2026-09-26 (M2): tokens/sec and train_wall_s come from TB wall times of the
+  first and last `train/batch_loss` (the loop incl. periodic evals, excluding
+  startup and the final full eval). `performance.wall_s` is the whole process.
+- 2026-09-26 (M2): `config_hash` covers model+optim+eval+steps+dataset_id and
+  excludes the seed, so seeds of one config share a hash (for noise grouping).
+- 2026-09-26 (M2): `train/grad_norm` is computed only on log-interval steps
+  (no sync on other steps). The last step is logged for loss but not grad norm
+  unless it falls on the interval.
+- 2026-09-26 (M2): pulled the M3 CPU hook forward: `AUTOLAB_FORCE_CPU=1` in
+  `device.py` (marked). tests/autolab sets it automatically. The existing
+  `test_train_control` trains via `select_device()`, so run the full suite with the env var
+  while the GPU is shared.
+- 2026-09-26 (M2): GPU counts as free only after 2 consecutive idle checks
+  60 s apart, so autolab doesn't slip into the gap between two queued owner jobs.
+- 2026-09-26 (M2): autolab runs pass `--full-eval-interval 0` (only the final
+  full eval) and `--control-poll 25`. Wall-clock stop has a 15-min kill grace
+  for the final eval.
+- 2026-09-26 (M2): diagnose() reads only `action`, `accepted` and `improved`
+  from notebook entries. M3's notebook schema must keep those three fields.
+  "LR tuned" = an lr_range_test/hparam_search entry, or ≥3 distinct LRs for
+  the same model shape in past reports. "Data increase didn't help" = an
+  explicit build_dataset entry with improved/accepted false, or two reports with
+  the same config on different dataset sizes where the bigger one isn't better by
+  more than noise_mult × noise_std.
+- 2026-09-26 (M2): caveat. With cosine-to-min_lr, the last 20% of a run is
+  low-LR annealing, so flat tails are partly the schedule. diagnose() notes it
+  when final LR < 5% of peak. M3 should keep this in mind when choosing budgets.

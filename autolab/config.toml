@@ -1,0 +1,24 @@
+# Autolab configuration (committed). Paths are relative to the repo root.
+
+[data]
+# Frozen, held-out validation set: a copy of ~/dev/wiki-llm/data/data20k/val.pt
+# (918,728 tokens, 937 docs, 0 doc overlap with every train file). Never rebuilt.
+# sha256 of the .pt file bytes; checked before every run.
+frozen_val = "autolab/data/val_frozen.pt"
+frozen_val_sha256 = "28b1041acaa527ac6d7e0a464b07115e766c5bf76252ecbc56a8519de02569ee"
+# sha256 of the int64 token buffer (what REPO_NOTES quotes as 08f241fde5bc...).
+frozen_val_tokens_sha256 = "08f241fde5bc721efd5866041c3b3fc3f785376b15fc38dcdb6b2a24f0629faf"
+datasets_dir = "autolab/data/datasets"
+
+[runs]
+runs_dir = "autolab/runs"
+
+[gpu]
+# The owner's queue runner trains on the same Mac. A heartbeat updated less
+# than `stale_after_s` ago without "finished": true means the GPU is busy.
+owner_runs_dir = "~/dev/wiki-llm/runs"
+stale_after_s = 120
+poll_s = 60
+# Consecutive idle checks (poll_s apart) required before starting, so we don't
+# slip into the gap between two queued jobs.
+idle_checks_required = 2
