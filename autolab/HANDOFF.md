@@ -577,3 +577,7 @@ Build this first; everything else hill-climbs on it.
   defaults now resolve at call time, and tests/autolab/conftest.py fails any test that
   changes the live ACTIVE session, the controller's enabled flag, or the repo's
   branches/worktrees.
+- 2026-09-27 (owner): screen_margin 0.10 → 0.25. Screens penalize regularization that pays off
+  only after several epochs (p1: dropout+wd+6 layers screened +0.154; p4: dropout+warmup 50
+  +0.179), and regularization is what the data_limited diagnosis asks for. p1 and p4 were
+  re-queued at the full stage. The controller was started (`autolab start`) the same day.
