@@ -226,6 +226,48 @@ def settings() -> dict:
     return out
 
 
+STAGE_ORDER = ["static", "cpu", "params", "screen", "full", "confirm", "done"]
+
+
+def evolve_view() -> dict | None:
+    root = AUTOLAB / "state" / "evolve"
+    session = _json(root / "session.json")
+    if not session:
+        return None
+    progs = [_json(p) for p in sorted((root / "programs").glob("*.json"), key=lambda p: int(p.stem[1:]) if p.stem[1:].isdigit() else 0)]
+    progs = [p for p in progs if p]
+    inc = next((p for p in progs if p["id"] == session["incumbent"]), None)
+    sigma = session["noise"]["full"]["std"]
+    inc_mean = (inc or {}).get("scores", {}).get("full_mean")
+    rows = []
+    for p in progs:
+        sc = p.get("scores", {})
+        passed = [st["stage"] for st in p.get("stages", []) if st.get("ok")]
+        rows.append({
+            "id": p["id"], "parent": p.get("parent_id"), "by": p.get("created_by"), "created": p.get("created_at"),
+            "rationale": p.get("rationale", ""), "stage": p.get("stage"), "status": p.get("status"), "reason": p.get("reason", ""),
+            "screen": sc.get("screen_loss"), "full_mean": sc.get("full_mean"), "n_seeds": sc.get("n_seeds", 0),
+            "delta_sigma": ((sc["full_mean"] - inc_mean) / sigma) if sc.get("full_mean") is not None and inc_mean and sigma else None,
+            "params": sc.get("params"), "tokens_per_sec": sc.get("tokens_per_sec"),
+            "furthest": p.get("stage") if p.get("status") not in ("evaluated", "contender", "accepted") else "done",
+            "passed": passed, "hparams": p.get("hparams"), "runs": p.get("runs", {}),
+        })
+    def furthest(r: dict) -> int:
+        """Index of the last stage a program got to (its current one, or 'done')."""
+        if r["status"] in ("evaluated", "contender", "accepted"):
+            return STAGE_ORDER.index("confirm") if r["status"] != "evaluated" else STAGE_ORDER.index("full")
+        return STAGE_ORDER.index(r["stage"]) if r["stage"] in STAGE_ORDER else 0
+
+    children = [r for r in rows if r["id"] != "p0"]
+    funnel = [{"stage": st, "reached": sum(furthest(r) >= i for r in children),
+               "rejected_here": sum(r["status"] == "rejected" and r["stage"] == st for r in children)}
+              for i, st in enumerate(STAGE_ORDER[:-1])]
+    return {"session": session, "incumbent": inc and inc["id"], "bar": (inc_mean - 2 * sigma) if inc_mean else None,
+            "programs": rows, "funnel": funnel,
+            "counts": {k: sum(r["status"] == k for r in rows if r["id"] != "p0")
+                       for k in ("queued", "running", "blocked", "rejected", "evaluated", "contender", "accepted")}}
+
+
 def overview() -> dict:
     calls = _json(AUTOLAB / "state" / "modal_calls.json", {}) or {}
     exps = load_experiments()
@@ -260,6 +302,7 @@ def overview() -> dict:
                         | {"jobs": len(e.get("jobs", [])), "analysis": analyze(e, rows)} for e in exps],
         "decisions": decisions(),
         "settings": settings(),
+        "evolve": evolve_view(),
     }
 
 
@@ -286,6 +329,30 @@ def api_run(run_id: str) -> JSONResponse:
     return JSONResponse({"run_id": run_id, "call": call, "launch": _json(d / "launch.json"),
                          "report": _json(d / "report.json"), "diagnosis": _json(d / "diagnosis.json"),
                          "live": _json(d / "live.json"), "log_tail": log})
+
+
+@app.get("/api/program/{pid}")
+def api_program(pid: str) -> JSONResponse:
+    import difflib
+
+    if not SAFE_ID.match(pid):
+        raise HTTPException(400, "bad program id")
+    root = AUTOLAB / "state" / "evolve" / "programs"
+    p = _json(root / f"{pid}.json")
+    if p is None:
+        raise HTTPException(404, "unknown program")
+    parent = _json(root / f"{p['parent_id']}.json") if p.get("parent_id") else None
+    diff = []
+    if parent:
+        for key in sorted(set(p["blocks"]) | set(parent["blocks"])):
+            a, b = parent["blocks"].get(key, ""), p["blocks"].get(key, "")
+            if a != b:
+                diff += list(difflib.unified_diff(a.splitlines(), b.splitlines(), f"{parent['id']}/{key}",
+                                                  f"{p['id']}/{key}", lineterm="", n=2))
+    hp_diff = {k: [parent["hparams"].get(k), v] for k, v in p["hparams"].items()
+               if parent and parent["hparams"].get(k) != v}
+    return JSONResponse({"program": {k: v for k, v in p.items() if k != "blocks"}, "diff": "\n".join(diff),
+                         "hparams_diff": hp_diff})
 
 
 @app.get("/")

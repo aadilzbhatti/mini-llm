@@ -70,3 +70,19 @@ def test_run_detail_and_safety(client):
 def test_spearman():
     assert dash.spearman({"a": 1, "b": 2, "c": 3}, {"a": 3, "b": 2, "c": 1}) == pytest.approx(-1.0)
     assert dash.spearman({"a": 1, "b": 2}, {"a": 1, "b": 2}) is None
+
+
+def test_page_script_parses(tmp_path):
+    """A syntax error blanks the whole page; catch it here (skipped without node)."""
+    import re
+    import shutil
+    import subprocess
+
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node not installed")
+    html = (dash.STATIC / "dashboard.html").read_text()
+    js = tmp_path / "page.js"
+    js.write_text(re.search(r"<script>(.*)</script>", html, re.S).group(1))
+    r = subprocess.run([node, "--check", str(js)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr

@@ -71,6 +71,7 @@ def test_session_from_baseline_runs(lab):
     m = build_model(ModelConfig(vocab_size=50257, block_size=128, n_embd=256, n_head=4, n_layer=4))
     assert sum(x.numel() for x in m.parameters()) == INITIAL_PARAMS
     p0 = ev.programs(lab["paths"])["p0"]
+    assert p0.scores["screen_loss"] == pytest.approx((6.52 + 6.56 + 6.51) / 3)
     assert p0.status == "accepted" and p0.scores["full_mean"] == pytest.approx((5.39 + 5.39 + 5.32) / 3)
 
 

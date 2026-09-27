@@ -139,7 +139,7 @@ def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cf
     p0 = Program(id="p0", parent_id=None, base_commit=base_commit, blocks=extract_blocks(files), hparams=hparams,
                  rationale="Initial program: the owner's emb256/blk128/bs64 regime at the base commit.",
                  stage="done", status="accepted", runs=runs)
-    p0.scores = _scores(losses("screen")[0], losses("full"), reports["full"][0])
+    p0.scores = _scores(mean(losses("screen")), losses("full"), reports["full"][0])
     p0.scores["screen_losses"] = losses("screen")
     session = {
         "created": now_iso(),
@@ -370,6 +370,8 @@ def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths = Pa
     inc = load(paths.programs / f"{session['incumbent']}.json")
 
     if p.stage in ("static", "cpu", "params") and p.status in ("queued", "running"):
+        p.status = "running"
+        save(p, paths.programs)  # CPU gates take ~2 min; let the dashboard show it
         src = stage_static(p, cfg, paths, repo)
         if src and stage_cpu(p, src, cfg, repo) and stage_params(p, src, cfg, session):
             p.stage, p.status = "screen", "queued"
