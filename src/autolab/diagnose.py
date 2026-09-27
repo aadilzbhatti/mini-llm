@@ -40,9 +40,11 @@ class Thresholds:
     gap_growth: float = 0.01
     epochs_support: float = 1.0
     tokens_per_param_ref: float = 20.0
-    spike_rate_max: float = 0.02
+    spike_rate_max: float = 0.03
+    spike_min_count: int = 5
     divergence_rel: float = 0.03
-    grad_norm_max_over_median: float = 50.0
+    grad_norm_max_over_median: float = 3.0
+    grad_norm_p95_over_median: float = 1.5
     noise_mult: float = 1.0
     lr_tuning_actions: tuple[str, ...] = ("lr_range_test", "hparam_search")
     data_actions: tuple[str, ...] = ("build_dataset",)
@@ -186,7 +188,9 @@ def diagnose(report: dict, history: History | None = None, th: Thresholds | None
     spike_rate = spikes.get("rate") or 0.0
     gn = health.get("grad_norm") or {}
     gn_ratio = gn.get("max_over_median")
-    best, final_val = s.get("best_val_loss"), s.get("final_val_loss_ema")
+    gn_p95_ratio = gn["p95"] / gn["median"] if gn.get("p95") and gn.get("median") else None
+    best = s.get("best_val_loss")
+    final_val = s.get("final_val_loss_smooth", s.get("final_val_loss_ema"))
     lr_peak, lr_final = s.get("lr_peak"), s.get("lr_final")
     lr_ratio = lr_final / lr_peak if lr_peak and lr_final is not None else None
 
@@ -201,17 +205,22 @@ def diagnose(report: dict, history: History | None = None, th: Thresholds | None
     unstable_ev = {}
     diverged = best is not None and final_val is not None and final_val > best * (1 + th.divergence_rel)
     if diverged and t_train == "rising":
-        unstable_ev.update(diverged=True, best_val=best, final_val_ema=final_val, train_trend=t_train)
-    if spike_rate > th.spike_rate_max:
+        unstable_ev.update(diverged=True, best_val=best, final_val_smooth=final_val, train_trend=t_train)
+    spiky = spike_rate > th.spike_rate_max and (spikes.get("count") or 0) >= th.spike_min_count
+    if spiky:
         unstable_ev.update(spike_rate=_r(spike_rate), spike_count=spikes.get("count"),
                            spike_rate_max=th.spike_rate_max)
     if gn_ratio is not None and gn_ratio > th.grad_norm_max_over_median:
         unstable_ev.update(grad_norm_max_over_median=gn_ratio, grad_norm_max=gn.get("max"))
+    if gn_p95_ratio is not None and gn_p95_ratio > th.grad_norm_p95_over_median:
+        unstable_ev.update(grad_norm_p95_over_median=_r(gn_p95_ratio, 2))
     if unstable_ev:
         conf = 0.9 if unstable_ev.get("diverged") else 0.5
-        if "spike_rate" in unstable_ev:
+        if spiky:
             conf = max(conf, min(0.9, 0.55 + 0.1 * (spike_rate / th.spike_rate_max - 1)))
-        if "grad_norm_max_over_median" in unstable_ev and len(unstable_ev) > 2:
+        if "grad_norm_p95_over_median" in unstable_ev:  # sustained, not one bad batch
+            conf = max(conf, 0.75)
+        if "grad_norm_max_over_median" in unstable_ev and len(unstable_ev) > 1:
             conf = min(0.95, conf + 0.1)
         labels.append(Label("unstable", round(conf, 2), {**unstable_ev, "lr_peak": lr_peak},
                             "Lower the peak LR or lengthen warmup; lr_range_test to find the divergence point."))
@@ -254,7 +263,7 @@ def diagnose(report: dict, history: History | None = None, th: Thresholds | None
     if (t_train in ("flat", "crawl") and t_val in ("flat", "crawl") and gap is not None
             and abs(gap) < th.gap_small and gap_stable):
         instability = spike_rate > th.spike_rate_max / 2 or (
-            gn_ratio is not None and gn_ratio > th.grad_norm_max_over_median / 2)
+            gn_p95_ratio is not None and gn_p95_ratio > 1 + (th.grad_norm_p95_over_median - 1) / 2)
         if instability:
             hint, suggestion = "lr_too_high", "Lower the peak LR (hparam_search) or run lr_range_test."
         elif t_train == "crawl" or t_val == "crawl":

@@ -39,6 +39,7 @@ class ReportParams:
     tail_fraction: float = 0.2
     spike_window: int = 21
     spike_mad_k: float = 3.0
+    early_skip_fraction: float = 0.05
 
     @classmethod
     def load(cls, path: Path = THRESHOLDS_PATH) -> "ReportParams":
@@ -86,7 +87,7 @@ def tail(series: Series, fraction: float) -> Series:
 def linfit(series: Series) -> dict:
     """OLS of value on step. Slope is per 1k steps; drop = fitted change across the window."""
     n = len(series)
-    out = {"n": n, "slope_per_1k_steps": None, "t": None, "change": None, "rel_change": None}
+    out = {"n": n, "end_value": None, "slope_per_1k_steps": None, "t": None, "change": None, "rel_change": None}
     if n < 3:
         return out
     xs = [s for s, _ in series]
@@ -101,6 +102,7 @@ def linfit(series: Series) -> dict:
     t = slope / se if se > 0 else (math.copysign(1e6, slope) if slope != 0 else 0.0)
     change = slope * (xs[-1] - xs[0])
     out.update(
+        end_value=my + slope * (xs[-1] - mx),
         slope_per_1k_steps=slope * 1000,
         t=max(-1e6, min(1e6, t)),
         change=change,
@@ -141,12 +143,18 @@ def summarize_curves(train: Series, val: Series, params: ReportParams) -> dict:
     train_fit = linfit(tail(train, params.tail_fraction))
     val_fit = linfit(tail(val, params.tail_fraction))
     gap_fit = linfit(tail(gap_series, params.tail_fraction))
+    # "Smoothed final" = the tail line fit evaluated at the last step. Unlike an EMA it
+    # doesn't lag a still-falling curve (on 13-point screens the EMA sat ~0.1 above the curve).
+    train_end = train_fit["end_value"] if finite(train_fit["end_value"]) else train_ema
+    val_end = val_fit["end_value"] if finite(val_fit["end_value"]) else val_ema
     return {
+        "final_train_loss_smooth": clean(train_end),
+        "final_val_loss_smooth": clean(val_end),
         "final_train_loss_ema": clean(train_ema),
         "final_val_loss_ema": clean(val_ema),
         "final_train_loss": clean(train[-1][1]) if train else None,
         "final_val_loss": clean(val[-1][1]) if val else None,
-        "gap": clean(val_ema - train_ema) if finite(train_ema) and finite(val_ema) else None,
+        "gap": clean(val_end - train_end) if finite(train_end) and finite(val_end) else None,
         "gap_trend": {k: clean(v) if isinstance(v, float) else v for k, v in gap_fit.items()},
         "train_slope_tail": {k: clean(v) if isinstance(v, float) else v for k, v in train_fit.items()},
         "val_slope_tail": {k: clean(v) if isinstance(v, float) else v for k, v in val_fit.items()},
@@ -250,6 +258,10 @@ def build_report(run_dir: Path, params: ReportParams | None = None) -> dict:
 
     all_steps = [s for series in (batch_loss, train, val) for s, _ in series]
     last_step = max(all_steps) if all_steps else None
+    # Spikes and grad-norm stats skip the initial descent (warmup, or the first
+    # early_skip_fraction of the run if longer): there the loss falls from ~10.8 so
+    # steeply that every point sits far above a rolling median.
+    skip_until = max(params.early_skip_fraction * (last_step or 0), config.get("warmup_steps") or 0)
     tokens_per_step = launch.get("tokens_per_step") or (
         (config.get("batch_size") or 0) * (model_cfg.get("block_size") or 0) or None)
     tokens_seen = (last_step + 1) * tokens_per_step if last_step is not None and tokens_per_step else None
@@ -314,8 +326,9 @@ def build_report(run_dir: Path, params: ReportParams | None = None) -> dict:
             "nan_or_inf": any(non_finite.values()) or bool(log.get("traceback")),
             "non_finite_counts": {k: v for k, v in non_finite.items() if v},
             "trainer_traceback": bool(log.get("traceback")),
-            "spikes": spike_stats(batch_loss, params.spike_window, params.spike_mad_k),
-            "grad_norm": grad_norm_stats(grad_norm),
+            "spikes": {**spike_stats([(st, v) for st, v in batch_loss if st > skip_until],
+                                     params.spike_window, params.spike_mad_k), "skipped_until_step": skip_until},
+            "grad_norm": grad_norm_stats([(st, v) for st, v in grad_norm if st > skip_until]),
         },
         "performance": {
             "tokens_per_sec": clean(tok_per_s, 1),

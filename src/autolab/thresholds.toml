@@ -7,6 +7,7 @@ ema_alpha = 0.3             # EMA over eval points for the "final smoothed" loss
 tail_fraction = 0.2         # slopes and gap trend use the last 20% of eval points
 spike_window = 21           # rolling-median window over train/batch_loss points
 spike_mad_k = 3.0           # spike = residual > k * 1.4826 * MAD of residuals
+early_skip_fraction = 0.05  # spikes/grad-norm stats ignore steps <= max(this x run, warmup)
 
 [diagnose]
 min_tail_points = 4         # fewer eval points in the window -> inconclusive
@@ -30,9 +31,16 @@ epochs_support = 1.0
 tokens_per_param_ref = 20.0
 
 # unstable
-spike_rate_max = 0.02        # fraction of logged batch losses that are spikes
+# Calibrated 2026-09-27 on the 15 M3-prep runs (bs64, emb256/blk128, L4), with spikes and
+# grad-norm stats taken after the initial descent (report.early_skip_fraction / warmup):
+# healthy runs: <= 1.6% spikes (full), 2-3 spikes on 54-point screens, grad-norm
+# max/median 1.1-1.4 and p95/median ~1.1; the diverging lr 3.6e-3 run: max/median 10.0,
+# p95/median 4.2.
+spike_rate_max = 0.03        # fraction of logged batch losses that are spikes...
+spike_min_count = 5          # ...and at least this many (short screens have ~50 points)
 divergence_rel = 0.03        # final smoothed val above best val by this fraction
-grad_norm_max_over_median = 50.0
+grad_norm_max_over_median = 3.0
+grad_norm_p95_over_median = 1.5
 
 # If seed noise std is known (history), window drops smaller than
 # `noise_mult` x std don't count as a trend.

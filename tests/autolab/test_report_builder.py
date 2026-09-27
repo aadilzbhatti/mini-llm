@@ -147,13 +147,34 @@ def test_report_from_real_tiny_run(tmp_path, monkeypatch):
     lj = launch()
     lj["request"]["model"] = {"block_size": 8, "n_embd": 16, "n_head": 2, "n_layer": 1, "dropout": 0.0}
     lj["tokens_per_step"], lj["steps"] = 4 * 8, 60
+    lj["request"]["optim"]["warmup_steps"] = 0  # as passed to train.main above
     (tmp_path / "launch.json").write_text(json.dumps(lj))
 
     r = build_report(tmp_path, ReportParams())
     assert r["performance"]["device"] == "cpu"
     assert r["scale"]["tokens_seen"] == 60 * 32 and r["scale"]["dataset_tokens"] == 4000
     assert r["scale"]["params"] > 0 and r["scale"]["embedding_params"] == (64 + 8) * 16
-    assert r["health"]["grad_norm"]["n"] == 12  # steps 0,5,...,55 (the last step 59 isn't a log step)
+    assert r["health"]["grad_norm"]["n"] == 11  # steps 5,...,55: step 0 is in the early-skip window, 59 is not a log step
     assert r["health"]["grad_norm"]["median"] > 0
     assert len(r["curves"]["val_loss"]) == 7   # steps 0,10,...,50 and the final 59
     assert r["summary"]["final_full_val_loss"] is not None
+
+
+def test_initial_descent_is_not_spikes_or_grad_blowup(tmp_path):
+    """Real runs start at loss ~10.8 and fall steeply; that must not read as spikes."""
+    tb = tmp_path / "runs" / "tb" / RUN_ID
+    w = SummaryWriter(log_dir=str(tb))
+    for s in range(0, 3000, 10):
+        w.add_scalar("train/batch_loss", 5 + 5.8 * math.exp(-s / 40) + 0.01 * math.sin(s), s)
+        w.add_scalar("train/grad_norm", 0.5 + 4 * math.exp(-s / 40), s)
+    for s in range(0, 3000, 100):
+        w.add_scalar("eval/train_loss", 5 + 5.8 * math.exp(-s / 40), s)
+        w.add_scalar("eval/val_loss", 5.1 + 5.8 * math.exp(-s / 40), s)
+    w.close()
+    (tmp_path / "train.log").write_text(LOG)
+    (tmp_path / "launch.json").write_text(json.dumps(launch()))  # warmup_steps 500
+    r = build_report(tmp_path)
+    assert r["health"]["spikes"]["skipped_until_step"] == 500
+    assert r["health"]["spikes"]["count"] == 0
+    assert r["health"]["grad_norm"]["max_over_median"] < 1.1
+    assert r["summary"]["final_val_loss_smooth"] == pytest.approx(5.1, abs=1e-3)
