@@ -25,15 +25,15 @@ project and is **unchanged**. See `BOOTSTRAP_NOTES.md`.
 
 ## Current best
 
-`full_val_loss` **4.5415** on the 937-doc val set shared by data20k and
-data40k: 4 layers × 256d, block 128, **data40k**, batch 64 (global) × 15,000
-steps = 122.88M tokens (~3 passes), peak LR 1.2e-3 cosine to 2e-6,
+`full_val_loss` **4.4679** on the 937-doc val set shared by data20k, data40k
+and data80k: 4 layers × 256d, block 128, **data80k**, batch 64 (global) ×
+15,000 steps = 122.88M tokens (~1.5 passes), peak LR 1.2e-3 cosine to 2e-6,
 256K-token warmup (32 steps), seed 42. About 31 min on Modal 2×L4.
 Reproduce with
 
 ```bash
 uv run --group modal modal run --detach src/mini_llm/remote/modal_train.py \
-    --config configs/modal/data40k_bs64_15k_lr1.2e-3_wu256k.json --gpus L4:2
+    --config configs/modal/data80k_bs64_15k_lr1.2e-3_wu256k.json --gpus L4:2
 ```
 
 What got here (all in `baselines.md`):
@@ -41,9 +41,10 @@ What got here (all in `baselines.md`):
   vs 4.6564 at 122.88M tokens on data20k; 13 h on the Mac vs 31 min), and
   batch 128 doesn't (best 4.6787). The best LR followed square-root batch
   scaling at batch 64 (3e-4 × √16 = 1.2e-3) and batch 128 (≈1.7e-3).
-- Data: same run on data40k instead of data20k, same compute and val set:
-  4.6564 → 4.5415, with the train/val gap 0.51 → 0.22. The curves match
-  until data20k starts repeating (step ~2,500) and then separate steadily.
+- Data: same run and val set, only the unique training data changes:
+  data20k 4.6564 → data40k 4.5415 → data80k 4.4679, train/val gap
+  0.51 → 0.22 → 0.12. Diminishing returns per doubling, and overfitting
+  roughly halves each time.
 
 Datasets and how they were built: `data/*/MANIFEST.md`.
 
