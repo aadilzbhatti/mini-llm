@@ -24,10 +24,12 @@ rising_rel = 0.002
 # Gap = val - train (EMA). "small" below gap_small; "growing" when the fitted
 # change of the gap across the window exceeds gap_growth with t >= t_min.
 gap_small = 0.05
-gap_growth = 0.01
+gap_growth = 0.005           # growing = change >= this with t >= t_min (82M runs: +0.007-0.011, t ~ 10)
+gap_stable_max = 0.01        # stable = |change| below this (for optimization/capacity_limited)
 
 # data_limited support: epochs over the train set, or tokens per parameter.
 epochs_support = 1.0
+data_gap_large = 0.15       # a gap this large after >= 1 epoch adds confidence to data_limited
 tokens_per_param_ref = 20.0
 
 # unstable

@@ -511,3 +511,87 @@ def advance_all(log=print, paths: Paths | None = None) -> list[str]:
         if (p.stage, p.status) != before:
             touched.append(pid)
     return touched
+
+
+# --- data checks: does more training data beat the current program? --------------------------
+
+
+def start_data_check(program_id: str, dataset_id: str, seeds: list[int] | None = None, paths: Paths | None = None,
+                     submit=None, repo: Path = REPO_ROOT) -> dict:
+    """Train `program_id` on a bigger dataset at the session's full budget, on several seeds.
+
+    The daemon (advance_data_checks) judges it when the runs finish: more data "helped" iff the mean
+    beats the program's own mean on the session's data by more than accept_sigma x the full seed std.
+    """
+    from autolab.config import load_config
+
+    paths = paths or Paths()
+    cfg, session = evolve_cfg(), load_session(paths)
+    p = load(paths.programs / f"{program_id}.json")
+    if p.scores.get("full_mean") is None:
+        raise ValueError(f"{program_id} has no full-budget score to compare against")
+    if not (load_config().datasets_dir / dataset_id / "train.pt").exists():
+        raise FileNotFoundError(f"dataset {dataset_id} not built")
+    if submit is None:
+        from autolab.modal_backend import submit as modal_submit
+
+        def submit(req, gpu, src):
+            return modal_submit(req, gpu, src_root=src)
+
+    work = paths.work(f"data-{dataset_id}-{program_id}")
+    shutil.rmtree(work, ignore_errors=True)
+    src = materialize(render(base_sources(repo, p.base_commit), p.blocks), work)
+    seeds = seeds or [1, 2, 3]
+    run_ids = []
+    for seed in seeds:
+        req = _request(p, "full", seed, cfg, session)
+        req.run_id = f"ev-{session.get('name', 's')}-data-{dataset_id}-{p.id}-s{seed}"
+        req.dataset_id = dataset_id
+        req.train_tokens = str(load_config().datasets_dir / dataset_id / "train.pt")
+        submit(req, cfg["gpu"], src)
+        run_ids.append(req.run_id)
+    check = {"id": f"{dataset_id}-{p.id}", "program": p.id, "dataset": dataset_id, "runs": run_ids,
+             "baseline_mean": p.scores["full_mean"], "status": "running", "started": now_iso()}
+    session.setdefault("data_checks", []).append(check)
+    save_session(session, paths)
+    return check
+
+
+def advance_data_checks(calls: dict, paths: Paths | None = None, runs_dir: Path | None = None, log=print) -> list[str]:
+    paths = paths or Paths()
+    runs_dir = runs_dir or REPO_ROOT / "autolab" / "runs"
+    session = load_session(paths)
+    if not session or not session.get("data_checks"):
+        return []
+    cfg, done = evolve_cfg(), []
+    for chk in session["data_checks"]:
+        if chk["status"] != "running":
+            continue
+        if any(calls.get(r, {}).get("state", "pending") == "pending" for r in chk["runs"]):
+            continue
+        losses = [rep["summary"]["final_full_val_loss"] for r in chk["runs"]
+                  if (rep := _report(r, runs_dir)) and rep["summary"].get("final_full_val_loss") is not None]
+        sigma = session["noise"]["full"]["std"]
+        chk.update(losses=losses, finished=now_iso())
+        if len(losses) < 2:
+            chk.update(status="failed", verdict="too few finished runs")
+        else:
+            m = mean(losses)
+            margin = cfg["accept_sigma"] * sigma
+            helped = m < chk["baseline_mean"] - margin
+            chk.update(status="done", mean=m, std=stdev(losses), delta=m - chk["baseline_mean"],
+                       delta_sigma=(m - chk["baseline_mean"]) / sigma, helped=helped,
+                       verdict=(f"{'helped' if helped else 'did not help'}: {m:.4f} vs {chk['baseline_mean']:.4f} "
+                                f"({(m - chk['baseline_mean']) / sigma:+.1f}σ; bar −{margin:.4f})"))
+            # the notebook-style entry diagnose() reads for capacity_limited / data_limited evidence
+            session.setdefault("notebook", []).append({"at": now_iso(), "action": "build_dataset",
+                                                      "dataset": chk["dataset"], "program": chk["program"],
+                                                      "improved": helped, "accepted": helped, "detail": chk["verdict"]})
+        log(f"data check {chk['id']}: {chk.get('verdict')}")
+        done.append(chk["id"])
+    if done:
+        save_session(session, paths)
+    for chk_id in done:
+        for w in (paths.root / "work").glob(f"data-{chk_id.rsplit('-', 1)[0]}-*"):
+            shutil.rmtree(w, ignore_errors=True)
+    return done

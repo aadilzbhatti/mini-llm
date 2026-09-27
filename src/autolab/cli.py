@@ -48,6 +48,18 @@ def main(argv: list[str] | None = None) -> None:
     pr.add_argument("--parent", default=None, help="Parent program id (default: the incumbent)")
     pr.add_argument("--hparams", default="{}", help="JSON hyperparameter patch")
     pr.add_argument("--rationale", default="")
+    d = sub.add_parser("data", help="Grow the training set (autolab.datasets)")
+    dsub = d.add_subparsers(dest="data_cmd", required=True)
+    b = dsub.add_parser("build")
+    b.add_argument("--num-examples", type=int, required=True)
+    s = dsub.add_parser("slice")
+    s.add_argument("source")
+    s.add_argument("--docs", type=int, required=True)
+    ab = dsub.add_parser("ablate", help="Train a program on a bigger dataset (3 seeds) and judge whether it helped")
+    ab.add_argument("dataset")
+    ab.add_argument("--program", default=None, help="Default: the incumbent")
+    ch = dsub.add_parser("check", help="Build a tiny set in scratch and check it is a prefix of the reference")
+    ch.add_argument("--num-examples", type=int, default=200)
     r = sub.add_parser("report", help="Rebuild report.json + diagnosis.json (needs runs/tb/ locally)")
     r.add_argument("run_dirs", nargs="+")
     args = p.parse_args(argv)
@@ -55,6 +67,8 @@ def main(argv: list[str] | None = None) -> None:
         from autolab.daemon import run
 
         run(args.interval, args.once)
+    elif args.cmd == "data":
+        data_main(args)
     elif args.cmd == "evolve":
         evolve_main(args)
     elif args.cmd == "report":
@@ -79,6 +93,39 @@ def main(argv: list[str] | None = None) -> None:
 
 
 MARKERS_COMMIT = "7a7e0e7"  # the EVOLVE-BLOCK refactor; behavior-identical to the prep runs' code
+
+
+def data_main(args) -> None:
+    import json
+    import shutil
+    import subprocess
+    import sys
+    import tempfile
+    from pathlib import Path
+
+    from autolab import datasets
+    from autolab.config import load_config
+
+    if args.data_cmd == "build":
+        print(json.dumps(datasets.build(args.num_examples), indent=2))
+    elif args.data_cmd == "slice":
+        print(json.dumps(datasets.slice_prefix(args.source, args.docs), indent=2))
+    elif args.data_cmd == "ablate":
+        from autolab import evaluate as ev
+
+        session = ev.load_session()
+        print(json.dumps(ev.start_data_check(args.program or session["incumbent"], args.dataset), indent=2))
+    elif args.data_cmd == "check":
+        cfg = load_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            subprocess.run([sys.executable, "-m", "mini_llm.prepare_dataset", "--num-examples", str(args.num_examples),
+                            "--val-examples", "0", "--seed", str(datasets.data_cfg()["seed"]), "--out-dir", tmp],
+                           check=True)
+            tiny = datasets.doc_hashes(Path(tmp) / "train.pt")
+        ref = datasets.doc_hashes(cfg.datasets_dir / datasets.data_cfg()["reference"] / "train.pt")
+        prefix = ref[: len(tiny)] == tiny
+        inside = sum(h in set(ref) for h in tiny)
+        print(json.dumps({"tiny_docs": len(tiny), "in_reference": inside, "is_prefix_of_reference": prefix}))
 
 
 def evolve_main(args) -> None:

@@ -531,3 +531,22 @@ Build this first; everything else hill-climbs on it.
 - 2026-09-27 (M4): the 4th call hit the account's weekly Claude limit (HTTP 429, resets Sep 30
   18:00 CT). A rate limit now raises `RateLimited` and stops generation instead of queuing
   fallback mutations. M5's controller must pause proposing until the reset.
+- 2026-09-27 (owner): confirm trigger lowered to 0.5σ; p2 (−0.99σ) re-queued for confirm seeds.
+- 2026-09-27 (data): more data is now a dimension the loop can assess, as an outer-loop
+  action (changing data changes the evaluator, so it can't be a program edit):
+  `autolab data build` (prepare_dataset → scratch, val.pt discarded, reject on any doc
+  overlap with the frozen val, disk cap, dataset.json), `autolab data slice` (doc-prefix
+  subsets), and `autolab data ablate <dataset>`: the incumbent on the bigger set at the
+  session's full budget, 3 seeds. The daemon judges it (helped iff mean < program mean −
+  2σ) and appends a `build_dataset` notebook entry {improved}, which diagnose() reads as
+  capacity_limited evidence. "Bigger = superset" was checked, not assumed: a fresh
+  200-doc build (seed 0) is exactly data20k's first 200 docs, so data20k used seed 0 and
+  bigger builds with seed 0 contain it as a prefix. M5's controller triggers this when the
+  incumbent is `data_limited` with confidence >= 0.75 and no bigger dataset has been
+  tried; if it helps, a new session starts on that data (re-baselined noise).
+- 2026-09-27 (diagnose): `data_limited` missed the 82M runs, because under cosine annealing val
+  still crawls down (−0.4% over the tail) while clearly overfitting (4 epochs, gap 0.40,
+  train falling faster than val, gap +0.007–0.011 at t ~ 10). It now also fires on "train
+  outpaces a crawling val + growing gap + >= 1 epoch", with +0.1 confidence for a gap >= 0.15.
+  gap_growth is 0.005 (with t >= 3), split from gap_stable_max 0.01. All three 82M base runs now
+  read data_limited (0.85); the 1-epoch 21M runs are unchanged.

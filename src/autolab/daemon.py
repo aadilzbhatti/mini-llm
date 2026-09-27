@@ -42,9 +42,10 @@ def cycle(log=print) -> dict:
     t0 = time.time()
     finished = mb.collect(log=log)
     live = mb.fetch_live()
-    from autolab.evaluate import advance_all
+    from autolab.evaluate import advance_all, advance_data_checks
 
     advanced = advance_all(log=log)  # evaluation cascade: CPU gates inline, GPU stages via Modal
+    advanced += advance_data_checks(mb.load_calls(), log=log)  # "does more data help?" verdicts
     calls = mb.load_calls()
     return {
         "finished_this_cycle": finished,

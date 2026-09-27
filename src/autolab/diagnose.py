@@ -37,8 +37,10 @@ class Thresholds:
     flat_rel_drop: float = 0.002
     rising_rel: float = 0.002
     gap_small: float = 0.05
-    gap_growth: float = 0.01
+    gap_growth: float = 0.005
+    gap_stable_max: float = 0.01
     epochs_support: float = 1.0
+    data_gap_large: float = 0.15
     tokens_per_param_ref: float = 20.0
     spike_rate_max: float = 0.03
     spike_min_count: int = 5
@@ -183,7 +185,7 @@ def diagnose(report: dict, history: History | None = None, th: Thresholds | None
     gap = s.get("gap")
     gap_change, gap_t = gf.get("change"), gf.get("t")
     gap_growing = gap_change is not None and gap_t is not None and gap_change >= th.gap_growth and gap_t >= th.t_min
-    gap_stable = gap_change is not None and abs(gap_change) < th.gap_growth
+    gap_stable = gap_change is not None and abs(gap_change) < th.gap_stable_max
     spikes = health.get("spikes") or {}
     spike_rate = spikes.get("rate") or 0.0
     gn = health.get("grad_norm") or {}
@@ -250,13 +252,23 @@ def diagnose(report: dict, history: History | None = None, th: Thresholds | None
     params = scale.get("params")
     ds_tokens = scale.get("dataset_tokens")
     ds_tok_per_param = ds_tokens / params if ds_tokens and params else None
-    if t_train in ("falling", "crawl") and t_val in ("flat", "rising") and gap_growing:
-        supported = (epochs is not None and epochs >= th.epochs_support) or (
-            ds_tok_per_param is not None and ds_tok_per_param < th.tokens_per_param_ref)
-        conf = 0.5 + (0.25 if supported else 0.0) + (0.1 if t_val == "rising" else 0.0)
+    multi_epoch = epochs is not None and epochs >= th.epochs_support
+    # Classic: val flat/rising while train falls. Under an annealing schedule val can still
+    # crawl down while the model overfits, so "train falling faster than val, gap growing,
+    # after >= 1 epoch" counts too (the 82M-token runs: 4 epochs, gap 0.40, +0.01 over the tail).
+    train_outpaces_val = (tf.get("rel_change") is not None and vf.get("rel_change") is not None
+                          and tf["rel_change"] < vf["rel_change"])
+    classic = t_train in ("falling", "crawl") and t_val in ("flat", "rising") and gap_growing
+    annealed = (t_train in ("falling", "crawl") and t_val == "crawl" and gap_growing
+                and train_outpaces_val and multi_epoch)
+    if classic or annealed:
+        supported = multi_epoch or (ds_tok_per_param is not None and ds_tok_per_param < th.tokens_per_param_ref)
+        conf = (0.5 + (0.25 if supported else 0.0) + (0.1 if t_val == "rising" else 0.0)
+                + (0.1 if gap is not None and gap >= th.data_gap_large else 0.0))
         labels.append(Label("data_limited", round(conf, 2),
                             {**base_ev, "epochs": epochs, "dataset_tokens_per_param": _r(ds_tok_per_param, 2),
-                             "tokens_per_param": scale.get("tokens_per_param"), "supported": supported},
+                             "tokens_per_param": scale.get("tokens_per_param"), "supported": supported,
+                             "pattern": "val flat/rising" if classic else "train outpaces a crawling val"},
                             "build_dataset (bigger), or more regularization (dropout / weight decay)."))
 
     # --- optimization_limited / capacity_limited ---------------------------------------

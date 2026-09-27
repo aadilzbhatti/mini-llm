@@ -195,3 +195,27 @@ def test_optimizer_change_passes_ddp_suite(lab):
     p = lab["step"](propose(lab, "good_grad_clip.txt"))
     assert (p.stage, p.status) == ("screen", "running"), p.reason
     assert "1 deselected" in p.stages[1]["detail"]
+
+
+def test_data_check_verdicts(lab, monkeypatch):
+    from autolab import config as acfg
+
+    class FakeCfg:
+        datasets_dir = lab["runs"].parent / "datasets"
+    (FakeCfg.datasets_dir / "data40k").mkdir(parents=True)
+    (FakeCfg.datasets_dir / "data40k" / "train.pt").write_bytes(b"x")
+    monkeypatch.setattr(acfg, "load_config", lambda: FakeCfg)
+    reqs = []
+    chk = ev.start_data_check("p0", "data40k", paths=lab["paths"], submit=lambda r, g, s: reqs.append(r))
+    assert [r.dataset_id for r in reqs] == ["data40k"] * 3 and reqs[0].budget.tokens == reqs[0].budget.tokens
+    assert all(r.run_id.startswith(f"ev-{lab['session']['name']}-data-data40k-p0-s") for r in reqs)
+    assert ev.advance_data_checks({}, paths=lab["paths"], runs_dir=lab["runs"]) == []  # still running
+    calls = {}
+    for r, loss in zip(reqs, [5.20, 5.22, 5.21]):  # baseline 5.367, 2σ = 0.081
+        (lab["runs"] / r.run_id).mkdir(parents=True)
+        (lab["runs"] / r.run_id / "report.json").write_text(json.dumps(fake_report(loss)))
+        calls[r.run_id] = {"state": "finished"}
+    assert ev.advance_data_checks(calls, paths=lab["paths"], runs_dir=lab["runs"], log=lambda m: None) == [chk["id"]]
+    s = ev.load_session(lab["paths"])
+    assert s["data_checks"][0]["helped"] is True and "helped" in s["data_checks"][0]["verdict"]
+    assert s["notebook"][-1] == {**s["notebook"][-1], "action": "build_dataset", "improved": True}

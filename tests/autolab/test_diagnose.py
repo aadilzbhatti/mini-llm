@@ -212,3 +212,18 @@ def test_diagnosis_serializes():
     d = diagnose(make_report(overfit_train, overfit_val, epochs=2.5), History(), TH)
     out = json.loads(json.dumps(d.to_dict(), allow_nan=False))
     assert out["primary"] == "data_limited" and out["labels"][0]["evidence"]
+
+
+def test_data_limited_under_annealing_val_still_crawls():
+    """82M-token runs: 4 epochs, val creeps down (cosine to ~0), train falls faster, gap large and growing."""
+    def train(s):  # tail: -0.66% (as in m4p-base-full-s1)
+        return 4.40 + 2 * math.exp(-s / 400) - 0.000029 * s
+
+    def val(s):    # tail: -0.44%, still crawling down
+        return 4.90 + 2 * math.exp(-s / 400) - 0.0000213 * s
+
+    d = diagnose(make_report(train, val, epochs=3.99, gap_noise=0.0005), History(), TH)
+    lab = d.get("data_limited")
+    assert lab is not None, d.summary()
+    assert lab.evidence["pattern"] == "train outpaces a crawling val" and lab.confidence >= 0.85
+    assert d.primary == "data_limited"

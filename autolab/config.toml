@@ -53,7 +53,7 @@ full_tokens = 20971520       # 2560 steps, ~1 epoch of data20k
 wall_cap_mult = 1.25         # per-stage wall-clock cap = this x the initial program's wall time
 screen_margin = 0.10         # screen must be <= incumbent screen mean + this (screens reject, never accept)
 confirm_seeds = [2, 3]       # extra seeds for a full-budget result that beats the incumbent...
-confirm_trigger_sigma = 1.0  # ...by at least this x the full seed std (p1 spent 2 seeds on a 0.04σ edge)
+confirm_trigger_sigma = 0.5  # ...by at least this x the full seed std (owner: 0.5σ, 2026-09-27)
 accept_sigma = 2.0           # accept iff mean over >= 2 seeds < incumbent mean - accept_sigma x full seed std
 param_cap_mult = 1.5         # reject programs above this x the initial program's parameter count
 throughput_floor = 0.5       # reject screens slower than this x the initial program's tokens/sec
@@ -107,3 +107,8 @@ diagnosis = 1.0
 optimization = 1.0
 architecture = 1.0
 simplify = 0.3
+
+[datasets]
+seed = 0                     # prepare_dataset shuffle seed (the CLI default; data20k's was not recorded)
+max_total_gb = 5.0           # disk cap for autolab/data/datasets
+reference = "data20k"        # a bigger build should contain this (checked, not assumed)
