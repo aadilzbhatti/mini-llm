@@ -1,0 +1,72 @@
+"""Dashboard API over a fabricated autolab/ tree."""
+
+import json
+
+import pytest
+from fastapi.testclient import TestClient
+
+import autolab.dashboard as dash
+
+
+@pytest.fixture
+def client(tmp_path, monkeypatch):
+    root = tmp_path / "autolab"
+    (root / "state").mkdir(parents=True)
+    (root / "experiments").mkdir()
+    runs = {}
+    exp = {"id": "e1", "title": "t", "purpose": "p", "gpu": "L4", "dataset_id": "d",
+           "model": {"n_embd": 8}, "optim": {"lr": 1e-3}, "eval": {},
+           "analysis": {"kind": "noise_and_ranking", "baseline_variant": "base"}, "jobs": []}
+    vals = {("base", "screen"): [6.50, 6.52, 6.54], ("base", "full"): [5.00, 5.02, 5.04],
+            ("a", "screen"): [6.40], ("a", "full"): [4.90], ("b", "screen"): [6.60], ("b", "full"): [5.10],
+            ("c", "screen"): [6.70], ("c", "full"): [5.20]}
+    i = 0
+    for (variant, budget), xs in vals.items():
+        for x in xs:
+            i += 1
+            rid = f"r{i}"
+            exp["jobs"].append({"run_id": rid, "variant": variant, "budget": budget})
+            runs[rid] = {"call_id": "fc", "state": "finished", "gpu": "L4", "usd": 0.1, "usd_estimate": 0.2,
+                         "submitted_at": "2026-09-27T00:00:00+00:00", "request": {"seed": i, "budget": {}}}
+            d = root / "runs" / rid
+            d.mkdir(parents=True)
+            (d / "report.json").write_text(json.dumps({
+                "summary": {"final_full_val_loss": x}, "scale": {}, "performance": {"wall_s": 60},
+                "identity": {"end_time": f"2026-09-27T00:{i:02d}:00+00:00"}, "health": {}}))
+    runs["live1"] = {"call_id": "fc", "state": "pending", "gpu": "L4", "usd_estimate": 0.5, "request": {}}
+    (root / "runs" / "live1").mkdir()
+    (root / "runs" / "live1" / "live.json").write_text(json.dumps({"step": 5, "total_steps": 10,
+                                                                    "updated": "2026-09-27T00:00:00Z"}))
+    (root / "state" / "modal_calls.json").write_text(json.dumps(runs))
+    (root / "experiments" / "e1.json").write_text(json.dumps(exp))
+    (root / "HANDOFF.md").write_text("## Where things stand\n- a `x`\n  more\n## Decision log\n- 2026-09-26 (M2): one\n  two\n")
+    (root / "config.toml").write_text("[modal]\nmax_usd = 5.0\n")
+    monkeypatch.setattr(dash, "AUTOLAB", root)
+    return TestClient(dash.app)
+
+
+def test_overview(client):
+    d = client.get("/api/overview").json()
+    assert d["counts"] == {"pending": 1, "finished": 12, "failed": 0}
+    assert d["spend"]["spent"] == pytest.approx(1.2) and d["spend"]["pending_estimate"] == pytest.approx(0.5)
+    assert d["spend"]["cap"] == 5.0 and len(d["spend"]["timeline"]) == 12
+    assert d["best"]["full_val"] == 4.90
+    a = d["experiments"][0]["analysis"]
+    assert a["noise"]["full"]["n"] == 3 and a["noise"]["full"]["std"] == pytest.approx(0.02)
+    assert a["spearman"] == pytest.approx(1.0)  # screens rank exactly like full runs
+    assert [r["variant"] for r in a["ranking"]][:2] == ["a", "base"]
+    live = next(r for r in d["runs"] if r["run_id"] == "live1")
+    assert live["live"]["step"] == 5
+    assert d["decisions"][0]["text"] == "one two" and d["status"] == ["a `x` more"]
+
+
+def test_run_detail_and_safety(client):
+    assert client.get("/api/run/r1").json()["report"]["summary"]["final_full_val_loss"] == 6.50
+    assert client.get("/api/run/nope").status_code == 404
+    assert client.get("/api/run/..%2F..%2Fetc").status_code in (400, 404)
+    assert "autolab" in client.get("/").text
+
+
+def test_spearman():
+    assert dash.spearman({"a": 1, "b": 2, "c": 3}, {"a": 3, "b": 2, "c": 1}) == pytest.approx(-1.0)
+    assert dash.spearman({"a": 1, "b": 2}, {"a": 1, "b": 2}) is None

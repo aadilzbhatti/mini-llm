@@ -79,7 +79,7 @@ def tail(series: Series, fraction: float) -> Series:
     pts = [(s, v) for s, v in series if finite(v)]
     if not pts:
         return []
-    k = max(3, math.ceil(len(pts) * fraction))
+    k = max(4, math.ceil(len(pts) * fraction))  # diagnose() needs >= min_tail_points (4)
     return pts[-k:]
 
 

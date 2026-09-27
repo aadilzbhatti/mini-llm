@@ -23,11 +23,13 @@ the image. Modal's block_network can't be used: it also blocks the call's result
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import hashlib
 import json
 import os
 import shutil
 import sys
+import threading
 import time
 import tomllib
 from datetime import datetime, timezone
@@ -68,6 +70,27 @@ def _sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+LIVE_SYNC_S = 30
+
+
+def _sync_live(run_dir: Path, run_id: str, stop) -> None:
+    """Push the trainer's heartbeat and log tail to the runs volume while it trains,
+    so the Mac-side daemon (and the dashboard) can show progress."""
+    dest = Path(RUNS_MOUNT) / run_id
+    while not stop.wait(LIVE_SYNC_S):
+        try:
+            dest.mkdir(parents=True, exist_ok=True)
+            live = run_dir / "runs" / f"{run_id}.live.json"
+            if live.exists():
+                shutil.copyfile(live, dest / "live.json")
+            log = run_dir / "train.log"
+            if log.exists():
+                (dest / "train.tail.log").write_text(log.read_text(errors="replace")[-20_000:])
+            runs_volume.commit()
+        except Exception as exc:  # noqa: BLE001 - progress is best-effort
+            print(f"live sync failed: {exc}", flush=True)
+
+
 @app.function(
     volumes={RUNS_MOUNT: runs_volume, DATA_MOUNT: data_volume},
     gpu=_CFG.get("default_gpu", "L4"),
@@ -96,11 +119,18 @@ def run_trial(request: dict, meta: dict, code: dict[str, str]) -> dict:
     run_dir = Path("/tmp/run") / req.run_id
     shutil.rmtree(run_dir, ignore_errors=True)
     run_dir.mkdir(parents=True)
-    launch = execute(
-        req, run_dir, train_path, val_path,
-        {**meta, "backend": "modal", "modal_task_id": os.environ.get("MODAL_TASK_ID")},
-        env_extra={"PYTHONPATH": str(src), "PYTHONUNBUFFERED": "1"},
-    )
+    stop = threading.Event()
+    syncer = threading.Thread(target=_sync_live, args=(run_dir, req.run_id, stop), daemon=True)
+    syncer.start()
+    try:
+        launch = execute(
+            req, run_dir, train_path, val_path,
+            {**meta, "backend": "modal", "modal_task_id": os.environ.get("MODAL_TASK_ID")},
+            env_extra={"PYTHONPATH": str(src), "PYTHONUNBUFFERED": "1"},
+        )
+    finally:
+        stop.set()
+        syncer.join()
     out: dict = {"launch": launch, "train_log": (run_dir / "train.log").read_text(errors="replace")[-400_000:]}
     try:
         report = build_report(run_dir)
@@ -122,6 +152,21 @@ def run_trial(request: dict, meta: dict, code: dict[str, str]) -> dict:
 
 def _state_path() -> Path:
     return REPO / "autolab" / "state" / "modal_calls.json"
+
+
+@contextmanager
+def calls_lock():
+    """Serialize read-modify-write of modal_calls.json across processes (CLI, daemon)."""
+    import fcntl
+
+    path = _state_path().with_suffix(".lock")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fh, fcntl.LOCK_UN)
 
 
 def load_calls() -> dict:
@@ -157,6 +202,11 @@ def code_snapshot(src_root: Path | None = None) -> dict[str, str]:
 
 
 def submit(req, gpu: str | None = None, src_root: Path | None = None, startup_s: float = 180) -> dict:
+    with calls_lock():
+        return _submit(req, gpu, src_root, startup_s)
+
+
+def _submit(req, gpu, src_root, startup_s) -> dict:
     from autolab.config import check_frozen_val, load_config, sha256_file
     from autolab.trainer import git_state
 
@@ -191,6 +241,11 @@ def submit(req, gpu: str | None = None, src_root: Path | None = None, startup_s:
 
 def collect(runs_dir: Path | None = None, log=print) -> list[str]:
     """Write every finished call's results under autolab/runs/<run_id>/. Returns newly finished ids."""
+    with calls_lock():
+        return _collect(runs_dir, log)
+
+
+def _collect(runs_dir: Path | None, log) -> list[str]:
     runs_dir = runs_dir or REPO / "autolab" / "runs"
     calls = load_calls()
     finished = []
@@ -243,6 +298,28 @@ def from_volume(run_id: str, volume=None) -> dict | None:
         return None
     out.setdefault("train_log", "")
     return out
+
+
+def fetch_live(runs_dir: Path | None = None, volume=None) -> int:
+    """Copy each pending run's live.json / log tail from the volume to autolab/runs/<id>/."""
+    volume = volume or runs_volume
+    runs_dir = runs_dir or REPO / "autolab" / "runs"
+    n = 0
+    for run_id, c in load_calls().items():
+        if c["state"] != "pending":
+            continue
+        for name in ("live.json", "train.tail.log"):
+            try:
+                raw = b"".join(volume.read_file(f"/{run_id}/{name}"))
+            except Exception:  # noqa: BLE001 - not started yet
+                continue
+            d = runs_dir / run_id
+            d.mkdir(parents=True, exist_ok=True)
+            tmp = d / f".{name}.tmp"
+            tmp.write_bytes(raw)
+            tmp.replace(d / name)
+            n += 1
+    return n
 
 
 def status_lines() -> list[str]:

@@ -29,37 +29,49 @@
       "run_id": "m3p-base-screen-s1",
       "tokens": 5242880,
       "wall_clock_s": 900,
-      "seed": 1
+      "seed": 1,
+      "variant": "base",
+      "budget": "screen"
     },
     {
       "run_id": "m3p-base-full-s1",
       "tokens": 20971520,
       "wall_clock_s": 1800,
-      "seed": 1
+      "seed": 1,
+      "variant": "base",
+      "budget": "full"
     },
     {
       "run_id": "m3p-base-screen-s2",
       "tokens": 5242880,
       "wall_clock_s": 900,
-      "seed": 2
+      "seed": 2,
+      "variant": "base",
+      "budget": "screen"
     },
     {
       "run_id": "m3p-base-full-s2",
       "tokens": 20971520,
       "wall_clock_s": 1800,
-      "seed": 2
+      "seed": 2,
+      "variant": "base",
+      "budget": "full"
     },
     {
       "run_id": "m3p-base-screen-s3",
       "tokens": 5242880,
       "wall_clock_s": 900,
-      "seed": 3
+      "seed": 3,
+      "variant": "base",
+      "budget": "screen"
     },
     {
       "run_id": "m3p-base-full-s3",
       "tokens": 20971520,
       "wall_clock_s": 1800,
-      "seed": 3
+      "seed": 3,
+      "variant": "base",
+      "budget": "full"
     },
     {
       "run_id": "m3p-lr3.6e-4-screen-s1",
@@ -68,7 +80,9 @@
       "seed": 1,
       "optim": {
         "lr": 0.00036
-      }
+      },
+      "variant": "lr3.6e-4",
+      "budget": "screen"
     },
     {
       "run_id": "m3p-lr3.6e-4-full-s1",
@@ -77,7 +91,9 @@
       "seed": 1,
       "optim": {
         "lr": 0.00036
-      }
+      },
+      "variant": "lr3.6e-4",
+      "budget": "full"
     },
     {
       "run_id": "m3p-lr3.6e-3-screen-s1",
@@ -86,7 +102,9 @@
       "seed": 1,
       "optim": {
         "lr": 0.0036
-      }
+      },
+      "variant": "lr3.6e-3",
+      "budget": "screen"
     },
     {
       "run_id": "m3p-lr3.6e-3-full-s1",
@@ -95,7 +113,9 @@
       "seed": 1,
       "optim": {
         "lr": 0.0036
-      }
+      },
+      "variant": "lr3.6e-3",
+      "budget": "full"
     },
     {
       "run_id": "m3p-bs16-screen-s1",
@@ -104,7 +124,9 @@
       "seed": 1,
       "optim": {
         "batch_size": 16
-      }
+      },
+      "variant": "bs16",
+      "budget": "screen"
     },
     {
       "run_id": "m3p-bs16-full-s1",
@@ -113,7 +135,9 @@
       "seed": 1,
       "optim": {
         "batch_size": 16
-      }
+      },
+      "variant": "bs16",
+      "budget": "full"
     },
     {
       "run_id": "m3p-wu500-screen-s1",
@@ -122,7 +146,9 @@
       "seed": 1,
       "optim": {
         "warmup_steps": 500
-      }
+      },
+      "variant": "wu500",
+      "budget": "screen"
     },
     {
       "run_id": "m3p-wu500-full-s1",
@@ -131,7 +157,17 @@
       "seed": 1,
       "optim": {
         "warmup_steps": 500
-      }
+      },
+      "variant": "wu500",
+      "budget": "full"
     }
-  ]
+  ],
+  "id": "m3_prep",
+  "title": "M3 prep: seed noise + screen-vs-full ranking",
+  "analysis": {
+    "kind": "noise_and_ranking",
+    "baseline_variant": "base",
+    "screen": "screen",
+    "full": "full"
+  }
 }

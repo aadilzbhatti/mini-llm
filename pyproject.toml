@@ -23,6 +23,7 @@ mini-llm-prepare-data = "mini_llm.prepare_dataset:main"
 mini-llm-control = "mini_llm.server:main"
 mini-llm-import-run = "mini_llm.import_run:main"
 mini-llm-modal-mirror = "mini_llm.remote.modal_mirror:main"
+autolab = "autolab.cli:main"
 
 [dependency-groups]
 dev = ["pytest>=8.0", "httpx>=0.27"]
@@ -35,6 +36,10 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mini_llm", "src/autolab"]
+
+# AUTOLAB: autolab runs Modal trials from plain `uv run`; keep the modal group installed.
+[tool.uv]
+default-groups = ["dev", "modal"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

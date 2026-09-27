@@ -23,6 +23,12 @@ the "Decision log" at the bottom.
   launcher, volume mirror) into `autolab`, and added a Modal backend for
   autolab trials (`src/autolab/modal_backend.py`). The local Mac GPU waiter was
   stopped; the M2 real check runs on Modal instead.
+- 2026-09-27: autolab runs without a chat session. `autolab daemon` (launchd
+  `com.aadil.autolab-daemon`) collects Modal results and live progress every
+  60 s. `autolab dashboard` (launchd `com.aadil.autolab-dashboard`, port 8766)
+  serves the dashboard, mounted on the tailnet at `/autolab` next to the
+  owner's control page. Plists are in `autolab/launchd/`. The M5 controller loop
+  will run inside the daemon.
 - Milestones 3–6 are not started. They were re-planned on 2026-09-26 around
   AlphaEvolve (see "Design pivot" under Milestone guidance), which overrides
   BRIEF §4–§5 and parts of §6–§9.
@@ -103,6 +109,19 @@ the "Decision log" at the bottom.
 - **Long commands.** Your Bash tool has a time limit. Run anything longer
   than a few minutes in the background (`nohup ... &` with a log file,
   wrapped in `caffeinate -i` so the Mac doesn't sleep) and poll it.
+
+## Running autolab (no chat session needed)
+
+- `uv run autolab modal submit-batch autolab/experiments/<batch>.json` queues trials.
+  The daemon collects them, and the dashboard shows them.
+- `uv run autolab modal status` prints the queue table and spend.
+- Dashboard: https://aadils-macbook-air.taile67486.ts.net/autolab (tailnet only),
+  or http://127.0.0.1:8766 on the Mac. It reads `autolab/state/`, `autolab/runs/`,
+  `autolab/experiments/`, HANDOFF's decision log and both TOML configs, and never writes.
+- Services: `launchctl list | grep autolab`. Logs are in `autolab/state/{daemon,dashboard}.log`.
+- An experiment batch file carries `id`, `title`, `purpose`, base
+  model/optim/eval, per-job `variant`/`budget`, and an `analysis` kind. Record the
+  why of every batch in `purpose`: it is what the dashboard shows.
 
 ## Facts you'll need (from REPO_NOTES)
 
