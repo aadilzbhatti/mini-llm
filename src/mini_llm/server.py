@@ -27,6 +27,8 @@ import json
 import os
 import re
 import shutil
+import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -37,6 +39,9 @@ from fastapi.responses import FileResponse, PlainTextResponse
 from mini_llm.control import KNOBS, COMMAND_TYPES, CommandError, append_command, read_jsonl, run_paths
 
 RUN_ID = re.compile(r"^[A-Za-z0-9._-]{1,200}$")
+# Modal GPU spec as modal_train.py takes it: "L4:2", "A100-80GB:4", "H100", or "cpu".
+MODAL_GPUS = re.compile(r"^(cpu|[A-Za-z0-9-]{2,20}(:[1-8])?)$")
+MODAL_KEYS = ("target", "gpus", "timeout_hours")
 STATIC = Path(__file__).parent / "static"
 
 
@@ -402,10 +407,16 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         Written to a dotfile first and renamed, so the runner (which globs
         *.json) never sees a half-written job.
         """
+        target = body.get("target", "local") if isinstance(body, dict) else "local"
+        if target not in ("local", "modal"):
+            raise HTTPException(422, f"target must be 'local' or 'modal', got {target!r}")
+        job = {k: v for k, v in body.items() if k not in MODAL_KEYS} if isinstance(body, dict) else body
         try:
-            name, kind, cmd, args = runner.validate_job(body, repo, uv, pending=pending_outputs())
+            name, kind, cmd, args = runner.validate_job(job, repo, uv, pending=pending_outputs())
         except runner.JobError as exc:
             raise HTTPException(422, str(exc)) from exc
+        if target == "modal":
+            return launch_modal(name, kind, cmd, args, body, dry_run)
         forecast = runner.forecast_for(repo, args) if kind == "train" else None
         if dry_run:
             return {"ok": True, "name": name, "kind": kind, "argv": cmd[4:], "forecast": forecast}
@@ -415,6 +426,54 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         tmp.write_text(json.dumps({"name": name, "kind": kind, "args": args}, indent=2))
         tmp.replace(queue_dir / fname)
         return {"file": fname, "name": name, "kind": kind, "argv": cmd[4:], "forecast": forecast}
+
+    def launch_modal(name: str, kind: str, cmd: list[str], args: dict, body: dict, dry_run: bool) -> dict:
+        """Hand a validated job to mini_llm.remote.launch in the background.
+
+        Modal jobs skip queue/ entirely: the queue runs one local job at a
+        time, and a remote run has no reason to wait behind a long Mac run.
+        The run shows up in runs/ at once ("launching"), and the mirror
+        (mini_llm.remote.modal_mirror) takes it from there.
+        """
+        if kind != "train":
+            raise HTTPException(422, "only train jobs can run on Modal")
+        gpus = str(body.get("gpus") or "L4:2")
+        if not MODAL_GPUS.match(gpus):
+            raise HTTPException(422, f"gpus must look like L4:2, A100-80GB:4, H100 or cpu; got {gpus!r}")
+        nproc = 2 if gpus == "cpu" else int(gpus.partition(":")[2] or 1)
+        try:
+            timeout_hours = float(body.get("timeout_hours", 6))
+        except (TypeError, ValueError):
+            raise HTTPException(422, "timeout_hours must be a number") from None
+        if not 0.1 <= timeout_hours <= 24:
+            raise HTTPException(422, "timeout_hours must be between 0.1 and 24 (Modal's maximum)")
+        # The runner's defaults (data paths, plot-loss) apply on Modal too. --baseline
+        # is dropped: the mirror's import writes the baselines row for Modal runs.
+        effective = {k: v for k, v in {**runner.DEFAULT_ARGS, **args}.items() if k != "baseline"}
+        batch = int(effective.get("batch-size", 4))
+        if batch % nproc:
+            raise HTTPException(422, f"batch-size {batch} is the global batch; it must divide evenly across {nproc} GPUs")
+        if importlib.util.find_spec("modal") is None:
+            raise HTTPException(503, "the modal package isn't installed here: run `uv sync --group modal`")
+        from mini_llm.remote.launch import launching_status, write_status
+        from mini_llm.remote.modal_train import make_run_id
+
+        run_id = make_run_id(name)
+        preview = {"target": "modal", "name": name, "kind": kind, "gpus": gpus, "nproc": nproc,
+                   "timeout_hours": timeout_hours, "run_id": run_id, "argv": cmd[4:]}
+        if dry_run:
+            return {"ok": True, **preview}
+        job = {"run_id": run_id, "name": name, "args": effective, "gpus": gpus, "timeout_hours": timeout_hours}
+        job_file = runs_dir / f"{run_id}.modal-job.json"
+        runs_dir.mkdir(exist_ok=True)
+        job_file.write_text(json.dumps(job, indent=2))
+        write_status(repo, run_id, launching_status(run_id, job))  # visible before this returns
+        subprocess.Popen(
+            [sys.executable, "-m", "mini_llm.remote.launch", str(job_file), "--repo", str(repo), "--uv", uv],
+            cwd=repo, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            start_new_session=True,  # survives a server restart mid-launch
+        )
+        return preview
 
     @app.delete("/api/queue/{file}", dependencies=[Depends(auth)])
     def cancel_job(file: str) -> dict:

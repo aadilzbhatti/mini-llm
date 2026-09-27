@@ -81,6 +81,15 @@
     <div id="formnote" class="note hidden"></div>
     <div class="field"><label for="kind">kind</label>
       <select id="kind" onchange="resetForm(this.value)"><option value="train">train — a training run</option><option value="prepare-data">prepare-data — build a token dataset</option></select></div>
+    <div class="field" id="targetfield"><label for="target">run on</label>
+      <select id="target" onchange="targetChanged()"><option value="local">this Mac — the job queue</option><option value="modal">Modal GPUs — starts now</option></select></div>
+    <div id="modalopts" class="hidden">
+      <div class="field"><label for="gpus">GPUs</label><input id="gpus" list="gpulist" value="L4:2" autocapitalize="off" autocorrect="off" spellcheck="false" oninput="collectJob(true)">
+        <datalist id="gpulist"><option value="L4:2"><option value="A100-80GB:2"><option value="H100:2"><option value="H100:4"><option value="cpu"></datalist>
+        <div class="mut hint">type:count, e.g. L4:2 · batch-size is the global batch and must divide by the count · L4 ≈ $0.80/GPU-h, H100 ≈ $3.95/GPU-h</div><div class="err"></div></div>
+      <div class="field"><label for="timeout">timeout (hours)</label><input id="timeout" inputmode="decimal" value="6">
+        <div class="mut hint">Modal stops the run here; it saves only at the end, so leave headroom</div></div>
+    </div>
     <div class="field"><label for="jobname">name *</label><input id="jobname" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="e.g. data20k-emb256-160k">
       <div class="mut hint">becomes part of the run id · letters, digits, . _ -</div></div>
     <div id="fields-common"></div>
@@ -137,6 +146,14 @@ async function cmd(runId, body, label) {
 }
 function setKnob(runId, knob, value) { cmd(runId, { type: 'set', knob, value: Number(value) }, `${knob} = ${value}`); }
 
+function targetChanged() {
+  const train = $('#kind').value === 'train', modal = train && $('#target').value === 'modal';
+  $('#targetfield').classList.toggle('hidden', !train);
+  $('#modalopts').classList.toggle('hidden', !modal);
+  $('#submitbtn').textContent = modal ? 'Launch on Modal' : 'Queue it';
+  collectJob(true);
+}
+
 function remoteTag(r) { return r.remote ? `<span class="pill" title="${esc(r.remote.git_sha || '')}">modal · ${esc(r.remote.gpus || '')}</span>` : ''; }
 
 function liveCard(r) {
@@ -144,6 +161,8 @@ function liveCard(r) {
   const pct = L.total_steps ? Math.min(100, 100 * L.step / L.total_steps) : 0;
   const stale = L.updated && (Date.now() - Date.parse(L.updated)) > 120000;
   const id = esc(r.run_id);
+  if (r.remote?.phase === 'launching') return `<div class="card" data-run="${id}"><div class="row"><strong style="flex:1">${esc(r.name)}</strong>${remoteTag(r)}<span class="pill s-running">launching</span></div>
+    <div class="mut">building the image and starting ${esc(r.remote.gpus)} on Modal · started ${ago(r.started)}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
   if (r.kind === 'prepare-data') return `<div class="card" data-run="${id}"><div class="row"><strong style="flex:1">${esc(r.name)}</strong><span class="pill s-running">building data</span></div>
     <div class="mut">started ${ago(r.started)}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
   return `<div class="card" data-run="${id}">
@@ -262,6 +281,9 @@ function renderForm(job, note) {
   if (!META) return;
   const kind = job?.kind || 'train';
   $('#kind').value = kind;
+  $('#target').value = kind === 'train' && job?.target === 'modal' ? 'modal' : 'local';
+  if (job?.gpus) $('#gpus').value = job.gpus;
+  if (job?.timeout_hours) $('#timeout').value = job.timeout_hours;
   const fields = fieldsFor(kind);
   $('#fields-common').innerHTML = fields.filter(f => f.common).map(fieldHTML).join('');
   $('#fields-more').innerHTML = fields.filter(f => !f.common).map(fieldHTML).join('');
@@ -283,8 +305,8 @@ function renderForm(job, note) {
   $('#formnote').classList.toggle('hidden', !note);
   $('#jobresult').classList.add('hidden');
   document.querySelectorAll('#jobform [data-flag], #jobname').forEach(el => el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', () => collectJob(true)));
+  targetChanged();  // after the fields exist: it re-validates the form
   if (unknown.length) showErrors([`not an allowed ${kind} option, dropped: ${unknown.join(', ')}`]);
-  else collectJob(true);
   FORM_READY = true;
 }
 
@@ -335,9 +357,17 @@ function collectJob(quiet) {
     if (embd % head) errors.push(`n-embd (${embd}) must be divisible by n-head (${head})`);
     if (args['sample-report'] && !args.save) errors.push('note: sample-report without save writes a report for a checkpoint that isn\'t kept');
   }
+  const job = { name, kind, args };
+  if (kind === 'train' && $('#target').value === 'modal') {
+    const gpus = $('#gpus').value.trim(), m = gpus.match(/^(cpu|[A-Za-z0-9-]{2,20}(:([1-8]))?)$/);
+    const n = gpus === 'cpu' ? 2 : Number(m?.[3] || 1), bs = args['batch-size'] ?? 4;
+    if (!m) errors.push('GPUs: like L4:2, A100-80GB:4, H100 or cpu');
+    else if (bs % n) errors.push(`batch-size ${bs} must divide evenly across ${n} GPUs (it's the global batch)`);
+    Object.assign(job, { target: 'modal', gpus, timeout_hours: Number($('#timeout').value) || 6 });
+  }
   showErrors(errors);
   $('#submitbtn').disabled = errors.some(e => !e.startsWith('note:'));
-  return { job: { name, kind, args }, errors: errors.filter(e => !e.startsWith('note:')) };
+  return { job, errors: errors.filter(e => !e.startsWith('note:')) };
 }
 
 async function submitJob(dryRun) {
@@ -347,8 +377,9 @@ async function submitJob(dryRun) {
   try {
     const r = await api(`/api/jobs${dryRun ? '?dry_run=true' : ''}`, { method: 'POST', body: JSON.stringify(job) });
     const f = r.forecast && !r.forecast.error ? `\nforecast: ~${Number(r.forecast.time_hours).toFixed(1)}h${r.forecast.loss != null ? `, full_val ≈ ${Number(r.forecast.loss).toFixed(3)}` : ''}` : '';
-    out.textContent = `${dryRun ? '✓ valid' : 'queued as ' + r.file}${f}\n\n${r.argv.join(' ')}`;
-    if (!dryRun) { toast('Queued'); refresh(); }
+    const where = r.target === 'modal' ? `${dryRun ? '✓ valid' : 'launching on Modal'} as ${r.run_id} · ${r.gpus} (${r.nproc} ranks) · timeout ${r.timeout_hours}h` : `${dryRun ? '✓ valid' : 'queued as ' + r.file}${f}`;
+    out.textContent = `${where}\n\n${r.argv.join(' ')}`;
+    if (!dryRun) { toast(r.target === 'modal' ? 'Launching on Modal' : 'Queued'); refresh(); }
   } catch (e) { out.textContent = 'Rejected: ' + e.message; }
 }
 
@@ -370,7 +401,9 @@ function openForm(job, note) {
 }
 async function cloneJob(id) {
   const s = await api(`/api/runs/${id}`); await freshMeta();
-  openForm({ name: (s.name || 'job') + '-v2', kind: s.kind || 'train', args: s.args || {} }, `copied from ${s.name || id}`);
+  const args = { ...(s.args || {}) };
+  if (s.remote) delete args['save-name'];  // the mirror's import name, not a real flag of that run
+  openForm({ name: (s.name || 'job') + '-v2', kind: s.kind || 'train', args, ...(s.remote ? { target: 'modal', gpus: s.remote.gpus } : {}) }, `copied from ${s.name || id}`);
 }
 async function continueFrom(url) {
   try { const j = await api(url); await freshMeta(); openForm(j, j.note); }

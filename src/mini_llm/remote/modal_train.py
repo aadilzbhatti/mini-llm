@@ -224,17 +224,30 @@ def parse_gpus(spec: str) -> tuple[str | None, int]:
     return spec, int(count or 1)
 
 
+def git_state() -> tuple[str, bool]:
+    return git("rev-parse", "HEAD"), bool(git("status", "--porcelain", "--untracked-files=no"))
+
+
+def make_run_id(name: str = "") -> str:
+    """<UTC timestamp>-<short sha>[-dirty][-name]. Shared with mini_llm.remote.launch,
+    which needs the id before the launch so the web page can show the run at once."""
+    sha, dirty = git_state()
+    return "-".join(filter(None, [datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S"),
+                                  sha[:7] + ("-dirty" if dirty else ""), name]))
+
+
 @app.local_entrypoint()
-def main(config: str = "", gpus: str = "H100:2", args: str = "", name: str = "", timeout_hours: float = 24.0):
+def main(config: str = "", gpus: str = "H100:2", args: str = "", name: str = "", timeout_hours: float = 24.0,
+         run_id: str = "", wait: bool = True):
+    """--run-id: use this id instead of making one. --no-wait: submit and exit
+    without streaming the run (with --detach the run carries on in Modal)."""
     cfg = json.loads(Path(config).read_text()) if config else {}
     train_argv = config_to_argv(cfg) + shlex.split(args)
     gpu, nproc = parse_gpus(gpus)
 
-    sha = git("rev-parse", "HEAD")
-    dirty = bool(git("status", "--porcelain", "--untracked-files=no"))
+    sha, dirty = git_state()
     name = name or cfg.get("name", "")
-    run_id = "-".join(filter(None, [datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S"),
-                                    sha[:7] + ("-dirty" if dirty else ""), name]))
+    run_id = run_id or make_run_id(name)
     meta = {
         "config_file": config or None,
         "config": cfg,
@@ -256,5 +269,10 @@ def main(config: str = "", gpus: str = "H100:2", args: str = "", name: str = "",
     print(f"gpus:    {gpus} -> torchrun --nproc_per_node={nproc}")
     print(f"argv:    {shlex.join(train_argv)}")
     print(f"fetch:   scripts/fetch_modal_run.sh {run_id}")
-    result = train_remote.with_options(**options).remote(run_id, train_argv, nproc, meta)
+    fn = train_remote.with_options(**options)
+    if not wait:
+        call = fn.spawn(run_id, train_argv, nproc, meta)
+        print(f"spawned: {call.object_id}")
+        return
+    result = fn.remote(run_id, train_argv, nproc, meta)
     print(f"done:    {result}")
