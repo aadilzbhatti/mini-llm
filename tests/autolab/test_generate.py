@@ -132,6 +132,8 @@ GOOD = {"rationale": "use a shorter warmup", "expected_effect": "-0.01", "diffs"
 @pytest.mark.parametrize("runner,needle", [
     (fake_run(raise_timeout=True), "timeout"),
     (fake_run(returncode=1, stderr="auth failed"), "exited 1: auth failed"),
+    (fake_run(returncode=1, stdout=json.dumps({"result": "You've hit your weekly limit", "api_error_status": 429})),
+     r"HTTP 429\): You've hit your weekly limit"),
     (fake_run(stdout="not json"), "not JSON"),
     (fake_run(stdout=json.dumps({"is_error": True, "result": "overloaded"})), "reported an error"),
     (fake_run(stdout=json.dumps({"structured_output": {"rationale": "x"}})), "fails the schema"),
@@ -217,3 +219,22 @@ def test_real_claude_call(lab):
     c = generate_one(paths=lab["paths"], rng=random.Random(0), log=print, model="sonnet", runs_dir=lab["runs"])
     assert c.created_by != "mutation", c.meta.get("fallback_reason")
     assert c.meta["cost_usd"] > 0 and c.rationale
+
+
+def test_rate_limit_is_its_own_error(tmp_path):
+    from autolab.llm import RateLimited
+
+    run = fake_run(returncode=1, stdout=json.dumps({"result": "You've hit your weekly limit", "api_error_status": 429}))
+    with pytest.raises(RateLimited):
+        call("PROMPT", "SYS", REPLY_SCHEMA, "opus", {"claude_bin": "/bin/echo"}, tmp_path / "llm" / "s", "t", runner=run)
+
+
+def test_rate_limit_stops_generation(lab):
+    from autolab.llm import RateLimited
+
+    def limited(*a, **k):
+        raise RateLimited("claude exited 1 (HTTP 429): weekly limit")
+
+    with pytest.raises(RateLimited):
+        gen(lab, limited)
+    assert set(ev.programs(lab["paths"])) == {"p0"}  # no fallback mutation queued

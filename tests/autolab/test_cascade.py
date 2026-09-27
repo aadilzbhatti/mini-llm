@@ -111,7 +111,7 @@ def test_good_patch_passes_cpu_gates_and_submits_screen(lab):
     assert [s["stage"] for s in p.stages] == ["static", "cpu", "params", ]
     assert all(s["ok"] for s in p.stages)
     req = lab["submitted"][0]
-    assert req.run_id == f"ev-{p.id}-screen-s1" and req.budget.wall_clock_s == 187.5
+    assert req.run_id == f"ev-{lab['session']['name']}-{p.id}-screen-s1" and req.budget.wall_clock_s == 187.5
     assert req.model["block_size"] == 128 and req.optim["lr"] == 1.2e-3
 
 

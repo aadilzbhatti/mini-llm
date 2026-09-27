@@ -58,6 +58,9 @@ accept_sigma = 2.0           # accept iff mean over >= 2 seeds < incumbent mean 
 param_cap_mult = 1.5         # reject programs above this x the initial program's parameter count
 throughput_floor = 0.5       # reject screens slower than this x the initial program's tokens/sec
 cpu_tests = ["tests"]        # pytest paths run against every candidate (protected, from this checkout)
+# Pins plain AdamW bit for bit, i.e. freezes the evolvable optimizer region; replaced by
+# tests/autolab/test_loop_equivalence.py, which checks the same thing with the program's own optimizer.
+cpu_test_deselect = ["tests/test_ddp.py::test_single_process_matches_plain_loop"]
 cpu_test_timeout_s = 900
 
 [evolve.eval]

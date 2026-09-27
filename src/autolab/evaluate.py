@@ -283,7 +283,8 @@ def stage_cpu(p: Program, src: Path, cfg: dict, repo: Path) -> bool:
     env = _env(src, {"AUTOLAB_TEST_MODEL": json.dumps(_model_cfg(p, cfg))})
     steps = [("shape", [f"{repo / CAUSAL_TEST}::test_shapes_and_backward"]),
              ("causal-leak", [str(repo / CAUSAL_TEST), "-k", "leak or targets"]),
-             ("tests", [str(repo / t) for t in cfg["cpu_tests"]])]
+             ("tests", [str(repo / t) for t in cfg["cpu_tests"]]
+              + [f"--deselect={repo / d}" for d in cfg.get("cpu_test_deselect", [])])]
     summary = []
     for kind, args in steps:
         cmd = [sys.executable, "-m", "pytest", "-q", "-rf", "--no-header", "-p", "no:cacheprovider",
@@ -331,7 +332,7 @@ def _request(p: Program, stage: str, seed: int, cfg: dict, session: dict):
     tokens = budgets["screen_tokens"] if stage == "screen" else budgets["full_tokens"]
     cap = session["wall_caps"]["screen" if stage == "screen" else "full"]
     return TrainRequest(
-        run_id=f"ev-{p.id}-{stage}-s{seed}", dataset_id=cfg["dataset_id"],
+        run_id=f"ev-{session.get('name', 's')}-{p.id}-{stage}-s{seed}", dataset_id=cfg["dataset_id"],
         train_tokens=str(load_config().datasets_dir / cfg["dataset_id"] / "train.pt"),
         budget=Budget(tokens=tokens, wall_clock_s=cap), seed=seed,
         model={"block_size": cfg["block_size"], **{k: p.hparams[k] for k in MODEL_KEYS}},

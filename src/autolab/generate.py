@@ -24,7 +24,7 @@ import tomllib
 from autolab import evaluate as ev
 from autolab.config import REPO_ROOT
 from autolab.database import DBConfig, maybe_migrate, next_island, sample
-from autolab.llm import LLMError, call
+from autolab.llm import LLMError, RateLimited, call
 from autolab.program import Program, save, validate_hparams
 from autolab.prompt import PROMPTS, REPLY_SCHEMA, build_prompt
 
@@ -128,6 +128,8 @@ def generate_one(paths: ev.Paths | None = None, rng: random.Random | None = None
             log(f"{child.id}: from {res['model']} on parent {parent.id} (island {island}, ${res['cost_usd']:.3f}): "
                 f"{reply['rationale'][:120]}")
             return child
+    except RateLimited:
+        raise  # a usage limit: stop proposing until it resets rather than filling the queue with mutations
     except LLMError as exc:
         fallback = str(exc)
         log(f"LLM proposal failed ({fallback}); falling back to mutation")

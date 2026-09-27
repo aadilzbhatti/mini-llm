@@ -33,6 +33,10 @@ class LLMError(RuntimeError):
     """The proposer call failed; the message is the fallback reason."""
 
 
+class RateLimited(LLMError):
+    """Usage limit hit (HTTP 429 / "limit" in the message). Callers should pause proposing, not mutate."""
+
+
 def claude_bin(llm_cfg: dict) -> str:
     path = Path(os.path.expanduser(llm_cfg.get("claude_bin", "claude")))
     if path.exists():
@@ -63,9 +67,17 @@ def call(prompt: str, system: str, schema: dict, model: str, llm_cfg: dict, log_
         raise LLMError(f"timeout after {llm_cfg.get('timeout_s', 600)}s") from None
     record.update(returncode=r.returncode, stdout=r.stdout[-200_000:], stderr=r.stderr[-20_000:])
     if r.returncode != 0:
-        _finish(record, log_path, t0, error=f"exit {r.returncode}")
-        tail = (r.stderr or r.stdout).strip().splitlines()[-1:] or ["?"]
-        raise LLMError(f"claude exited {r.returncode}: {tail[0][:300]}")
+        # The CLI still prints its JSON result on failure; its `result` is the readable message.
+        try:
+            info = json.loads(r.stdout)
+            msg, status = str(info.get("result") or ""), info.get("api_error_status")
+        except json.JSONDecodeError:
+            msg, status = "", None
+        msg = msg or ((r.stderr or r.stdout).strip().splitlines()[-1:] or ["?"])[0]
+        limited = status == 429 or "limit" in msg.lower()
+        _finish(record, log_path, t0, error=("rate_limited: " if limited else f"exit {r.returncode}: ") + msg[:200])
+        raise (RateLimited if limited else LLMError)(f"claude exited {r.returncode}"
+                                                     f"{f' (HTTP {status})' if status else ''}: {msg[:300]}")
     try:
         out = json.loads(r.stdout)
     except json.JSONDecodeError:
