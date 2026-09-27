@@ -62,6 +62,9 @@ class Head(nn.Module):
         B, T, C = x.shape  # pyright: ignore[reportUnusedVariable]
         k = self.key(x)
         q = self.query(x)
+        v = self.value(x)
+        if self.training:
+            return F.scaled_dot_product_attention(q, k, v, dropout_p=self.dropout.p, is_causal=True)
         wei = q @ k.transpose(-2, -1) / torch.sqrt(torch.tensor(k.shape[-1], dtype=torch.float32, device=k.device))
         # wei = q @ k.transpose(-2, -1)  / torch.sqrt(torch.tensor(C, dtype=torch.float32) + 1e-6)
         wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
