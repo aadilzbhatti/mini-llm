@@ -1,0 +1,8 @@
+RMSNorm instead of LayerNorm in every block (fewer params, a common small win).
+<<<<<<< SEARCH
+        self.ln1 = nn.LayerNorm(n_embd)
+        self.ln2 = nn.LayerNorm(n_embd)
+=======
+        self.ln1 = nn.RMSNorm(n_embd)
+        self.ln2 = nn.RMSNorm(n_embd)
+>>>>>>> REPLACE

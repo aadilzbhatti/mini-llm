@@ -1,0 +1,8 @@
+Feed the targets into the residual stream (inside a block, but must be rejected by the static rules).
+<<<<<<< SEARCH
+        x = tok_emb + pos_emb  # (B, T, C)
+=======
+        x = tok_emb + pos_emb  # (B, T, C)
+        if targets is not None:
+            x = x + self.token_embedding_table(targets)
+>>>>>>> REPLACE

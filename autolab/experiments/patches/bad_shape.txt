@@ -1,0 +1,6 @@
+Project attention output to the wrong width (must be rejected by the shape test).
+<<<<<<< SEARCH
+        self.proj = nn.Linear(head_size * num_heads, n_embd)
+=======
+        self.proj = nn.Linear(head_size * num_heads, n_embd // 2)
+>>>>>>> REPLACE

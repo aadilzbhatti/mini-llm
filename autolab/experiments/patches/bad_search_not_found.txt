@@ -1,0 +1,6 @@
+A SEARCH that doesn't match the parent (must be rejected at static).
+<<<<<<< SEARCH
+        self.ln1 = nn.BatchNorm1d(n_embd)
+=======
+        self.ln1 = nn.LayerNorm(n_embd)
+>>>>>>> REPLACE

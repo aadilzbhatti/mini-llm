@@ -1,0 +1,6 @@
+Drop the causal mask (must be rejected by the causal-leak test).
+<<<<<<< SEARCH
+        wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
+=======
+        pass  # no causal mask
+>>>>>>> REPLACE

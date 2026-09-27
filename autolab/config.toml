@@ -41,3 +41,40 @@ L40S = 0.000542
 "A100-40GB" = 0.000583
 "A100-80GB" = 0.000694
 H100 = 0.001097
+
+[evolve]
+# The evaluator `h` (HANDOFF M3). Fixed for a session: data, frozen val, block_size,
+# token budgets, eval settings, GPU type. Everything else is the program.
+gpu = "L4"
+dataset_id = "data20k"
+block_size = 128
+screen_tokens = 5242880      # 640 steps at bs64 x blk128
+full_tokens = 20971520       # 2560 steps, ~1 epoch of data20k
+wall_cap_mult = 1.25         # per-stage wall-clock cap = this x the initial program's wall time
+screen_margin = 0.10         # screen must be <= incumbent screen mean + this (screens reject, never accept)
+confirm_seeds = [2, 3]       # extra seeds for a full-budget result that beats the incumbent
+accept_sigma = 2.0           # accept iff mean over >= 2 seeds < incumbent mean - accept_sigma x full seed std
+param_cap_mult = 1.5         # reject programs above this x the initial program's parameter count
+throughput_floor = 0.5       # reject screens slower than this x the initial program's tokens/sec
+cpu_tests = ["tests"]        # pytest paths run against every candidate (protected, from this checkout)
+cpu_test_timeout_s = 900
+
+[evolve.eval]
+eval_interval = 50
+eval_batches = 20
+eval_seed = 1234
+log_interval = 10
+full_eval_interval = 0
+control_poll = 25
+
+# Evolvable hyperparameters and their allowed ranges (block_size and budgets are fixed).
+[evolve.hparams]
+lr = { min = 1e-5, max = 1e-2 }
+min_lr = { min = 0.0, max = 1e-3 }
+warmup_steps = { min = 0, max = 2000, int = true }
+weight_decay = { min = 0.0, max = 0.5 }
+dropout = { min = 0.0, max = 0.3 }
+batch_size = { choices = [16, 32, 64, 128] }
+n_embd = { choices = [128, 192, 256, 320, 384, 512] }
+n_head = { choices = [1, 2, 4, 8] }
+n_layer = { min = 1, max = 12, int = true }

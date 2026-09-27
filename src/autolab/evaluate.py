@@ -1,0 +1,474 @@
+"""The evaluation cascade: AlphaEvolve's `h`, as a resumable state machine.
+
+Each program moves through the stages below. `advance(program)` does as much as
+it can without waiting and returns. CPU stages run inline; GPU stages submit a
+Modal trial and return, and a later call (from the daemon, every cycle) picks up
+the collected result. The first failing stage rejects the program with a reason.
+All state is in the program's JSON, so the daemon can restart at any point.
+
+    static   diff already applied + scope-checked at creation; forbidden names
+             in blocks; hparams within [evolve.hparams]; the program imports, and
+             `mini_llm` resolves to the program's own code
+    cpu      pytest over [evolve] cpu_tests (the full protected suite) against the
+             program's code, with the causal-leak/shape test at the program's own size
+    params   parameter count <= param_cap_mult x the initial program's
+    screen   Modal, screen_tokens, seed 1. Also the smoke test: no NaN, no
+             divergence, throughput >= throughput_floor x initial. Passes if within
+             screen_margin of the incumbent's screen mean (screens overstate gains,
+             so they can only reject)
+    full     Modal, full_tokens, seed 1
+    confirm  only if the full result beats the incumbent's mean: confirm_seeds more.
+             Accepted as the new incumbent iff the mean over all seeds beats it by
+             more than accept_sigma x the full-budget seed std; otherwise a contender.
+
+A separate smoke stage was folded into the screen: on Modal a 640-step screen
+costs ~$0.03, barely more than the container overhead a separate smoke run would
+add (decision log, 2026-09-27).
+
+    uv run autolab evolve init                              # session + initial program p0
+    uv run autolab evolve propose --diff patch.txt --rationale "..." [--parent p0] [--hparams '{..}']
+    uv run autolab evolve status
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tomllib
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from statistics import mean, stdev
+
+from autolab.config import REPO_ROOT
+from autolab.program import (
+    Program,
+    ScopeError,
+    apply_diffs,
+    base_sources,
+    extract_blocks,
+    load,
+    materialize,
+    render,
+    save,
+    static_violations,
+    validate_hparams,
+)
+
+STATE = REPO_ROOT / "autolab" / "state" / "evolve"
+MODEL_KEYS = ("n_embd", "n_head", "n_layer", "dropout")
+OPTIM_KEYS = ("batch_size", "lr", "min_lr", "warmup_steps", "weight_decay")
+VOCAB = 50257
+DONE = {"rejected", "evaluated", "contender", "accepted"}
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def evolve_cfg() -> dict:
+    return tomllib.loads((REPO_ROOT / "autolab" / "config.toml").read_text())["evolve"]
+
+
+@dataclass
+class Paths:
+    root: Path = STATE
+
+    @property
+    def session(self) -> Path:
+        return self.root / "session.json"
+
+    @property
+    def programs(self) -> Path:
+        return self.root / "programs"
+
+    def work(self, pid: str) -> Path:
+        return self.root / "work" / pid
+
+
+# --- session -----------------------------------------------------------------------------
+
+
+def load_session(paths: Paths = Paths()) -> dict | None:
+    try:
+        return json.loads(paths.session.read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def save_session(session: dict, paths: Paths = Paths()) -> None:
+    paths.root.mkdir(parents=True, exist_ok=True)
+    tmp = paths.session.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(session, indent=2))
+    tmp.replace(paths.session)
+
+
+def _report(run_id: str, runs_dir: Path) -> dict | None:
+    try:
+        return json.loads((runs_dir / run_id / "report.json").read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cfg: dict | None = None,
+                 paths: Paths = Paths(), runs_dir: Path | None = None, repo: Path = REPO_ROOT) -> dict:
+    """Create the session and its initial program p0 from already-run baseline trials.
+
+    `runs` maps "screen"/"full" to finished run ids of p0 on different seeds; they give
+    the incumbent's scores, the seed noise, the wall-clock caps and the throughput floor.
+    """
+    cfg = cfg or evolve_cfg()
+    runs_dir = runs_dir or repo / "autolab" / "runs"
+    if paths.session.exists():
+        raise FileExistsError(f"session already exists: {paths.session}")
+    files = base_sources(repo, base_commit)
+    reports = {k: [_report(r, runs_dir) for r in ids] for k, ids in runs.items()}
+    if any(r is None for rs in reports.values() for r in rs):
+        raise ValueError("every initial run needs a collected report.json")
+
+    def losses(k):
+        return [r["summary"]["final_full_val_loss"] for r in reports[k]]
+
+    def walls(k):
+        return [r["performance"]["wall_s"] for r in reports[k]]
+
+    p0 = Program(id="p0", parent_id=None, base_commit=base_commit, blocks=extract_blocks(files), hparams=hparams,
+                 rationale="Initial program: the owner's emb256/blk128/bs64 regime at the base commit.",
+                 stage="done", status="accepted", runs=runs)
+    p0.scores = _scores(losses("screen")[0], losses("full"), reports["full"][0])
+    p0.scores["screen_losses"] = losses("screen")
+    session = {
+        "created": now_iso(),
+        "base_commit": base_commit,
+        "incumbent": "p0",
+        "initial_params": reports["full"][0]["scale"]["params"],
+        "initial_tokens_per_sec": mean(r["performance"]["tokens_per_sec"] for r in reports["full"]),
+        "noise": {k: {"n": len(losses(k)), "mean": mean(losses(k)), "std": stdev(losses(k))} for k in ("screen", "full")},
+        "wall_caps": {k: round(cfg["wall_cap_mult"] * mean(walls(k)), 1) for k in ("screen", "full")},
+        "incumbent_history": [{"at": now_iso(), "program": "p0", "full_mean": mean(losses("full"))}],
+        "next_id": 1,
+    }
+    save(p0, paths.programs)
+    save_session(session, paths)
+    return session
+
+
+def _scores(screen: float | None, fulls: list[float], report: dict | None) -> dict:
+    s = {"screen_loss": screen, "full_losses": fulls}
+    if fulls:
+        s.update(full_mean=mean(fulls), n_seeds=len(fulls), full_std=stdev(fulls) if len(fulls) > 1 else None,
+                 neg_full_val_loss=-mean(fulls))
+    if report:
+        s.update(tokens_per_sec=report["performance"]["tokens_per_sec"], params=report["scale"]["params"],
+                 neg_params=-report["scale"]["params"])
+    return s
+
+
+# --- creating children ---------------------------------------------------------------------
+
+
+def programs(paths: Paths = Paths()) -> dict[str, Program]:
+    return {p.stem: load(p) for p in sorted(paths.programs.glob("*.json"))}
+
+
+def propose(parent_id: str, diffs: list[dict], hparams_patch: dict | None = None, rationale: str = "",
+            created_by: str = "human", paths: Paths = Paths(), repo: Path = REPO_ROOT) -> Program:
+    """Create (and save) a child of `parent_id`. A scope failure is saved as a rejected program."""
+    session = load_session(paths)
+    if session is None:
+        raise RuntimeError("no evolve session; run `autolab evolve init` first")
+    parent = load(paths.programs / f"{parent_id}.json")
+    pid = f"p{session['next_id']}"
+    session["next_id"] += 1
+    save_session(session, paths)
+    child = Program(id=pid, parent_id=parent_id, base_commit=parent.base_commit, blocks=dict(parent.blocks),
+                    hparams={**parent.hparams, **(hparams_patch or {})}, rationale=rationale,
+                    created_by=created_by, diffs=diffs)
+    try:
+        if diffs:
+            child.blocks = apply_diffs(base_sources(repo, parent.base_commit), parent.blocks, diffs)
+    except ScopeError as exc:
+        _reject(child, "static", f"scope: {exc}")
+    save(child, paths.programs)
+    return child
+
+
+# --- the state machine -----------------------------------------------------------------------
+
+
+def _record(p: Program, stage: str, ok: bool, detail: str = "", **extra) -> None:
+    p.stages.append({"stage": stage, "ok": ok, "at": now_iso(), "detail": detail[:4000], **extra})
+
+
+def _reject(p: Program, stage: str, reason: str) -> None:
+    p.stage, p.status, p.reason = stage, "rejected", reason[:2000]
+    _record(p, stage, False, reason)
+
+
+def _model_cfg(p: Program, cfg: dict) -> dict:
+    return {"vocab_size": VOCAB, "block_size": cfg["block_size"], **{k: p.hparams[k] for k in MODEL_KEYS}}
+
+
+def _env(src: Path, extra: dict | None = None) -> dict:
+    return {**os.environ, "PYTHONPATH": str(src), "AUTOLAB_FORCE_CPU": "1", "HF_HUB_OFFLINE": "1",
+            "AUTOLAB_IN_CASCADE": "1", **(extra or {})}
+
+
+def stage_static(p: Program, cfg: dict, paths: Paths, repo: Path) -> Path | None:
+    problems = static_violations(p.blocks) + validate_hparams(
+        {k: v for k, v in p.hparams.items()}, cfg["hparams"])
+    if problems:
+        _reject(p, "static", "; ".join(problems))
+        return None
+    work = paths.work(p.id)
+    shutil.rmtree(work, ignore_errors=True)
+    src = materialize(render(base_sources(repo, p.base_commit), p.blocks), work)
+    r = subprocess.run([sys.executable, "-c", "import mini_llm, mini_llm.model, mini_llm.train; print(mini_llm.__file__)"],
+                       env=_env(src), capture_output=True, text=True, timeout=300)
+    if r.returncode != 0:
+        _reject(p, "static", "import failed: " + (r.stderr.strip().splitlines() or ["?"])[-1])
+        return None
+    if not Path(r.stdout.strip()).resolve().is_relative_to(src.resolve()):
+        _reject(p, "static", f"mini_llm resolved to {r.stdout.strip()}, not the program's code")
+        return None
+    _record(p, "static", True)
+    return src
+
+
+FAILED_LINE = re.compile(r"^FAILED (\S+)", re.M)
+
+
+CAUSAL_TEST = "tests/autolab/test_causal_leak.py"
+
+
+def stage_cpu(p: Program, src: Path, cfg: dict, repo: Path) -> bool:
+    """Shape test, then causal/label-leak tests, then the full protected suite.
+
+    Separate runs so the reject reason is specific: a shape bug crashes every forward
+    pass (the causal tests too), and a leak must be reported as a leak.
+    """
+    env = _env(src, {"AUTOLAB_TEST_MODEL": json.dumps(_model_cfg(p, cfg))})
+    steps = [("shape", [f"{repo / CAUSAL_TEST}::test_shapes_and_backward"]),
+             ("causal-leak", [str(repo / CAUSAL_TEST), "-k", "leak or targets"]),
+             ("tests", [str(repo / t) for t in cfg["cpu_tests"]])]
+    summary = []
+    for kind, args in steps:
+        cmd = [sys.executable, "-m", "pytest", "-q", "-rf", "--no-header", "-p", "no:cacheprovider",
+               "-p", "autolab.pytest_seed", *args]
+        try:
+            r = subprocess.run(cmd, cwd=repo, env=env, capture_output=True, text=True, timeout=cfg["cpu_test_timeout_s"])
+        except subprocess.TimeoutExpired:
+            _reject(p, "cpu", f"{kind}: timed out after {cfg['cpu_test_timeout_s']}s")
+            return False
+        tail = (r.stdout + r.stderr)[-3000:]
+        if r.returncode != 0:
+            failed = FAILED_LINE.findall(r.stdout)
+            _reject(p, "cpu", f"{kind}: {len(failed)} failed: {', '.join(failed[:6]) or tail[-500:]}")
+            p.stages[-1]["detail"] = tail
+            return False
+        summary.append(f"{kind}: {tail.strip().splitlines()[-1] if tail.strip() else 'ok'}")
+    _record(p, "cpu", True, "; ".join(summary))
+    return True
+
+
+def stage_params(p: Program, src: Path, cfg: dict, session: dict) -> bool:
+    code = ("import json,sys; from mini_llm.config import ModelConfig, build_model; "
+            "m = build_model(ModelConfig(**json.loads(sys.argv[1]))); print(sum(x.numel() for x in m.parameters()))")
+    r = subprocess.run([sys.executable, "-c", code, json.dumps(_model_cfg(p, cfg))], env=_env(src),
+                       capture_output=True, text=True, timeout=300)
+    if r.returncode != 0:
+        _reject(p, "params", "could not build the model: " + (r.stderr.strip().splitlines() or ["?"])[-1])
+        return False
+    n = int(r.stdout.strip())
+    cap = cfg["param_cap_mult"] * session["initial_params"]
+    p.scores["params"] = n
+    if n > cap:
+        _reject(p, "params", f"{n:,} parameters > cap {cap:,.0f} ({cfg['param_cap_mult']}x initial)")
+        return False
+    _record(p, "params", True, f"{n:,} parameters", params=n)
+    return True
+
+
+def _request(p: Program, stage: str, seed: int, cfg: dict, session: dict):
+    from autolab.config import load_config
+    from autolab.trainer import Budget, TrainRequest
+
+    tokens = cfg["screen_tokens"] if stage == "screen" else cfg["full_tokens"]
+    cap = session["wall_caps"]["screen" if stage == "screen" else "full"]
+    return TrainRequest(
+        run_id=f"ev-{p.id}-{stage}-s{seed}", dataset_id=cfg["dataset_id"],
+        train_tokens=str(load_config().datasets_dir / cfg["dataset_id"] / "train.pt"),
+        budget=Budget(tokens=tokens, wall_clock_s=cap), seed=seed,
+        model={"block_size": cfg["block_size"], **{k: p.hparams[k] for k in MODEL_KEYS}},
+        optim={k: p.hparams[k] for k in OPTIM_KEYS}, eval=dict(cfg["eval"]))
+
+
+def _submit(p: Program, stage: str, seeds: list[int], cfg: dict, session: dict, paths: Paths, submit) -> bool:
+    src = paths.work(p.id) / "src"
+    if not src.exists():  # e.g. after a restart that cleaned work/: rebuild from the stored blocks
+        src = materialize(render(base_sources(REPO_ROOT, p.base_commit), p.blocks), paths.work(p.id))
+    ids = []
+    for seed in seeds:
+        req = _request(p, stage, seed, cfg, session)
+        try:
+            submit(req, cfg["gpu"], src)
+        except FileExistsError:
+            pass  # already submitted (restart between submit and save)
+        except RuntimeError as exc:  # cost cap: wait, retry next cycle
+            p.status, p.reason = "blocked", str(exc)
+            return False
+        ids.append(req.run_id)
+    p.runs.setdefault(stage, []).extend(ids)
+    p.stage, p.status, p.reason = stage, "running", ""
+    return True
+
+
+def _results(p: Program, stage: str, calls: dict, runs_dir: Path) -> list[tuple[str, dict | None, str | None]] | None:
+    """[(run_id, report, error)] once every run of the stage is done, else None."""
+    out = []
+    for rid in p.runs.get(stage, []):
+        c = calls.get(rid)
+        if c is None or c["state"] == "pending":
+            return None
+        out.append((rid, _report(rid, runs_dir), c.get("error") if c["state"] == "failed" else None))
+    return out
+
+
+def _health(report: dict | None, error: str | None, session: dict, cfg: dict) -> str | None:
+    if error or report is None:
+        return f"run failed: {(error or 'no report')[:300]}"
+    if report["health"]["nan_or_inf"]:
+        return "NaN/inf in training" + (" (trainer traceback)" if report["health"].get("trainer_traceback") else "")
+    if report["summary"].get("final_full_val_loss") is None:
+        return "no final full val loss"
+    tps = report["performance"].get("tokens_per_sec") or 0
+    floor = cfg["throughput_floor"] * session["initial_tokens_per_sec"]
+    if tps < floor:
+        return f"throughput {tps:,.0f} tok/s < floor {floor:,.0f} ({cfg['throughput_floor']}x initial)"
+    return None
+
+
+def incumbent(session: dict, progs: dict[str, Program]) -> Program:
+    return progs[session["incumbent"]]
+
+
+def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths = Paths(), repo: Path = REPO_ROOT,
+            runs_dir: Path | None = None, submit=None, log=print) -> Program:
+    runs_dir = runs_dir or repo / "autolab" / "runs"
+    if submit is None:
+        from autolab.modal_backend import submit as modal_submit
+
+        def submit(req, gpu, src):
+            return modal_submit(req, gpu, src_root=src)
+
+    if p.status in DONE:
+        return p
+    inc = load(paths.programs / f"{session['incumbent']}.json")
+
+    if p.stage in ("static", "cpu", "params") and p.status in ("queued", "running"):
+        src = stage_static(p, cfg, paths, repo)
+        if src and stage_cpu(p, src, cfg, repo) and stage_params(p, src, cfg, session):
+            p.stage, p.status = "screen", "queued"
+        save(p, paths.programs)
+        if p.status == "rejected":
+            log(f"{p.id}: rejected at {p.stage}: {p.reason[:200]}")
+            _cleanup(p, paths)
+            return p
+
+    if p.stage == "screen":
+        if p.status in ("queued", "blocked"):
+            _submit(p, "screen", [1], cfg, session, paths, submit)
+        else:
+            res = _results(p, "screen", calls, runs_dir)
+            if res is not None:
+                rid, rep, err = res[0]
+                bad = _health(rep, err, session, cfg)
+                if bad:
+                    _reject(p, "screen", f"smoke: {bad}")
+                else:
+                    loss = rep["summary"]["final_full_val_loss"]
+                    p.scores = {**p.scores, **_scores(loss, [], rep)}
+                    inc_screen = mean(inc.scores.get("screen_losses") or [inc.scores["screen_loss"]])
+                    limit = inc_screen + cfg["screen_margin"]
+                    if loss > limit:
+                        _reject(p, "screen", f"screen {loss:.4f} > incumbent {inc_screen:.4f} + margin {cfg['screen_margin']}")
+                    else:
+                        _record(p, "screen", True, f"screen {loss:.4f} vs incumbent {inc_screen:.4f}", loss=loss)
+                        p.stage, p.status = "full", "queued"
+
+    if p.stage == "full":
+        if p.status in ("queued", "blocked"):
+            _submit(p, "full", [1], cfg, session, paths, submit)
+        else:
+            res = _results(p, "full", calls, runs_dir)
+            if res is not None:
+                rid, rep, err = res[0]
+                bad = _health(rep, err, session, cfg)
+                if bad:
+                    _reject(p, "full", bad)
+                else:
+                    loss = rep["summary"]["final_full_val_loss"]
+                    p.scores = {**p.scores, **_scores(p.scores.get("screen_loss"), [loss], rep)}
+                    inc_mean = inc.scores["full_mean"]
+                    _record(p, "full", True, f"full {loss:.4f} vs incumbent mean {inc_mean:.4f}", loss=loss)
+                    if loss < inc_mean:
+                        p.stage, p.status = "confirm", "queued"
+                    else:
+                        p.stage, p.status, p.reason = "done", "evaluated", "full-budget loss not below the incumbent's mean"
+
+    if p.stage == "confirm":
+        if p.status in ("queued", "blocked"):
+            _submit(p, "confirm", list(cfg["confirm_seeds"]), cfg, session, paths, submit)
+        else:
+            res = _results(p, "confirm", calls, runs_dir)
+            if res is not None:
+                good = [(rid, rep) for rid, rep, err in res if _health(rep, err, session, cfg) is None]
+                fulls = p.scores["full_losses"] + [rep["summary"]["final_full_val_loss"] for _, rep in good]
+                p.scores = {**p.scores, **_scores(p.scores.get("screen_loss"), fulls, None)}
+                sigma = session["noise"]["full"]["std"]
+                bar = inc.scores["full_mean"] - cfg["accept_sigma"] * sigma
+                m = p.scores["full_mean"]
+                detail = f"mean {m:.4f} over {len(fulls)} seeds; bar {bar:.4f} = incumbent {inc.scores['full_mean']:.4f} - {cfg['accept_sigma']}x{sigma:.4f}"
+                if len(fulls) >= 2 and m < bar:
+                    _record(p, "confirm", True, detail)
+                    p.stage, p.status, p.reason = "done", "accepted", detail
+                    session["incumbent"] = p.id
+                    session.setdefault("incumbent_history", []).append({"at": now_iso(), "program": p.id, "full_mean": m})
+                    save_session(session, paths)
+                    log(f"{p.id}: ACCEPTED as new incumbent ({detail})")
+                else:
+                    _record(p, "confirm", False, detail)
+                    p.stage, p.status, p.reason = "done", "contender", f"not significant: {detail}"
+
+    save(p, paths.programs)
+    if p.status in DONE:
+        log(f"{p.id}: {p.status} ({p.reason[:200]})")
+        _cleanup(p, paths)
+    return p
+
+
+def _cleanup(p: Program, paths: Paths) -> None:
+    shutil.rmtree(paths.work(p.id), ignore_errors=True)  # blocks live in the JSON; re-materializable
+
+
+def advance_all(log=print, paths: Paths = Paths()) -> list[str]:
+    """One pass over every unfinished program (the daemon calls this each cycle)."""
+    session = load_session(paths)
+    if session is None:
+        return []
+    from autolab.modal_backend import load_calls
+
+    cfg, calls, touched = evolve_cfg(), load_calls(), []
+    for pid, p in programs(paths).items():
+        if p.status in DONE:
+            continue
+        before = (p.stage, p.status)
+        session = load_session(paths)  # an acceptance earlier in this pass may have moved the incumbent
+        p = advance(p, session, cfg, calls, paths=paths, log=log)
+        if (p.stage, p.status) != before:
+            touched.append(pid)
+    return touched
