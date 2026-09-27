@@ -416,21 +416,28 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     progs = ev.programs(session_paths)
     ccfg = controller_cfg()
 
-    # record newly finished programs (and commit acceptances) whether or not proposing is enabled
-    seen = set(ctl.setdefault("recorded", {}).get(session.get("name"), []))
-    for p in progs.values():
-        if p.parent_id is None or p.id in seen or p.status not in ev.DONE:
-            continue
-        note("program_done", session=session.get("name"), program=p.id, status=p.status, stage=p.stage,
-             reason=p.reason[:300], full_mean=p.scores.get("full_mean"), n_seeds=p.scores.get("n_seeds"),
-             created_by=p.created_by)
-        if p.status == "accepted" and ccfg.get("commit_accepted", True):
-            p.meta["commit"] = commit_accepted(p, session, log=log)
-            from autolab.program import save
+    # record newly finished programs (and commit acceptances) in every session, whether or not
+    # proposing is enabled: an older session can still finish programs after a data switch
+    from autolab.program import save
 
-            save(p, session_paths.programs)
-        seen.add(p.id)
-    ctl["recorded"][session.get("name")] = sorted(seen)
+    for spaths in ev.all_session_paths():
+        sess = ev.load_session(spaths)
+        if not sess:
+            continue
+        name = sess.get("name")
+        seen = set(ctl.setdefault("recorded", {}).get(name, []))
+        for p in ev.programs(spaths).values():
+            if p.parent_id is None or p.id in seen or p.status not in ev.DONE:
+                continue
+            note("program_done", session=name, program=p.id, status=p.status, stage=p.stage,
+                 reason=p.reason[:300], full_mean=p.scores.get("full_mean"), n_seeds=p.scores.get("n_seeds"),
+                 created_by=p.created_by)
+            if p.status == "accepted" and ccfg.get("commit_accepted", True):
+                p.meta["commit"] = commit_accepted(p, sess, log=log)
+                save(p, spaths.programs)
+            seen.add(p.id)
+        ctl["recorded"][name] = sorted(seen)
+    progs = ev.programs(session_paths)
 
     if not ctl.get("enabled"):
         save_control(ctl)
