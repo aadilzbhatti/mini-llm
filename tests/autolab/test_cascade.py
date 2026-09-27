@@ -135,7 +135,7 @@ def finish(lab, p, stage, losses, **kw):
 
 def test_screen_margin_rejects(lab):
     p = lab["step"](gpu_program(lab))
-    p = finish(lab, p, "screen", [6.70])  # incumbent screen mean 6.53 + 0.10 margin
+    p = finish(lab, p, "screen", [6.85])  # incumbent screen mean 6.53 + 0.25 margin = 6.78
     assert (p.status, p.stage) == ("rejected", "screen") and "margin" in p.reason
 
 

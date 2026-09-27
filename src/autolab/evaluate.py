@@ -230,6 +230,23 @@ def propose(parent_id: str, diffs: list[dict], hparams_patch: dict | None = None
     return child
 
 
+def port(program: Program, source_session: str, paths: Paths | None = None) -> Program:
+    """Propose another session's program (e.g. accepted after a data switch) as a child of this
+    session's incumbent, so it is re-evaluated from scratch on this session's data and budget."""
+    paths = paths or Paths()
+    session = load_session(paths)
+    pid = f"p{session['next_id']}"
+    session["next_id"] += 1
+    save_session(session, paths)
+    child = Program(id=pid, parent_id=session["incumbent"], base_commit=program.base_commit, blocks=dict(program.blocks),
+                    hparams=dict(program.hparams), created_by=f"port:{source_session}/{program.id}",
+                    rationale=f"Ported from {source_session}/{program.id} "
+                              f"({program.scores.get('full_mean', float('nan')):.4f} there): {program.rationale}")
+    child.meta = {"ported_from": f"{source_session}/{program.id}"}
+    save(child, paths.programs)
+    return child
+
+
 # --- the state machine -----------------------------------------------------------------------
 
 
@@ -497,8 +514,27 @@ def _cleanup(p: Program, paths: Paths) -> None:
     shutil.rmtree(paths.work(p.id), ignore_errors=True)  # blocks live in the JSON; re-materializable
 
 
+def all_session_paths() -> list[Paths]:
+    """Every session on disk (the active one last, so its acceptances are the freshest)."""
+    active = active_session_name()
+    names = sorted(d.name for d in STATE_ROOT.iterdir() if (d / "session.json").exists()) if STATE_ROOT.exists() else []
+    return [Paths(STATE_ROOT / n) for n in names if n != active] + ([Paths(STATE_ROOT / active)] if active in names else [])
+
+
+def advance_everything(log=print) -> list[str]:
+    """Advance unfinished programs and data checks in every session. A session switch can happen
+    while programs of the old session are mid-evaluation; they must still be judged."""
+    from autolab.modal_backend import load_calls
+
+    touched = []
+    for paths in all_session_paths():
+        touched += [f"{paths.root.name}/{pid}" for pid in advance_all(log=log, paths=paths)]
+        touched += [f"{paths.root.name}/{c}" for c in advance_data_checks(load_calls(), paths=paths, log=log)]
+    return touched
+
+
 def advance_all(log=print, paths: Paths | None = None) -> list[str]:
-    """One pass over every unfinished program of the active session (the daemon calls this each cycle)."""
+    """One pass over every unfinished program of one session (default: the active one)."""
     paths = paths or Paths()
     session = load_session(paths)
     if session is None:

@@ -259,6 +259,8 @@ def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, pat
     datasets_dir = load_config().datasets_dir
     runs_dir = RUNS
 
+    if flow["state"] in ("idle", "uploading", "checking") and not budget_ok(flow, session, calls, cfg):
+        return  # the data check trains 3 full seeds; wait for the rolling-24h budget like proposals do
     if flow["state"] == "idle":
         lab = incumbent_diagnosis(session, progs, runs_dir)
         if not lab or lab["confidence"] < cfg.get("data_trigger_confidence", 0.75):
@@ -318,6 +320,23 @@ def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, pat
         flow["new_session"] = new
 
 
+def budget_ok(flow: dict, session: dict, calls: dict, cfg: dict) -> bool:
+    """Room in the rolling-24h budget for what the next data step will submit."""
+    from autolab import modal_backend as mb
+
+    if flow["state"] not in ("idle", "uploading"):
+        return True  # nothing new gets submitted before the verdict
+    llm = []
+    try:
+        llm = [json.loads(x) for x in (STATE / "llm_spend.jsonl").read_text().splitlines() if x.strip()]
+    except OSError:
+        pass
+    cost = 3 * (session["wall_caps"]["full"] + 180) * mb.price_per_s(ev.evolve_cfg()["gpu"])
+    ok = spend_24h(calls, llm, now())["total"] + cost <= cfg.get("daily_usd", 10.0)
+    flow["waiting_for_budget"] = not ok
+    return ok
+
+
 def submit_screens(flow: dict, session: dict, progs: dict, paths: ev.Paths, log, submit=None) -> None:
     from autolab.config import load_config
     from autolab.program import base_sources, materialize, render
@@ -356,6 +375,27 @@ def switch_session(flow: dict, session: dict, progs: dict, paths: ev.Paths, log)
     note("session_switched", old=session.get("name"), new=name, dataset=flow["target"], verdict=chk["verdict"])
     log(f"switched to session {name} on {flow['target']}")
     return name
+
+
+def port_from_old_sessions(ctl: dict, session: dict, log) -> list[str]:
+    """Programs accepted in other sessions (e.g. after a data switch) get re-evaluated here, once."""
+    ported = ctl.setdefault("ported", [])
+    out = []
+    for paths in ev.all_session_paths():
+        other = ev.load_session(paths)
+        if not other or other.get("name") == session.get("name"):
+            continue
+        for p in ev.programs(paths).values():
+            key = f"{other.get('name')}/{p.id}"
+            if p.parent_id is None or p.status != "accepted" or key in ported:
+                continue
+            child = ev.port(p, other.get("name"))
+            ported.append(key)
+            note("ported", session=session.get("name"), program=child.id, source=key,
+                 full_mean_there=p.scores.get("full_mean"))
+            log(f"ported {key} -> {session.get('name')}/{child.id}")
+            out.append(child.id)
+    return out
 
 
 # --- one controller step ------------------------------------------------------------------------------
@@ -405,6 +445,7 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     if ctl.get("data_flow", {}).get("state") == "switched":  # new session: reload
         session_paths = ev.Paths()
         session, progs = ev.load_session(session_paths), ev.programs(ev.Paths())
+    port_from_old_sessions(ctl, session, log)
     status["data"] = {k: v for k, v in ctl.get("data_flow", {}).items() if k in ("state", "target", "check", "new_session")}
     paused = ctl.get("paused_until")
     if paused and datetime.fromisoformat(paused) > t:

@@ -170,7 +170,8 @@ def test_data_policy_end_to_end(world, monkeypatch):
     class Cfg:
         datasets_dir = datasets
     monkeypatch.setattr(acfg, "load_config", lambda: Cfg)
-    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"daily_usd": 0.0, "data_trigger_confidence": 0.75})
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"daily_usd": 100.0, "max_in_flight": 0,
+                                                        "data_trigger_confidence": 0.75})
     spawned, alive = [], {"v": True}
     monkeypatch.setattr(ctl, "_spawn", lambda args, logname: spawned.append(args) or 4242)
     monkeypatch.setattr(ctl, "_alive", lambda pid: alive["v"])
@@ -230,7 +231,7 @@ def test_data_policy_prefers_slicing_a_bigger_set(world, monkeypatch):
     class Cfg:
         datasets_dir = datasets
     monkeypatch.setattr(acfg, "load_config", lambda: Cfg)
-    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"daily_usd": 0.0})
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"daily_usd": 100.0, "max_in_flight": 0})
     spawned = []
     monkeypatch.setattr(ctl, "_spawn", lambda args, logname: spawned.append(args) or 1)
     enable()
@@ -257,3 +258,36 @@ def test_commit_accepted_in_a_throwaway_clone(tmp_path):
     assert "accept s2/p7" in log and "Hypothesis: clip grads" in log
     assert "clip_grad_norm_" in (wt / "src" / "mini_llm" / "train.py").read_text()
     assert json.loads((wt / "autolab" / "accepted" / "s2-p7.json").read_text())["scores"]["full_mean"] == 4.61
+
+
+def test_old_session_programs_still_advance_and_accepted_ones_are_ported(world, monkeypatch):
+    """A data switch mid-evaluation: the old session's programs are still judged, and an
+    acceptance there is re-evaluated in the new session."""
+    root = world["root"]
+    old = ev.Paths(root / "s2")
+    head = ev.load_session(old)["base_commit"]
+    ev.init_session(head, HP, {"screen": ["screen1", "screen2"], "full": ["full1", "full2"]},
+                    paths=ev.Paths(root / "s3"), runs_dir=world["runs"], name="s3",
+                    budgets={"screen_tokens": 1, "full_tokens": 2, "eval": {}}, dataset_id="data40k")
+    ev.set_active_session("s3", root)
+    assert [p.root.name for p in ev.all_session_paths()] == ["s2", "s3"]  # active last
+    save(Program(id="p1", parent_id="p0", base_commit=head, blocks={}, hparams={**HP, "lr": 2e-3}, stage="done",
+                 status="accepted", scores={"full_mean": 4.66, "n_seeds": 3}, rationale="higher lr"), old.programs)
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"daily_usd": 0.0})
+    enable(data_flow={"session": "s3", "state": "not_helped"})
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)  # ported once only
+    new = ev.programs(ev.Paths(root / "s3"))
+    ported = [p for p in new.values() if p.created_by.startswith("port:")]
+    assert len(ported) == 1 and ported[0].created_by == "port:s2/p1" and ported[0].hparams["lr"] == 2e-3
+    assert ported[0].status == "queued" and ported[0].parent_id == "p0"
+
+
+def test_data_policy_waits_for_budget(world, monkeypatch):
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"daily_usd": 1.0, "data_trigger_confidence": 0.75})
+    spawned = []
+    monkeypatch.setattr(ctl, "_spawn", lambda args, logname: spawned.append(args) or 1)
+    enable()
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    flow = ctl.load_control()["data_flow"]
+    assert flow["state"] == "idle" and flow["waiting_for_budget"] and not spawned

@@ -44,10 +44,10 @@ def cycle(log=print) -> dict:
     t0 = time.time()
     finished = mb.collect(log=log)
     live = mb.fetch_live()
-    from autolab.evaluate import advance_all, advance_data_checks
+    from autolab.evaluate import advance_everything
 
-    advanced = advance_all(log=log)  # evaluation cascade: CPU gates inline, GPU stages via Modal
-    advanced += advance_data_checks(mb.load_calls(), log=log)  # "does more data help?" verdicts
+    # evaluation cascade + data-check verdicts, in every session (an old one may still have work)
+    advanced = advance_everything(log=log)
     from autolab.controller import step
 
     control = step(log=log)  # propose within budget, data policy, notebook, accepted commits
