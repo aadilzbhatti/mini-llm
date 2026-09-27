@@ -1,0 +1,85 @@
+{
+  "id": "m4_prep",
+  "title": "M4 prep: seed noise at the owner's 82M-token regime",
+  "purpose": "The owner's best run is bs64 x 10k steps (82M tokens, ~4 epochs of data20k): 4.7118 with a 32-step warmup vs 4.7178 with 100 steps, one seed each. Autolab's evaluator moves to that regime so what it finds applies to the owner's runs: full = 10k steps (82M tokens), screen = 1280 steps (10.5M). This batch measures the initial program's seed noise at both budgets (it keeps warmup 100 so the search has to discover the short warmup, and every other improvement, on its own).",
+  "gpu": "L4",
+  "dataset_id": "data20k",
+  "model": {
+    "block_size": 128,
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 4,
+    "dropout": 0.0
+  },
+  "optim": {
+    "batch_size": 64,
+    "lr": 0.0012,
+    "min_lr": 2e-06,
+    "warmup_steps": 100,
+    "weight_decay": 0.0
+  },
+  "eval": {
+    "eval_interval": 100,
+    "eval_batches": 20,
+    "eval_seed": 1234,
+    "log_interval": 10,
+    "full_eval_interval": 0,
+    "control_poll": 25
+  },
+  "analysis": {
+    "kind": "noise_and_ranking",
+    "baseline_variant": "base",
+    "screen": "screen",
+    "full": "full"
+  },
+  "jobs": [
+    {
+      "run_id": "m4p-base-screen-s1",
+      "tokens": 10485760,
+      "wall_clock_s": 900,
+      "seed": 1,
+      "variant": "base",
+      "budget": "screen"
+    },
+    {
+      "run_id": "m4p-base-full-s1",
+      "tokens": 81920000,
+      "wall_clock_s": 3600,
+      "seed": 1,
+      "variant": "base",
+      "budget": "full"
+    },
+    {
+      "run_id": "m4p-base-screen-s2",
+      "tokens": 10485760,
+      "wall_clock_s": 900,
+      "seed": 2,
+      "variant": "base",
+      "budget": "screen"
+    },
+    {
+      "run_id": "m4p-base-full-s2",
+      "tokens": 81920000,
+      "wall_clock_s": 3600,
+      "seed": 2,
+      "variant": "base",
+      "budget": "full"
+    },
+    {
+      "run_id": "m4p-base-screen-s3",
+      "tokens": 10485760,
+      "wall_clock_s": 900,
+      "seed": 3,
+      "variant": "base",
+      "budget": "screen"
+    },
+    {
+      "run_id": "m4p-base-full-s3",
+      "tokens": 81920000,
+      "wall_clock_s": 3600,
+      "seed": 3,
+      "variant": "base",
+      "budget": "full"
+    }
+  ]
+}

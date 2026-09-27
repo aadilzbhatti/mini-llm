@@ -79,3 +79,28 @@ batch_size = { choices = [16, 32, 64, 128] }
 n_embd = { choices = [128, 192, 256, 320, 384, 512] }
 n_head = { choices = [1, 2, 4, 8] }
 n_layer = { min = 1, max = 12, int = true }
+
+# Program database (AlphaEvolve's MAP-Elites + islands, scaled down to tens of programs).
+[evolve.database]
+n_islands = 2
+p_exploit = 0.5              # parent = island's best with this prob., else a random elite cell
+top_inspirations = 2         # best programs shown as "prior programs" in the prompt
+diverse_inspirations = 1     # plus random elites from other cells
+migrate_every = 6            # after this many finished children, copy each island's best to the others
+params_bins = [12e6, 16e6, 20e6]          # MAP-Elites descriptor 1: parameter count
+tokens_per_sec_bins = [30e3, 38e3, 45e3]  # descriptor 2: training throughput (L4)
+recent_failures = 5          # rejected children shown in the prompt, with reasons
+history = 30                 # one-line summaries of the latest programs, to avoid repeats
+
+[llm]
+claude_bin = "~/.local/bin/claude"
+timeout_s = 600
+# Model mix: evaluations (minutes of GPU) dwarf LLM latency, so lean on the strongest model.
+models = { opus = 0.8, sonnet = 0.2 }
+# Stochastic formatting: the task instruction varies across calls, with these weights.
+[llm.instructions]
+open = 1.0
+diagnosis = 1.0
+optimization = 1.0
+architecture = 1.0
+simplify = 0.3

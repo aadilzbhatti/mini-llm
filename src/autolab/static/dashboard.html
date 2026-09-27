@@ -330,6 +330,7 @@ function renderOverview(D) {
   const running = D.runs.filter(r => r.state === "pending");
   el.append(h("div", {class: "tiles"},
     tile("Spent (Modal, lower bound)", fmt.usd(sp.spent), `+ up to ${fmt.usd(sp.pending_estimate)} running · cap ${fmt.usd(cap)}`, meter),
+    tile("Claude (proposer)", fmt.usd(D.llm.usd), `${D.llm.calls} calls · ${D.llm.failed} failed`),
     tile("Trials", `${D.counts.finished} done`, `${D.counts.pending} running · ${D.counts.failed} failed · ${fmt.val(sp.gpu_hours)} GPU-h`),
     tile("Best full val loss", D.best ? fmt.loss(D.best.full_val) : "–", D.best ? `${D.best.run_id} (${D.best.experiment}, ${D.best.budget_name} budget)` : "no finished runs"),
     tile("Daemon", h("span", {}, statusEl(dk, dt.split(" · ")[0].replace("daemon ", ""))), D.daemon ? `last cycle ${fmt.ago(D.daemon.age_s)} · ${D.daemon.pending ?? "?"} pending` : "start com.aadil.autolab-daemon"),
@@ -527,6 +528,9 @@ async function openProgram(id) {
   const P = r.program; body.replaceChildren();
   body.append(h("div", {class: "card"}, h("h3", {}, progStatus(P), " ", h("span", {class: "muted"}, `stage ${P.stage} · parent ${P.parent_id || "–"} · by ${P.created_by} · ${fmt.time(P.created_at)}`)),
     h("p", {}, P.rationale || "(no rationale)"), P.reason ? h("p", {class: "ink2"}, P.reason) : null,
+    P.meta && P.meta.expected_effect ? h("p", {class: "muted"}, "Expected: " + P.meta.expected_effect) : null,
+    P.meta && Object.keys(P.meta).length ? h("div", {style: "margin-bottom:6px"}, configChips(Object.fromEntries(
+      Object.entries(P.meta).filter(([k]) => ["model", "instruction", "island", "cost_usd", "llm_s", "inspirations", "fallback_reason"].includes(k))))) : null,
     h("div", {}, configChips(P.hparams)), Object.keys(r.hparams_diff).length ? h("div", {style: "margin-top:6px"}, h("span", {class: "muted"}, "changed vs parent: "),
       Object.entries(r.hparams_diff).map(([k, [a, b]]) => h("span", {class: "chip"}, `${k} ${fmt.val(a)} → ${fmt.val(b)}`))) : null));
   const st = h("div", {class: "card"}, h("h3", {}, "Cascade"));

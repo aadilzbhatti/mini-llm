@@ -1,0 +1,7 @@
+# Stochastic formatting (AlphaEvolve §2.2): one of these task instructions per call, weighted by
+# [llm.instructions] in autolab/config.toml.
+open = "Suggest a new idea, inspired by your expert knowledge of language-model training, that you expect to lower the full validation loss of the current program."
+diagnosis = "Read the current program's training report and diagnosis carefully, and make a targeted change that addresses what they show."
+optimization = "Propose a change to the optimization: the optimizer, the learning-rate schedule, gradient handling, or the optimization hyperparameters."
+architecture = "Propose an architectural change (attention, MLP, normalization, residual wiring, positional encoding or initialization) that keeps the parameter count and throughput roughly the same."
+simplify = "Propose a simplification or a small, well-understood best practice from modern small-LM training recipes that the current program lacks."

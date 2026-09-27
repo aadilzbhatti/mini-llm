@@ -60,7 +60,19 @@ from autolab.program import (
     validate_hparams,
 )
 
-STATE = REPO_ROOT / "autolab" / "state" / "evolve"
+STATE_ROOT = REPO_ROOT / "autolab" / "state" / "evolve"  # one subdirectory per session
+
+
+def active_session_name(root: Path = STATE_ROOT) -> str:
+    try:
+        return (root / "ACTIVE").read_text().strip()
+    except OSError:
+        return "default"
+
+
+def set_active_session(name: str, root: Path = STATE_ROOT) -> None:
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "ACTIVE").write_text(name + "\n")
 MODEL_KEYS = ("n_embd", "n_head", "n_layer", "dropout")
 OPTIM_KEYS = ("batch_size", "lr", "min_lr", "warmup_steps", "weight_decay")
 VOCAB = 50257
@@ -77,7 +89,13 @@ def evolve_cfg() -> dict:
 
 @dataclass
 class Paths:
-    root: Path = STATE
+    """Where one session lives. The default is the active session (STATE_ROOT/ACTIVE)."""
+
+    root: Path = None  # type: ignore[assignment]
+
+    def __post_init__(self):
+        if self.root is None:
+            self.root = STATE_ROOT / active_session_name()
 
     @property
     def session(self) -> Path:
@@ -94,14 +112,16 @@ class Paths:
 # --- session -----------------------------------------------------------------------------
 
 
-def load_session(paths: Paths = Paths()) -> dict | None:
+def load_session(paths: Paths | None = None) -> dict | None:
+    paths = paths or Paths()
     try:
         return json.loads(paths.session.read_text())
     except (OSError, json.JSONDecodeError):
         return None
 
 
-def save_session(session: dict, paths: Paths = Paths()) -> None:
+def save_session(session: dict, paths: Paths | None = None) -> None:
+    paths = paths or Paths()
     paths.root.mkdir(parents=True, exist_ok=True)
     tmp = paths.session.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(session, indent=2))
@@ -116,13 +136,15 @@ def _report(run_id: str, runs_dir: Path) -> dict | None:
 
 
 def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cfg: dict | None = None,
-                 paths: Paths = Paths(), runs_dir: Path | None = None, repo: Path = REPO_ROOT) -> dict:
+                 paths: Paths | None = None, runs_dir: Path | None = None, repo: Path = REPO_ROOT,
+                 budgets: dict | None = None, name: str = "") -> dict:
     """Create the session and its initial program p0 from already-run baseline trials.
 
     `runs` maps "screen"/"full" to finished run ids of p0 on different seeds; they give
     the incumbent's scores, the seed noise, the wall-clock caps and the throughput floor.
     """
     cfg = cfg or evolve_cfg()
+    paths = paths or Paths()
     runs_dir = runs_dir or repo / "autolab" / "runs"
     if paths.session.exists():
         raise FileExistsError(f"session already exists: {paths.session}")
@@ -143,7 +165,11 @@ def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cf
     p0.scores = _scores(mean(losses("screen")), losses("full"), reports["full"][0])
     p0.scores["screen_losses"] = losses("screen")
     session = {
+        "name": name or paths.root.name,
         "created": now_iso(),
+        # Fixed for the session: what "better" means (token budgets, eval settings).
+        "budgets": budgets or {"screen_tokens": cfg["screen_tokens"], "full_tokens": cfg["full_tokens"],
+                               "eval": dict(cfg["eval"])},
         "base_commit": base_commit,
         "incumbent": "p0",
         "initial_params": reports["full"][0]["scale"]["params"],
@@ -172,13 +198,15 @@ def _scores(screen: float | None, fulls: list[float], report: dict | None) -> di
 # --- creating children ---------------------------------------------------------------------
 
 
-def programs(paths: Paths = Paths()) -> dict[str, Program]:
-    return {p.stem: load(p) for p in sorted(paths.programs.glob("*.json"))}
+def programs(paths: Paths | None = None) -> dict[str, Program]:
+    paths = paths or Paths()
+    return {p.stem: load(p) for p in sorted(paths.programs.glob("*.json"), key=lambda f: (len(f.stem), f.stem))}
 
 
 def propose(parent_id: str, diffs: list[dict], hparams_patch: dict | None = None, rationale: str = "",
-            created_by: str = "human", paths: Paths = Paths(), repo: Path = REPO_ROOT) -> Program:
+            created_by: str = "human", paths: Paths | None = None, repo: Path = REPO_ROOT) -> Program:
     """Create (and save) a child of `parent_id`. A scope failure is saved as a rejected program."""
+    paths = paths or Paths()
     session = load_session(paths)
     if session is None:
         raise RuntimeError("no evolve session; run `autolab evolve init` first")
@@ -298,14 +326,16 @@ def _request(p: Program, stage: str, seed: int, cfg: dict, session: dict):
     from autolab.config import load_config
     from autolab.trainer import Budget, TrainRequest
 
-    tokens = cfg["screen_tokens"] if stage == "screen" else cfg["full_tokens"]
+    budgets = session.get("budgets") or {"screen_tokens": cfg["screen_tokens"], "full_tokens": cfg["full_tokens"],
+                                         "eval": cfg["eval"]}
+    tokens = budgets["screen_tokens"] if stage == "screen" else budgets["full_tokens"]
     cap = session["wall_caps"]["screen" if stage == "screen" else "full"]
     return TrainRequest(
         run_id=f"ev-{p.id}-{stage}-s{seed}", dataset_id=cfg["dataset_id"],
         train_tokens=str(load_config().datasets_dir / cfg["dataset_id"] / "train.pt"),
         budget=Budget(tokens=tokens, wall_clock_s=cap), seed=seed,
         model={"block_size": cfg["block_size"], **{k: p.hparams[k] for k in MODEL_KEYS}},
-        optim={k: p.hparams[k] for k in OPTIM_KEYS}, eval=dict(cfg["eval"]))
+        optim={k: p.hparams[k] for k in OPTIM_KEYS}, eval=dict(budgets["eval"]))
 
 
 def _submit(p: Program, stage: str, seeds: list[int], cfg: dict, session: dict, paths: Paths, submit) -> bool:
@@ -357,8 +387,9 @@ def incumbent(session: dict, progs: dict[str, Program]) -> Program:
     return progs[session["incumbent"]]
 
 
-def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths = Paths(), repo: Path = REPO_ROOT,
+def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths | None = None, repo: Path = REPO_ROOT,
             runs_dir: Path | None = None, submit=None, log=print) -> Program:
+    paths = paths or Paths()
     runs_dir = runs_dir or repo / "autolab" / "runs"
     if submit is None:
         from autolab.modal_backend import submit as modal_submit
@@ -461,8 +492,9 @@ def _cleanup(p: Program, paths: Paths) -> None:
     shutil.rmtree(paths.work(p.id), ignore_errors=True)  # blocks live in the JSON; re-materializable
 
 
-def advance_all(log=print, paths: Paths = Paths()) -> list[str]:
-    """One pass over every unfinished program (the daemon calls this each cycle)."""
+def advance_all(log=print, paths: Paths | None = None) -> list[str]:
+    """One pass over every unfinished program of the active session (the daemon calls this each cycle)."""
+    paths = paths or Paths()
     session = load_session(paths)
     if session is None:
         return []

@@ -229,8 +229,16 @@ def settings() -> dict:
 STAGE_ORDER = ["static", "cpu", "params", "screen", "full", "confirm", "done"]
 
 
+def evolve_root() -> Path:
+    base = AUTOLAB / "state" / "evolve"
+    try:
+        return base / (base / "ACTIVE").read_text().strip()
+    except OSError:
+        return base / "default"
+
+
 def evolve_view() -> dict | None:
-    root = AUTOLAB / "state" / "evolve"
+    root = evolve_root()
     session = _json(root / "session.json")
     if not session:
         return None
@@ -262,7 +270,8 @@ def evolve_view() -> dict | None:
     funnel = [{"stage": st, "reached": sum(furthest(r) >= i for r in children),
                "rejected_here": sum(r["status"] == "rejected" and r["stage"] == st for r in children)}
               for i, st in enumerate(STAGE_ORDER[:-1])]
-    return {"session": session, "incumbent": inc and inc["id"], "bar": (inc_mean - 2 * sigma) if inc_mean else None,
+    sessions = sorted(q.name for q in (AUTOLAB / "state" / "evolve").iterdir() if (q / "session.json").exists())
+    return {"session": session, "sessions": sessions, "incumbent": inc and inc["id"], "bar": (inc_mean - 2 * sigma) if inc_mean else None,
             "programs": rows, "funnel": funnel,
             "counts": {k: sum(r["status"] == k for r in rows if r["id"] != "p0")
                        for k in ("queued", "running", "blocked", "rejected", "evaluated", "contender", "accepted")}}
@@ -282,6 +291,11 @@ def overview() -> dict:
         timeline.append([r["ended_at"], round(cum, 4), r["run_id"]])
     finished = [r for r in rows if r["full_val"] is not None]
     best = min(finished, key=lambda r: r["full_val"], default=None)
+    llm_calls = []
+    try:
+        llm_calls = [json.loads(line) for line in (AUTOLAB / "state" / "llm_spend.jsonl").read_text().splitlines() if line]
+    except (OSError, json.JSONDecodeError):
+        pass
     daemon = _json(AUTOLAB / "state" / "daemon.json")
     if daemon:
         daemon["age_s"] = _age_s(daemon.get("updated"))
@@ -296,6 +310,8 @@ def overview() -> dict:
                              for g in sorted({r["gpu"] for r in rows if r["gpu"]})},
                   "gpu_hours": round(sum((r["wall_s"] or 0) for r in rows) / 3600, 3)},
         "counts": {s: sum(r["state"] == s for r in rows) for s in ("pending", "finished", "failed")},
+        "llm": {"calls": len(llm_calls), "failed": sum(not c.get("ok") for c in llm_calls),
+                "usd": round(sum(c.get("usd") or 0 for c in llm_calls), 4)},
         "best": ({k: best[k] for k in ("run_id", "full_val", "experiment", "variant", "budget_name")} if best else None),
         "runs": rows,
         "experiments": [{k: e.get(k) for k in ("id", "title", "purpose", "gpu", "dataset_id", "model", "optim", "eval")}
@@ -337,7 +353,7 @@ def api_program(pid: str) -> JSONResponse:
 
     if not SAFE_ID.match(pid):
         raise HTTPException(400, "bad program id")
-    root = AUTOLAB / "state" / "evolve" / "programs"
+    root = evolve_root() / "programs"
     p = _json(root / f"{pid}.json")
     if p is None:
         raise HTTPException(404, "unknown program")

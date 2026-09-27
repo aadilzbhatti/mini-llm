@@ -67,6 +67,9 @@ class Program:
     stages: list[dict] = field(default_factory=list)
     runs: dict[str, list[str]] = field(default_factory=dict)  # stage -> run ids
     scores: dict = field(default_factory=dict)
+    # search bookkeeping (see autolab.database / autolab.generate)
+    island: int | None = None  # None = every island (the initial program)
+    meta: dict = field(default_factory=dict)  # proposer details: model, cost, prompt log, inspirations, fallback
 
     def to_dict(self) -> dict:
         return asdict(self)
