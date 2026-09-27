@@ -25,21 +25,27 @@ project and is **unchanged**. See `BOOTSTRAP_NOTES.md`.
 
 ## Current best
 
-`full_val_loss` **4.6564** on data20k's val set: 4 layers × 256d, block 128,
-batch 64 (global) × 15,000 steps = 122.88M tokens, peak LR 1.2e-3 cosine to
-2e-6, 256K-token warmup (32 steps), seed 42. About 31 min on Modal 2×L4.
+`full_val_loss` **4.5415** on the 937-doc val set shared by data20k and
+data40k: 4 layers × 256d, block 128, **data40k**, batch 64 (global) × 15,000
+steps = 122.88M tokens (~3 passes), peak LR 1.2e-3 cosine to 2e-6,
+256K-token warmup (32 steps), seed 42. About 31 min on Modal 2×L4.
 Reproduce with
 
 ```bash
 uv run --group modal modal run --detach src/mini_llm/remote/modal_train.py \
-    --config configs/modal/best_data20k_bs64_15k_lr1.2e-3_wu256k.json --gpus L4:2
+    --config configs/modal/data40k_bs64_15k_lr1.2e-3_wu256k.json --gpus L4:2
 ```
 
-What got here (all in `baselines.md`): at a fixed token budget, batch 64
-beats the batch-4 baseline (4.7165 at the same 122.88M tokens, 13 h on the
-Mac), and batch 128 doesn't (best 4.6787 at LR 1.7e-3). The best LR followed
-square-root batch scaling at both batch 64 (3e-4 × √16 = 1.2e-3) and batch
-128 (≈1.7e-3). Datasets and how they were built: `data/*/MANIFEST.md`.
+What got here (all in `baselines.md`):
+- Batch: at a fixed token budget, batch 64 beats the batch-4 baseline (4.7165
+  vs 4.6564 at 122.88M tokens on data20k; 13 h on the Mac vs 31 min), and
+  batch 128 doesn't (best 4.6787). The best LR followed square-root batch
+  scaling at batch 64 (3e-4 × √16 = 1.2e-3) and batch 128 (≈1.7e-3).
+- Data: same run on data40k instead of data20k, same compute and val set:
+  4.6564 → 4.5415, with the train/val gap 0.51 → 0.22. The curves match
+  until data20k starts repeating (step ~2,500) and then separate steadily.
+
+Datasets and how they were built: `data/*/MANIFEST.md`.
 
 ## Setup
 
