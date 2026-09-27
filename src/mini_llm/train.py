@@ -677,6 +677,11 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     tokenizer = get_tokenizer()
     tokens = load_tokens(args.tokens) if args.tokens else encode(load_text(args.text), tokenizer)
     val_tokens = load_tokens(args.val_tokens) if args.val_tokens else None
+    if val_tokens is not None and tokens.numel() == val_tokens.numel() and torch.equal(tokens, val_tokens):
+        # Training on the val set makes every val loss a memorization score
+        # (it has happened: a run passed val.pt as --tokens and "scored" 0.35).
+        # Caught by content, not path, so a copy under another name is refused too.
+        raise SystemExit("--tokens and --val-tokens contain identical data: refusing to train on the validation set.")
     # DDP: each rank trains only on its own contiguous 1/N of the stream, so
     # no two ranks ever see the same training tokens. `tokens` itself stays
     # whole: the fixed eval batches are sampled from it identically on every

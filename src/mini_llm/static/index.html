@@ -354,6 +354,7 @@ function collectJob(quiet) {
   if (kind === 'train') {
     if ('restart-lr' in args && !('resume' in args)) errors.push('restart-lr only applies with resume');
     if ('warmup-steps' in args && 'warmup-tokens' in args) errors.push('set warmup-steps or warmup-tokens, not both');
+    if (args.tokens && args.tokens === args['val-tokens']) errors.push('tokens and val-tokens are the same file: that trains on the validation set');
     const embd = args['n-embd'] ?? 128, head = args['n-head'] ?? 4;
     if (embd % head) errors.push(`n-embd (${embd}) must be divisible by n-head (${head})`);
     if (args['sample-report'] && !args.save) errors.push('note: sample-report without save writes a report for a checkpoint that isn\'t kept');

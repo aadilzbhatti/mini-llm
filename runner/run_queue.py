@@ -140,6 +140,8 @@ def build_command(args: dict, repo: Path, uv: str, pending: frozenset[str] = fro
     # Cross-field rules train.py would otherwise only enforce after startup.
     if "restart-lr" in merged and "resume" not in merged:
         raise JobError("restart-lr only applies to a continuation; set resume too")
+    if merged.get("tokens") and merged.get("tokens") == merged.get("val-tokens"):
+        raise JobError("tokens and val-tokens are the same file: that trains on the validation set")
     if "warmup-steps" in merged and "warmup-tokens" in merged:
         raise JobError("set warmup-steps or warmup-tokens, not both (warmup-tokens is converted to steps)")
     n_embd, n_head = merged.get("n-embd", 128), merged.get("n-head", 4)
