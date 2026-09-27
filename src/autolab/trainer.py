@@ -24,7 +24,7 @@ import os
 import subprocess
 import sys
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -105,7 +105,7 @@ def run_training(
     poll_s: float = 1.0,
     log=print,
 ) -> Path:
-    """Run the trainer to completion (or its wall-clock cap). Returns the run dir."""
+    """Run the trainer locally to completion (or its wall-clock cap). Returns the run dir."""
     cfg = cfg or load_config()
     val_path = check_frozen_val(cfg)
     run_dir = cfg.runs_dir / req.run_id
@@ -117,13 +117,37 @@ def run_training(
     if wait_gpu:
         gpu_wait_s = wait_for_gpu(cfg.owner_runs_dir, cfg.gpu_stale_after_s, cfg.gpu_poll_s,
                                   cfg.gpu_idle_checks_required, log=log)
-
-    argv = trainer_argv(req, val_path)
-    env = {**os.environ, "HF_HUB_OFFLINE": "1", "MINI_LLM_RUN_ID": req.run_id, **(env_extra or {})}
+    env = dict(env_extra or {})
     code_repo = cfg.repo_root
     if req.code_src:
         env["PYTHONPATH"] = str(Path(req.code_src).resolve())
         code_repo = Path(req.code_src).resolve().parent
+    launch = {
+        "backend": "local",
+        "train_sha256": sha256_file(Path(req.train_tokens)),
+        "val_sha256": cfg.frozen_val_sha256,
+        "git": git_state(code_repo),
+        "gpu_wait_s": gpu_wait_s,
+    }
+    execute(req, run_dir, Path(req.train_tokens), val_path, launch, env, kill_grace_s, poll_s, log)
+    return run_dir
+
+
+def execute(
+    req: TrainRequest,
+    run_dir: Path,
+    train_path: Path,
+    val_path: Path,
+    launch: dict,
+    env_extra: dict[str, str] | None = None,
+    kill_grace_s: float = 900,
+    poll_s: float = 1.0,
+    log=print,
+) -> dict:
+    """Run mini_llm.train in `run_dir` and write launch.json. Shared by the local
+    and Modal backends; the caller has already checked the data and chosen paths."""
+    argv = trainer_argv(replace(req, train_tokens=str(train_path)), val_path)
+    env = {**os.environ, "HF_HUB_OFFLINE": "1", "MINI_LLM_RUN_ID": req.run_id, **(env_extra or {})}
     launch = {
         "run_id": req.run_id,
         "request": req.to_dict(),
@@ -131,10 +155,7 @@ def run_training(
         "steps": req.steps(),
         "tokens_per_step": req.optim["batch_size"] * req.model["block_size"],
         "val_path": str(val_path),
-        "val_sha256": cfg.frozen_val_sha256,
-        "train_sha256": sha256_file(Path(req.train_tokens)),
-        "git": git_state(code_repo),
-        "gpu_wait_s": gpu_wait_s,
+        **launch,
         "started_at": now_iso(),
         "status": "running",
     }
@@ -179,7 +200,7 @@ def run_training(
         "status": "finished" if proc.returncode == 0 and not killed else "failed",
     })
     _write_json(run_dir / "launch.json", launch)
-    return run_dir
+    return launch
 
 
 def main(argv: list[str] | None = None) -> None:

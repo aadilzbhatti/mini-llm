@@ -1,0 +1,137 @@
+{
+  "purpose": "M3 prep: seed-noise baseline of the initial program at screen and full budgets, and the screen-vs-full ranking check on 4 hparam variants (HANDOFF M3). Initial program = the owner's configs/modal/data20k_bs64_1250_emb256_blk128_lr1.2e-3.json regime.",
+  "gpu": "L4",
+  "dataset_id": "data20k",
+  "model": {
+    "block_size": 128,
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 4,
+    "dropout": 0.0
+  },
+  "optim": {
+    "batch_size": 64,
+    "lr": 0.0012,
+    "min_lr": 2e-06,
+    "warmup_steps": 100,
+    "weight_decay": 0.0
+  },
+  "eval": {
+    "eval_interval": 50,
+    "eval_batches": 20,
+    "eval_seed": 1234,
+    "log_interval": 10,
+    "full_eval_interval": 0,
+    "control_poll": 25
+  },
+  "jobs": [
+    {
+      "run_id": "m3p-base-screen-s1",
+      "tokens": 5242880,
+      "wall_clock_s": 900,
+      "seed": 1
+    },
+    {
+      "run_id": "m3p-base-full-s1",
+      "tokens": 20971520,
+      "wall_clock_s": 1800,
+      "seed": 1
+    },
+    {
+      "run_id": "m3p-base-screen-s2",
+      "tokens": 5242880,
+      "wall_clock_s": 900,
+      "seed": 2
+    },
+    {
+      "run_id": "m3p-base-full-s2",
+      "tokens": 20971520,
+      "wall_clock_s": 1800,
+      "seed": 2
+    },
+    {
+      "run_id": "m3p-base-screen-s3",
+      "tokens": 5242880,
+      "wall_clock_s": 900,
+      "seed": 3
+    },
+    {
+      "run_id": "m3p-base-full-s3",
+      "tokens": 20971520,
+      "wall_clock_s": 1800,
+      "seed": 3
+    },
+    {
+      "run_id": "m3p-lr3.6e-4-screen-s1",
+      "tokens": 5242880,
+      "wall_clock_s": 900,
+      "seed": 1,
+      "optim": {
+        "lr": 0.00036
+      }
+    },
+    {
+      "run_id": "m3p-lr3.6e-4-full-s1",
+      "tokens": 20971520,
+      "wall_clock_s": 1800,
+      "seed": 1,
+      "optim": {
+        "lr": 0.00036
+      }
+    },
+    {
+      "run_id": "m3p-lr3.6e-3-screen-s1",
+      "tokens": 5242880,
+      "wall_clock_s": 900,
+      "seed": 1,
+      "optim": {
+        "lr": 0.0036
+      }
+    },
+    {
+      "run_id": "m3p-lr3.6e-3-full-s1",
+      "tokens": 20971520,
+      "wall_clock_s": 1800,
+      "seed": 1,
+      "optim": {
+        "lr": 0.0036
+      }
+    },
+    {
+      "run_id": "m3p-bs16-screen-s1",
+      "tokens": 5242880,
+      "wall_clock_s": 900,
+      "seed": 1,
+      "optim": {
+        "batch_size": 16
+      }
+    },
+    {
+      "run_id": "m3p-bs16-full-s1",
+      "tokens": 20971520,
+      "wall_clock_s": 3600,
+      "seed": 1,
+      "optim": {
+        "batch_size": 16
+      }
+    },
+    {
+      "run_id": "m3p-wu500-screen-s1",
+      "tokens": 5242880,
+      "wall_clock_s": 900,
+      "seed": 1,
+      "optim": {
+        "warmup_steps": 500
+      }
+    },
+    {
+      "run_id": "m3p-wu500-full-s1",
+      "tokens": 20971520,
+      "wall_clock_s": 1800,
+      "seed": 1,
+      "optim": {
+        "warmup_steps": 500
+      }
+    }
+  ]
+}

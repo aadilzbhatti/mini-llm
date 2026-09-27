@@ -218,6 +218,9 @@ def diagnose(report: dict, history: History | None = None, th: Thresholds | None
         if unstable_ev.get("diverged"):
             return Diagnosis(labels, notes)
 
+    if lr_ratio is not None and lr_ratio < 0.05 and t_val in ("flat", "crawl"):
+        notes.append("LR annealed to <5% of peak by the end, so flat tail curves are partly the schedule")
+
     # --- still_improving -------------------------------------------------------------
     val_drop = -(vf.get("change") or 0.0)
     noise_floor = th.noise_mult * history.noise_std if history.noise_std else None
@@ -258,9 +261,6 @@ def diagnose(report: dict, history: History | None = None, th: Thresholds | None
             hint, suggestion = "lr_too_low_or_schedule", "Raise the LR or change the schedule; lr_range_test for bounds."
         else:
             hint, suggestion = "plateau", "hparam_search over LR / warmup / min-LR ratio / batch size."
-        annealed = lr_ratio is not None and lr_ratio < 0.05
-        if annealed:
-            notes.append("LR annealed to <5% of peak by the end, so flat tail curves are partly the schedule")
         opt_ev = {**base_ev, "hint": hint, "spike_rate": _r(spike_rate),
                   "grad_norm_max_over_median": gn_ratio, "lr_final_over_peak": _r(lr_ratio)}
 

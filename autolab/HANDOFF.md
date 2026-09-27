@@ -19,6 +19,10 @@ the "Decision log" at the bottom.
   {config, gpu, trainer, report, diagnose}.py + `thresholds.toml`; tests in
   `tests/autolab/`. Run the suite with `AUTOLAB_FORCE_CPU=1 uv run pytest`
   while the owner's runner is training.
+- 2026-09-27: merged the owner's `modal-ddp` branch (DDP training, Modal
+  launcher, volume mirror) into `autolab`, and added a Modal backend for
+  autolab trials (`src/autolab/modal_backend.py`). The local Mac GPU waiter was
+  stopped; the M2 real check runs on Modal instead.
 - Milestones 3–6 are not started. They were re-planned on 2026-09-26 around
   AlphaEvolve (see "Design pivot" under Milestone guidance), which overrides
   BRIEF §4–§5 and parts of §6–§9.
@@ -63,7 +67,16 @@ the "Decision log" at the bottom.
   (BRIEF §6). Those rules govern what the agent may change when proposing model
   edits, not your own build work. Still keep changes to existing training code
   small and marked, so the owner can follow them.
-- **Shared GPU.** The owner's queue runner trains on this same Mac. Before
+- **Modal (default backend since 2026-09-27).** Trials run on Modal via
+  `autolab.modal_backend` (app `autolab-train`, volumes `autolab-runs` and
+  `autolab-data`). Never write to the owner's `wiki-llm-runs` or `wiki-llm-data`
+  volumes: his `mini-llm-modal-mirror` imports finished runs from
+  `wiki-llm-runs` into his baselines. Every submit is priced against
+  `[modal] max_usd` in `autolab/config.toml` (spent + pending estimates). Raise it
+  only with the owner's say-so. Redeploy (`python -m autolab.modal_backend deploy`)
+  after changing `src/autolab/` or dependencies. Candidate `mini_llm` code is sent
+  with each call, so it needs no redeploy.
+- **Shared GPU (local runs only).** The owner's queue runner trains on this same Mac. Before
   starting any training run (including smoke runs and gates that train),
   check `~/dev/wiki-llm/runs/*.live.json`. If any file's `updated` is less than
   2 minutes old and it doesn't have `"finished": true`, wait (poll every
@@ -159,9 +172,12 @@ Mapping to autolab:
 | program database (MAP-Elites + islands) | a small version: SQLite under `autolab/state/` |
 | prompt sampler (+ stochastic formatting, explicit context) | parent + inspirations + their reports/diagnoses + recent failures |
 | LLM ensemble (Flash + Pro) | `claude -p` with a configurable model mix |
-| async pipeline, many evaluators | one GPU: overlap LLM calls and CPU gates for the next child with GPU training of the current one |
+| async pipeline, many evaluators | Modal: spawn up to `max_containers` trials at once. The controller keeps that many children in flight and adds each to the database as it returns |
 
-What changes because we have one shared MacBook GPU, not a cluster:
+What changes at our scale (updated 2026-09-27 for Modal: trials now run in
+parallel on Modal GPUs, up to `max_containers`, priced against `max_usd`. That makes
+the paper's "evaluators pool" real, and the main limit is now dollars, not
+one Mac GPU):
 - **Evaluations are the scarce resource**: tens per night, not thousands.
   LLM latency is irrelevant next to a 3–10 min training run. So the model mix
   should lean toward the strongest model (the paper used the fast model for
@@ -387,3 +403,17 @@ Build this first; everything else hill-climbs on it.
   cascade) instead of the brief's fixed action menu and planner. M3–M6 are
   rewritten. The M2 report and diagnosis are kept as the evaluator's output and
   as prompt context.
+- 2026-09-27: Modal backend design.
+  - One GPU per trial, running `python -m mini_llm.train` directly (no
+    torchrun), so the control inbox and the wall-clock stop keep working.
+  - Every call ships the trial's full `src/mini_llm/*.py` as an overlay on
+    PYTHONPATH, so programs never need an image rebuild.
+  - The container checks the val/train sha256 recorded on the Mac, trains with
+    `block_network=True` (the tokenizer is baked into the image), builds
+    report.json + diagnosis in-container, copies the run dir (minus *.pt) to
+    `autolab-runs`, and returns report/diagnosis/log.
+  - Local state lives in `autolab/state/modal_calls.json`. Cost = wall_s ×
+    GPU $/s from config, a lower bound (CPU/memory charges aren't counted).
+  - Throughput and wall-clock caps are only comparable on the same GPU type,
+    so a session fixes one GPU type. The noise baseline must be measured on
+    that GPU type, not on the Mac.
