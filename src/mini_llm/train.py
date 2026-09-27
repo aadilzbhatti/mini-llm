@@ -10,6 +10,13 @@ own new horizon rather than the original run's). --min-lr is the actual
 decay knob -- set it equal to --lr to disable decay and train at a constant
 rate; --warmup-steps 0 disables warmup.
 
+--warmup-tokens N sets the warmup in tokens instead: it becomes
+ceil(N / (batch_size * block_size)) steps. Use it when comparing batch
+sizes, so every run warms up over the same data. At an equal token budget
+that is also the same fraction of the run, whereas a fixed --warmup-steps
+covers 16x the tokens at 16x the batch, and a bigger share of a run that
+now has fewer steps.
+
 Reproducibility: --seed drives (a) model init, via torch.manual_seed before
 the model is built, and (b) the training batch sequence, via a dedicated
 Generator so it doesn't depend on how many random draws init happened to
@@ -78,6 +85,7 @@ import argparse
 import contextlib
 import math
 import os
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -483,6 +491,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=500,
         help="Linear warmup length before the cosine decay begins. 0 = no warmup.",
     )
+    p.add_argument(
+        "--warmup-tokens",
+        type=int,
+        default=None,
+        help="Warmup length in tokens instead of steps: ceil(N / (batch-size * block-size)) "
+        "steps. Keeps warmup comparable across batch sizes. Can't be combined with "
+        "--warmup-steps.",
+    )
     p.add_argument("--weight-decay", type=float, default=0.0)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument(
@@ -601,8 +617,24 @@ class _SilentControl(RunControl):
         pass
 
 
+def resolve_warmup(args: argparse.Namespace, argv: list[str] | None = None) -> argparse.Namespace:
+    """Turn --warmup-tokens into args.warmup_steps (in place). The schedule
+    itself only ever sees steps; this is the one place tokens get converted."""
+    if args.warmup_tokens is None:
+        return args
+    raw = sys.argv[1:] if argv is None else argv
+    if any(a == "--warmup-steps" or a.startswith("--warmup-steps=") for a in raw):
+        raise SystemExit("Pass --warmup-steps or --warmup-tokens, not both.")
+    if args.warmup_tokens < 0:
+        raise SystemExit("--warmup-tokens must be >= 0.")
+    # Global batch: under DDP every rank takes a step together, so one step is
+    # batch_size * block_size tokens however many ranks share it.
+    args.warmup_steps = math.ceil(args.warmup_tokens / (args.batch_size * args.block_size))
+    return args
+
+
 def main(argv: list[str] | None = None) -> None:
-    args = parse_args(argv)
+    args = resolve_warmup(parse_args(argv), argv)
     # Under torchrun: join the process group. Otherwise a no-op, and
     # dist_info.enabled is False everywhere below.
     dist_info = setup_distributed()
@@ -770,6 +802,9 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         "full_eval_interval": args.full_eval_interval,
         "tokens_processed": tokens_processed,
     }
+    if args.warmup_tokens is not None:
+        # What was asked for; warmup_steps above is what it became.
+        optim_cfg["warmup_tokens"] = args.warmup_tokens
     # Recorded only when they apply, so single-device runs log exactly as before.
     if dist_info.enabled:
         optim_cfg["world_size"] = dist_info.world_size

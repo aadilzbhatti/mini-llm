@@ -51,6 +51,7 @@ INT_FLAGS: dict[str, tuple[int, int]] = {
     "batch-size": (1, 512),
     "steps": (1, 1_000_000),
     "warmup-steps": (0, 100_000),
+    "warmup-tokens": (0, 10_000_000_000),
     "seed": (0, 2**31 - 1),
     "log-interval": (1, 100_000),
     "eval-interval": (1, 1_000_000),
@@ -344,7 +345,8 @@ def forecast_for(repo: Path, args: dict):
                    n_layer=int(g("n-layer", 4)), block_size=int(g("block-size", 64)),
                    batch_size=int(g("batch-size", 4)), steps=int(args["steps"]),
                    lr=float(g("lr", 1e-3)), min_lr=float(g("min-lr", 2e-6)),
-                   warmup_steps=int(g("warmup-steps", 500)))
+                   warmup_steps=(-(-int(args["warmup-tokens"]) // (int(g("batch-size", 4)) * int(g("block-size", 64))))
+                                 if "warmup-tokens" in args else int(g("warmup-steps", 500))))
         return mod.forecast(cfg, runs)
     except Exception as exc:  # noqa: BLE001
         return {"error": f"{type(exc).__name__}: {exc}"}
