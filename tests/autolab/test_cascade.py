@@ -186,3 +186,12 @@ def test_failed_run_rejects_and_cost_cap_blocks(lab):
     assert q.status == "blocked" and "cost cap" in q.reason
     q = lab["step"](q)  # cap lifted: retried
     assert q.status == "running"
+
+
+def test_optimizer_change_passes_ddp_suite(lab):
+    """The owner's DDP test pins plain AdamW; the cascade must deselect it (and run the
+    program-aware equivalent) so optimizer changes stay evolvable."""
+    lab["cfg"]["cpu_tests"] = ["tests/test_ddp.py", "tests/autolab/test_loop_equivalence.py"]
+    p = lab["step"](propose(lab, "good_grad_clip.txt"))
+    assert (p.stage, p.status) == ("screen", "running"), p.reason
+    assert "1 deselected" in p.stages[1]["detail"]

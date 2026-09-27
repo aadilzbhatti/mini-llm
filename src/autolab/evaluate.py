@@ -284,7 +284,7 @@ def stage_cpu(p: Program, src: Path, cfg: dict, repo: Path) -> bool:
     steps = [("shape", [f"{repo / CAUSAL_TEST}::test_shapes_and_backward"]),
              ("causal-leak", [str(repo / CAUSAL_TEST), "-k", "leak or targets"]),
              ("tests", [str(repo / t) for t in cfg["cpu_tests"]]
-              + [f"--deselect={repo / d}" for d in cfg.get("cpu_test_deselect", [])])]
+              + [f"--deselect={d}" for d in cfg.get("cpu_test_deselect", [])])]  # rootdir-relative node ids
     summary = []
     for kind, args in steps:
         cmd = [sys.executable, "-m", "pytest", "-q", "-rf", "--no-header", "-p", "no:cacheprovider",

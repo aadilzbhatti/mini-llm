@@ -1,0 +1,7 @@
+Global grad-norm clipping at 1.0 (changes the optimizer path; must pass the CPU gate).
+<<<<<<< SEARCH
+    """AUTOLAB: hook between backward() and optimizer.step() (e.g. gradient clipping). No-op by default."""
+=======
+    """AUTOLAB: hook between backward() and optimizer.step(): global grad-norm clipping at 1.0."""
+    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+>>>>>>> REPLACE
