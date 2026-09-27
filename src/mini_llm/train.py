@@ -208,6 +208,7 @@ def evaluate_full(
     return total_loss / total_windows
 
 
+# EVOLVE-BLOCK-START lr_schedule
 def lr_at_step(step: int, total_steps: int, lr: float, min_lr: float, warmup_steps: int) -> float:
     """Linear warmup for `warmup_steps`, then cosine decay from `lr` to `min_lr`.
 
@@ -229,6 +230,22 @@ def lr_at_step(step: int, total_steps: int, lr: float, min_lr: float, warmup_ste
     progress = min(max(progress, 0.0), 1.0)
     coeff = 0.5 * (1.0 + math.cos(math.pi * progress))
     return min_lr + coeff * (lr - min_lr)
+# EVOLVE-BLOCK-END lr_schedule
+
+
+# EVOLVE-BLOCK-START optimizer
+def build_optimizer(model: torch.nn.Module, args: argparse.Namespace) -> torch.optim.Optimizer:
+    """AUTOLAB: the optimizer, moved here from run_training so autolab can evolve it.
+
+    The loop sets every param group's "lr" to the scheduled value each step, so
+    per-group LR multipliers need another mechanism (e.g. scale in before_optimizer_step).
+    """
+    return AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+
+
+def before_optimizer_step(model: torch.nn.Module, optimizer: torch.optim.Optimizer, step: int) -> None:
+    """AUTOLAB: hook between backward() and optimizer.step() (e.g. gradient clipping). No-op by default."""
+# EVOLVE-BLOCK-END optimizer
 
 
 def hyperparam_slug(cfg: ModelConfig, optim_cfg: dict[str, object], total_steps: int) -> str:
@@ -684,7 +701,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
 
     min_lr = args.min_lr
 
-    optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    optimizer = build_optimizer(model, args)  # AUTOLAB: evolvable, see build_optimizer
 
     batch = None
     if args.fixed_batch:
@@ -889,6 +906,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             if step % ctl.log_interval == 0
             else None
         )
+        before_optimizer_step(model, optimizer, step)  # AUTOLAB: evolvable hook, no-op by default
         optimizer.step()
 
         # A stop command ends the run *here*, as if this had been the last

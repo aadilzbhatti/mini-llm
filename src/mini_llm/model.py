@@ -12,12 +12,18 @@ with `FIX (#n)` comments and cover:
   #6 no silent .to(device) coercion of inputs
   #7 unused self.step removed
   #8 generate() sets eval mode itself and restores the previous mode
+
+AUTOLAB: code between `# EVOLVE-BLOCK-START <name>` and `# EVOLVE-BLOCK-END <name>`
+may be rewritten by autolab's evolutionary search (autolab/HANDOFF.md, M3). Everything
+outside the blocks -- the logits/loss lines at the end of forward() included -- is
+protected, and autolab's scope check rejects any candidate that touches it.
 """
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+# EVOLVE-BLOCK-START attention
 class Head(nn.Module):
     """ one head of self-attention """
 
@@ -91,7 +97,9 @@ class MultiHeadAttention(nn.Module):
         out = torch.cat([h(x) for h in self.heads], dim=-1)
         out = self.dropout(self.proj(out))
         return out
+# EVOLVE-BLOCK-END attention
 
+# EVOLVE-BLOCK-START mlp
 class FeedForward(nn.Module):
     """ a simple linear layer followed by a non-linearity """
 
@@ -112,7 +120,9 @@ class FeedForward(nn.Module):
         x = self.net[2](x)
         x = self.net[3](x)
         return x
+# EVOLVE-BLOCK-END mlp
     
+# EVOLVE-BLOCK-START block
 class Block(nn.Module):
     """ Transformer block: communication followed by computation """
 
@@ -132,8 +142,10 @@ class Block(nn.Module):
         x = x + self.sa(self.ln1(x))
         x = x + self.ffwd(self.ln2(x))
         return x
+# EVOLVE-BLOCK-END block
 
 class ModelCustomTransformer(nn.Module):
+    # EVOLVE-BLOCK-START model_init
     def __init__(self, vocab_size: int, n_embd: int, n_head: int, n_layer: int, block_size: int, dropout: float = 0.2):
         super().__init__()
         self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
@@ -159,8 +171,10 @@ class ModelCustomTransformer(nn.Module):
         for module in self.modules():
             if module is not self and hasattr(module, "init_weights"):
                 module.init_weights()
+    # EVOLVE-BLOCK-END model_init
 
     def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
+        # EVOLVE-BLOCK-START forward_body
         B, T = idx.shape
 
         # idx and targets are both (B, T) tensor of integers
@@ -181,6 +195,7 @@ class ModelCustomTransformer(nn.Module):
         for block in self.blocks:
             x = block(x)
         x = self.ln_f(x)  # (B, T, C)
+        # EVOLVE-BLOCK-END forward_body
         logits = self.lm_head(x)  # (B, T, vocab_size)
 
         # NOTE (bootstrap): a loop that normalized each Head's stored attention
