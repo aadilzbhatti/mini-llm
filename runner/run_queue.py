@@ -140,6 +140,8 @@ def build_command(args: dict, repo: Path, uv: str, pending: frozenset[str] = fro
     # Cross-field rules train.py would otherwise only enforce after startup.
     if "restart-lr" in merged and "resume" not in merged:
         raise JobError("restart-lr only applies to a continuation; set resume too")
+    if "warmup-steps" in merged and "warmup-tokens" in merged:
+        raise JobError("set warmup-steps or warmup-tokens, not both (warmup-tokens is converted to steps)")
     n_embd, n_head = merged.get("n-embd", 128), merged.get("n-head", 4)
     if isinstance(n_embd, int) and isinstance(n_head, int) and n_head > 0 and n_embd % n_head:
         raise JobError(f"n-embd ({n_embd}) must be divisible by n-head ({n_head})")
