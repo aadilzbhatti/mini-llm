@@ -519,3 +519,15 @@ Build this first; everything else hill-climbs on it.
   sonnet call costs ~$0.05; LLM spend is tracked in `autolab/state/llm_spend.jsonl` and on the
   dashboard. Fallback on any proposer failure is an in-range hparam mutation. A child whose diffs
   don't apply is kept as a rejected program, since its failure feeds later prompts.
+- 2026-09-27 (M4 results): 82M-token noise for p0 (bs64, lr 1.2e-3, warmup 100), 3 seeds: full
+  4.763 / 4.778 / 4.715, mean 4.752, σ 0.033 (spread 0.063). Screen (10.5M) mean 5.920, σ 0.049.
+  So the owner's warmup-32 "new best" (4.7118 vs 4.7178, seed 42 each) is 0.18σ, i.e. noise.
+  Accept bar for s2-82m: 4.686. First Claude proposals (opus, ~$0.09 each) all read the
+  diagnosis (gap 0.40 after 4 epochs; embeddings = 12.9M of 16.1M params):
+  p2 (6 layers + fused SDPA attention) full 4.7198 (−0.99σ, just under the 1σ confirm trigger).
+  p1 (dropout 0.1 + wd 0.1 + 6 layers + SDPA) and p3 (GPT-style decoupled wd on 2-D weights,
+  betas 0.95, grad clip 1.0) were re-queued after the two bugs below. p4 (fallback mutation:
+  warmup 50 + dropout 0.1) was rejected at the screen (6.10 vs 5.92 + 0.10).
+- 2026-09-27 (M4): the 4th call hit the account's weekly Claude limit (HTTP 429, resets Sep 30
+  18:00 CT). A rate limit now raises `RateLimited` and stops generation instead of queuing
+  fallback mutations. M5's controller must pause proposing until the reset.
