@@ -137,6 +137,8 @@ async function cmd(runId, body, label) {
 }
 function setKnob(runId, knob, value) { cmd(runId, { type: 'set', knob, value: Number(value) }, `${knob} = ${value}`); }
 
+function remoteTag(r) { return r.remote ? `<span class="pill" title="${esc(r.remote.git_sha || '')}">modal · ${esc(r.remote.gpus || '')}</span>` : ''; }
+
 function liveCard(r) {
   const L = r.live || {};
   const pct = L.total_steps ? Math.min(100, 100 * L.step / L.total_steps) : 0;
@@ -145,7 +147,7 @@ function liveCard(r) {
   if (r.kind === 'prepare-data') return `<div class="card" data-run="${id}"><div class="row"><strong style="flex:1">${esc(r.name)}</strong><span class="pill s-running">building data</span></div>
     <div class="mut">started ${ago(r.started)}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
   return `<div class="card" data-run="${id}">
-    <div class="row"><strong style="flex:1">${esc(r.name)}</strong><span class="pill s-running">${L.paused ? 'paused' : 'running'}</span></div>
+    <div class="row"><strong style="flex:1">${esc(r.name)}</strong>${remoteTag(r)}<span class="pill s-running">${L.paused ? 'paused' : 'running'}</span></div>
     <div class="bar"><div style="width:${pct.toFixed(1)}%"></div></div>
     <div class="grid num">
       <div class="mut">step</div><div>${(L.step ?? 0).toLocaleString()} / ${(L.total_steps ?? 0).toLocaleString()}</div>
@@ -155,7 +157,7 @@ function liveCard(r) {
       <div class="mut">full val</div><div>${f4(L.full_val_loss)}</div>
       <div class="mut">heartbeat</div><div>${ago(L.updated)}${stale ? ' ⚠︎' : ''}</div>
     </div>
-    <div class="row" style="margin-top:8px">
+    ${r.remote ? `<div class="mut" style="margin-top:8px">On Modal: read-only here (live control is off for multi-GPU runs). Progress syncs every ~30 s.</div>` : `<div class="row" style="margin-top:8px">
       ${L.paused ? `<button class="pri" onclick="cmd('${id}', {type:'resume'}, 'Resume')">Resume</button>` : `<button onclick="cmd('${id}', {type:'pause'}, 'Pause')">Pause</button>`}
       <button onclick="cmd('${id}', {type:'eval_now'}, 'Eval')">Eval now</button>
       <button onclick="cmd('${id}', {type:'checkpoint'}, 'Checkpoint')">Checkpoint</button>
@@ -169,11 +171,11 @@ function liveCard(r) {
       <select id="k-${id}">${Object.keys(META?.knobs || {}).map(k => `<option>${k}</option>`).join('')}</select>
       <input id="v-${id}" inputmode="decimal" placeholder="value" style="width:90px">
       <button onclick="setKnob('${id}', $('#k-${id}').value, $('#v-${id}').value)">Set</button>
-    </div>
+    </div>`}
     <div class="row" style="margin-top:8px">
       <button onclick="showLog('${id}', this)">Log</button>
-      <button onclick="showEvents('${id}', this)">Commands</button>
-      <button onclick="continueFrom('/api/runs/${id}/continuation')">Continue after</button>
+      ${r.remote ? '' : `<button onclick="showEvents('${id}', this)">Commands</button>
+      <button onclick="continueFrom('/api/runs/${id}/continuation')">Continue after</button>`}
     </div>
     <pre class="hidden"></pre>
   </div>`;
@@ -193,7 +195,7 @@ async function showDetail(id, btn) {
 function histCard(r) {
   const id = esc(r.run_id);
   return `<div class="card" data-run="${id}">
-    <div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(r.name || r.run_id)}</strong><span class="pill s-${esc(r.status)}">${esc(r.status)}</span></div>
+    <div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(r.name || r.run_id)}</strong>${remoteTag(r)}<span class="pill s-${esc(r.status)}">${esc(r.status)}</span></div>
     <div class="mut num">${r.started ? new Date(r.started).toLocaleString() : ''} · ${dur(r.duration_sec)}${r.full_val_loss != null ? ` · full val <strong style="color:var(--fg)">${f4(r.full_val_loss)}</strong>` : ''}${r.kind === 'prepare-data' ? ' · dataset' : ''}</div>
     ${r.error ? `<div class="mut" style="color:var(--bad)">${esc(r.error)}</div>` : ''}
     <div class="row" style="margin-top:8px">

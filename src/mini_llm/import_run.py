@@ -36,6 +36,12 @@ def final_checkpoint(run_dir: Path) -> Path:
     return ckpts[0]
 
 
+def default_stem(record: dict) -> str:
+    """Checkpoint/baselines name for an imported run: modal_<config name>_seed<N>."""
+    seed = build_parser().parse_args(record["resolved_argv"]).seed
+    return f"modal_{(record.get('config') or {}).get('name') or record['run_id']}_seed{seed}"
+
+
 def import_run(run_dir: Path, repo: Path, name: str | None = None) -> dict[str, object]:
     record = json.loads((run_dir / "run.json").read_text())
     if record.get("returncode") != 0:
@@ -48,7 +54,7 @@ def import_run(run_dir: Path, repo: Path, name: str | None = None) -> dict[str, 
     # parameters() dedups the tied embedding/lm_head weight; the state_dict would count it twice.
     n_params = sum(p.numel() for p in build_model(cfg).parameters())
 
-    stem = name or f"modal_{record['config'].get('name') or record['run_id']}_seed{args.seed}"
+    stem = name or default_stem(record)
     ckpt_dest = repo / "checkpoints" / f"{stem}.pt"
     ckpt_dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src_ckpt, ckpt_dest)

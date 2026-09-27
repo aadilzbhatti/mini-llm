@@ -50,7 +50,9 @@ DATA_VOLUME, DATA_MOUNT = "wiki-llm-data", "/data"
 BUNDLED_DATA = "/opt/mini-llm/data"  # data/tiny.txt, baked into the image
 PATH_FLAGS = {"--tokens", "--val-tokens", "--text", "--resume"}
 DEFAULT_ARGS = {"save": True, "plot-loss": True}  # a remote run is useless without its outputs
-COMMIT_EVERY_SEC = 300  # push partial outputs to the volume so a live run can be fetched
+# Push partial outputs to the volume this often, so a live run can be fetched and
+# mini_llm.remote.modal_mirror can show its progress in the control web app.
+COMMIT_EVERY_SEC = 30
 
 runs_volume = modal.Volume.from_name(RUNS_VOLUME, create_if_missing=True)
 data_volume = modal.Volume.from_name(DATA_VOLUME, create_if_missing=True)

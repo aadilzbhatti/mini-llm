@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.aadil.mini-llm-modal-mirror</string>
+
+    <!-- Mirrors Modal runs (wiki-llm-runs volume) into runs/ every 30 s so the control
+         page shows them, and imports finished ones into checkpoints/, plots/, baselines.md.
+         Needs the modal group and a Modal token (~/.modal.toml). See mini_llm.remote.modal_mirror. -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/uv</string>
+        <string>run</string>
+        <string>--project</string>
+        <string>/Users/aadil/dev/wiki-llm</string>
+        <string>--group</string>
+        <string>modal</string>
+        <string>mini-llm-modal-mirror</string>
+        <string>--repo</string>
+        <string>/Users/aadil/dev/wiki-llm</string>
+        <string>--interval</string>
+        <string>30</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/aadil/dev/wiki-llm</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/aadil/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Background</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/aadil/dev/wiki-llm/runner/modal-mirror.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/aadil/dev/wiki-llm/runner/modal-mirror.log</string>
+</dict>
+</plist>

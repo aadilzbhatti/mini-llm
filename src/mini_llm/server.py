@@ -248,7 +248,7 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             status = _read_json(path) or {}
             run_id = status.get("run_id") or path.name.removesuffix(".status.json")
             row = {k: status.get(k) for k in
-                   ("run_id", "name", "kind", "status", "started", "finished", "duration_sec", "error")}
+                   ("run_id", "name", "kind", "status", "started", "finished", "duration_sec", "error", "remote")}
             row["run_id"] = run_id
             met = status.get("metrics") or {}
             row["full_val_loss"] = met.get("full_val_loss")
@@ -378,6 +378,10 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             raise HTTPException(409, f"run is {status.get('status')}, not running")
         if status.get("kind", "train") != "train":
             raise HTTPException(409, "only training runs take commands")
+        if status.get("remote"):
+            # Mirrored from Modal: nothing there reads a commands file, and live
+            # control is off under DDP anyway. Say so rather than queue it silently.
+            raise HTTPException(409, "live control isn't available for Modal runs")
         try:
             return append_command(runs_dir, run_id, body)
         except CommandError as exc:

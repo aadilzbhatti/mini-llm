@@ -413,6 +413,8 @@ def mark_interrupted(repo: Path) -> None:
         except (OSError, json.JSONDecodeError):
             continue
         if status.get("status") == "running":
+            if status.get("remote"):
+                continue  # mirrored from Modal (mini_llm.remote.modal_mirror), not ours to judge
             pid = status.get("runner_pid")
             if pid and pid != os.getpid() and _alive(pid):
                 continue  # another watcher (e.g. a manual --once) owns it

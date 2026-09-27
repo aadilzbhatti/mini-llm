@@ -156,7 +156,7 @@ plots/          loss_*.png
 runs/tb/<id>/   TensorBoard events
 ```
 
-Fetch a run (it's safe to repeat on a live run, since outputs are committed every 5 min):
+Fetch a run (it's safe to repeat on a live run, since outputs are committed every 30 s):
 
 ```bash
 scripts/fetch_modal_run.sh                              # list runs
@@ -172,6 +172,24 @@ A finished run is then imported like a local `--baseline` run
 row to `baselines.md`, ranked with local runs on `full_val_loss`. The run id,
 GPUs and git sha are kept in `baselines.json` only. Re-importing replaces the
 row instead of adding a second one. Unfinished runs are fetched but not imported.
+
+### Tracking Modal runs in the control page
+
+`mini-llm-modal-mirror` polls the `wiki-llm-runs` volume every 30 s and writes
+each Modal run into `runs/` in the same files the queue runner writes
+(`<id>.status.json`, `<id>.live.json`, `<id>.log`). The phone page then shows
+Modal runs in Live and History, with a `modal · <gpus>` badge, step/ETA,
+losses, log and full_val curve. Finished runs that had `--val-tokens` are
+imported automatically (checkpoint, plot, sample report, baselines row), so
+the page's Plot and Samples buttons work for them too. A run with no
+heartbeat for 15 min (timeout, disabled workspace) shows as `interrupted`.
+Modal runs are read-only on the page: live control is off for multi-GPU runs.
+
+```bash
+uv run --group modal mini-llm-modal-mirror --repo ~/dev/wiki-llm            # foreground
+cp runner/com.aadil.mini-llm-modal-mirror.plist ~/Library/LaunchAgents/     # or as a service
+launchctl load ~/Library/LaunchAgents/com.aadil.mini-llm-modal-mirror.plist
+```
 
 A checkpoint resumes locally as usual (`--resume runs/<run_id>/checkpoints/...`),
 or remotely with `--args "--resume /runs/<run_id>/checkpoints/<file>.pt"`.
