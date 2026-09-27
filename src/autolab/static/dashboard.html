@@ -137,6 +137,9 @@ dialog .head button { margin-left: auto; font: inherit; border: 1px solid var(--
 
 <script>
 "use strict";
+// Mounted at /autolab on the tailnet: resolve API calls against this page's own path, with or
+// without a trailing slash, so they never fall through to the owner's server at /.
+const BASE = location.pathname.endsWith("/") ? location.pathname : location.pathname + "/";
 // ---------- tiny DOM helpers (all data goes in as text nodes) ----------
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -442,7 +445,7 @@ async function openRun(id) {
   document.getElementById("detailTitle").textContent = id;
   body.replaceChildren(h("p", {class: "muted"}, "loading…"));
   if (!dlg.open) dlg.showModal();
-  const r = await (await fetch("api/run/" + encodeURIComponent(id))).json();
+  const r = await (await fetch(BASE + "api/run/" + encodeURIComponent(id))).json();
   body.replaceChildren();
   const rep = r.report, dg = r.diagnosis, call = r.call || {};
   if (call.error) body.append(h("div", {class: "card"}, h("h3", {}, statusEl("critical", "failed")), h("pre", {}, call.error)));
@@ -510,7 +513,7 @@ async function refresh() {
   const main = document.getElementById("main");
   main.classList.add("stale");
   try {
-    const r = await fetch("api/overview", {cache: "no-store"});
+    const r = await fetch(BASE + "api/overview", {cache: "no-store"});
     if (!r.ok) throw new Error(r.status);
     DATA = await r.json(); render();
   } catch (e) {
