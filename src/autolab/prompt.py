@@ -50,8 +50,14 @@ def _read_json(path: Path) -> dict | None:
         return None
 
 
-def report_summary(p: Program, runs_dir: Path) -> str:
-    """Compact rendering of the program's first full-budget run (else its screen)."""
+def report_summary(p: Program, runs_dir: Path, history=None) -> str:
+    """Compact rendering of the program's first full-budget run (else its screen).
+
+    The diagnosis is recomputed here with the session's history (other programs' reports, the
+    data-check notebook, seed noise): the one stored with the run was made in the Modal
+    container without history, so e.g. capacity_limited ("a data increase didn't help") can't
+    appear in it.
+    """
     rid = (p.runs.get("full") or p.runs.get("screen") or [None])[0]
     rep = _read_json(runs_dir / rid / "report.json") if rid else None
     if not rep:
@@ -76,12 +82,33 @@ def report_summary(p: Program, runs_dir: Path) -> str:
         f"- throughput {perf.get('tokens_per_sec') or 0:,.0f} tokens/s, train wall {perf.get('train_wall_s') or 0:.0f} s",
     ]
     diag = _read_json(runs_dir / rid / "diagnosis.json")
+    if history is not None:
+        from autolab.diagnose import diagnose
+
+        try:
+            diag = diagnose(rep, history).to_dict()
+        except (KeyError, TypeError):
+            pass  # fall back to the stored diagnosis
     if diag:
         for lab in diag["labels"]:
             ev = ", ".join(f"{k}={v}" for k, v in lab["evidence"].items())
             lines.append(f"- diagnosis **{lab['name']}** (confidence {lab['confidence']}): {ev}. Suggests: {lab['suggestion']}")
         lines += [f"- note: {n}" for n in diag.get("notes", [])]
     return "\n".join(lines)
+
+
+def session_history(progs: dict[str, Program], session: dict, runs_dir: Path):
+    """History for diagnose(): full-run reports of this session's programs, the session's
+    notebook (data checks), and the full-budget seed noise."""
+    from autolab.diagnose import History
+
+    reports = []
+    for q in progs.values():
+        rid = (q.runs.get("full") or [None])[0]
+        rep = _read_json(runs_dir / rid / "report.json") if rid else None
+        if rep:
+            reports.append(rep)
+    return History(reports=reports, notebook=session.get("notebook", []), noise_std=session["noise"]["full"]["std"])
 
 
 def block_diff(a: dict[str, str], b: dict[str, str]) -> str:
@@ -171,7 +198,7 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
         f"# Current program ({parent.id}) — the one to modify\n\n{score_line(parent)}. "
         f"Rationale when it was made: {parent.rationale or '(initial program)'}\n\n"
         f"Hyperparameters: {json.dumps(parent.hparams)}\n\n## Training report and diagnosis\n\n"
-        f"{report_summary(parent, runs_dir)}\n\n## EVOLVE blocks\n\n{blocks}")
+        f"{report_summary(parent, runs_dir, session_history(progs, session, runs_dir))}\n\n## EVOLVE blocks\n\n{blocks}")
 
     others = [q for q in progs.values() if q.parent_id is not None]
     history = others[-cfg["database"].get("history", 30):]

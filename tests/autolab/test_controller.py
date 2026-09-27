@@ -292,3 +292,21 @@ def test_data_policy_waits_for_budget(world, monkeypatch):
     ctl.step(log=lambda m: None, generate=Gen(), t=T)
     flow = ctl.load_control()["data_flow"]
     assert flow["state"] == "idle" and flow["waiting_for_budget"] and not spawned
+
+
+def test_session_report(world, monkeypatch, tmp_path):
+    from autolab import session_report
+
+    monkeypatch.setattr(session_report, "REPO_ROOT", tmp_path)  # notebook / llm spend / runs lookups
+    paths = ev.Paths()
+    save(Program(id="p1", parent_id="p0", base_commit="x", blocks={}, hparams={**HP, "lr": 2e-3}, stage="done",
+                 status="accepted", scores={"full_mean": 4.60, "n_seeds": 3}, rationale="higher\nlr",
+                 stages=[{"stage": "full", "ok": True, "at": "2026-09-27T20:00:00", "loss": 4.61}]), paths.programs)
+    s = ev.load_session(paths)
+    s["incumbent"] = "p1"
+    s["incumbent_history"].append({"at": "2026-09-27T21:00:00", "program": "p1", "full_mean": 4.60})
+    ev.save_session(s, paths)
+    text = session_report.build(out=tmp_path / "S.md")
+    assert "Best: **s2/p1**, full val loss **4.6000**" in text
+    assert "Start at the same budget: `s2` p0 4.7533" in text
+    assert "| 1 | 2026-09-27T20:00 | s2/p1" in text and "higher lr" in text

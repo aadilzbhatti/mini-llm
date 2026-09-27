@@ -25,6 +25,7 @@ from pathlib import Path
 from autolab.config import REPO_ROOT
 
 STATE = REPO_ROOT / "autolab" / "state"
+_last_report = 0.0
 
 
 def now_iso() -> str:
@@ -51,6 +52,12 @@ def cycle(log=print) -> dict:
     from autolab.controller import step
 
     control = step(log=log)  # propose within budget, data policy, notebook, accepted commits
+    global _last_report
+    if time.time() - _last_report > 3600:  # the M6 session report, hourly
+        from autolab.session_report import build
+
+        build()
+        _last_report = time.time()
     calls = mb.load_calls()
     return {
         "finished_this_cycle": finished,

@@ -39,7 +39,9 @@ the "Decision log" at the bottom.
   evaluates them. The next step (M5) is the daemon generating on its own within a nightly budget.
 - M5 (controller) is built: `src/autolab/controller.py`, run by the daemon every cycle.
   `autolab start|stop [--cancel-running]|resume|status`. It is OFF until `autolab start`.
-- Milestone 6 (real session) is not started. M3–M6 were re-planned on 2026-09-26 around
+- M6 (real session) is running: the controller has been on since 2026-09-27 19:35 UTC.
+  `autolab/SESSION_1.md` is regenerated hourly by the daemon (`autolab session-report`).
+  M3–M6 were re-planned on 2026-09-26 around
   AlphaEvolve (see "Design pivot" under Milestone guidance), which overrides
   BRIEF §4–§5 and parts of §6–§9.
 
@@ -581,3 +583,13 @@ Build this first; everything else hill-climbs on it.
   only after several epochs (p1: dropout+wd+6 layers screened +0.154; p4: dropout+warmup 50
   +0.179), and regularization is what the data_limited diagnosis asks for. p1 and p4 were
   re-queued at the full stage. The controller was started (`autolab start`) the same day.
+- 2026-09-27 (M6): first autonomous results. The controller detected data_limited (4 epochs)
+  and tested data40k: helped (4.6433 vs 4.7522, −3.3σ), so it switched to session s2+data40k. p6
+  (6 layers + fused attention + lr 2e-3 + warmup 300, found by Opus over two steps) was accepted in
+  s2-82m (4.6636, 3 seeds), ported to data40k and accepted there: **4.5793**, vs the owner's
+  4.7118 and p0's 4.7522 (−0.17 nats, 5.3σ). data80k (1 epoch at 82M tokens) did not help vs
+  data40k (4.6488 vs 4.6433): at this budget data stops being the bottleneck around 2 epochs.
+- 2026-09-27 (M6): the owner raised the Modal cap to $50 (daily budget stays $10).
+- 2026-09-27 (M6): prompts now re-diagnose the parent's report with the session's history
+  (program reports, data-check notebook, seed noise). The stored diagnosis is made in the
+  container without history, so capacity_limited could never reach Claude.

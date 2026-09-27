@@ -105,7 +105,7 @@ def test_prompt_contains_everything(lab):
     text, meta = build_prompt(progs["p0"], [progs["p1"]], progs, session, ev.evolve_cfg(), llm_cfg(), lab["runs"],
                               random.Random(0))
     for needle in ("81,920,000 tokens", "Accepted", "# Prior programs", "## Program p1", "# Current program (p0)",
-                   "diagnosis **data_limited**", "block `attention`", "masked_fill", "# What has been tried",
+                   "- diagnosis **", "block `attention`", "masked_fill", "# What has been tried",
                    "# Recent rejections", "# Task", "`lr`: 1e-05 … 0.01"):
         assert needle in text, needle
     bar = 4.72 - 2 * 0.01

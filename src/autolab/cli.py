@@ -35,6 +35,7 @@ def main(argv: list[str] | None = None) -> None:
     stp = sub.add_parser("stop", help="Stop proposing (in-flight programs finish)")
     stp.add_argument("--cancel-running", action="store_true", help="Also cancel running Modal trials")
     sub.add_parser("status", help="Controller, budget and session summary")
+    sub.add_parser("session-report", help="Regenerate autolab/SESSION_1.md")
     e = sub.add_parser("evolve", help="Program database + evaluation cascade (autolab.evaluate)")
     esub = e.add_subparsers(dest="evolve_cmd", required=True)
     ini = esub.add_parser("init")
@@ -72,6 +73,10 @@ def main(argv: list[str] | None = None) -> None:
         from autolab.daemon import run
 
         run(args.interval, args.once)
+    elif args.cmd == "session-report":
+        from autolab.session_report import build
+
+        print(build())
     elif args.cmd in ("start", "resume", "stop", "status"):
         control_main(args)
     elif args.cmd == "data":

@@ -31,7 +31,7 @@ runs_volume = "autolab-runs"
 data_volume = "autolab-data"
 default_gpu = "L4"
 max_containers = 8          # parallel trials
-max_usd = 25.0              # refuse submits once spent + committed estimate would exceed this
+max_usd = 50.0              # refuse submits once spent + committed estimate would exceed this (owner, 2026-09-27)
 # $/sec per GPU (modal.com/pricing, 2026-09-26, via the owner's README). CPU/memory
 # charges come on top and aren't counted, so treat totals as a lower bound.
 [modal.gpu_usd_per_s]
