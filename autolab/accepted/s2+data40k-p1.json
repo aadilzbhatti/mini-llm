@@ -1,0 +1,33 @@
+{
+  "program": "p1",
+  "session": "s2+data40k",
+  "hparams": {
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 6,
+    "dropout": 0.0,
+    "batch_size": 64,
+    "lr": 0.002,
+    "min_lr": 2e-06,
+    "warmup_steps": 300,
+    "weight_decay": 0.0
+  },
+  "scores": {
+    "params": 17683281,
+    "screen_loss": 5.788238,
+    "full_losses": [
+      4.576503,
+      4.578728,
+      4.582658
+    ],
+    "tokens_per_sec": 42879.2,
+    "neg_params": -17683281,
+    "full_mean": 4.579296333333334,
+    "n_seeds": 3,
+    "full_std": 0.0031166100707876805,
+    "neg_full_val_loss": -4.579296333333334
+  },
+  "rationale": "Ported from s2-82m/p6 (4.6636 there): This is a hyperparameter-only change to p2: peak lr goes from 1.2e-3 to 2e-3, and warmup goes from 100 to 300 steps.\n\nMechanism: the evaluator fixes the batch at 64\u00d7128 tokens, so there are only 10,000 optimizer steps. At about 17.7M parameters, a peak of 1.2e-3 is conservative. The end-of-run tails show train and val both still falling slowly (t \u2248 \u221212), which suggests the run is limited by optimization progress rather than capacity. Training is well-conditioned: the largest gradient norm was only 1.12\u00d7 the median, and there were just 2 small spikes, so there is headroom for a larger step size.\n\nA higher peak lets the cosine schedule reach a lower-loss region before it decays. It also adds SGD noise early on, which may regularize against memorizing data seen about 4 times.\n\nThe longer 300-step warmup (3% of training) guards against early instability. That risk mainly comes from the large, uneven gradients of the tied 50k-token embedding matrix.\n\nI deliberately leave weight decay, the Adam betas and clipping unchanged. p3 changed all three (decay 0.1 on the embedding, \u03b22 = 0.95, clipping) and was much worse, and those effects can't be separated. Changing only the learning rate keeps this a clean test.",
+  "parent": "p0",
+  "created_by": "port:s2-82m/p6"
+}
