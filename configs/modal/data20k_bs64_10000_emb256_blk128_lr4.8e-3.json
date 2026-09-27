@@ -1,0 +1,24 @@
+{
+  "name": "data20k-bs64-lr4.8e-3",
+  "args": {
+    "tokens": "data/data20k/train.pt",
+    "val-tokens": "data/data20k/val.pt",
+    "block-size": 128,
+    "n-embd": 256,
+    "n-head": 4,
+    "n-layer": 4,
+    "dropout": 0.0,
+    "batch-size": 64,
+    "steps": 10000,
+    "lr": 0.0048,
+    "min-lr": 2e-06,
+    "warmup-steps": 100,
+    "seed": 42,
+    "eval-interval": 100,
+    "eval-batches": 20,
+    "eval-seed": 1234,
+    "full-eval-interval": 1000,
+    "sample-report": true,
+    "plot-suffix": "data20k-bs64-lr4.8e-3-modal"
+  }
+}
