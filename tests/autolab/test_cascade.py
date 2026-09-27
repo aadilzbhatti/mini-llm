@@ -153,6 +153,12 @@ def test_full_not_better_is_evaluated(lab):
     assert p.status == "evaluated" and p.scores["full_mean"] == 5.40
 
 
+def test_marginal_full_does_not_buy_confirm_seeds(lab):
+    p = finish(lab, lab["step"](gpu_program(lab)), "screen", [6.50])
+    p = finish(lab, p, "full", [5.36])  # below the incumbent mean 5.367, but by < 1σ (0.040)
+    assert p.status == "evaluated" and "confirm" not in p.runs
+
+
 def test_confirm_accepts_only_beyond_noise(lab):
     p = finish(lab, lab["step"](gpu_program(lab)), "screen", [6.40])
     p = finish(lab, p, "full", [5.30])

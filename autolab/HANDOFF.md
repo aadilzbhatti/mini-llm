@@ -485,3 +485,11 @@ Build this first; everything else hill-climbs on it.
   more seeds. Accept iff the mean over >= 2 seeds < incumbent mean − 2σ_full (= 5.280 for
   p0), else "contender". Wall caps = 1.25x p0's mean wall time: screen 184 s, full 667 s.
   p0 = the 6 base runs of m3_prep (run on pre-marker code 2c351a5, behavior-identical).
+- 2026-09-27 (M3 live check): the real daemon took 8 hand-written programs through the
+  cascade. All 7 bad ones were rejected at the intended gate: scope ×2, forbidden `targets`,
+  out-of-range lr, causal-leak, shape, param cap (30.8M > 24.2M). RMSNorm (p1) passed
+  every CPU gate (116 protected tests at its own size), the screen (6.494 vs 6.536) and
+  full (5.3635), then 3 seeds gave 5.3665 ± 0.027, a contender, not significant against
+  the 5.280 bar. RMSNorm is a wash here. Its single full run beat p0's mean by 0.04σ,
+  which bought 2 confirm seeds, so confirmation now needs the full result to beat the
+  incumbent by `confirm_trigger_sigma` (1.0) × σ_full.

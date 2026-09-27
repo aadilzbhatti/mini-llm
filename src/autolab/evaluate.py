@@ -17,7 +17,8 @@ All state is in the program's JSON, so the daemon can restart at any point.
              screen_margin of the incumbent's screen mean (screens overstate gains,
              so they can only reject)
     full     Modal, full_tokens, seed 1
-    confirm  only if the full result beats the incumbent's mean: confirm_seeds more.
+    confirm  only if the full result beats the incumbent's mean by confirm_trigger_sigma x
+             the full seed std: confirm_seeds more.
              Accepted as the new incumbent iff the mean over all seeds beats it by
              more than accept_sigma x the full-budget seed std; otherwise a contender.
 
@@ -416,11 +417,14 @@ def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths = Pa
                     loss = rep["summary"]["final_full_val_loss"]
                     p.scores = {**p.scores, **_scores(p.scores.get("screen_loss"), [loss], rep)}
                     inc_mean = inc.scores["full_mean"]
-                    _record(p, "full", True, f"full {loss:.4f} vs incumbent mean {inc_mean:.4f}", loss=loss)
-                    if loss < inc_mean:
+                    trigger = inc_mean - cfg.get("confirm_trigger_sigma", 0.0) * session["noise"]["full"]["std"]
+                    _record(p, "full", True, f"full {loss:.4f} vs incumbent mean {inc_mean:.4f} (confirm below {trigger:.4f})",
+                            loss=loss)
+                    if loss < trigger:
                         p.stage, p.status = "confirm", "queued"
                     else:
-                        p.stage, p.status, p.reason = "done", "evaluated", "full-budget loss not below the incumbent's mean"
+                        p.stage, p.status, p.reason = "done", "evaluated", \
+                            f"full {loss:.4f} not below {trigger:.4f} (incumbent mean - {cfg.get('confirm_trigger_sigma', 0.0)}σ)"
 
     if p.stage == "confirm":
         if p.status in ("queued", "blocked"):
