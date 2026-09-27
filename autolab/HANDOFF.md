@@ -37,7 +37,9 @@ the "Decision log" at the bottom.
 - M4 (proposer) is built: `src/autolab/{database,prompt,llm,generate}.py`, `prompts/`.
   `autolab evolve generate -n N` makes children (Claude, falling back to mutation), and the daemon
   evaluates them. The next step (M5) is the daemon generating on its own within a nightly budget.
-- Milestones 5–6 are not started. M3–M6 were re-planned on 2026-09-26 around
+- M5 (controller) is built: `src/autolab/controller.py`, run by the daemon every cycle.
+  `autolab start|stop [--cancel-running]|resume|status`. It is OFF until `autolab start`.
+- Milestone 6 (real session) is not started. M3–M6 were re-planned on 2026-09-26 around
   AlphaEvolve (see "Design pivot" under Milestone guidance), which overrides
   BRIEF §4–§5 and parts of §6–§9.
 
@@ -550,3 +552,28 @@ Build this first; everything else hill-climbs on it.
   outpaces a crawling val + growing gap + >= 1 epoch", with +0.1 confidence for a gap >= 0.15.
   gap_growth is 0.005 (with t >= 3), split from gap_stable_max 0.01. All three 82M base runs now
   read data_limited (0.85); the 1-epoch 21M runs are unchanged.
+
+- 2026-09-27 (M5): the controller lives in the daemon (no separate process). Each cycle it
+  records finished programs in `autolab/notebook.jsonl` (regenerating `autolab/NOTEBOOK.md`),
+  commits accepted programs, and, when enabled, runs the data policy and proposes up to
+  `max_in_flight` (4) children. Each new one needs rolling-24h spend (Modal actual +
+  pending estimates + Claude) + its expected cost <= `daily_usd` ($10, owner) and Modal
+  total <= `max_usd`. A Claude usage limit pauses proposing until the reset time parsed from
+  the message ("resets Sep 30 at 6pm (America/Chicago)"). 4 early rejections (static/cpu/params)
+  in a row pause for 6 h (a broken prompt shouldn't burn budget).
+- 2026-09-27 (M5): accepted programs are committed to the local branch `autolab-accepted` in
+  its own worktree (`../wiki-llm-autolab-wt/accepted`), never on `autolab`, so the daemon
+  never touches the working tree I develop in. Nothing is pushed automatically. (Branch
+  names can't be `autolab/<x>`: the ref `autolab` already exists as a branch.)
+- 2026-09-27 (M5): the data policy (controller.data_step) is a small state machine:
+  idle → (incumbent data_limited ≥ 0.75, no check yet) building (`autolab data build`, or
+  `data slice` from a bigger existing set, as a detached subprocess) → uploading → checking
+  (start_data_check, 3 seeds at the full budget) → not_helped | baselining (3 screens of the
+  incumbent on the new data) → switched (new session `<old>+<dataset>` with the incumbent as
+  p0; its full noise comes from the check's 3 seeds). It only runs while enabled.
+- 2026-09-27 (M5, test hygiene): two default arguments bound at import time (controller.json,
+  the ACTIVE session file) let tests write real state, and the e2e test once committed a
+  throwaway program to a real `autolab-accepted` branch (deleted; never pushed). All such
+  defaults now resolve at call time, and tests/autolab/conftest.py fails any test that
+  changes the live ACTIVE session, the controller's enabled flag, or the repo's
+  branches/worktrees.

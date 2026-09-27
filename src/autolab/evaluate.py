@@ -63,14 +63,16 @@ from autolab.program import (
 STATE_ROOT = REPO_ROOT / "autolab" / "state" / "evolve"  # one subdirectory per session
 
 
-def active_session_name(root: Path = STATE_ROOT) -> str:
+def active_session_name(root: Path | None = None) -> str:
+    root = root or STATE_ROOT  # resolved at call time, so tests can redirect STATE_ROOT
     try:
         return (root / "ACTIVE").read_text().strip()
     except OSError:
         return "default"
 
 
-def set_active_session(name: str, root: Path = STATE_ROOT) -> None:
+def set_active_session(name: str, root: Path | None = None) -> None:
+    root = root or STATE_ROOT
     root.mkdir(parents=True, exist_ok=True)
     (root / "ACTIVE").write_text(name + "\n")
 MODEL_KEYS = ("n_embd", "n_head", "n_layer", "dropout")
@@ -137,7 +139,8 @@ def _report(run_id: str, runs_dir: Path) -> dict | None:
 
 def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cfg: dict | None = None,
                  paths: Paths | None = None, runs_dir: Path | None = None, repo: Path = REPO_ROOT,
-                 budgets: dict | None = None, name: str = "") -> dict:
+                 budgets: dict | None = None, name: str = "", blocks: dict | None = None,
+                 dataset_id: str | None = None, rationale: str = "") -> dict:
     """Create the session and its initial program p0 from already-run baseline trials.
 
     `runs` maps "screen"/"full" to finished run ids of p0 on different seeds; they give
@@ -159,14 +162,15 @@ def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cf
     def walls(k):
         return [r["performance"]["wall_s"] for r in reports[k]]
 
-    p0 = Program(id="p0", parent_id=None, base_commit=base_commit, blocks=extract_blocks(files), hparams=hparams,
-                 rationale="Initial program: the owner's emb256/blk128/bs64 regime at the base commit.",
+    p0 = Program(id="p0", parent_id=None, base_commit=base_commit, blocks=blocks or extract_blocks(files), hparams=hparams,
+                 rationale=rationale or "Initial program: the owner's emb256/blk128/bs64 regime at the base commit.",
                  stage="done", status="accepted", runs=runs)
     p0.scores = _scores(mean(losses("screen")), losses("full"), reports["full"][0])
     p0.scores["screen_losses"] = losses("screen")
     session = {
         "name": name or paths.root.name,
         "created": now_iso(),
+        "dataset_id": dataset_id or cfg["dataset_id"],
         # Fixed for the session: what "better" means (token budgets, eval settings).
         "budgets": budgets or {"screen_tokens": cfg["screen_tokens"], "full_tokens": cfg["full_tokens"],
                                "eval": dict(cfg["eval"])},
@@ -332,8 +336,8 @@ def _request(p: Program, stage: str, seed: int, cfg: dict, session: dict):
     tokens = budgets["screen_tokens"] if stage == "screen" else budgets["full_tokens"]
     cap = session["wall_caps"]["screen" if stage == "screen" else "full"]
     return TrainRequest(
-        run_id=f"ev-{session.get('name', 's')}-{p.id}-{stage}-s{seed}", dataset_id=cfg["dataset_id"],
-        train_tokens=str(load_config().datasets_dir / cfg["dataset_id"] / "train.pt"),
+        run_id=f"ev-{session.get('name', 's')}-{p.id}-{stage}-s{seed}", dataset_id=session.get("dataset_id", cfg["dataset_id"]),
+        train_tokens=str(load_config().datasets_dir / session.get("dataset_id", cfg["dataset_id"]) / "train.pt"),
         budget=Budget(tokens=tokens, wall_clock_s=cap), seed=seed,
         model={"block_size": cfg["block_size"], **{k: p.hparams[k] for k in MODEL_KEYS}},
         optim={k: p.hparams[k] for k in OPTIM_KEYS}, eval=dict(budgets["eval"]))

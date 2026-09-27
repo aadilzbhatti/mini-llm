@@ -5,7 +5,9 @@
 Every `interval` seconds:
   1. collect finished Modal trials into autolab/runs/<run_id>/ (report, diagnosis, log);
   2. copy live progress (heartbeat + log tail) of running trials from the runs volume;
-  3. advance every unfinished program through the evaluation cascade (autolab.evaluate);
+  3. advance every unfinished program through the evaluation cascade (autolab.evaluate),
+     judge finished data checks, and run the controller (autolab.controller: proposals within
+     the daily budget, pauses, the data policy, the notebook, accepted-program commits);
   4. write a heartbeat to autolab/state/daemon.json, which the dashboard shows.
 
 A failed cycle is logged and retried next cycle. It never takes the daemon down.
@@ -46,11 +48,15 @@ def cycle(log=print) -> dict:
 
     advanced = advance_all(log=log)  # evaluation cascade: CPU gates inline, GPU stages via Modal
     advanced += advance_data_checks(mb.load_calls(), log=log)  # "does more data help?" verdicts
+    from autolab.controller import step
+
+    control = step(log=log)  # propose within budget, data policy, notebook, accepted commits
     calls = mb.load_calls()
     return {
         "finished_this_cycle": finished,
         "live_files": live,
         "programs_advanced": advanced,
+        "controller": control,
         "pending": sum(c["state"] == "pending" for c in calls.values()),
         "cycle_s": round(time.time() - t0, 2),
     }

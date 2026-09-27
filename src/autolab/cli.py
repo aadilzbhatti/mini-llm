@@ -30,6 +30,11 @@ def main(argv: list[str] | None = None) -> None:
     w.add_argument("--host", default="127.0.0.1")
     w.add_argument("--port", type=int, default=8766)
     sub.add_parser("modal", help="Modal backend commands (see autolab.modal_backend)")
+    sub.add_parser("start", help="Enable the controller: the daemon proposes and evaluates on its own")
+    sub.add_parser("resume", help="Clear a pause (usage limit / early rejects) and keep going")
+    stp = sub.add_parser("stop", help="Stop proposing (in-flight programs finish)")
+    stp.add_argument("--cancel-running", action="store_true", help="Also cancel running Modal trials")
+    sub.add_parser("status", help="Controller, budget and session summary")
     e = sub.add_parser("evolve", help="Program database + evaluation cascade (autolab.evaluate)")
     esub = e.add_subparsers(dest="evolve_cmd", required=True)
     ini = esub.add_parser("init")
@@ -67,6 +72,8 @@ def main(argv: list[str] | None = None) -> None:
         from autolab.daemon import run
 
         run(args.interval, args.once)
+    elif args.cmd in ("start", "resume", "stop", "status"):
+        control_main(args)
     elif args.cmd == "data":
         data_main(args)
     elif args.cmd == "evolve":
@@ -93,6 +100,39 @@ def main(argv: list[str] | None = None) -> None:
 
 
 MARKERS_COMMIT = "7a7e0e7"  # the EVOLVE-BLOCK refactor; behavior-identical to the prep runs' code
+
+
+def control_main(args) -> None:
+    import json
+
+    from autolab import controller as c
+    from autolab import evaluate as ev
+
+    ctl = c.load_control()
+    if args.cmd == "start":
+        ctl.update(enabled=True, started=c.iso(c.now()))
+        c.note("started")
+    elif args.cmd == "resume":
+        ctl.update(enabled=True, paused_until=None, pause_reason=None)
+        c.note("resumed")
+    elif args.cmd == "stop":
+        ctl["enabled"] = False
+        c.note("stopped", cancel_running=args.cancel_running)
+        if args.cancel_running:
+            import modal
+
+            from autolab import modal_backend as mb
+
+            for rid, call in mb.load_calls().items():
+                if call["state"] == "pending":
+                    modal.FunctionCall.from_id(call["call_id"]).cancel()
+                    print(f"cancelled {rid}")
+    if args.cmd != "status":
+        c.save_control(ctl)
+    session = ev.load_session()
+    print(json.dumps({"controller": {k: v for k, v in ctl.items() if k != "recorded"},
+                      "session": session and {"name": session.get("name"), "incumbent": session["incumbent"],
+                                              "dataset": session.get("dataset_id")}}, indent=2, default=str))
 
 
 def data_main(args) -> None:

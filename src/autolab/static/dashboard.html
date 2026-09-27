@@ -123,6 +123,7 @@ a { color: var(--s1); }
     <button role="tab" data-tab="programs">Programs</button>
     <button role="tab" data-tab="experiments">Experiments</button>
     <button role="tab" data-tab="runs">Runs</button>
+    <button role="tab" data-tab="notebook">Notebook</button>
     <button role="tab" data-tab="decisions">Decisions</button>
     <button role="tab" data-tab="settings">Settings</button>
   </nav>
@@ -132,6 +133,7 @@ a { color: var(--s1); }
   <section id="programs" hidden></section>
   <section id="experiments" hidden></section>
   <section id="runs" hidden></section>
+  <section id="notebook" hidden></section>
   <section id="decisions" hidden></section>
   <section id="settings" hidden></section>
 </main>
@@ -330,6 +332,7 @@ function renderOverview(D) {
   const running = D.runs.filter(r => r.state === "pending");
   el.append(h("div", {class: "tiles"},
     tile("Spent (Modal, lower bound)", fmt.usd(sp.spent), `+ up to ${fmt.usd(sp.pending_estimate)} running · cap ${fmt.usd(cap)}`, meter),
+    controllerTile(D.controller),
     tile("Claude (proposer)", fmt.usd(D.llm.usd), `${D.llm.calls} calls · ${D.llm.failed} failed`),
     tile("Trials", `${D.counts.finished} done`, `${D.counts.pending} running · ${D.counts.failed} failed · ${fmt.val(sp.gpu_hours)} GPU-h`),
     tile("Best full val loss", D.best ? fmt.loss(D.best.full_val) : "–", D.best ? `${D.best.run_id} (${D.best.experiment}, ${D.best.budget_name} budget)` : "no finished runs"),
@@ -545,6 +548,34 @@ async function openProgram(id) {
   body.append(h("div", {class: "card"}, h("h3", {}, "Code diff vs parent"), h("pre", {}, r.diff || "(no code change)")));
 }
 
+function controllerTile(C) {
+  let kind = "serious", text = "off";
+  if (C.enabled && C.paused_until && Date.parse(C.paused_until) > Date.now()) { kind = "warning"; text = "paused"; }
+  else if (C.enabled) { kind = "good"; text = "running"; }
+  const sub = [C.enabled && C.paused_until && Date.parse(C.paused_until) > Date.now() ? `until ${fmt.time(C.paused_until)}: ${C.pause_reason || ""}` : "",
+    `24h spend ${fmt.usd(C.spend_24h)} of ${fmt.usd(C.daily_usd)}`,
+    C.data_flow && C.data_flow.state ? `data: ${C.data_flow.state}${C.data_flow.target ? " " + C.data_flow.target : ""}` : ""].filter(Boolean).join(" · ");
+  const meter = h("div", {class: "meter"}, h("span", {style: `width:${C.daily_usd ? Math.min(100, C.spend_24h / C.daily_usd * 100) : 0}%;background:var(--s1)`}));
+  return tile("Controller", h("span", {}, statusEl(kind, text)), sub || (C.enabled ? "" : "autolab start to enable"), meter);
+}
+const EVENT_KIND = {accepted: "good", program_done: "serious", proposed: "warning", paused: "critical", data_limited: "warning",
+  data_check_done: "good", session_switched: "good", started: "good", resumed: "good", stopped: "serious"};
+function renderNotebook(D) {
+  const el = document.getElementById("notebook"); el.replaceChildren();
+  el.append(h("p", {class: "muted"}, "Every action the controller took, newest first (autolab/notebook.jsonl; NOTEBOOK.md is regenerated from it)."));
+  if (!D.notebook.length) { el.append(h("div", {class: "card"}, h("p", {class: "muted", style: "margin:0"}, "No entries yet. The notebook starts when the controller runs (autolab start)."))); return; }
+  const c = h("div", {class: "card"});
+  for (const e of D.notebook) {
+    const kind = e.event === "program_done" ? ({accepted: "good", contender: "warning", evaluated: "serious", rejected: "critical"}[e.status] || "serious") : (EVENT_KIND[e.event] || "serious");
+    const rest = Object.entries(e).filter(([k]) => !["at", "event"].includes(k));
+    c.append(h("div", {class: "decision"}, h("div", {class: "when"}, fmt.time(e.at)),
+      h("div", {}, statusEl(kind, e.event.replaceAll("_", " ")), " ",
+        e.program ? h("a", {href: "#", onclick: ev => { ev.preventDefault(); openProgram(e.program); }}, e.program) : null),
+      h("div", {style: "margin-top:4px"}, rest.filter(([k]) => k !== "program").map(([k, v]) => h("span", {class: "chip"}, `${k}: ${fmt.val(v)}`.slice(0, 220))))));
+  }
+  el.append(c);
+}
+
 function renderDecisions(D) {
   const el = document.getElementById("decisions"); el.replaceChildren();
   el.append(h("p", {class: "muted"}, "From the decision log in autolab/HANDOFF.md, newest first."));
@@ -573,7 +604,7 @@ function render() {
   const [dk, dt] = daemonState(D.daemon);
   document.getElementById("daemonBadge").replaceChildren(statusEl(dk, dt));
   document.getElementById("meta").textContent = "updated " + new Date(D.generated_at).toLocaleTimeString();
-  renderOverview(D); renderPrograms(D); renderExperiments(D); renderRuns(D); renderDecisions(D); renderSettings(D);
+  renderOverview(D); renderPrograms(D); renderExperiments(D); renderRuns(D); renderNotebook(D); renderDecisions(D); renderSettings(D);
 }
 async function refresh() {
   const main = document.getElementById("main");
@@ -595,7 +626,7 @@ document.getElementById("tabs").addEventListener("click", e => { if (e.target.da
 document.getElementById("detailClose").addEventListener("click", () => document.getElementById("detail").close());
 let initial = location.hash.slice(1);
 if (!initial) { try { initial = localStorage.getItem("autolab.tab") || ""; } catch (e) {} }
-showTab(["overview", "programs", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "overview");
+showTab(["overview", "programs", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "overview");
 let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 200); });
 refresh(); setInterval(() => { if (!document.hidden && !document.getElementById("detail").open) refresh(); }, 30000);
 </script>

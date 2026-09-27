@@ -82,6 +82,12 @@ def _flat(d: dict | None) -> dict:
     return {**d.get("model", {}), **d.get("optim", {}), **d.get("eval", {})}
 
 
+def _evolve_label(run_id: str) -> str | None:
+    """ev-<session>-<program>-<stage>-s<seed> -> "evolve <session>"."""
+    m = re.match(r"^ev-(.+?)-(p\d+|data-.+)$", run_id)
+    return f"evolve {m.group(1)}" if m else None
+
+
 def run_rows(calls: dict, experiments: list[dict]) -> list[dict]:
     membership = {}
     for e in experiments:
@@ -102,7 +108,7 @@ def run_rows(calls: dict, experiments: list[dict]) -> list[dict]:
         top = max(diag.get("labels", []), key=lambda lab: lab["confidence"], default=None)
         rows.append({
             "run_id": run_id,
-            "experiment": e["id"] if e else "adhoc",
+            "experiment": e["id"] if e else (_evolve_label(run_id) or "adhoc"),
             "variant": (j or {}).get("variant") or "-",
             "budget_name": (j or {}).get("budget") or "-",
             "state": c["state"],
@@ -277,6 +283,44 @@ def evolve_view() -> dict | None:
                        for k in ("queued", "running", "blocked", "rejected", "evaluated", "contender", "accepted")}}
 
 
+def controller_view(calls: dict) -> dict:
+    ctl = _json(AUTOLAB / "state" / "controller.json", {}) or {}
+    cfg = settings().get("config", {}).get("controller", {})
+    since = datetime.now(timezone.utc).timestamp() - 86400
+
+    def recent(ts):
+        try:
+            return datetime.fromisoformat(ts.replace("Z", "+00:00")).timestamp() >= since
+        except (AttributeError, ValueError):
+            return False
+
+    llm = []
+    try:
+        llm = [json.loads(x) for x in (AUTOLAB / "state" / "llm_spend.jsonl").read_text().splitlines() if x.strip()]
+    except (OSError, json.JSONDecodeError):
+        pass
+    spend = (sum(c.get("usd") or 0 for c in calls.values() if c["state"] != "pending" and recent(c.get("submitted_at")))
+             + sum(c.get("usd_estimate") or 0 for c in calls.values() if c["state"] == "pending")
+             + sum(e.get("usd") or 0 for e in llm if recent(e.get("at"))))
+    return {"enabled": ctl.get("enabled", False), "paused_until": ctl.get("paused_until"),
+            "pause_reason": ctl.get("pause_reason"), "data_flow": ctl.get("data_flow", {}),
+            "spend_24h": round(spend, 3), "daily_usd": cfg.get("daily_usd"), "max_in_flight": cfg.get("max_in_flight")}
+
+
+def notebook_view(limit: int = 200) -> list[dict]:
+    try:
+        lines = (AUTOLAB / "notebook.jsonl").read_text().splitlines()
+    except OSError:
+        return []
+    out = []
+    for line in lines[-limit:]:
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return out[::-1]
+
+
 def overview() -> dict:
     calls = _json(AUTOLAB / "state" / "modal_calls.json", {}) or {}
     exps = load_experiments()
@@ -319,6 +363,8 @@ def overview() -> dict:
         "decisions": decisions(),
         "settings": settings(),
         "evolve": evolve_view(),
+        "controller": controller_view(calls),
+        "notebook": notebook_view(),
     }
 
 
