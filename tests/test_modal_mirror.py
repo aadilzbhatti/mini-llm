@@ -120,7 +120,7 @@ def test_finished_run_is_imported_once(tmp_path, repo, monkeypatch):
     st = mirror_run(vol, "r-done", repo, load_runner(repo))
     assert st["status"] == "completed" and st["remote"]["imported"] and st["remote"]["synced"]
     rows = json.loads((repo / "baselines.json").read_text())
-    assert [r["run"] for r in rows] == ["modal_tiny_seed42.pt"]
+    assert [r["run"] for r in rows] == ["modal_tiny_steps20_seed42.pt"]
     assert (repo / st["metrics"]["plot"]).exists()                      # the page's Plot button path
 
     vol.reads.clear()

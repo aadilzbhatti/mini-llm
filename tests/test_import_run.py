@@ -50,7 +50,7 @@ def test_import_lands_files_and_one_row(run_dir, tmp_path):
     repo = tmp_path / "repo"
     row = import_run(run_dir, repo)
 
-    assert (repo / "checkpoints" / "modal_tiny_seed42.pt").exists()
+    assert (repo / "checkpoints" / "modal_tiny_steps20_seed42.pt").exists()
     assert row["plot"] and (repo / row["plot"]).exists()
     assert row["batch_size"] == 4 and row["lr"] == 2e-3 and row["min_lr"] == 2e-6  # parser default resolved
     assert row["steps"] == 20 and row["full_val_loss"] is not None
@@ -59,9 +59,9 @@ def test_import_lands_files_and_one_row(run_dir, tmp_path):
 
     import_run(run_dir, repo)  # re-import replaces, never duplicates
     rows = json.loads((repo / "baselines.json").read_text())
-    assert [r["run"] for r in rows] == ["modal_tiny_seed42.pt"]
+    assert [r["run"] for r in rows] == ["modal_tiny_steps20_seed42.pt"]
     assert rows[0]["gpus"] == "L4:2"                                    # JSON-only detail kept
-    assert "modal_tiny_seed42.pt" in (repo / "baselines.md").read_text()
+    assert "modal_tiny_steps20_seed42.pt" in (repo / "baselines.md").read_text()
     assert "L4:2" not in (repo / "baselines.md").read_text()           # table columns unchanged
 
 
@@ -72,3 +72,15 @@ def test_unfinished_run_is_refused(run_dir, tmp_path):
     with pytest.raises(SystemExit, match="did not finish"):
         import_run(run_dir, tmp_path / "repo")
     assert not os.path.exists(tmp_path / "repo" / "baselines.md")
+
+
+def test_same_config_name_at_different_budgets_gets_distinct_rows(run_dir, tmp_path):
+    """Same config name, different --steps: two rows, neither overwritten."""
+    repo = tmp_path / "repo"
+    import_run(run_dir, repo)
+    record = json.loads((run_dir / "run.json").read_text())
+    record["resolved_argv"] = [a if a != "20" else "10000" for a in record["resolved_argv"]]
+    (run_dir / "run.json").write_text(json.dumps(record))
+    import_run(run_dir, repo)
+    rows = json.loads((repo / "baselines.json").read_text())
+    assert sorted(r["run"] for r in rows) == ["modal_tiny_steps10000_seed42.pt", "modal_tiny_steps20_seed42.pt"]

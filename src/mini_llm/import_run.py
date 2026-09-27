@@ -37,9 +37,15 @@ def final_checkpoint(run_dir: Path) -> Path:
 
 
 def default_stem(record: dict) -> str:
-    """Checkpoint/baselines name for an imported run: modal_<config name>_seed<N>."""
-    seed = build_parser().parse_args(record["resolved_argv"]).seed
-    return f"modal_{(record.get('config') or {}).get('name') or record['run_id']}_seed{seed}"
+    """Checkpoint/baselines name for an imported run: modal_<config name>_steps<N>_seed<N>.
+
+    The step count is part of the name because config names aren't unique
+    across budgets (the same "bs64-lr1.2e-3" config ran at 1,250 and 10,000
+    steps), and a shared name would make the second import overwrite the first.
+    """
+    args = build_parser().parse_args(record["resolved_argv"])
+    name = (record.get("config") or {}).get("name") or record["run_id"]
+    return f"modal_{name}_steps{args.steps}_seed{args.seed}"
 
 
 def import_run(run_dir: Path, repo: Path, name: str | None = None) -> dict[str, object]:
