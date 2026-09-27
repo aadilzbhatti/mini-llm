@@ -1,5 +1,25 @@
 [
   {
+    "run": "ckpt_blk128_emb256_head4_layer4_bs4_steps240000_lr0.0003_minlr2e-06_seed42.pt",
+    "date": "2026-09-27 07:05 UTC",
+    "steps": 240000,
+    "params": 16105297,
+    "n_layer": 4,
+    "n_embd": 256,
+    "n_head": 4,
+    "block_size": 128,
+    "batch_size": 4,
+    "lr": 0.0003,
+    "min_lr": 2e-06,
+    "warmup_steps": 500,
+    "seed": 42,
+    "eval_train_loss": 4.291414833068847,
+    "eval_val_loss": 4.7462629795074465,
+    "full_val_loss": 4.716515631102347,
+    "checkpoint": "checkpoints/ckpt_blk128_emb256_head4_layer4_bs4_steps240000_lr0.0003_minlr2e-06_seed42.pt",
+    "plot": "plots/loss_blk128_emb256_head4_layer4_bs4_steps240000_lr0.0003_minlr2e-06_seed42_data20k.png"
+  },
+  {
     "run": "modal_data20k-bs64-lr1.2e-3_steps10000_seed42.pt",
     "date": "2026-09-27 00:39 UTC",
     "steps": 10000,
