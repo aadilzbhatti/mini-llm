@@ -34,7 +34,10 @@ the "Decision log" at the bottom.
   `tests/autolab/test_causal_leak.py`. The daemon advances programs every cycle, and the
   dashboard has a Programs tab. `autolab evolve propose --diff FILE` adds a candidate by hand.
   M4 (LLM proposer) will call the same `propose()`.
-- Milestones 4–6 are not started. M3–M6 were re-planned on 2026-09-26 around
+- M4 (proposer) is built: `src/autolab/{database,prompt,llm,generate}.py`, `prompts/`.
+  `autolab evolve generate -n N` makes children (Claude, falling back to mutation), and the daemon
+  evaluates them. The next step (M5) is the daemon generating on its own within a nightly budget.
+- Milestones 5–6 are not started. M3–M6 were re-planned on 2026-09-26 around
   AlphaEvolve (see "Design pivot" under Milestone guidance), which overrides
   BRIEF §4–§5 and parts of §6–§9.
 
@@ -493,3 +496,26 @@ Build this first; everything else hill-climbs on it.
   the 5.280 bar. RMSNorm is a wash here. Its single full run beat p0's mean by 0.04σ,
   which bought 2 confirm seeds, so confirmation now needs the full result to beat the
   incumbent by `confirm_trigger_sigma` (1.0) × σ_full.
+- 2026-09-27 (M4): the evaluator moves to the owner's regime. His best run is bs64 × 10k steps
+  (82M tokens, ~4 epochs): 4.7118 with a 32-step (256K-token) warmup vs 4.7178 with 100 steps,
+  one seed each. A 21M-token (1-epoch) search can't see what matters at 4 epochs (the train/val
+  gap is ~0.4 there), so session `s2-82m` uses full = 10k steps (81.9M tokens) and screen =
+  1280 steps (10.5M), eval every 100 steps. p0 keeps warmup 100 and gets no hint, so the search
+  has to find the short warmup, and anything else, itself. Noise baseline: `m4_prep`. Budget
+  per the owner: $10 per night within the overall $25 cap.
+- 2026-09-27 (M4): sessions are named (`autolab/state/evolve/<name>/`, `ACTIVE` picks one) and
+  store their own budgets and eval settings. The finished 21M session is `s1-21m`.
+- 2026-09-27 (M4): the database is the paper's MAP-Elites + islands scaled down. Elites are programs
+  that finished the full stage, in cells by (params, tokens/sec), 2 islands round-robin, and
+  migration every 6 finished children. Sampling: exploit the island's best w.p. 0.5, else a
+  random cell; inspirations = 2 fittest + 1 random other-cell elite.
+- 2026-09-27 (M4): the prompt adds two things the paper doesn't have: a one-line history of
+  everything tried and the latest rejections with their reasons. With tens of evaluations
+  (not thousands), not repeating ideas matters more than volume.
+- 2026-09-27 (M4): proposer = `claude -p --json-schema` with no tools, its own short system
+  prompt (the default Claude Code one costs ~18k input tokens per call), no MCP, no session
+  persistence, in an empty temp dir. Autolab applies the diffs itself, so Claude never edits files.
+  Model mix: opus 0.8 / sonnet 0.2, since GPU time, not LLM latency, is the bottleneck. A real
+  sonnet call costs ~$0.05; LLM spend is tracked in `autolab/state/llm_spend.jsonl` and on the
+  dashboard. Fallback on any proposer failure is an in-range hparam mutation. A child whose diffs
+  don't apply is kept as a rejected program, since its failure feeds later prompts.
