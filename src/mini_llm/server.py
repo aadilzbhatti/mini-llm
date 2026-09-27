@@ -456,11 +456,13 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         if importlib.util.find_spec("modal") is None:
             raise HTTPException(503, "the modal package isn't installed here: run `uv sync --group modal`")
         from mini_llm.remote.launch import launching_status, write_status
-        from mini_llm.remote.modal_train import make_run_id
+        from mini_llm.remote.modal_train import config_to_argv, make_run_id
 
         run_id = make_run_id(name)
         preview = {"target": "modal", "name": name, "kind": kind, "gpus": gpus, "nproc": nproc,
-                   "timeout_hours": timeout_hours, "run_id": run_id, "argv": cmd[4:]}
+                   "timeout_hours": timeout_hours, "run_id": run_id,
+                   # What torchrun will actually run on Modal (not the local queue's argv).
+                   "argv": ["mini-llm-train", *config_to_argv({"args": effective})]}
         if dry_run:
             return {"ok": True, **preview}
         job = {"run_id": run_id, "name": name, "args": effective, "gpus": gpus, "timeout_hours": timeout_hours}

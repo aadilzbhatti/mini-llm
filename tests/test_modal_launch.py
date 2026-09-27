@@ -52,6 +52,7 @@ def test_dry_run_previews_without_launching(repo, spawned):
     r = post(repo, {**JOB, "target": "modal", "gpus": "L4:2"}, dry_run=True)
     assert r.status_code == 200, r.text
     assert r.json()["nproc"] == 2 and r.json()["run_id"].endswith("-web-bs64")
+    assert "--baseline" not in r.json()["argv"] and "--plot-loss" in r.json()["argv"]  # the argv Modal runs
     assert spawned == [] and not list((repo / "runs").glob("*.status.json"))
 
 
