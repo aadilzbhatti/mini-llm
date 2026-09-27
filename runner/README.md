@@ -18,6 +18,7 @@ over [Tailscale](https://tailscale.com):
 | queue runner | executes jobs, one at a time | `com.aadil.mini-llm-runner` |
 | control API + phone page | queue/cancel jobs, steer live runs, read results | `com.aadil.mini-llm-control` |
 | TensorBoard | every plot: live, historical, run-vs-run, hparams | `com.aadil.mini-llm-tensorboard` |
+| Modal mirror (optional) | shows Modal GPU runs on the page, imports finished ones | `com.aadil.mini-llm-modal-mirror` |
 
 Plots are entirely TensorBoard's job. The control page only shows numbers
 (step, ETA, latest losses) and links out to TensorBoard for curves.
@@ -62,6 +63,12 @@ if you ever share the tailnet.
   `--control-poll` steps, default 25) and are logged with their step.
 - **Queue**: see and cancel pending jobs; queue a training run or a dataset
   build (`kind: "prepare-data"`); "Clone" on any past run pre-fills its args.
+- **Modal**: set "run on" to *Modal GPUs* in the job form to launch a training
+  run on cloud GPUs instead of this Mac (pick e.g. `L4:2` or `H100:4`). Modal
+  runs appear in Live and History with a `modal · <gpus>` badge; they're
+  read-only (no pause/stop/LR), since live control is off for multi-GPU runs.
+  Needs `uv sync --group modal`, a Modal token, and the mirror service; see
+  the Modal section of the main [`README`](../README.md).
 - **History**: every run with status, duration and full val loss; its args,
   metrics, sample report and log tail.
 - **Best**: the baselines table.
