@@ -157,7 +157,7 @@ def prepare(
     return train_path, val_path
 
 
-def parse_args(argv: list[str] | None = None):
+def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         description="Pull a HF dataset, tokenize a deterministic subset, and save fixed train/val token files."
     )
@@ -190,7 +190,11 @@ def parse_args(argv: list[str] | None = None):
     p.add_argument("--seed", type=int, default=0, help="Shuffle seed; fixes the scan order deterministically.")
     p.add_argument("--out-dir", default=str(DEFAULT_OUT_DIR))
     p.add_argument("--tokenizer", default="gpt2")
-    return p.parse_args(argv)
+    return p
+
+
+def parse_args(argv: list[str] | None = None):
+    return build_parser().parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> None:

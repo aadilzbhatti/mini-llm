@@ -34,6 +34,17 @@
   .s-running { color:var(--acc); } .s-completed { color:var(--ok); } .s-failed, .s-rejected { color:var(--bad); } .s-interrupted { color:var(--warn); }
   pre { white-space:pre-wrap; word-break:break-word; font:12px/1.35 ui-monospace, Menlo, monospace; background:var(--bg); padding:8px; border-radius:8px; max-height:60vh; overflow:auto; margin:8px 0 0; }
   .hidden { display:none !important; }
+  .field { margin:8px 0; }
+  .field label { display:block; font-size:13px; font-weight:600; margin-bottom:3px; }
+  .field input:not([type=checkbox]), .field select { width:100%; }
+  .field label.chk { font-weight:400; font-size:15px; display:flex; gap:8px; align-items:center; }
+  .hint { font-size:12px; margin-top:2px; }
+  .err { color:var(--bad); font-size:12px; }
+  .bad { border-color:var(--bad) !important; }
+  #formerrors { color:var(--bad); font-size:13px; margin-top:8px; }
+  .note { background:var(--bg); border-radius:8px; padding:6px 8px; font-size:13px; margin-bottom:6px; }
+  details summary { cursor:pointer; padding:6px 0; }
+  button:disabled { opacity:.45; }
   img.plot { display:block; width:100%; margin-top:8px; border-radius:8px; background:#fff; }
   #toast { position:fixed; left:12px; right:12px; bottom:calc(14px + env(safe-area-inset-bottom)); background:var(--fg); color:var(--bg); padding:10px 12px; border-radius:10px; opacity:0; transition:opacity .2s; pointer-events:none; }
   #toast.show { opacity:.95; }
@@ -63,15 +74,32 @@
 
 <section id="queue" class="hidden">
   <div id="queued"></div>
-  <div class="card">
-    <div class="row" style="margin-bottom:8px">
-      <strong style="flex:1">New job</strong>
-      <select id="kind" onchange="template()"><option>train</option><option>prepare-data</option></select>
+  <div class="card" id="jobform">
+    <div class="row" style="margin-bottom:6px"><strong style="flex:1">New job</strong>
+      <button onclick="resetForm()">Reset</button>
+      <button onclick="toggleJSON()">JSON</button></div>
+    <div id="formnote" class="note hidden"></div>
+    <div class="field"><label for="kind">kind</label>
+      <select id="kind" onchange="resetForm(this.value)"><option value="train">train — a training run</option><option value="prepare-data">prepare-data — build a token dataset</option></select></div>
+    <div class="field" id="targetfield"><label for="target">run on</label>
+      <select id="target" onchange="targetChanged()"><option value="local">this Mac — the job queue</option><option value="modal">Modal GPUs — starts now</option></select></div>
+    <div id="modalopts" class="hidden">
+      <div class="field"><label for="gpus">GPUs</label><input id="gpus" list="gpulist" value="L4:2" autocapitalize="off" autocorrect="off" spellcheck="false" oninput="collectJob(true)">
+        <datalist id="gpulist"><option value="L4:2"><option value="A100-80GB:2"><option value="H100:2"><option value="H100:4"><option value="cpu"></datalist>
+        <div class="mut hint">type:count, e.g. L4:2 · batch-size is the global batch and must divide by the count · L4 ≈ $0.80/GPU-h, H100 ≈ $3.95/GPU-h</div><div class="err"></div></div>
+      <div class="field"><label for="timeout">timeout (hours)</label><input id="timeout" inputmode="decimal" value="6">
+        <div class="mut hint">Modal stops the run here; it saves only at the end, so leave headroom</div></div>
     </div>
-    <textarea id="jobjson" spellcheck="false"></textarea>
-    <div class="row" style="margin-top:8px">
-      <button class="pri" onclick="submitJob()">Queue it</button>
-      <span class="mut" id="jobhint">flags without the leading --</span>
+    <div class="field"><label for="jobname">name *</label><input id="jobname" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="e.g. data20k-emb256-160k">
+      <div class="mut hint">becomes part of the run id · letters, digits, . _ -</div></div>
+    <div id="fields-common"></div>
+    <details id="more"><summary class="mut">More options</summary><div id="fields-more"></div></details>
+    <div id="jsonbox" class="hidden"><textarea id="jobjson" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:6px"><button onclick="applyJSON()">Apply JSON to form</button></div></div>
+    <div id="formerrors" class="hidden"></div>
+    <div class="row" style="margin-top:10px">
+      <button onclick="submitJob(true)">Check</button>
+      <button class="pri" id="submitbtn" onclick="submitJob(false)">Queue it</button>
     </div>
     <pre id="jobresult" class="hidden"></pre>
   </div>
@@ -118,15 +146,27 @@ async function cmd(runId, body, label) {
 }
 function setKnob(runId, knob, value) { cmd(runId, { type: 'set', knob, value: Number(value) }, `${knob} = ${value}`); }
 
+function targetChanged() {
+  const train = $('#kind').value === 'train', modal = train && $('#target').value === 'modal';
+  $('#targetfield').classList.toggle('hidden', !train);
+  $('#modalopts').classList.toggle('hidden', !modal);
+  $('#submitbtn').textContent = modal ? 'Launch on Modal' : 'Queue it';
+  collectJob(true);
+}
+
+function remoteTag(r) { return r.remote ? `<span class="pill" title="${esc(r.remote.git_sha || '')}">modal · ${esc(r.remote.gpus || '')}</span>` : ''; }
+
 function liveCard(r) {
   const L = r.live || {};
   const pct = L.total_steps ? Math.min(100, 100 * L.step / L.total_steps) : 0;
   const stale = L.updated && (Date.now() - Date.parse(L.updated)) > 120000;
   const id = esc(r.run_id);
+  if (r.remote?.phase === 'launching') return `<div class="card" data-run="${id}"><div class="row"><strong style="flex:1">${esc(r.name)}</strong>${remoteTag(r)}<span class="pill s-running">launching</span></div>
+    <div class="mut">building the image and starting ${esc(r.remote.gpus)} on Modal · started ${ago(r.started)}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
   if (r.kind === 'prepare-data') return `<div class="card" data-run="${id}"><div class="row"><strong style="flex:1">${esc(r.name)}</strong><span class="pill s-running">building data</span></div>
     <div class="mut">started ${ago(r.started)}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
   return `<div class="card" data-run="${id}">
-    <div class="row"><strong style="flex:1">${esc(r.name)}</strong><span class="pill s-running">${L.paused ? 'paused' : 'running'}</span></div>
+    <div class="row"><strong style="flex:1">${esc(r.name)}</strong>${remoteTag(r)}<span class="pill s-running">${L.paused ? 'paused' : 'running'}</span></div>
     <div class="bar"><div style="width:${pct.toFixed(1)}%"></div></div>
     <div class="grid num">
       <div class="mut">step</div><div>${(L.step ?? 0).toLocaleString()} / ${(L.total_steps ?? 0).toLocaleString()}</div>
@@ -136,7 +176,7 @@ function liveCard(r) {
       <div class="mut">full val</div><div>${f4(L.full_val_loss)}</div>
       <div class="mut">heartbeat</div><div>${ago(L.updated)}${stale ? ' ⚠︎' : ''}</div>
     </div>
-    <div class="row" style="margin-top:8px">
+    ${r.remote ? `<div class="mut" style="margin-top:8px">On Modal: read-only here (live control is off for multi-GPU runs). Progress syncs every ~30 s.</div>` : `<div class="row" style="margin-top:8px">
       ${L.paused ? `<button class="pri" onclick="cmd('${id}', {type:'resume'}, 'Resume')">Resume</button>` : `<button onclick="cmd('${id}', {type:'pause'}, 'Pause')">Pause</button>`}
       <button onclick="cmd('${id}', {type:'eval_now'}, 'Eval')">Eval now</button>
       <button onclick="cmd('${id}', {type:'checkpoint'}, 'Checkpoint')">Checkpoint</button>
@@ -150,10 +190,11 @@ function liveCard(r) {
       <select id="k-${id}">${Object.keys(META?.knobs || {}).map(k => `<option>${k}</option>`).join('')}</select>
       <input id="v-${id}" inputmode="decimal" placeholder="value" style="width:90px">
       <button onclick="setKnob('${id}', $('#k-${id}').value, $('#v-${id}').value)">Set</button>
-    </div>
+    </div>`}
     <div class="row" style="margin-top:8px">
       <button onclick="showLog('${id}', this)">Log</button>
-      <button onclick="showEvents('${id}', this)">Commands</button>
+      ${r.remote ? '' : `<button onclick="showEvents('${id}', this)">Commands</button>
+      <button onclick="continueFrom('/api/runs/${id}/continuation')">Continue after</button>`}
     </div>
     <pre class="hidden"></pre>
   </div>`;
@@ -169,18 +210,11 @@ async function showDetail(id, btn) {
     pre.textContent = JSON.stringify({ args: s.args, metrics: m, full_val_curve: s.metrics?.full_val_curve?.map(([a, b]) => `${a}: ${b}`), forecast_error: s.forecast_error, error: s.error }, null, 2);
   } catch (e) { pre.textContent = e.message; }
 }
-async function cloneJob(id) {
-  const s = await api(`/api/runs/${id}`);
-  $('#kind').value = s.kind || 'train';
-  $('#jobjson').value = JSON.stringify({ name: (s.name || 'job') + '-v2', kind: s.kind || 'train', args: s.args || {} }, null, 2);
-  document.querySelector('nav button[data-tab=queue]').click();
-  toast('Copied into a new job — edit and queue');
-}
 
 function histCard(r) {
   const id = esc(r.run_id);
   return `<div class="card" data-run="${id}">
-    <div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(r.name || r.run_id)}</strong><span class="pill s-${esc(r.status)}">${esc(r.status)}</span></div>
+    <div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(r.name || r.run_id)}</strong>${remoteTag(r)}<span class="pill s-${esc(r.status)}">${esc(r.status)}</span></div>
     <div class="mut num">${r.started ? new Date(r.started).toLocaleString() : ''} · ${dur(r.duration_sec)}${r.full_val_loss != null ? ` · full val <strong style="color:var(--fg)">${f4(r.full_val_loss)}</strong>` : ''}${r.kind === 'prepare-data' ? ' · dataset' : ''}</div>
     ${r.error ? `<div class="mut" style="color:var(--bad)">${esc(r.error)}</div>` : ''}
     <div class="row" style="margin-top:8px">
@@ -188,6 +222,7 @@ function histCard(r) {
       ${r.kind !== 'prepare-data' ? `<button onclick="showPlot('${id}', this)">Plot</button><button onclick="showReport('${id}', this)">Samples</button>` : ''}
       <button onclick="showLog('${id}', this)">Log</button>
       <button onclick="cloneJob('${id}')">Clone</button>
+      ${r.status === 'completed' && r.kind !== 'prepare-data' ? `<button onclick="continueFrom('/api/runs/${id}/continuation')">Continue</button>` : ''}
     </div>
     <img class="plot hidden" alt="loss plot" onclick="window.open(this.src)">
     <pre class="hidden"></pre>
@@ -209,21 +244,172 @@ async function showPlot(id, btn) {
   } catch (e) { toast(e.message); }
 }
 
+// --- job form: built from /api/meta, so fixed choices are dropdowns and every field is validated ---
 const TEMPLATES = {
   'train': { name: 'my-run', kind: 'train', args: { steps: 20000, 'n-embd': 256, 'n-layer': 4, lr: 0.0003, tokens: 'data/data10k/train.pt', 'val-tokens': 'data/data10k/val.pt', 'full-eval-interval': 5000, save: true, 'save-name': 'my-run.pt', 'sample-report': true } },
-  'prepare-data': { name: 'data20k', kind: 'prepare-data', args: { 'num-examples': 20000, 'val-examples': 200, 'out-dir': 'data/data20k' } },
+  'prepare-data': { name: 'data50k', kind: 'prepare-data', args: { 'num-examples': 50000, 'val-examples': 200, 'out-dir': 'data/data50k' } },
 };
-function template() { $('#jobjson').value = JSON.stringify(TEMPLATES[$('#kind').value], null, 2); }
+const NAME_RE = /^[A-Za-z0-9._-]{1,80}$/, FILE_RE = /^[A-Za-z0-9._-]+$/, HF_RE = /^[A-Za-z0-9._\/-]{1,200}$/;
+const fmtDefault = v => v === null || v === undefined ? 'none' : v === false ? 'off' : v === true ? 'on' : String(v);
+let FORM_READY = false;
 
-async function submitJob() {
+function fieldsFor(kind) { return (META?.form || {})[kind] || []; }
+
+function fieldHTML(f) {
+  const id = `f-${f.flag}`;
+  const range = f.min != null ? ` · ${f.min}–${f.max}` : '';
+  const hint = `<div class="mut hint">${f.type === 'bool' ? '' : `default ${esc(fmtDefault(f.default))}${range}`}${f.help ? (f.type === 'bool' ? '' : ' — ') + esc(f.help) : ''}</div>`;
+  let ctl;
+  if (f.type === 'bool') {
+    ctl = `<label class="chk"><input type="checkbox" id="${id}" data-flag="${f.flag}"> ${f.flag} <span class="mut">(default ${fmtDefault(f.default)})</span></label>`;
+    return `<div class="field">${ctl}${hint}<div class="err"></div></div>`;
+  }
+  if (f.type === 'path') {
+    const pend = new Set(f.pending || []);
+    ctl = `<select id="${id}" data-flag="${f.flag}"><option value="">${f.default ? 'default: ' + esc(f.default) : '— none —'}</option>${
+      (f.choices || []).map(c => `<option value="${esc(c)}">${esc(c)}${pend.has(c) ? '  (after queued run)' : ''}</option>`).join('')}</select>`;
+  } else {
+    const list = f.examples ? ` list="dl-${f.flag}"` : '';
+    const mode = f.type === 'int' || f.type === 'float' ? ' inputmode="decimal"' : ' autocapitalize="off" autocorrect="off" spellcheck="false"';
+    ctl = `<input id="${id}" data-flag="${f.flag}"${mode}${list} placeholder="${esc(fmtDefault(f.default))}">` +
+      (f.examples ? `<datalist id="dl-${f.flag}">${f.examples.map(e => `<option value="${esc(e)}">`).join('')}</datalist>` : '');
+  }
+  return `<div class="field"><label for="${id}">${f.flag}${f.required ? ' *' : ''}</label>${ctl}${hint}<div class="err"></div></div>`;
+}
+
+function renderForm(job, note) {
+  if (!META) return;
+  const kind = job?.kind || 'train';
+  $('#kind').value = kind;
+  $('#target').value = kind === 'train' && job?.target === 'modal' ? 'modal' : 'local';
+  if (job?.gpus) $('#gpus').value = job.gpus;
+  if (job?.timeout_hours) $('#timeout').value = job.timeout_hours;
+  const fields = fieldsFor(kind);
+  $('#fields-common').innerHTML = fields.filter(f => f.common).map(fieldHTML).join('');
+  $('#fields-more').innerHTML = fields.filter(f => !f.common).map(fieldHTML).join('');
+  $('#jobname').value = job?.name || '';
+  const args = job?.args || {};
+  const unknown = Object.keys(args).filter(k => !fields.some(f => f.flag === k));
+  for (const f of fields) {
+    const el = document.getElementById(`f-${f.flag}`); if (!el) continue;
+    const v = args[f.flag];
+    if (f.type === 'bool') el.checked = v !== undefined ? !!v : !!f.default;
+    else if (v !== undefined) {
+      if (el.tagName === 'SELECT' && ![...el.options].some(o => o.value === String(v))) el.add(new Option(`${v} (not found)`, String(v)));
+      el.value = String(v);
+    }
+  }
+  // open "More options" if the job uses any of them
+  $('#more').open = fields.some(f => !f.common && args[f.flag] !== undefined);
+  $('#formnote').textContent = note || '';
+  $('#formnote').classList.toggle('hidden', !note);
+  $('#jobresult').classList.add('hidden');
+  document.querySelectorAll('#jobform [data-flag], #jobname').forEach(el => el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', () => collectJob(true)));
+  targetChanged();  // after the fields exist: it re-validates the form
+  if (unknown.length) showErrors([`not an allowed ${kind} option, dropped: ${unknown.join(', ')}`]);
+  FORM_READY = true;
+}
+
+function parseField(f, el) {
+  if (f.type === 'bool') {
+    return el.checked === !!f.default ? { skip: true } : { value: el.checked };
+  }
+  const raw = el.value.trim();
+  if (raw === '') {
+    if (f.required) return { error: 'required' };
+    return { skip: true };
+  }
+  if (f.type === 'int' || f.type === 'float') {
+    const n = Number(raw.replace(/_/g, ''));
+    if (!Number.isFinite(n)) return { error: 'not a number' };
+    if (f.type === 'int' && !Number.isInteger(n)) return { error: 'must be a whole number' };
+    if (n < f.min || n > f.max) return { error: `must be between ${f.min} and ${f.max}` };
+    return { value: n };
+  }
+  if (f.type === 'name' && !FILE_RE.test(raw)) return { error: 'letters, digits, . _ - only' };
+  if (f.type === 'str' && (!HF_RE.test(raw) || raw.includes('..'))) return { error: 'letters, digits, . _ - / only' };
+  if (f.type === 'outdir' && !/^data\/[A-Za-z0-9._-]+(\/[A-Za-z0-9._-]+)*$/.test(raw)) return { error: 'must be a new folder under data/, e.g. data/data50k' };
+  return { value: raw };
+}
+
+function showErrors(list) {
+  const box = $('#formerrors');
+  box.innerHTML = list.map(e => `<div>${esc(e)}</div>`).join('');
+  box.classList.toggle('hidden', !list.length);
+}
+
+function collectJob(quiet) {
+  const kind = $('#kind').value, args = {}, errors = [];
+  for (const f of fieldsFor(kind)) {
+    const el = document.getElementById(`f-${f.flag}`); if (!el) continue;
+    const r = parseField(f, el);
+    const err = el.closest('.field').querySelector('.err');
+    err.textContent = r.error || ''; el.classList.toggle('bad', !!r.error);
+    if (r.error) errors.push(`${f.flag}: ${r.error}`);
+    else if (!r.skip) args[f.flag] = r.value;
+  }
+  const name = $('#jobname').value.trim();
+  $('#jobname').classList.toggle('bad', !NAME_RE.test(name));
+  if (!NAME_RE.test(name)) errors.push('name: letters, digits, . _ - only (max 80)');
+  if (kind === 'train') {
+    if ('restart-lr' in args && !('resume' in args)) errors.push('restart-lr only applies with resume');
+    const embd = args['n-embd'] ?? 128, head = args['n-head'] ?? 4;
+    if (embd % head) errors.push(`n-embd (${embd}) must be divisible by n-head (${head})`);
+    if (args['sample-report'] && !args.save) errors.push('note: sample-report without save writes a report for a checkpoint that isn\'t kept');
+  }
+  const job = { name, kind, args };
+  if (kind === 'train' && $('#target').value === 'modal') {
+    const gpus = $('#gpus').value.trim(), m = gpus.match(/^(cpu|[A-Za-z0-9-]{2,20}(:([1-8]))?)$/);
+    const n = gpus === 'cpu' ? 2 : Number(m?.[3] || 1), bs = args['batch-size'] ?? 4;
+    if (!m) errors.push('GPUs: like L4:2, A100-80GB:4, H100 or cpu');
+    else if (bs % n) errors.push(`batch-size ${bs} must divide evenly across ${n} GPUs (it's the global batch)`);
+    Object.assign(job, { target: 'modal', gpus, timeout_hours: Number($('#timeout').value) || 6 });
+  }
+  showErrors(errors);
+  $('#submitbtn').disabled = errors.some(e => !e.startsWith('note:'));
+  return { job, errors: errors.filter(e => !e.startsWith('note:')) };
+}
+
+async function submitJob(dryRun) {
+  const { job, errors } = collectJob();
   const out = $('#jobresult'); out.classList.remove('hidden');
-  let body; try { body = JSON.parse($('#jobjson').value); } catch (e) { out.textContent = 'Not valid JSON: ' + e.message; return; }
-  body.kind = body.kind || $('#kind').value;
-  try { const r = await api('/api/jobs', { method: 'POST', body: JSON.stringify(body) });
+  if (errors.length) { out.textContent = 'Fix the highlighted fields first.'; return; }
+  try {
+    const r = await api(`/api/jobs${dryRun ? '?dry_run=true' : ''}`, { method: 'POST', body: JSON.stringify(job) });
     const f = r.forecast && !r.forecast.error ? `\nforecast: ~${Number(r.forecast.time_hours).toFixed(1)}h${r.forecast.loss != null ? `, full_val ≈ ${Number(r.forecast.loss).toFixed(3)}` : ''}` : '';
-    out.textContent = `queued as ${r.file}${f}\n\n${r.argv.join(' ')}`; toast('Queued'); refresh();
+    const where = r.target === 'modal' ? `${dryRun ? '✓ valid' : 'launching on Modal'} as ${r.run_id} · ${r.gpus} (${r.nproc} ranks) · timeout ${r.timeout_hours}h` : `${dryRun ? '✓ valid' : 'queued as ' + r.file}${f}`;
+    out.textContent = `${where}\n\n${r.argv.join(' ')}`;
+    if (!dryRun) { toast(r.target === 'modal' ? 'Launching on Modal' : 'Queued'); refresh(); }
   } catch (e) { out.textContent = 'Rejected: ' + e.message; }
 }
+
+function toggleJSON() {
+  const box = $('#jsonbox'), open = box.classList.toggle('hidden') === false;
+  if (open) $('#jobjson').value = JSON.stringify(collectJob(true).job, null, 2);
+}
+function applyJSON() {
+  try { const j = JSON.parse($('#jobjson').value); if (j.kind && !(j.kind in (META?.form || {}))) throw new Error(`kind must be one of: ${Object.keys(META.form).join(', ')}`); renderForm({ ...j, kind: j.kind || $('#kind').value }); $('#jsonbox').classList.add('hidden'); }
+  catch (e) { toast('JSON: ' + e.message); }
+}
+
+async function freshMeta() { try { META = await api('/api/meta'); } catch {} }
+async function resetForm(kind) { await freshMeta(); renderForm(TEMPLATES[kind || $('#kind').value]); }
+function openForm(job, note) {
+  renderForm(job, note);
+  document.querySelector('nav button[data-tab=queue]').click();
+  $('#jobform').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+async function cloneJob(id) {
+  const s = await api(`/api/runs/${id}`); await freshMeta();
+  const args = { ...(s.args || {}) };
+  if (s.remote) delete args['save-name'];  // the mirror's import name, not a real flag of that run
+  openForm({ name: (s.name || 'job') + '-v2', kind: s.kind || 'train', args, ...(s.remote ? { target: 'modal', gpus: s.remote.gpus } : {}) }, `copied from ${s.name || id}`);
+}
+async function continueFrom(url) {
+  try { const j = await api(url); await freshMeta(); openForm(j, j.note); }
+  catch (e) { toast(e.message); }
+}
+
 async function cancelJob(file) { try { await api(`/api/queue/${encodeURIComponent(file)}`, { method: 'DELETE' }); toast('Cancelled'); refresh(); } catch (e) { toast('Error: ' + e.message); } }
 
 const PANELS = { log: showLog, events: showEvents, report: showReport, detail: showDetail };
@@ -244,12 +430,14 @@ function editing() { return document.activeElement?.matches('input, select, text
 
 async function refresh() {
   try {
-    if (!META) { META = await api('/api/meta'); $('#tb').href = META.tensorboard_url || `${location.protocol}//${location.hostname}:8443/`; $('#tb').classList.remove('hidden'); }
+    if (!META || !FORM_READY) { META = await api('/api/meta'); if (!FORM_READY) renderForm(TEMPLATES.train); $('#tb').href = META.tensorboard_url || `${location.protocol}//${location.hostname}:8443/`; $('#tb').classList.remove('hidden'); }
     const [runs, queue] = await Promise.all([api('/api/runs?limit=60'), api('/api/queue')]);
     RUNS = runs;
     const live = runs.filter(r => r.status === 'running');
     if (!editing()) { const st = openState('#live'); $('#live').innerHTML = live.length ? live.map(liveCard).join('') : `<div class="card mut">Nothing running. ${queue.length ? queue.length + ' job(s) queued.' : 'Queue a job from the Queue tab.'}</div>`; restore('#live', st); }
-    $('#queued').innerHTML = queue.map(q => `<div class="card"><div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(q.job?.name || q.file)}</strong><span class="mut">${esc(q.job?.kind || 'train')}</span><button class="danger" onclick="cancelJob('${esc(q.file)}')">Cancel</button></div><div class="mut" style="overflow-wrap:anywhere">${esc(JSON.stringify(q.job?.args || {}))}</div></div>`).join('') || '<div class="card mut">Queue is empty.</div>';
+    $('#queued').innerHTML = queue.map(q => `<div class="card"><div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(q.job?.name || q.file)}</strong>${q.running ? '<span class="pill s-running">running</span>' : `<span class="mut">${esc(q.job?.kind || 'train')}</span>`}</div>
+      <div class="mut" style="overflow-wrap:anywhere; margin:4px 0 8px">${esc(Object.entries(q.job?.args || {}).map(([k, v]) => `${k}=${v}`).join('  '))}</div>
+      <div class="row">${(q.job?.kind || 'train') === 'train' && q.job?.args?.save ? `<button onclick="continueFrom('/api/queue/${encodeURIComponent(q.file)}/continuation')">Continue after</button>` : ''}${q.running ? '' : `<button class="danger" onclick="cancelJob('${esc(q.file)}')">Cancel</button>`}</div></div>`).join('') || '<div class="card mut">Queue is empty.</div>';
     const hist = runs.filter(r => r.status !== 'running');
     const sig = JSON.stringify(hist.map(r => [r.run_id, r.status]));
     if (sig !== HIST_SIG) {  // only rebuild when a run appears or changes status, so open plots stay put
@@ -313,7 +501,6 @@ function renderBest() {
 
 function tick() { const s = Math.round((Date.now() - LAST) / 1000); $('#updated').textContent = LAST ? (s < 5 ? 'updated now' : `updated ${s}s ago`) : ''; }
 
-template();
 try { const t = localStorage.getItem('mini-llm-tab'); if (t) document.querySelector(`nav button[data-tab=${t}]`)?.click(); } catch {}
 refresh();
 // Auto-refresh every 30s while the page is on screen; catch up immediately when you come back to it.
