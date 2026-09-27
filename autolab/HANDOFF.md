@@ -436,3 +436,16 @@ Build this first; everything else hill-climbs on it.
   - Throughput and wall-clock caps are only comparable on the same GPU type,
     so a session fixes one GPU type. The noise baseline must be measured on
     that GPU type, not on the Mac.
+- 2026-09-27 (M3 prep results, `autolab/experiments/m3_prep.json`, 15 trials, $1.15 on L4):
+  Seed noise of the base program (emb256/L4/blk128, bs64, lr 1.2e-3): σ = 0.027 at
+  the 5.2M-token screen (mean 6.536) and σ = 0.043 at the 21M-token full budget
+  (mean 5.365). Screens rank the 5 variants almost like full runs (Spearman ρ = 0.9;
+  only lr 3.6e-3 and lr 3.6e-4 swap places), but they exaggerate gains from faster
+  early progress. bs16 is −0.34 at the screen (12.7σ) and only −0.046 at full (1.1σ,
+  not significant); warmup 500 is −0.15 at the screen and −0.012 at full. So screens
+  are good for rejecting, not for accepting: keep the cascade's rule (screen within
+  margin → full runs decide). Screens also flatter high LR: lr 3.6e-3 is +0.16 at the screen
+  and +1.09 at full. Calibrate before M3: spike_rate_max = 0.02 flags healthy bs64
+  runs (2–3% spikes, grad-norm max/median ≈ 3) as `unstable`, while the diverging lr 3.6e-3 run
+  (max/median ≈ 10) isn't flagged. Tune spike_rate_max / grad_norm_max_over_median
+  on these runs.
