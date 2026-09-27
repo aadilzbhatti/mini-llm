@@ -23,6 +23,24 @@ project and is **unchanged**. See `BOOTSTRAP_NOTES.md`.
   plot, sample report, baselines row), so Mac and Modal runs are compared in
   one table on the same `full_val_loss`.
 
+## Current best
+
+`full_val_loss` **4.6564** on data20k's val set: 4 layers × 256d, block 128,
+batch 64 (global) × 15,000 steps = 122.88M tokens, peak LR 1.2e-3 cosine to
+2e-6, 256K-token warmup (32 steps), seed 42. About 31 min on Modal 2×L4.
+Reproduce with
+
+```bash
+uv run --group modal modal run --detach src/mini_llm/remote/modal_train.py \
+    --config configs/modal/best_data20k_bs64_15k_lr1.2e-3_wu256k.json --gpus L4:2
+```
+
+What got here (all in `baselines.md`): at a fixed token budget, batch 64
+beats the batch-4 baseline (4.7165 at the same 122.88M tokens, 13 h on the
+Mac), and batch 128 doesn't (best 4.6787 at LR 1.7e-3). The best LR followed
+square-root batch scaling at both batch 64 (3e-4 × √16 = 1.2e-3) and batch
+128 (≈1.7e-3). Datasets and how they were built: `data/*/MANIFEST.md`.
+
 ## Setup
 
 Requires [uv](https://docs.astral.sh/uv/). If you don't have it:
