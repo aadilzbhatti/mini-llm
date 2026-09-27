@@ -29,7 +29,12 @@ the "Decision log" at the bottom.
   serves the dashboard, mounted on the tailnet at `/autolab` next to the
   owner's control page. Plists are in `autolab/launchd/`. The M5 controller loop
   will run inside the daemon.
-- Milestones 3–6 are not started. They were re-planned on 2026-09-26 around
+- M3 (evaluator + cascade) is built and running live: `src/autolab/{program,evaluate}.py`,
+  the `EVOLVE-BLOCK` markers (commit 7a7e0e7, the base of every program), and the protected
+  `tests/autolab/test_causal_leak.py`. The daemon advances programs every cycle, and the
+  dashboard has a Programs tab. `autolab evolve propose --diff FILE` adds a candidate by hand.
+  M4 (LLM proposer) will call the same `propose()`.
+- Milestones 4–6 are not started. M3–M6 were re-planned on 2026-09-26 around
   AlphaEvolve (see "Design pivot" under Milestone guidance), which overrides
   BRIEF §4–§5 and parts of §6–§9.
 
@@ -449,3 +454,34 @@ Build this first; everything else hill-climbs on it.
   runs (2–3% spikes, grad-norm max/median ≈ 3) as `unstable`, while the diverging lr 3.6e-3 run
   (max/median ≈ 10) isn't flagged. Tune spike_rate_max / grad_norm_max_over_median
   on these runs.
+- 2026-09-27 (M3): diagnosis recalibrated on the 15 prep runs. Spike/grad-norm stats skip
+  the initial descent (the steep drop from ~10.8 read as spikes in every healthy run).
+  The "final smoothed" losses use the tail fit's end value (the EMA lagged ~0.1 on screens).
+  `unstable` now needs >= 5 spikes above 3%, grad-norm max/median > 3, or p95/median
+  > 1.5. That flags the diverging lr 3.6e-3 run and no healthy one.
+- 2026-09-27 (M3): no git worktrees. A program is block texts + hparams in
+  `autolab/state/evolve/programs/<id>.json`, materialized from the base commit into
+  `autolab/state/evolve/work/<id>/src` when needed (deleted when done). Tests always come
+  from this checkout, since they're protected. The JSON store is simple and inspectable;
+  M4 can index it or move it to SQLite for sampling.
+- 2026-09-27 (M3): regions are attention, mlp, block, model_init, forward_body (up to ln_f;
+  the logits/loss lines stay outside), lr_schedule, optimizer. The optimizer region also holds a
+  new no-op `before_optimizer_step` hook (called between backward() and step()). Without it,
+  gradient clipping, one of the most common useful edits, would be impossible.
+- 2026-09-27 (M3): static rules beyond the scope check. Block code may not name
+  `targets` (labels are in scope in forward(), so a block could leak them into the logits), file/OS/
+  network/pickle modules, exec/eval/compile/__import__, or torch.load/save. The protected
+  test also checks that logits don't depend on the targets passed.
+- 2026-09-27 (M3): the CPU gate runs shape → causal/label-leak (at the program's own size) →
+  full protected suite, as three pytest runs so reject reasons are specific. Every test is
+  seeded via `-p autolab.pytest_seed`. The owner's `test_overfits_one_batch` fails ~1 in
+  3 on the unmodified code without seeding (unseeded init + tokens). Worth fixing on the main
+  track. The full suite costs ~90 s of Mac CPU per candidate.
+- 2026-09-27 (M3): the smoke stage is folded into the screen. On Modal a 640-step screen
+  (~$0.03) costs barely more than a separate smoke run's container overhead. The screen
+  applies the smoke checks (NaN, failed run, throughput >= 0.5x initial) first.
+- 2026-09-27 (M3): acceptance. The screen passes if <= incumbent screen mean + 0.10 (screens
+  overstate gains, so they only reject). A full run below the incumbent's mean triggers 2
+  more seeds. Accept iff the mean over >= 2 seeds < incumbent mean − 2σ_full (= 5.280 for
+  p0), else "contender". Wall caps = 1.25x p0's mean wall time: screen 184 s, full 667 s.
+  p0 = the 6 base runs of m3_prep (run on pre-marker code 2c351a5, behavior-identical).
