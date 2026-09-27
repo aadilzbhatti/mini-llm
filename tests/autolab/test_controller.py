@@ -239,6 +239,7 @@ def test_data_policy_prefers_slicing_a_bigger_set(world, monkeypatch):
     assert spawned == [["data", "slice", "data80k", "--docs", "40000"]]
 
 
+@pytest.mark.real_commit
 def test_commit_accepted_in_a_throwaway_clone(tmp_path):
     """Commits the accepted program's code into its own worktree/branch (on a clone, never the real repo)."""
     clone = tmp_path / "clone"
