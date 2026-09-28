@@ -1,0 +1,33 @@
+{
+  "program": "p3",
+  "session": "s2+data40k@122M",
+  "hparams": {
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 6,
+    "dropout": 0.0,
+    "batch_size": 64,
+    "lr": 0.003,
+    "min_lr": 2e-06,
+    "warmup_steps": 400,
+    "weight_decay": 0.1
+  },
+  "scores": {
+    "params": 17683281,
+    "screen_loss": 5.267244,
+    "full_losses": [
+      4.299932,
+      4.300331,
+      4.312983
+    ],
+    "tokens_per_sec": 42275.0,
+    "neg_params": -17683281,
+    "full_mean": 4.304415333333333,
+    "n_seeds": 3,
+    "full_std": 0.007422498523632957,
+    "neg_full_val_loss": -4.304415333333333
+  },
+  "rationale": "Ported from s2+data40k/p10 (4.3754 there): Three linked changes, all aimed at letting the model use a faster learning rate safely.\n\n(1) Fix the embedding init scale. xavier_uniform on the 50257\u00d7256 token table gives std \u2248 0.0063. On the 128\u00d7256 position table it gives std \u2248 0.07, so at init the position signal is about 10\u00d7 larger than the token signal in the residual stream. Rare tokens get few updates, so their rows stay near that tiny scale for a long time. Because the embedding is tied, these rows are also the output logits, so rare-token logits stay near zero too. I switch to GPT-2 init: N(0, 0.02) for the token table and N(0, 0.01) for positions. That makes token identity the dominant input signal and gives reasonably scaled output logits from step 0.\n\n(2) Add global gradient-norm clipping at 1.0 in before_optimizer_step. The median grad norm is 0.40 and p95 is 0.47, so clipping almost never fires in normal steps. It only caps the 4 observed loss spikes.\n\n(3) Given that safety margin, raise peak lr from 2e-3 to 3e-3 and warmup from 300 to 400 steps. The last lr increase (1.2e-3 \u2192 2e-3) gave about \u22120.08, and the incumbent is diagnosed \"still_improving\" at the token budget. A faster effective learning rate should get more out of the fixed number of tokens. Weight decay (0.1, including the embedding) is kept as in the incumbent. With a higher lr, the decay also shrinks weights faster, since AdamW's decay step scales with lr\u00d7wd.",
+  "parent": "p0",
+  "created_by": "port:s2+data40k/p10"
+}
