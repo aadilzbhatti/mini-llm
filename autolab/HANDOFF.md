@@ -628,3 +628,9 @@ Build this first; everything else hill-climbs on it.
   Claude's prompt said "Wikipedia-style validation set" and hard-coded the dataset label as
   data20k; it now names FineWeb-Edu and the session's dataset. Proposals made before this fix
   (s2-82m, s2+data40k p1-p10) saw the wrong description.
+- 2026-09-28 (owner): budget controls on the dashboard (Live tab, "Budget & limits"): a one-time raise
+  of the rolling-24h budget for N hours, or permanent changes to [controller] daily_usd / max_in_flight
+  and [modal] max_usd, written into config.toml with comments kept (POST /api/budget, bounded, needs an
+  X-Autolab header so a cross-site form can't trigger it; tailnet-only anyway). Every change is a notebook
+  entry. The Modal cap is now re-read on each submit (modal_backend.max_usd()), so page changes apply without
+  a restart. The header has a "← Control" link back to the owner's control page at /.

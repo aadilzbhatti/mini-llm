@@ -1,6 +1,6 @@
 # Autolab session report
 
-Generated 2026-09-28T04:25+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k`.
+Generated 2026-09-28T05:00+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k`.
 
 ## Headline
 
@@ -61,20 +61,21 @@ Generated 2026-09-28T04:25+00:00 by `autolab session-report` (the daemon refresh
   - p7 (human) @ static: mini_llm/model.py:forward_body: uses forbidden name 'targets' (line 17); mini_llm/model.py:forward_body: uses forbidden name 'targets' (line 18)
   - p8 (human) @ static: hparam lr=0.5 outside [1e-05, 0.01]
 - `s2-82m`: 7 children — evaluated 4, contender 2, accepted 1
-- `s2+data40k`: 6 children — accepted 2, contender 2, rejected 1, evaluated 1 · rejected at cpu 1
+- `s2+data40k`: 13 children — running 3, queued 3, accepted 2, contender 2, rejected 2, evaluated 1 · rejected at cpu 2
   - p3 (claude-sonnet-5) @ cpu: shape: 1 failed: tests/autolab/test_causal_leak.py::test_shapes_and_backward
+  - p8 (claude-opus-5-5) @ cpu: shape: 1 failed: tests/autolab/test_causal_leak.py::test_shapes_and_backward
 
 ## Proposer (Claude) statistics
 
 | proposer | proposed | trained | accepted | contender | evaluated | rejected |
 | --- | --- | --- | --- | --- | --- | --- |
-| claude-opus-5-5 | 7 | 7 | 1 | 3 | 3 | 0 |
-| claude-sonnet-5 | 4 | 3 | 1 | 1 | 1 | 1 |
+| claude-opus-5-5 | 12 | 11 | 1 | 3 | 3 | 1 |
+| claude-sonnet-5 | 6 | 5 | 1 | 1 | 1 | 1 |
 | human | 8 | 1 | 0 | 1 | 0 | 7 |
 | mutation | 1 | 1 | 0 | 0 | 1 | 0 |
 | port | 1 | 1 | 1 | 0 | 0 | 0 |
 
-- Claude calls: 12 (11 ok), $1.15. Failures: exit 1 ×1.
+- Claude calls: 19 (18 ok), $2.19. Failures: exit 1 ×1.
 - Fallback mutations (proposer failed): 1.
 
 ## Spend
@@ -85,10 +86,10 @@ Generated 2026-09-28T04:25+00:00 by `autolab session-report` (the daemon refresh
 | full runs | 13 | 6.60 | 5.27 |
 | baselines & prep experiments | 25 | 6.23 | 4.98 |
 | data checks | 6 | 2.97 | 2.38 |
-| screens | 13 | 0.93 | 0.74 |
+| screens | 16 | 0.93 | 0.74 |
 | data-switch screens | 3 | 0.20 | 0.16 |
-| **Modal total** | 76 | 24.81 | **19.83** |
-| Claude | 12 calls | | 1.15 |
+| **Modal total** | 79 | 24.81 | **19.83** |
+| Claude | 19 calls | | 2.19 |
 
 Modal $ = wall time × GPU list price (L4); CPU/memory charges excluded, so a lower bound.
 

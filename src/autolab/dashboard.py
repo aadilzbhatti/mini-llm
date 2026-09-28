@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean, stdev
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 
 from autolab.config import REPO_ROOT
@@ -319,7 +319,12 @@ def controller_view(calls: dict) -> dict:
     daily = cfg.get("daily_usd")
     if ov.get("until") and _age_s(ov["until"]) is not None and _age_s(ov["until"]) < 0:
         daily = ov.get("usd")
+    modal_cap = settings().get("config", {}).get("modal", {}).get("max_usd")
+    modal_spent = sum(c.get("usd") or 0 for c in calls.values() if c["state"] != "pending")
+    modal_pending = sum(c.get("usd_estimate") or 0 for c in calls.values() if c["state"] == "pending")
     return {"enabled": ctl.get("enabled", False), "paused_until": ctl.get("paused_until"),
+            "base_daily_usd": cfg.get("daily_usd"), "modal_cap": modal_cap,
+            "modal_spent": round(modal_spent, 2), "modal_pending": round(modal_pending, 2),
             "override": ov if daily == ov.get("usd") else None,
             "pause_reason": ctl.get("pause_reason"), "data_flow": ctl.get("data_flow", {}),
             "ladder": ctl.get("ladder", {}),
@@ -464,6 +469,87 @@ def live_view() -> dict:
             "daemon": _json(AUTOLAB / "state" / "daemon.json"), "columns": PIPE_COLUMNS, "cards": cards,
             "llm": llm, "log": log_tail, "active_session": active.name,
             "pending_runs": sum(c["state"] == "pending" for c in calls.values())}
+
+
+BUDGET_BOUNDS = {"daily_usd": (0.0, 200.0), "max_usd": (0.0, 1000.0), "max_in_flight": (1, 12)}
+CONFIG_KEYS = {"daily_usd": "controller", "max_in_flight": "controller", "max_usd": "modal"}
+
+
+def set_config_value(path: Path, section: str, key: str, value) -> None:
+    """Replace `key = ...` inside [section] of a TOML file, keeping comments; validate the result."""
+    lines = path.read_text().splitlines(keepends=True)
+    current, done = None, False
+    for i, line in enumerate(lines):
+        m = re.match(r"^\[([^\]]+)\]\s*$", line.strip())
+        if m:
+            current = m.group(1)
+            continue
+        if current == section and re.match(rf"^{key}\s*=", line):
+            comment = line.split("#", 1)[1] if "#" in line else ""
+            head = f"{key} = {value}"
+            lines[i] = (head.ljust(max(len(head) + 1, 34)) + ("# " + comment.strip() if comment else "")).rstrip() + "\n"
+            done = True
+            break
+    if not done:
+        raise ValueError(f"[{section}] {key} not found in {path.name}")
+    text = "".join(lines)
+    got = tomllib.loads(text)[section][key]
+    if got != value:
+        raise ValueError(f"write check failed for {key}")
+    tmp = path.with_suffix(".toml.tmp")
+    tmp.write_text(text)
+    tmp.replace(path)
+
+
+def _bounded(key: str, value):
+    lo, hi = BUDGET_BOUNDS[key]
+    v = int(value) if isinstance(lo, int) else float(value)
+    if not lo <= v <= hi:
+        raise HTTPException(400, f"{key} must be between {lo} and {hi}")
+    return v
+
+
+@app.post("/api/budget")
+async def api_budget(request: Request) -> JSONResponse:
+    """Budget controls from the page. Tailnet-only; the custom header blocks cross-site form posts."""
+    if request.headers.get("x-autolab") != "1":
+        raise HTTPException(403, "missing X-Autolab header")
+    from datetime import timedelta
+
+    from autolab import controller as ctl
+
+    body = await request.json()
+    action = body.get("action")
+    if action == "override":
+        daily = _bounded("daily_usd", body.get("daily_usd"))
+        hours = float(body.get("hours", 12))
+        if not 0.5 <= hours <= 72:
+            raise HTTPException(400, "hours must be between 0.5 and 72")
+        c = ctl.load_control()
+        until = ctl.now() + timedelta(hours=hours)
+        c["daily_usd_override"] = {"usd": daily, "until": ctl.iso(until), "set": ctl.iso(ctl.now()), "by": "dashboard"}
+        ctl.save_control(c)
+        ctl.note("budget_override", daily_usd=daily, until=ctl.iso(until), by="dashboard")
+        return JSONResponse({"ok": True, "message": f"daily budget ${daily:g} until {ctl.iso(until)}"})
+    if action == "clear_override":
+        c = ctl.load_control()
+        c.pop("daily_usd_override", None)
+        ctl.save_control(c)
+        ctl.note("budget_override_cleared", by="dashboard")
+        return JSONResponse({"ok": True, "message": "one-time raise cleared"})
+    if action == "permanent":
+        changed = {}
+        for key in ("daily_usd", "max_usd", "max_in_flight"):
+            if body.get(key) not in (None, ""):
+                value = _bounded(key, body[key])
+                set_config_value(AUTOLAB / "config.toml", CONFIG_KEYS[key], key, value)
+                changed[key] = value
+        if not changed:
+            raise HTTPException(400, "nothing to change")
+        ctl.note("settings_changed", by="dashboard", **changed)
+        return JSONResponse({"ok": True, "message": "saved to autolab/config.toml: " +
+                             ", ".join(f"{k} = {v}" for k, v in changed.items())})
+    raise HTTPException(400, "unknown action")
 
 
 @app.get("/api/live")

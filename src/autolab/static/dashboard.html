@@ -41,6 +41,13 @@ html, body { overflow-x: hidden; margin: 0; background: var(--page); color: var(
 header { position: sticky; top: 0; z-index: 5; background: var(--page); border-bottom: 1px solid var(--border); }
 .bar { max-width: 1200px; margin: 0 auto; padding: 10px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .bar h1 { font-size: 16px; margin: 0; font-weight: 650; }
+.back { color: var(--ink-2); text-decoration: none; border: 1px solid var(--border); border-radius: 8px; padding: 3px 9px; font-size: 13px; }
+.back:hover { color: var(--ink); border-color: var(--axis); }
+.budget form { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-top: 8px; }
+.budget label { display: flex; flex-direction: column; font-size: 12px; color: var(--ink-2); gap: 3px; }
+.budget input { font: inherit; width: 110px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); }
+.budget button, .btn { font: inherit; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+.budget button.pri { background: var(--s1); border-color: var(--s1); color: #fff; }
 .bar .meta { color: var(--muted); font-size: 12px; margin-left: auto; }
 nav { max-width: 1200px; margin: 0 auto; padding: 0 16px 8px; display: flex; gap: 4px; overflow-x: auto; }
 nav button { border: 1px solid transparent; background: none; color: var(--ink-2); padding: 6px 10px;
@@ -130,6 +137,7 @@ a { color: var(--s1); }
 <body>
 <header>
   <div class="bar">
+    <a class="back" href="/" title="Back to the mini-llm control page">← Control</a>
     <h1>autolab</h1>
     <span id="daemonBadge" class="status"></span>
     <span class="meta" id="meta">loading…</span>
@@ -641,6 +649,7 @@ function renderLive(L) {
       h("div", {class: "muted"}, `${cur ? "for " + fmt.dur(cur.age_s) + " · " : ""}session ${L.active_session} · ${L.pending_runs} run${L.pending_runs === 1 ? "" : "s"} on Modal · ${ctlText}`),
       C.data_flow && C.data_flow.state ? h("div", {class: "muted"}, `data policy: ${C.data_flow.state}${C.data_flow.target ? " (" + C.data_flow.target + ")" : ""} · compute ladder: ${C.ladder && C.ladder.state || "idle"}` +
         (C.ladder && C.ladder.waiting && C.ladder.waiting.stalled !== undefined ? ` (${C.ladder.waiting.stalled} stalled of 4 needed)` : "")) : null)));
+  el.append(budgetCard(C));
   const board = h("div", {class: "board"});
   for (const col of L.columns.filter(c => c !== "finished")) {
     const cards = L.cards.filter(c => c.column === col);
@@ -669,6 +678,45 @@ function renderLive(L) {
     h("div", {}, h("h2", {}, "Activity"), feed)));
   el.append(h("details", {style: "margin-top:10px"}, h("summary", {class: "muted"}, "Daemon log (latest first)"), h("pre", {}, L.log.join("\n"))));
 }
+let budgetMsg = "";
+async function postBudget(body, confirmText) {
+  if (confirmText && !confirm(confirmText)) return;
+  try {
+    const r = await fetch(BASE + "api/budget", {method: "POST", headers: {"Content-Type": "application/json", "X-Autolab": "1"}, body: JSON.stringify(body)});
+    const j = await r.json();
+    budgetMsg = r.ok ? "✓ " + j.message : "✗ " + (j.detail || r.status);
+  } catch (e) { budgetMsg = "✗ " + e.message; }
+  await refreshLive(); refresh();
+}
+function budgetCard(C) {
+  const raised = C.override && C.override.until;
+  const num = (name, value, step) => h("input", {type: "number", name, value: value ?? "", step: step || "any", min: "0"});
+  const once = h("form", {onsubmit: e => { e.preventDefault(); const f = new FormData(e.target);
+      postBudget({action: "override", daily_usd: Number(f.get("daily_usd")), hours: Number(f.get("hours"))},
+        `Raise the rolling-24h budget to $${f.get("daily_usd")} for ${f.get("hours")} hours? It returns to $${C.base_daily_usd} after that.`); }},
+    h("label", {}, "Daily budget ($)", num("daily_usd", raised ? C.daily_usd : Math.max(20, (C.base_daily_usd || 10) * 2))),
+    h("label", {}, "For (hours)", num("hours", 12, "0.5")),
+    h("button", {class: "pri", type: "submit"}, "Raise one time"),
+    raised ? h("button", {type: "button", onclick: () => postBudget({action: "clear_override"}, "Clear the one-time raise now?")}, "Clear raise") : null);
+  const perm = h("form", {onsubmit: e => { e.preventDefault(); const f = new FormData(e.target); const body = {action: "permanent"};
+      for (const k of ["daily_usd", "max_usd", "max_in_flight"]) if (f.get(k) !== "") body[k] = Number(f.get(k));
+      postBudget(body, "Save these limits permanently to autolab/config.toml?\n" + JSON.stringify(body)); }},
+    h("label", {}, "Daily budget ($)", num("daily_usd", C.base_daily_usd)),
+    h("label", {}, "Total Modal cap ($)", num("max_usd", C.modal_cap)),
+    h("label", {}, "In flight", num("max_in_flight", C.max_in_flight, "1")),
+    h("button", {type: "submit"}, "Save permanently"));
+  const capFrac = C.modal_cap ? Math.min(100, C.modal_spent / C.modal_cap * 100) : 0;
+  return h("div", {class: "card budget"}, h("h3", {}, "Budget & limits"),
+    h("div", {class: "kv", style: "margin-bottom:6px"},
+      h("dt", {}, "Last 24 h"), h("dd", {}, `${fmt.usd(C.spend_24h)} of ${fmt.usd(C.daily_usd)}` + (raised ? ` — raised from ${fmt.usd(C.base_daily_usd)} until ${fmt.time(C.override.until)}` : "")),
+      h("dt", {}, "Modal total"), h("dd", {}, `${fmt.usd(C.modal_spent)} spent + ${fmt.usd(C.modal_pending)} running, of ${fmt.usd(C.modal_cap)} cap`),
+      h("dt", {}, "In flight"), h("dd", {}, `up to ${C.max_in_flight} candidates at once`)),
+    h("div", {class: "meter"}, h("span", {style: `width:${capFrac}%;background:var(--s1)`})),
+    h("div", {class: "muted", style: "font-size:12px;margin-top:10px"}, "One time: raises the rolling-24h budget until the time runs out, then it goes back by itself."), once,
+    h("div", {class: "muted", style: "font-size:12px;margin-top:12px"}, "Permanent: writes autolab/config.toml; the daemon picks it up on its next cycle."), perm,
+    budgetMsg ? h("div", {style: "margin-top:8px"}, budgetMsg) : null);
+}
+
 async function refreshLive() {
   try {
     const r = await fetch(BASE + "api/live", {cache: "no-store"});

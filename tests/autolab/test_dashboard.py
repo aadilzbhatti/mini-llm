@@ -86,3 +86,28 @@ def test_page_script_parses(tmp_path):
     js.write_text(re.search(r"<script>(.*)</script>", html, re.S).group(1))
     r = subprocess.run([node, "--check", str(js)], capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
+
+
+def test_budget_controls(client, tmp_path, monkeypatch):
+    from autolab import controller as ctl
+
+    monkeypatch.setattr(ctl, "CONTROL", tmp_path / "controller.json")
+    monkeypatch.setattr(ctl, "NOTEBOOK", tmp_path / "notebook.jsonl")
+    cfg = dash.AUTOLAB / "config.toml"
+    cfg.write_text("[modal]\nmax_usd = 50.0              # cap\n\n[controller]\ndaily_usd = 10.0   # per day\nmax_in_flight = 6\n")
+    h = {"X-Autolab": "1"}
+    assert client.post("/api/budget", json={"action": "override", "daily_usd": 30, "hours": 12}).status_code == 403
+    r = client.post("/api/budget", json={"action": "override", "daily_usd": 30, "hours": 12}, headers=h)
+    assert r.status_code == 200 and ctl.load_control()["daily_usd_override"]["usd"] == 30
+    assert client.post("/api/budget", json={"action": "override", "daily_usd": 5000, "hours": 1}, headers=h).status_code == 400
+    assert client.post("/api/budget", json={"action": "clear_override"}, headers=h).status_code == 200
+    assert "daily_usd_override" not in ctl.load_control()
+    r = client.post("/api/budget", json={"action": "permanent", "daily_usd": 15, "max_usd": 80}, headers=h)
+    assert r.status_code == 200, r.text
+    import tomllib
+
+    got = tomllib.loads(cfg.read_text())
+    assert got["controller"]["daily_usd"] == 15.0 and got["modal"]["max_usd"] == 80.0 and got["controller"]["max_in_flight"] == 6
+    assert "# cap" in cfg.read_text() and "# per day" in cfg.read_text()  # comments kept
+    events = [json.loads(x)["event"] for x in (tmp_path / "notebook.jsonl").read_text().splitlines()]
+    assert events == ["budget_override", "budget_override_cleared", "settings_changed"]

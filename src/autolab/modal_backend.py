@@ -47,6 +47,14 @@ def _modal_cfg() -> dict:
 
 
 _CFG = _modal_cfg()
+
+
+def max_usd() -> float:
+    """The Modal spend cap, re-read on every use so a change (e.g. from the dashboard) applies without a restart."""
+    try:
+        return float(_modal_cfg().get("max_usd", _CFG.get("max_usd", 25.0)))
+    except (OSError, ValueError):
+        return float(_CFG.get("max_usd", 25.0))
 APP_NAME = _CFG.get("app_name", "autolab-train")
 runs_volume = modal.Volume.from_name(_CFG.get("runs_volume", "autolab-runs"), create_if_missing=True)
 data_volume = modal.Volume.from_name(_CFG.get("data_volume", "autolab-data"), create_if_missing=True)
@@ -220,9 +228,10 @@ def _submit(req, gpu, src_root, startup_s) -> dict:
     gpu = gpu or _CFG["default_gpu"]
     estimate = (req.budget.wall_clock_s + startup_s) * price_per_s(gpu)
     done, pending = spend(calls)
-    if done + pending + estimate > float(_CFG["max_usd"]):
+    cap = max_usd()
+    if done + pending + estimate > cap:
         raise RuntimeError(f"cost cap: spent ${done:.2f} + pending ${pending:.2f} + this ${estimate:.2f} "
-                           f"> max_usd ${_CFG['max_usd']}")
+                           f"> max_usd ${cap}")
     meta = {
         "val_sha256": cfg.frozen_val_sha256,
         "train_sha256": sha256_file(Path(req.train_tokens)),
@@ -331,7 +340,7 @@ def status_lines() -> list[str]:
         lines.append(f"{run_id:40} {c['state']:9} {c['gpu']:6} {fv if fv is None else round(fv, 4)!s:>9} "
                      f"{c.get('budget_hit') or '':10} {c.get('primary') or '':22} "
                      f"{c.get('usd', c.get('usd_estimate', 0)):.3f}")
-    lines.append(f"spent ${done:.2f} (lower bound), pending up to ${pending:.2f}, cap ${_CFG.get('max_usd')}")
+    lines.append(f"spent ${done:.2f} (lower bound), pending up to ${pending:.2f}, cap ${max_usd()}")
     return lines
 
 

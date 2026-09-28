@@ -600,8 +600,8 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         if sp["total"] + need > daily:
             status["budget"] = f"24h spend ${sp['total']:.2f} + next ~${need:.2f} > ${daily}"
             break
-        if modal_total + need > mb._CFG.get("max_usd", 25.0):
-            status["budget"] = f"Modal total ${modal_total:.2f} + ~${need:.2f} > cap ${mb._CFG.get('max_usd')}"
+        if modal_total + need > mb.max_usd():
+            status["budget"] = f"Modal total ${modal_total:.2f} + ~${need:.2f} > cap ${mb.max_usd()}"
             break
         try:
             child = (generate or _generate)(log)
