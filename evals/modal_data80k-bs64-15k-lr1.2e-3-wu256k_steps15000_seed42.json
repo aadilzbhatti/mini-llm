@@ -1,0 +1,84 @@
+{
+  "checkpoint": "checkpoints/modal_data80k-bs64-15k-lr1.2e-3-wu256k_steps15000_seed42.pt",
+  "config": {
+    "vocab_size": 50257,
+    "block_size": 128,
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 4,
+    "dropout": 0.0
+  },
+  "params": 16105297,
+  "step": 15000,
+  "val_tokens": "data/data20k/val.pt",
+  "quality": {
+    "full_val@128": 4.4678817979365455,
+    "by_position@128": {
+      "0-15": 4.944491488265513,
+      "16-63": 4.473093342655939,
+      "64-127": 4.344820716814757
+    }
+  },
+  "context_benefit": {
+    "windows": 400,
+    "prefix_tokens": 64,
+    "loss_real_prefix": 4.356894016265869,
+    "loss_other_doc_prefix": 4.805935382843018,
+    "benefit_nats": 0.44904136657714844
+  },
+  "retrieval": {
+    "candidates": 10,
+    "chance": 0.1,
+    "trials_per_distance": 60,
+    "by_distance": {
+      "16": {
+        "accuracy": 0.9,
+        "mean_logprob_margin": 3.4737818837165833,
+        "key_in_context": true
+      },
+      "32": {
+        "accuracy": 0.8166666666666667,
+        "mean_logprob_margin": 2.901324486732483,
+        "key_in_context": true
+      },
+      "64": {
+        "accuracy": 0.6,
+        "mean_logprob_margin": 2.3098119417826335,
+        "key_in_context": true
+      },
+      "96": {
+        "accuracy": 0.45,
+        "mean_logprob_margin": 1.7990504602591197,
+        "key_in_context": true
+      },
+      "128": {
+        "accuracy": 0.13333333333333333,
+        "mean_logprob_margin": -0.07844826777776083,
+        "key_in_context": true
+      },
+      "160": {
+        "accuracy": 0.11666666666666667,
+        "mean_logprob_margin": 0.21499854524930317,
+        "key_in_context": false
+      },
+      "192": {
+        "accuracy": 0.03333333333333333,
+        "mean_logprob_margin": -0.19564965963363648,
+        "key_in_context": false
+      },
+      "224": {
+        "accuracy": 0.18333333333333332,
+        "mean_logprob_margin": 0.247286856174469,
+        "key_in_context": false
+      }
+    }
+  },
+  "inference": {
+    "device": "mps",
+    "prefill_ms_full_context": 18.38,
+    "decode_tokens_per_sec": 38.7,
+    "memory_gb": 0.088,
+    "note": "no KV cache: each decode step re-runs the (cropped) window"
+  },
+  "training_systems": null
+}

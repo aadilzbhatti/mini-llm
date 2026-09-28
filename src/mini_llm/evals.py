@@ -148,8 +148,11 @@ def retrieval(model, tokenizer, val: torch.Tensor, block_size: int, device,
             scores = logits[0, -1, cand.to(device)].float().log_softmax(-1).cpu()
             correct += int(scores.argmax()) == answer
             margins.append((scores[answer] - scores.mean()).item())
+        # The key is only usable if its lead-in (" The secret word is") fits too: at
+        # dist == block_size the key token is the window's first token and the
+        # prefix that makes it retrievable is cropped away.
         out[str(dist)] = {"accuracy": correct / trials, "mean_logprob_margin": sum(margins) / trials,
-                          "key_in_context": dist <= block_size}
+                          "key_in_context": dist + len(prefix) <= block_size}
     return {"candidates": len(cand), "chance": 1 / len(cand), "trials_per_distance": trials, "by_distance": out}
 
 
