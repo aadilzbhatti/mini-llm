@@ -15,6 +15,7 @@
   header h1 { font-size:17px; margin:0; flex:1; }
   nav { display:flex; gap:6px; margin-bottom:10px; overflow-x:auto; }
   nav button { flex:1; }
+  nav a.navlink { flex:1; text-align:center; text-decoration:none; color:var(--fg); border:1px solid var(--line); border-radius:9px; padding:8px 11px; white-space:nowrap; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:10px; }
   .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .mut { color:var(--mut); font-size:13px; }
@@ -68,6 +69,8 @@
   <button data-tab="queue">Queue</button>
   <button data-tab="history">History</button>
   <button data-tab="best">Best</button>
+  <!-- a link, not a <button>: every nav button is wired up as a tab switcher below -->
+  <a class="navlink" href="/autolab/">Autolab ↗</a>
 </nav>
 
 <section id="live"></section>
