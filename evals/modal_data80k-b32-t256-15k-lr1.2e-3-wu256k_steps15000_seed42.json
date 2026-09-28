@@ -1,0 +1,91 @@
+{
+  "checkpoint": "checkpoints/modal_data80k-b32-t256-15k-lr1.2e-3-wu256k_steps15000_seed42.pt",
+  "config": {
+    "vocab_size": 50257,
+    "block_size": 256,
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 4,
+    "dropout": 0.0
+  },
+  "params": 16138065,
+  "step": 15000,
+  "val_tokens": "data/data20k/val.pt",
+  "quality": {
+    "full_val@128": 4.596736758274671,
+    "by_position@128": {
+      "0-15": 5.138475051211234,
+      "16-63": 4.599193325826048,
+      "64-127": 4.459459759376998
+    },
+    "full_val@256": 4.4990400845561815,
+    "by_position@256": {
+      "0-15": 5.132092133679385,
+      "16-63": 4.606063307433579,
+      "64-127": 4.456026991135715,
+      "128-255": 4.40128141654699
+    }
+  },
+  "context_benefit": {
+    "windows": 400,
+    "prefix_tokens": 64,
+    "loss_real_prefix": 4.473941802978516,
+    "loss_other_doc_prefix": 4.914912700653076,
+    "benefit_nats": 0.44097089767456055
+  },
+  "retrieval": {
+    "candidates": 10,
+    "chance": 0.1,
+    "trials_per_distance": 60,
+    "by_distance": {
+      "16": {
+        "accuracy": 0.8666666666666667,
+        "mean_logprob_margin": 3.475380229949951,
+        "key_in_context": true
+      },
+      "32": {
+        "accuracy": 0.8,
+        "mean_logprob_margin": 3.205823320150375,
+        "key_in_context": true
+      },
+      "64": {
+        "accuracy": 0.6166666666666667,
+        "mean_logprob_margin": 2.3904089530309043,
+        "key_in_context": true
+      },
+      "96": {
+        "accuracy": 0.55,
+        "mean_logprob_margin": 1.8582912743091584,
+        "key_in_context": true
+      },
+      "128": {
+        "accuracy": 0.21666666666666667,
+        "mean_logprob_margin": 0.7903976559638977,
+        "key_in_context": true
+      },
+      "160": {
+        "accuracy": 0.4,
+        "mean_logprob_margin": 1.5400899986426035,
+        "key_in_context": true
+      },
+      "192": {
+        "accuracy": 0.25,
+        "mean_logprob_margin": 1.0378992040952046,
+        "key_in_context": true
+      },
+      "224": {
+        "accuracy": 0.26666666666666666,
+        "mean_logprob_margin": 1.0121628840764363,
+        "key_in_context": true
+      }
+    }
+  },
+  "inference": {
+    "device": "mps",
+    "prefill_ms_full_context": 26.02,
+    "decode_tokens_per_sec": 30.6,
+    "memory_gb": 0.117,
+    "note": "no KV cache: each decode step re-runs the (cropped) window"
+  },
+  "training_systems": null
+}

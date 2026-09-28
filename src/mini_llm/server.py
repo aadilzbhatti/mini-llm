@@ -29,6 +29,9 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
+import time
+from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -42,6 +45,10 @@ RUN_ID = re.compile(r"^[A-Za-z0-9._-]{1,200}$")
 # Modal GPU spec as modal_train.py takes it: "L4:2", "A100-80GB:4", "H100", or "cpu".
 MODAL_GPUS = re.compile(r"^(cpu|[A-Za-z0-9-]{2,20}(:[1-8])?)$")
 MODAL_KEYS = ("target", "gpus", "timeout_hours")
+CKPT_NAME = re.compile(r"^[A-Za-z0-9._-]{1,200}\.pt$")
+EVAL_NAME = re.compile(r"^[A-Za-z0-9._-]{1,200}$")
+GEN_METHODS = {"topk", "sample", "argmax"}
+EOS_TOKEN_ID = 50256
 STATIC = Path(__file__).parent / "static"
 
 
@@ -476,6 +483,137 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             start_new_session=True,  # survives a server restart mid-launch
         )
         return preview
+
+    # --- checkpoints, inference, evals -------------------------------------
+    #
+    # The server otherwise never touches torch; these import it lazily. Inference
+    # runs on the CPU by default so it never competes with a training job for
+    # the Mac's GPU. One lock serialises generation, so a seeded request gets
+    # the same random stream every time (torch's RNG is process-global).
+
+    ckpt_dir = repo / "checkpoints"
+    meta_cache: dict[tuple[str, float], dict] = {}
+    model_cache: OrderedDict = OrderedDict()
+    gen_lock = threading.Lock()
+    tokenizer_box: list = []
+
+    def ckpt_path(name: str) -> Path:
+        if not isinstance(name, str) or not CKPT_NAME.match(name) or not (ckpt_dir / name).is_file():
+            raise HTTPException(404, f"no checkpoint {name!r} in checkpoints/")
+        return ckpt_dir / name
+
+    def ckpt_meta(path: Path) -> dict:
+        key = (path.name, path.stat().st_mtime)
+        if key not in meta_cache:
+            import torch
+            ck = torch.load(path, map_location="cpu", mmap=True, weights_only=False)
+            fv = ck.get("full_val_history") or []
+            meta_cache[key] = {"config": ck.get("config"), "step": ck.get("step"),
+                               "full_val_loss": fv[-1][1] if fv else None, "systems": ck.get("systems")}
+        return meta_cache[key]
+
+    def load_for_inference(path: Path, device: str):
+        import torch
+        from mini_llm.config import ModelConfig, build_model
+        key = (path.name, path.stat().st_mtime, device)
+        if key in model_cache:
+            model_cache.move_to_end(key)
+            return model_cache[key]
+        ck = torch.load(path, map_location="cpu", weights_only=False)
+        cfg = ModelConfig(**ck["config"])
+        model = build_model(cfg)
+        model.load_state_dict(ck["model_state_dict"])
+        model.to(device).eval()
+        model_cache[key] = (model, cfg)
+        while len(model_cache) > 2:  # a 16M-param model is ~65 MB; keep the last two
+            model_cache.popitem(last=False)
+        return model, cfg
+
+    @app.get("/api/checkpoints", dependencies=[Depends(auth)])
+    def list_checkpoints() -> list[dict]:
+        out = []
+        for path in sorted(ckpt_dir.glob("*.pt"), key=lambda q: q.stat().st_mtime, reverse=True):
+            if not CKPT_NAME.match(path.name):
+                continue
+            row = {"name": path.name, "size_mb": round(path.stat().st_size / 2**20, 1),
+                   "modified": datetime.fromtimestamp(path.stat().st_mtime).isoformat(timespec="minutes")}
+            try:
+                row.update(ckpt_meta(path))
+            except Exception as exc:  # noqa: BLE001 - one unreadable file shouldn't hide the rest
+                row["error"] = f"{type(exc).__name__}: {exc}"
+            out.append(row)
+        return out
+
+    @app.post("/api/generate", dependencies=[Depends(auth)])
+    def generate(body: dict) -> dict:
+        import torch
+        from mini_llm.data import decode, encode, get_tokenizer
+        from mini_llm.report import generate_until_eos
+
+        path = ckpt_path(body.get("checkpoint"))
+        method = body.get("method", "topk")
+        if method not in GEN_METHODS:
+            raise HTTPException(422, f"method must be one of {sorted(GEN_METHODS)}")
+        prompt = body.get("prompt", "")
+        if not isinstance(prompt, str) or len(prompt) > 20_000:
+            raise HTTPException(422, "prompt must be a string of at most 20,000 characters")
+        try:
+            max_new = int(body.get("max_new_tokens", 128))
+            temperature = float(body.get("temperature", 0.8))
+            top_k = int(body.get("top_k", 50))
+            seed = None if body.get("seed") in (None, "") else int(body["seed"])
+        except (TypeError, ValueError):
+            raise HTTPException(422, "max_new_tokens, top_k and seed must be integers; temperature a number") from None
+        if not 1 <= max_new <= 1024:
+            raise HTTPException(422, "max_new_tokens must be between 1 and 1024")
+        if not 0.05 <= temperature <= 5:
+            raise HTTPException(422, "temperature must be between 0.05 and 5")
+        if not 1 <= top_k <= 50257:
+            raise HTTPException(422, "top_k must be between 1 and 50257")
+        device = body.get("device", "cpu")
+        if device not in ("cpu", "mps") or (device == "mps" and not torch.backends.mps.is_available()):
+            raise HTTPException(422, "device must be cpu (default) or mps (if available)")
+
+        model, cfg = load_for_inference(path, device)
+        if not tokenizer_box:
+            tokenizer_box.append(get_tokenizer())
+        tokenizer = tokenizer_box[0]
+        kwargs = {"greedy": True} if method == "argmax" else (
+            {"temperature": temperature} if method == "sample" else {"temperature": temperature, "top_k": top_k})
+        ids = encode(prompt, tokenizer) if prompt else torch.tensor([EOS_TOKEN_ID])
+        idx = ids.unsqueeze(0).to(device)
+        with gen_lock:
+            if seed is not None:
+                torch.manual_seed(seed)
+            t = time.perf_counter()
+            out, hit_eos = generate_until_eos(
+                model, idx, max_new, cfg.block_size,
+                eos_token_id=EOS_TOKEN_ID if body.get("stop_at_eos", True) else None, **kwargs)
+            seconds = time.perf_counter() - t
+        n_prompt, n_new = idx.size(1), out.size(1) - idx.size(1)
+        return {
+            "checkpoint": path.name, "method": method, "device": device,
+            "temperature": None if method == "argmax" else temperature,
+            "top_k": top_k if method == "topk" else None, "seed": seed,
+            "prompt": prompt, "completion": decode(out[0, n_prompt:], tokenizer),
+            "prompt_tokens": n_prompt, "new_tokens": n_new, "hit_eos": hit_eos,
+            "block_size": cfg.block_size, "prompt_truncated": n_prompt > cfg.block_size,
+            "seconds": round(seconds, 3), "tokens_per_sec": round(n_new / seconds, 1) if seconds > 0 else None,
+        }
+
+    @app.get("/api/evals", dependencies=[Depends(auth)])
+    def list_evals() -> dict:
+        d = repo / "evals"
+        summary = d / "summary.md"
+        return {"summary": summary.read_text() if summary.exists() else None,
+                "reports": sorted(q.stem for q in d.glob("*.md") if q.stem != "summary") if d.exists() else []}
+
+    @app.get("/api/evals/{name}", dependencies=[Depends(auth)], response_class=PlainTextResponse)
+    def get_eval(name: str) -> str:
+        path = repo / "evals" / f"{name}.md"
+        if not EVAL_NAME.match(name) or not path.is_file():
+            raise HTTPException(404, f"no eval report {name!r}")
+        return path.read_text()
 
     @app.delete("/api/queue/{file}", dependencies=[Depends(auth)])
     def cancel_job(file: str) -> dict:

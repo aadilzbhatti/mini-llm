@@ -15,6 +15,7 @@
   header h1 { font-size:17px; margin:0; flex:1; }
   nav { display:flex; gap:6px; margin-bottom:10px; overflow-x:auto; }
   nav button { flex:1; }
+  nav a.navlink { flex:1; text-align:center; text-decoration:none; color:var(--fg); border:1px solid var(--line); border-radius:9px; padding:8px 11px; white-space:nowrap; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:10px; }
   .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .mut { color:var(--mut); font-size:13px; }
@@ -55,6 +56,22 @@
   table.best th { cursor:pointer; white-space:nowrap; user-select:none; padding:8px; }
   table.best td { white-space:nowrap; padding:6px 8px; }
   table.best th:first-child, table.best td:first-child { position:sticky; left:0; background:var(--card); white-space:normal; min-width:120px; max-width:150px; overflow-wrap:anywhere; font-size:12px; box-shadow:1px 0 0 var(--line); z-index:1; }
+  /* Full-screen document panel: rendered markdown reports with a clickable table of contents. */
+  #doc { position:fixed; inset:0; background:var(--bg); z-index:20; overflow:auto; padding:0 12px calc(40px + env(safe-area-inset-bottom)); }
+  #doc .dochead { position:sticky; top:0; background:var(--bg); display:flex; gap:8px; align-items:center; padding:calc(10px + env(safe-area-inset-top)) 0 8px; border-bottom:1px solid var(--line); z-index:1; }
+  #doc .dochead strong { flex:1; overflow-wrap:anywhere; }
+  #doctoc { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:4px 12px; margin:10px 0; }
+  #doctoc a { display:block; padding:5px 0; text-decoration:none; }
+  #doctoc a.h3 { padding-left:16px; font-size:14px; }
+  .md h1 { font-size:20px; margin:18px 0 8px; } .md h2 { font-size:18px; margin:22px 0 8px; padding-top:6px; border-top:1px solid var(--line); }
+  .md h3 { font-size:15px; margin:16px 0 6px; } .md h2, .md h3 { scroll-margin-top:70px; }
+  .md p { margin:6px 0; } .md ul { margin:6px 0; padding-left:20px; }
+  .md code { font:12px ui-monospace, Menlo, monospace; background:var(--card); padding:1px 4px; border-radius:4px; }
+  .md pre { max-height:none; background:var(--card); border:1px solid var(--line); }
+  .md table { margin:8px 0; } .md .tbl { overflow-x:auto; }
+  #totop { position:fixed; right:14px; bottom:calc(16px + env(safe-area-inset-bottom)); z-index:21; }
+  .genout { white-space:pre-wrap; word-break:break-word; font:13px/1.45 ui-monospace, Menlo, monospace; background:var(--bg); padding:10px; border-radius:8px; margin-top:8px; }
+  .genout b { color:var(--mut); font-weight:400; }
 </style>
 </head>
 <body>
@@ -68,6 +85,9 @@
   <button data-tab="queue">Queue</button>
   <button data-tab="history">History</button>
   <button data-tab="best">Best</button>
+  <button data-tab="gen">Generate</button>
+  <!-- a link, not a <button>: every nav button is wired up as a tab switcher below -->
+  <a class="navlink" href="/autolab/">Autolab ↗</a>
 </nav>
 
 <section id="live"></section>
@@ -107,8 +127,33 @@
 
 <section id="history" class="hidden"></section>
 <section id="best" class="hidden"></section>
+<section id="gen" class="hidden">
+  <div class="card">
+    <div class="field"><label for="g-ckpt">checkpoint</label><select id="g-ckpt"></select>
+      <div class="mut hint" id="g-ckpt-info"></div></div>
+    <div class="field"><label for="g-prompt">prompt</label><textarea id="g-prompt" style="min-height:110px" placeholder="Photosynthesis is a process that"></textarea></div>
+    <div class="grid">
+      <div class="field"><label for="g-method">method</label><select id="g-method" onchange="genMethodChanged()">
+        <option value="topk">top-k sampling</option><option value="sample">sampling</option><option value="argmax">argmax (greedy)</option></select></div>
+      <div class="field"><label for="g-max">max new tokens</label><input id="g-max" inputmode="numeric" value="128"></div>
+      <div class="field" id="g-temp-f"><label for="g-temp">temperature</label><input id="g-temp" inputmode="decimal" value="0.8"></div>
+      <div class="field" id="g-topk-f"><label for="g-topk">top-k</label><input id="g-topk" inputmode="numeric" value="50"></div>
+      <div class="field"><label for="g-seed">seed (blank = random)</label><input id="g-seed" inputmode="numeric" value=""></div>
+      <div class="field"><label for="g-device">device</label><select id="g-device"><option value="cpu">cpu</option><option value="mps">mps (GPU; shares with training)</option></select></div>
+    </div>
+    <div class="field"><label class="chk"><input type="checkbox" id="g-eos" checked> stop at end-of-document (EOS)</label></div>
+    <div class="row"><button class="pri" id="g-go" onclick="runGenerate()">Generate</button><button onclick="loadCheckpoints(true)">Reload checkpoints</button></div>
+    <div id="g-out"></div>
+  </div>
+</section>
 
 <div id="toast"></div>
+<div id="doc" class="hidden">
+  <div class="dochead"><strong id="doctitle"></strong><button onclick="closeDoc()">✕ Close</button></div>
+  <details id="doctoc" open><summary class="mut">Contents</summary><div></div></details>
+  <div id="docbody" class="md"></div>
+  <button id="totop" onclick="$('#doc').scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+</div>
 
 <script>
 const $ = s => document.querySelector(s);
@@ -138,6 +183,7 @@ document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
   document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b));
   document.querySelectorAll('section').forEach(s => s.classList.toggle('hidden', s.id !== b.dataset.tab));
   try { localStorage.setItem('mini-llm-tab', b.dataset.tab); } catch {}
+  if (b.dataset.tab === 'gen') loadCheckpoints();
 });
 
 async function cmd(runId, body, label) {
@@ -203,7 +249,82 @@ function liveCard(r) {
 function mark(btn, kind) { const c = btn.closest('.card'); c.dataset.open = kind; return c; }
 async function showLog(id, btn) { const pre = mark(btn, 'log').querySelector('pre'); pre.classList.remove('hidden'); pre.textContent = 'loading…'; try { pre.textContent = await api(`/api/runs/${id}/log?tail=60`); pre.scrollTop = pre.scrollHeight; } catch (e) { pre.textContent = e.message; } }
 async function showEvents(id, btn) { const pre = mark(btn, 'events').querySelector('pre'); pre.classList.remove('hidden'); try { const e = await api(`/api/runs/${id}/events`); pre.textContent = e.applied.length ? e.applied.map(x => `step ${x.step}  ${x.ok ? '✓' : '✗'} ${x.result || x.error}`).join('\n') : 'no commands applied yet' + (e.sent.length ? ` (${e.sent.length} pending)` : ''); } catch (e) { pre.textContent = e.message; } }
-async function showReport(id, btn) { const pre = mark(btn, 'report').querySelector('pre'); pre.classList.remove('hidden'); pre.textContent = 'loading…'; try { pre.textContent = await api(`/api/runs/${id}/report`); } catch (e) { pre.textContent = e.message; } }
+async function showReport(id) { try { openDoc(`Samples · ${id}`, await api(`/api/runs/${id}/report`)); } catch (e) { toast(e.message); } }
+
+// --- markdown -> HTML for reports and evals (the subset they use), plus a table of contents ---
+function inline(t) { return esc(t).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>'); }
+function md(src) {
+  const out = [], toc = [], used = {}, lines = String(src).split('\n');
+  const slug = t => { let b = 'h-' + t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); used[b] = (used[b] || 0) + 1; return used[b] > 1 ? `${b}-${used[b]}` : b; };
+  let i = 0, section = '';
+  while (i < lines.length) {
+    const l = lines[i];
+    if (l.startsWith('```')) { const code = []; i++; while (i < lines.length && !lines[i].startsWith('```')) code.push(lines[i++]); i++; out.push(`<pre>${esc(code.join('\n'))}</pre>`); continue; }
+    const h = l.match(/^(#{1,3}) (.*)$/);
+    if (h) {
+      const lvl = h[1].length, text = h[2], id = slug((lvl === 3 ? section + ' ' : '') + text);
+      if (lvl === 2) section = text;
+      if (lvl > 1) toc.push({ lvl, text: lvl === 3 ? text : text, id });
+      out.push(`<h${lvl} id="${id}">${inline(text)}</h${lvl}>`); i++; continue;
+    }
+    if (l.startsWith('|')) { const rows = []; while (i < lines.length && lines[i].startsWith('|')) rows.push(lines[i++]);
+      const cells = r => r.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+      const body = rows.filter(r => !/^\|[\s:|-]+\|$/.test(r));
+      out.push(`<div class="tbl"><table>${body.map((r, k) => `<tr>${cells(r).map(c => k ? `<td>${inline(c)}</td>` : `<th>${inline(c)}</th>`).join('')}</tr>`).join('')}</table></div>`); continue; }
+    if (/^- /.test(l)) { const items = []; while (i < lines.length && /^- /.test(lines[i])) items.push(lines[i++].slice(2)); out.push(`<ul>${items.map(x => `<li>${inline(x)}</li>`).join('')}</ul>`); continue; }
+    if (l.trim()) out.push(`<p>${inline(l)}</p>`);
+    i++;
+  }
+  return { html: out.join('\n'), toc };
+}
+function openDoc(title, text) {
+  const { html, toc } = md(text);
+  $('#doctitle').textContent = title;
+  $('#docbody').innerHTML = html;
+  $('#doctoc').classList.toggle('hidden', !toc.length);
+  $('#doctoc div').innerHTML = toc.map(t => `<a href="#" class="h${t.lvl}" onclick="event.preventDefault(); document.getElementById('${t.id}').scrollIntoView({behavior:'smooth'})">${inline(t.text)}</a>`).join('');
+  $('#doc').classList.remove('hidden'); $('#doc').scrollTo(0, 0); document.body.style.overflow = 'hidden';
+}
+function closeDoc() { $('#doc').classList.add('hidden'); document.body.style.overflow = ''; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#doc').classList.contains('hidden')) closeDoc(); });
+
+// --- Generate tab ---
+let CKPTS = null;
+async function loadCheckpoints(force) {
+  if (CKPTS && !force) return;
+  try {
+    CKPTS = await api('/api/checkpoints');
+    const keep = $('#g-ckpt').value;
+    $('#g-ckpt').innerHTML = CKPTS.filter(c => !c.error).map(c => `<option value="${esc(c.name)}">${esc(c.name.replace(/\.pt$/, ''))}${c.full_val_loss != null ? ` · val ${f4(c.full_val_loss)}` : ''}</option>`).join('');
+    if (keep && CKPTS.some(c => c.name === keep)) $('#g-ckpt').value = keep;
+    ckptInfo();
+  } catch (e) { toast(e.message); }
+}
+function ckptInfo() {
+  const c = (CKPTS || []).find(x => x.name === $('#g-ckpt').value); if (!c) return;
+  const k = c.config || {};
+  $('#g-ckpt-info').textContent = `${k.n_layer}L × ${k.n_embd}d, context ${k.block_size} · step ${(c.step ?? 0).toLocaleString()} · ${c.size_mb} MB · ${c.modified}`;
+}
+function genMethodChanged() {
+  const m = $('#g-method').value;
+  $('#g-temp-f').classList.toggle('hidden', m === 'argmax');
+  $('#g-topk-f').classList.toggle('hidden', m !== 'topk');
+}
+async function runGenerate() {
+  const out = $('#g-out'), btn = $('#g-go');
+  const body = { checkpoint: $('#g-ckpt').value, prompt: $('#g-prompt').value, method: $('#g-method').value,
+    max_new_tokens: Number($('#g-max').value), temperature: Number($('#g-temp').value), top_k: Number($('#g-topk').value),
+    seed: $('#g-seed').value.trim() === '' ? null : Number($('#g-seed').value), device: $('#g-device').value, stop_at_eos: $('#g-eos').checked };
+  btn.disabled = true; out.innerHTML = '<div class="mut" style="margin-top:8px">generating…</div>';
+  try {
+    const r = await api('/api/generate', { method: 'POST', body: JSON.stringify(body) });
+    const how = r.method === 'argmax' ? 'argmax' : r.method === 'sample' ? `sampling, T=${r.temperature}` : `top-k ${r.top_k}, T=${r.temperature}`;
+    out.innerHTML = `<div class="genout"><b>${esc(r.prompt)}</b>${esc(r.completion)}</div>
+      <div class="mut" style="margin-top:6px">${how}${r.seed != null ? `, seed ${r.seed}` : ''} · ${r.new_tokens} tokens${r.hit_eos ? ' (stopped at EOS)' : ''} · ${r.seconds}s · ${r.tokens_per_sec} tok/s on ${r.device}${r.prompt_truncated ? ` · prompt (${r.prompt_tokens} tokens) is longer than the ${r.block_size}-token context: only its last ${r.block_size} tokens are seen` : ''}</div>`;
+  } catch (e) { out.innerHTML = `<div class="err" style="margin-top:8px">${esc(e.message)}</div>`; }
+  finally { btn.disabled = false; }
+}
+$('#g-ckpt').onchange = ckptInfo;
 async function showDetail(id, btn) {
   const pre = mark(btn, 'detail').querySelector('pre'); pre.classList.remove('hidden');
   try { const s = await api(`/api/runs/${id}`); const m = { ...(s.metrics || {}) }; delete m.full_val_curve;
@@ -353,6 +474,8 @@ function collectJob(quiet) {
   if (!NAME_RE.test(name)) errors.push('name: letters, digits, . _ - only (max 80)');
   if (kind === 'train') {
     if ('restart-lr' in args && !('resume' in args)) errors.push('restart-lr only applies with resume');
+    if ('warmup-steps' in args && 'warmup-tokens' in args) errors.push('set warmup-steps or warmup-tokens, not both');
+    if (args.tokens && args.tokens === args['val-tokens']) errors.push('tokens and val-tokens are the same file: that trains on the validation set');
     const embd = args['n-embd'] ?? 128, head = args['n-head'] ?? 4;
     if (embd % head) errors.push(`n-embd (${embd}) must be divisible by n-head (${head})`);
     if (args['sample-report'] && !args.save) errors.push('note: sample-report without save writes a report for a checkpoint that isn\'t kept');
@@ -412,7 +535,7 @@ async function continueFrom(url) {
 
 async function cancelJob(file) { try { await api(`/api/queue/${encodeURIComponent(file)}`, { method: 'DELETE' }); toast('Cancelled'); refresh(); } catch (e) { toast('Error: ' + e.message); } }
 
-const PANELS = { log: showLog, events: showEvents, report: showReport, detail: showDetail };
+const PANELS = { log: showLog, events: showEvents, detail: showDetail };  // reports open in the full-screen panel instead
 function openState(sel) {
   const st = {};
   document.querySelectorAll(`${sel} .card[data-run]`).forEach(c => { if (c.dataset.open || c.dataset.plot) st[c.dataset.run] = { open: c.dataset.open, plot: !!c.dataset.plot }; });
@@ -447,13 +570,16 @@ async function refresh() {
     }
     {
       const b = await api('/api/baselines');
-      BEST = b || []; renderBest();
+      BEST = b || [];
+      try { EVALS = await api('/api/evals'); } catch { EVALS = null; }
+      renderBest();
     }
     LAST = Date.now(); tick();
   } catch (e) { toast('Error: ' + e.message); }
 }
 // --- Best tab: every hyperparameter, sortable, run name pinned while scrolling sideways ---
-let BEST = [], BEST_SORT = { key: 'full_val_loss', dir: 1 };
+let BEST = [], BEST_SORT = { key: 'full_val_loss', dir: 1 }, EVALS = null;
+async function showEval(name) { try { openDoc(`Evals · ${name}`, await api(`/api/evals/${encodeURIComponent(name)}`)); } catch (e) { toast(e.message); } }
 try { BEST_SORT = JSON.parse(localStorage.getItem('mini-llm-best-sort')) || BEST_SORT; } catch {}
 const sci = v => v == null ? '–' : Number(v).toExponential(0).replace('e-', 'e-');
 const int = v => v == null ? '–' : Number(v).toLocaleString();
@@ -495,7 +621,11 @@ function renderBest() {
   $('#best').innerHTML = `<div class="card" style="padding:0"><div class="scroll"><table class="best">
     <tr><th onclick="sortBest('run')">run${arrow('run')}</th>${BEST_COLS.map(([k, label]) => `<th onclick="sortBest('${k}')">${label}${arrow(k)}</th>`).join('')}</tr>
     ${rows.map(x => `<tr><td>${esc(x.run)}</td>${BEST_COLS.map(([k, , f]) => `<td class="num">${f(x)}</td>`).join('')}</tr>`).join('')}
-  </table></div></div><div class="mut" style="padding:0 4px">Tap a column to sort. Scroll sideways for more.</div>`;
+  </table></div></div><div class="mut" style="padding:0 4px">Tap a column to sort. Scroll sideways for more.</div>
+  ${EVALS && (EVALS.summary || EVALS.reports.length) ? `<div class="card" style="margin-top:10px"><strong>Evals</strong>
+    <div class="mut" style="margin:4px 0 8px">Quality at matched context, context use, long-range retrieval and inference cost (<code>mini-llm-eval</code>).</div>
+    <div class="row">${EVALS.summary ? `<button class="pri" onclick="openDoc('Evals summary', EVALS.summary)">Summary table</button>` : ''}
+    ${EVALS.reports.map(n => `<button onclick="showEval('${esc(n)}')">${esc(n.replace(/^modal_/, '').replace(/_seed\d+$/, ''))}</button>`).join('')}</div></div>` : ''}`;
   $('#best .scroll').scrollLeft = left;
 }
 

@@ -51,6 +51,7 @@ INT_FLAGS: dict[str, tuple[int, int]] = {
     "batch-size": (1, 512),
     "steps": (1, 1_000_000),
     "warmup-steps": (0, 100_000),
+    "warmup-tokens": (0, 10_000_000_000),
     "seed": (0, 2**31 - 1),
     "log-interval": (1, 100_000),
     "eval-interval": (1, 1_000_000),
@@ -139,6 +140,10 @@ def build_command(args: dict, repo: Path, uv: str, pending: frozenset[str] = fro
     # Cross-field rules train.py would otherwise only enforce after startup.
     if "restart-lr" in merged and "resume" not in merged:
         raise JobError("restart-lr only applies to a continuation; set resume too")
+    if merged.get("tokens") and merged.get("tokens") == merged.get("val-tokens"):
+        raise JobError("tokens and val-tokens are the same file: that trains on the validation set")
+    if "warmup-steps" in merged and "warmup-tokens" in merged:
+        raise JobError("set warmup-steps or warmup-tokens, not both (warmup-tokens is converted to steps)")
     n_embd, n_head = merged.get("n-embd", 128), merged.get("n-head", 4)
     if isinstance(n_embd, int) and isinstance(n_head, int) and n_head > 0 and n_embd % n_head:
         raise JobError(f"n-embd ({n_embd}) must be divisible by n-head ({n_head})")
@@ -344,7 +349,8 @@ def forecast_for(repo: Path, args: dict):
                    n_layer=int(g("n-layer", 4)), block_size=int(g("block-size", 64)),
                    batch_size=int(g("batch-size", 4)), steps=int(args["steps"]),
                    lr=float(g("lr", 1e-3)), min_lr=float(g("min-lr", 2e-6)),
-                   warmup_steps=int(g("warmup-steps", 500)))
+                   warmup_steps=(-(-int(args["warmup-tokens"]) // (int(g("batch-size", 4)) * int(g("block-size", 64))))
+                                 if "warmup-tokens" in args else int(g("warmup-steps", 500))))
         return mod.forecast(cfg, runs)
     except Exception as exc:  # noqa: BLE001
         return {"error": f"{type(exc).__name__}: {exc}"}

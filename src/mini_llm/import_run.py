@@ -104,6 +104,8 @@ def import_run(run_dir: Path, repo: Path, name: str | None = None) -> dict[str, 
         "world_size": record.get("nproc"),
         "git_sha": record.get("git_sha"),
         "duration_sec": record.get("duration_sec"),
+        # Training systems metrics recorded by the run itself (mini_llm.systems).
+        **{k: (ckpt.get("systems") or {}).get(k) for k in ("train_tokens_per_sec", "peak_mem_gb", "wall_sec")},
     }
     update_baselines(row, repo / "baselines.md")
     return row

@@ -9,13 +9,17 @@ Everything that could drift is pinned: the prompts, the token budget, the
 seed, and the order the samples are drawn in. The only thing that varies
 between two reports is the model.
 
-Greedy decoding comes first and uses no randomness at all -- it is the
-model's single most-likely continuation, and the step at which it collapses
-into a repetition loop is a cheap progress metric. The sampled section then
-seeds once and draws sequentially, so each prompt consumes a different slice
-of the random stream. Seeding per prompt instead would hand every prompt the
-same uniform draws, which on a weak model produces near-identical text and
-looks like a model pathology rather than the sampling artefact it is.
+Sections, in reading order: top-k sampling (temperature 0.8, k=50) first,
+since it is the most readable; then plain sampling (temperature 1); then
+greedy/argmax last -- the model's single most-likely continuation, where the
+step at which it collapses into a repetition loop is a cheap progress metric.
+Each sampled section seeds its own stream once (top-k: seed+1, plain: seed)
+and draws sequentially, so each prompt consumes a different slice of the
+random stream. Seeding per prompt instead would hand every prompt the same
+uniform draws, which on a weak model produces near-identical text and looks
+like a model pathology rather than the sampling artefact it is. Because every
+section seeds itself, section ORDER never changes the text; and new prompts
+are only ever appended, so earlier prompts keep their exact draws.
 
 Reports are reproducible on the same device. MPS and CPU do not produce
 identical streams from the same seed, so a report regenerated on CPU from a
@@ -46,6 +50,22 @@ REPORT_TOP_K = 50
 # local directory can report eos_token_id = None; prepare_dataset.py writes
 # this same id between documents, so it is what the model was trained on.
 EOS_TOKEN_ID = 50256
+
+_RETRIEVAL_KEY = "Alice's secret number is 3817."
+_RETRIEVAL_QUERY = " Later that day, someone asked Alice what her secret number was. She said it was"
+_RETRIEVAL_SHORT = " She wrote it on a small card and put the card in her pocket."
+_RETRIEVAL_FILLER_1 = (
+    " The library was quiet in the afternoon, and sunlight came through the tall windows onto the long wooden tables."
+    " Students read about the water cycle, which describes how water evaporates from oceans and lakes, forms clouds,"
+    " and returns to the ground as rain or snow. Plants take up some of this water through their roots, and the rest"
+    " flows through rivers back to the sea, where the cycle begins again."
+)
+_RETRIEVAL_FILLER_2 = (
+    " In another part of the room, a teacher explained how bridges are designed. Engineers must consider the weight of"
+    " traffic, the strength of the materials, and the effect of wind and temperature. Steel expands when it is warm and"
+    " contracts when it is cold, so bridges include small gaps called expansion joints. Without them, the structure could"
+    " crack or bend over many years of use."
+)
 
 # (label, prompt). Chosen against what is ACTUALLY in the corpus, not what the
 # repo name suggests. prepare_dataset.py pulls HuggingFaceTB/smollm-corpus,
@@ -95,6 +115,15 @@ PROMPTS: list[tuple[str, str]] = [
     # --- out-of-distribution control: ~0.1 code occurrences per 100k chars, so
     #     this should fail. It is here to show WHETHER it fails, and how. ---
     ("code_ood", "def fibonacci(n):"),
+
+    # --- long-range retrieval: the answer (3817) is only in the first sentence.
+    #     Distances from the key to the end of the prompt are 32 / 97 / 171 GPT-2
+    #     tokens, so a 128-context model can still see it in the first two and has
+    #     lost it in the third, while a 256-context model sees all three. Appended
+    #     last so every prompt above keeps its exact sampled draws. ---
+    ("retrieval_32", _RETRIEVAL_KEY + _RETRIEVAL_SHORT + _RETRIEVAL_QUERY),
+    ("retrieval_97", _RETRIEVAL_KEY + _RETRIEVAL_FILLER_1 + _RETRIEVAL_QUERY),
+    ("retrieval_171", _RETRIEVAL_KEY + _RETRIEVAL_FILLER_1 + _RETRIEVAL_FILLER_2 + _RETRIEVAL_QUERY),
 ]
 
 
@@ -219,33 +248,10 @@ def sample_report(
         f"{max_new_tokens} new tokens every prompt has left the window by generated "
         f"token {block_size}; everything after that continues the model's own output only.",
         "",
-        "## Greedy (deterministic)",
-        "",
     ]
 
-    for label, prompt in PROMPTS:
-        text, n, eos = generate_sample(
-            model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=True
-        )
-        lines += [
-            f"### {label}", "",
-            f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", "",
-            "```", text, "```", _footer(n, eos, max_new_tokens), "",
-        ]
-
-    lines += ["## Sampled", ""]
-    torch.manual_seed(seed)  # once, then draw sequentially -- see module docstring
-    for label, prompt in PROMPTS:
-        lines += [f"### {label}", "", f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", ""]
-        for i in range(samples_per_prompt):
-            text, n, eos = generate_sample(
-                model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=False
-            )
-            lines += [f"draw {i + 1}:", "", "```", text, "```", _footer(n, eos, max_new_tokens), ""]
-
-    # Third regime, added after the first two so their RNG streams are
-    # untouched -- greedy and plain sampling are longitudinal benchmarks and
-    # must keep producing identical text for a given checkpoint.
+    # Top-k first: the most readable. Its own stream (seed + 1), exactly as when
+    # it was the third section, so its text for a given checkpoint is unchanged.
     lines += [f"## Sampled, temperature {temperature}, top-k {top_k}", ""]
     torch.manual_seed(seed + 1)  # its own stream, independent of the section above
     for label, prompt in PROMPTS:
@@ -261,6 +267,27 @@ def sample_report(
                 temperature=temperature, top_k=top_k,
             )
             lines += [f"draw {i + 1}:", "", "```", text, "```", _footer(n, eos, max_new_tokens), ""]
+
+    lines += ["## Sampled", ""]
+    torch.manual_seed(seed)  # once, then draw sequentially -- see module docstring
+    for label, prompt in PROMPTS:
+        lines += [f"### {label}", "", f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", ""]
+        for i in range(samples_per_prompt):
+            text, n, eos = generate_sample(
+                model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=False
+            )
+            lines += [f"draw {i + 1}:", "", "```", text, "```", _footer(n, eos, max_new_tokens), ""]
+
+    lines += ["## Greedy / argmax (deterministic)", ""]
+    for label, prompt in PROMPTS:
+        text, n, eos = generate_sample(
+            model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=True
+        )
+        lines += [
+            f"### {label}", "",
+            f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", "",
+            "```", text, "```", _footer(n, eos, max_new_tokens), "",
+        ]
 
     return "\n".join(lines)
 

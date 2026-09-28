@@ -140,3 +140,18 @@ def test_uploads_only_missing_data(repo):
     args = {"tokens": "data/d1/train.pt", "val-tokens": "data/val.pt", "resume": "checkpoints/c.pt", "steps": 5}
     assert sorted(launch_mod.upload_missing_data(repo, args, volume=vol)) == ["/checkpoints/c.pt", "/val.pt"]
     assert sorted(vol.uploaded) == [("c.pt", "/checkpoints/c.pt"), ("val.pt", "/val.pt")]
+
+
+def test_warmup_tokens_is_an_allowed_flag(repo, spawned):
+    r = post(repo, {**JOB, "args": {**JOB["args"], "warmup-tokens": 819200}, "target": "modal"}, dry_run=True)
+    assert r.status_code == 200, r.text
+    assert "--warmup-tokens" in r.json()["argv"]
+
+
+def test_warmup_steps_and_tokens_together_rejected_at_submit(repo, spawned):
+    """train.py refuses the pair at startup; catch it before a container is paid for."""
+    args = {**JOB["args"], "warmup-steps": 16, "warmup-tokens": 256000}
+    for target in ("modal", "local"):
+        r = post(repo, {**JOB, "args": args, "target": target})
+        assert r.status_code == 422 and "not both" in r.text
+    assert spawned == [] and not list((repo / "queue").glob("*.json"))

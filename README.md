@@ -6,6 +6,49 @@ Transformer: tiny model, tiny text, one training loop, nothing else.
 The model in `src/mini_llm/model.py` is copied from the original `wiki-llm`
 project and is **unchanged**. See `BOOTSTRAP_NOTES.md`.
 
+## What you can do
+
+- **Train locally** on the Mac (MPS): `uv run mini-llm-train ...`, with an LR
+  schedule, fixed-sample and exhaustive validation, plots, sample reports,
+  checkpoint resume, and a sorted `baselines.md` of every run.
+- **Queue and steer runs from your phone**: a queue runner executes jobs one
+  at a time; a control page (over Tailscale) queues/cancels jobs, shows live
+  progress, and pauses/stops/re-scales a running job. See
+  [`runner/README.md`](runner/README.md).
+- **Train on cloud GPUs (Modal), multi-GPU**: the same `train.py` runs under
+  `torchrun` as DDP. Launch from the command line or from the phone page
+  ("run on: Modal GPUs"); pick the GPUs (e.g. `L4:2`, `H100:4`) per run.
+- **Track Modal runs on the same page**: a mirror shows them in Live and
+  History next to local runs, and imports each finished run (checkpoint,
+  plot, sample report, baselines row), so Mac and Modal runs are compared in
+  one table on the same `full_val_loss`.
+
+## Current best
+
+`full_val_loss` **4.4679** on the 937-doc val set shared by data20k, data40k
+and data80k: 4 layers × 256d, block 128, **data80k**, batch 64 (global) ×
+15,000 steps = 122.88M tokens (~1.5 passes), peak LR 1.2e-3 cosine to 2e-6,
+256K-token warmup (32 steps), seed 42. About 31 min on Modal 2×L4.
+Reproduce with
+
+```bash
+uv run --group modal modal run --detach src/mini_llm/remote/modal_train.py \
+    --config configs/modal/data80k_bs64_15k_lr1.2e-3_wu256k.json --gpus L4:2
+```
+
+What got here (all in `baselines.md`):
+- Batch: at a fixed token budget, batch 64 beats the batch-4 baseline (4.7165
+  vs 4.6564 at 122.88M tokens on data20k; 13 h on the Mac vs 31 min), and
+  batch 128 doesn't (best 4.6787). The best LR followed square-root batch
+  scaling at batch 64 (3e-4 × √16 = 1.2e-3) and batch 128 (≈1.7e-3).
+- Data: same run and val set, only the unique training data changes:
+  data20k 4.6564 → data40k 4.5415 → data80k 4.4679 → data160k 4.4698,
+  train/val gap 0.51 → 0.22 → 0.12 → 0.05. The gain stops at data80k
+  (~1.5 passes over it costs nothing measurable at this budget), so at
+  122.88M tokens the model is now limited by size or compute, not data.
+
+Datasets and how they were built: `data/*/MANIFEST.md`.
+
 ## Setup
 
 Requires [uv](https://docs.astral.sh/uv/). If you don't have it:
@@ -58,12 +101,17 @@ src/mini_llm/
   device.py             select_device(): MPS -> CUDA -> CPU
   train.py              forward -> loss -> zero_grad -> backward -> step
   distributed.py        torchrun/DDP plumbing (no-op without torchrun)
-  remote/modal_train.py launch train.py on Modal GPUs (see below)
+  import_run.py         bring a fetched Modal run into checkpoints/, plots/, baselines.md
+  remote/modal_train.py the Modal app: image, volumes, torchrun launch, CLI entrypoint
+  remote/launch.py      background launcher behind the page's "run on Modal"
+  remote/modal_mirror.py  mirrors Modal runs into runs/ for the control page
+  server.py, static/    control API + phone page
   generate.py           encode -> model.generate() -> decode
 tests/test_model.py     smoke tests + skipped placeholders for your tests
 tests/test_ddp.py       single-process unchanged; 2-rank gloo DDP via torchrun
-configs/modal/          example configs for remote runs
-scripts/fetch_modal_run.sh  pull a Modal run to ./runs/<run_id>
+configs/modal/          configs for remote runs (runner job format)
+scripts/fetch_modal_run.sh  pull (and import) a Modal run by hand
+runner/                 queue runner + launchd plists for all four services
 BOOTSTRAP_NOTES.md      what came from where, and what looks suspicious
 ```
 
@@ -78,8 +126,10 @@ loss.backward()
 optimizer.step()
 ```
 
-No scheduler, no AMP, no gradient accumulation, no clipping, no eval loop,
-no checkpoint resume. Add back what you want, when you want it.
+Around it: linear warmup + cosine LR decay, fixed-sample and exhaustive
+validation, checkpoint resume, and (under `torchrun`) DDP with optional bf16
+autocast. Still no gradient accumulation and no clipping. The module
+docstring in `train.py` explains each piece.
 
 ## Data
 
@@ -114,11 +164,34 @@ DDP comments in `train.py`.
 ```bash
 uv sync --group modal                 # modal is an optional dependency group
 uv run --group modal modal setup      # browser login; writes ~/.modal.toml
-# Upload datasets once. The wiki-llm-data volume mirrors the local data/ tree:
-uv run --group modal modal volume put wiki-llm-data data/data10k /data10k
 ```
 
-### Launch
+Add a payment method in the Modal dashboard. Without one the account gets a
+$1 trial credit, and Modal disables the workspace (killing running jobs) as
+soon as that runs out. With one, the Starter plan includes $30/month.
+
+Datasets live in the `wiki-llm-data` volume, which mirrors the local `data/`
+tree (`data/data20k/train.pt` is `/data20k/train.pt` there). Runs launched
+from the page upload missing files automatically; from the command line,
+upload once with
+`uv run --group modal modal volume put wiki-llm-data data/data20k /data20k`.
+
+Heads-up: the `modal` group pins `protobuf` below 7, so `uv sync --group
+modal` changes protobuf in the shared `.venv`. Don't sync (or restart a
+service that runs `uv run`) while a local job is training; it could crash
+that job when it next imports protobuf code.
+
+### Launch from the phone page
+
+In the page's job form, set **run on** to *Modal GPUs*, pick the GPUs (e.g.
+`L4:2`, `A100-80GB:2`, `H100:4`, or `cpu` for a cheap check) and a timeout,
+and press **Launch on Modal**. The job is validated with the queue runner's
+rules, skips the local queue (so it never waits behind a Mac run), and shows
+up in Live straight away as *launching* while the image builds. If the
+launch fails (rate limit, no credit), the run shows as failed with the
+reason. "Clone" on a Modal run pre-fills the same GPUs.
+
+### Launch from the command line
 
 ```bash
 uv run --group modal modal run --detach src/mini_llm/remote/modal_train.py \
@@ -135,6 +208,8 @@ uv run --group modal modal run --detach src/mini_llm/remote/modal_train.py \
   or `L4` (single GPU, still through torchrun). `--gpus cpu` runs 2 gloo ranks
   on CPU, which is the cheapest end-to-end check of the whole path.
 - `--name`: a suffix for the run id. `--timeout-hours`: defaults to 24 (Modal's maximum).
+  A run only saves its checkpoint at the end, so a timeout that's too short
+  loses the whole run; leave headroom.
 - `--detach` keeps the job running if your laptop sleeps or disconnects.
   Watch it at modal.com/apps, or stream logs with
   `uv run --group modal modal app logs -f <app id>` (`modal app list` shows the `ap-...` id).
@@ -156,7 +231,9 @@ plots/          loss_*.png
 runs/tb/<id>/   TensorBoard events
 ```
 
-Fetch a run (it's safe to repeat on a live run, since outputs are committed every 30 s):
+With the mirror running (next section) you don't need this: finished runs
+are imported automatically. To fetch a run by hand (it's safe to repeat on a
+live run, since outputs are committed every 30 s):
 
 ```bash
 scripts/fetch_modal_run.sh                              # list runs
@@ -168,7 +245,7 @@ uv run tensorboard --logdir runs/<run_id>/runs/tb
 
 A finished run is then imported like a local `--baseline` run
 (`mini-llm-import-run`): checkpoint and sample report go to
-`checkpoints/modal_<config name>_seed<N>.pt|.md`, the plot to `plots/`, and a
+`checkpoints/modal_<config name>_steps<N>_seed<N>.pt|.md`, the plot to `plots/`, and a
 row to `baselines.md`, ranked with local runs on `full_val_loss`. The run id,
 GPUs and git sha are kept in `baselines.json` only. Re-importing replaces the
 row instead of adding a second one. Unfinished runs are fetched but not imported.
@@ -210,7 +287,9 @@ startup, on top of a CPU/memory charge. List prices from
 | T4         | 0.000164  | 0.59   | |
 
 CPU is $0.0000131/core/sec (≈ $0.05/core/hr) and memory $0.00000222/GiB/sec.
-The Starter plan includes $30/month of free compute. Rules of thumb:
+The Starter plan includes $30/month of free compute (with a payment method on
+file; see One-time setup). `uv run --group modal modal billing summary` shows
+usage so far. Rules of thumb:
 
 - The first launch builds the image (the CUDA torch wheels are several GB).
   That's minutes of CPU time, cached afterwards; code edits only re-upload `src/`.
@@ -220,3 +299,5 @@ The Starter plan includes $30/month of free compute. Rules of thumb:
   paying for 8 GPUs; a single L4 or A100 may be the better deal.
 - A 24 h timeout on `H100:8` is a ~$760 ceiling. Set `--timeout-hours` to
   what you expect the run to need.
+- For reference, on 2×L4: the batch-4 baseline (160k steps) took 2.6 h
+  (≈ $4); batch 64 on the same 82M tokens took ~22 min (≈ $0.60).

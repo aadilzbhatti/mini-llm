@@ -94,9 +94,10 @@ def test_ddp_gradients_loss_and_eval_match_single_device(tmp_path):
 def test_ddp_training_run(tmp_path):
     n_tokens = 4000
     torch.save(torch.arange(n_tokens), tmp_path / "train.pt")  # token id == position in the stream
+    torch.save(torch.arange(n_tokens, 4096), tmp_path / "val.pt")  # disjoint from train, within the vocab
     proc = torchrun(
         "train", str(tmp_path),
-        "--tokens", "train.pt", "--val-tokens", "train.pt", "--block-size", "8", "--n-embd", "16",
+        "--tokens", "train.pt", "--val-tokens", "val.pt", "--block-size", "8", "--n-embd", "16",
         "--n-head", "2", "--n-layer", "1", "--batch-size", "8", "--steps", "20", "--warmup-steps", "0",
         "--eval-interval", "10", "--eval-batches", "2", "--full-eval-interval", "0",
         "--save", "--save-name", "m.pt", "--plot-loss", "--plot-name", "p.png",

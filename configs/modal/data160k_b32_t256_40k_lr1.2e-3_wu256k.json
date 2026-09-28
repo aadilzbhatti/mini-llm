@@ -1,0 +1,26 @@
+{
+  "name": "data160k-b32-t256-40k-lr1.2e-3-wu256k",
+  "args": {
+    "tokens": "data/data160k/train.pt",
+    "val-tokens": "data/data160k/val.pt",
+    "plot-loss": true,
+    "steps": 40000,
+    "n-embd": 256,
+    "n-head": 4,
+    "n-layer": 4,
+    "block-size": 256,
+    "lr": 0.0012,
+    "min-lr": 2e-06,
+    "full-eval-interval": 3000,
+    "save": true,
+    "sample-report": true,
+    "plot-suffix": "data160k-b32-t256-40k-lr1.2e-3-wu256k-modal",
+    "batch-size": 32,
+    "dropout": 0,
+    "eval-batches": 20,
+    "eval-interval": 100,
+    "eval-seed": 1234,
+    "seed": 42,
+    "warmup-tokens": 256000
+  }
+}
