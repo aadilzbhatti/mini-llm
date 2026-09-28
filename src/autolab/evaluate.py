@@ -141,7 +141,7 @@ def _report(run_id: str, runs_dir: Path) -> dict | None:
 def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cfg: dict | None = None,
                  paths: Paths | None = None, runs_dir: Path | None = None, repo: Path = REPO_ROOT,
                  budgets: dict | None = None, name: str = "", blocks: dict | None = None,
-                 dataset_id: str | None = None, rationale: str = "") -> dict:
+                 dataset_id: str | None = None, rationale: str = "", origin: dict | None = None) -> dict:
     """Create the session and its initial program p0 from already-run baseline trials.
 
     `runs` maps "screen"/"full" to finished run ids of p0 on different seeds; they give
@@ -171,6 +171,7 @@ def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cf
     session = {
         "name": name or paths.root.name,
         "created": now_iso(),
+        "origin": origin,  # {session, program, via, detail}: where this session's p0 came from (lineage tree)
         "dataset_id": dataset_id or cfg["dataset_id"],
         # Fixed for the session: what "better" means (token budgets, eval settings).
         "budgets": {**(budgets or {"screen_tokens": cfg["screen_tokens"], "full_tokens": cfg["full_tokens"],

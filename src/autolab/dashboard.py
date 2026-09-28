@@ -570,6 +570,58 @@ async def api_budget(request: Request) -> JSONResponse:
     raise HTTPException(400, "unknown action")
 
 
+def _change_summary(p: dict, parent: dict | None) -> str:
+    """What a program changed vs its parent, in a few words (hparams + which blocks)."""
+    if not parent:
+        return "initial"
+    bits = [f"{k} {parent['hparams'].get(k)}→{v}" for k, v in p.get("hparams", {}).items()
+            if parent["hparams"].get(k) != v]
+    blocks = [k.split(":")[1] for k, v in p.get("blocks", {}).items() if parent.get("blocks", {}).get(k) != v]
+    if blocks:
+        bits.append("code: " + ", ".join(blocks))
+    return "; ".join(bits) or "no change"
+
+
+@app.get("/api/lineage")
+def api_lineage() -> JSONResponse:
+    """Every program in every session, with parent / port / session-origin links, for the evolution tree."""
+    from autolab.pareto import frontier as pareto_frontier
+    from autolab.program import Program
+
+    base = AUTOLAB / "state" / "evolve"
+    nodes, sessions = [], []
+    for sdir in sorted((q for q in base.iterdir() if (q / "session.json").exists()),
+                       key=lambda q: (_json(q / "session.json") or {}).get("created", "")) if base.exists() else []:
+        s = _json(sdir / "session.json") or {}
+        name = s.get("name", sdir.name)
+        progs = {p["id"]: p for f in (sdir / "programs").glob("*.json") if (p := _json(f))}
+        sig = max(s.get("noise", {}).get("full", {}).get("std", 0.02), 0.02)
+        front = {p.id for p in pareto_frontier([Program.from_dict(x) for x in progs.values()], sig)}
+        sessions.append({"name": name, "created": s.get("created"), "dataset": s.get("dataset_id") or "data20k",
+                         "tokens": s.get("budgets", {}).get("full_tokens"), "origin": s.get("origin"),
+                         "incumbent": s.get("incumbent")})
+        for pid, p in progs.items():
+            parent = progs.get(p.get("parent_id")) if p.get("parent_id") else None
+            links = []
+            if p.get("parent_id"):
+                links.append({"to": f"{name}/{p['parent_id']}", "kind": "parent"})
+            src = (p.get("meta") or {}).get("ported_from")
+            if src:
+                links.append({"to": src, "kind": "port"})
+            if pid == "p0" and s.get("origin"):
+                o = s["origin"]
+                links.append({"to": f"{o['session']}/{o['program']}", "kind": o.get("via", "session"), "detail": o.get("detail")})
+            sc = p.get("scores", {})
+            nodes.append({"id": f"{name}/{pid}", "session": name, "pid": pid, "status": p["status"], "stage": p["stage"],
+                          "full_mean": sc.get("full_mean"), "n_seeds": sc.get("n_seeds"), "screen": sc.get("screen_loss"),
+                          "by": p.get("created_by"), "created": p.get("created_at"), "reason": (p.get("reason") or "")[:240],
+                          "rationale": " ".join((p.get("rationale") or "").split())[:300],
+                          "change": _change_summary(p, parent), "links": links, "frontier": pid in front,
+                          "champion": pid == s.get("incumbent"),
+                          "early": p["status"] == "rejected" and p["stage"] in ("static", "cpu", "params")})
+    return JSONResponse({"sessions": sessions, "nodes": nodes, "active": evolve_root().name})
+
+
 @app.get("/api/frontier")
 def api_frontier(session: str | None = None) -> JSONResponse:
     """The Pareto table for one session (default: the active one); sessions differ in budget/data, so they
@@ -636,12 +688,13 @@ def api_run(run_id: str) -> JSONResponse:
 
 
 @app.get("/api/program/{pid}")
-def api_program(pid: str) -> JSONResponse:
+def api_program(pid: str, session: str | None = None) -> JSONResponse:
     import difflib
 
-    if not SAFE_ID.match(pid):
+    if not SAFE_ID.match(pid) or (session and not re.match(r"^[A-Za-z0-9._@+-]+$", session)):
         raise HTTPException(400, "bad program id")
-    root = evolve_root() / "programs"
+    base = AUTOLAB / "state" / "evolve"
+    root = (base / session if session and (base / session / "session.json").exists() else evolve_root()) / "programs"
     p = _json(root / f"{pid}.json")
     if p is None:
         raise HTTPException(404, "unknown program")

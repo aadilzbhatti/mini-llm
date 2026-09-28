@@ -408,7 +408,9 @@ def switch_session(flow: dict, session: dict, progs: dict, paths: ev.Paths, log)
     new_paths = ev.Paths(ev.STATE_ROOT / name)
     ev.init_session(session["base_commit"], inc.hparams, {"screen": flow["screen_runs"], "full": chk["runs"]},
                     paths=new_paths, budgets=session["budgets"], name=name, blocks=inc.blocks,
-                    dataset_id=flow["target"], rationale=f"{inc.id} of {session.get('name')} moved to {flow['target']}")
+                    dataset_id=flow["target"], rationale=f"{inc.id} of {session.get('name')} moved to {flow['target']}",
+                    origin={"session": session.get("name"), "program": inc.id, "via": "data",
+                            "detail": f"{session.get('dataset_id')} → {flow['target']} (data policy)"})
     ev.set_active_session(name)
     note("session_switched", old=session.get("name"), new=name, dataset=flow["target"], verdict=chk["verdict"])
     log(f"switched to session {name} on {flow['target']}")
@@ -505,7 +507,9 @@ def ladder_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, p
                         paths=ev.Paths(ev.STATE_ROOT / name),
                         budgets={**session["budgets"], "full_tokens": flow["tokens"]}, name=name, blocks=inc.blocks,
                         dataset_id=flow["dataset"],
-                        rationale=f"{inc.id} of {sname} at {flow['tokens']:,} tokens (compute ladder)")
+                        rationale=f"{inc.id} of {sname} at {flow['tokens']:,} tokens (compute ladder)",
+                        origin={"session": sname, "program": inc.id, "via": "ladder",
+                                "detail": f"{session['budgets']['full_tokens'] / 1e6:.0f}M → {flow['tokens'] / 1e6:.1f}M tokens (compute ladder)"})
         ev.set_active_session(name)
         note("session_switched", old=sname, new=name, tokens=flow["tokens"], verdict=chk["verdict"])
         log(f"ladder: switched to session {name}")

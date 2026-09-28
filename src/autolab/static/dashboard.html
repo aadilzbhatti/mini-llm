@@ -146,6 +146,7 @@ a { color: var(--s1); }
     <button role="tab" data-tab="live">Live</button>
     <button role="tab" data-tab="overview">Overview</button>
     <button role="tab" data-tab="programs">Programs</button>
+    <button role="tab" data-tab="lineage">Lineage</button>
     <button role="tab" data-tab="frontier">Frontier</button>
     <button role="tab" data-tab="research">Research</button>
     <button role="tab" data-tab="experiments">Experiments</button>
@@ -159,6 +160,7 @@ a { color: var(--s1); }
   <section id="live" hidden></section>
   <section id="overview" hidden></section>
   <section id="programs" hidden></section>
+  <section id="lineage" hidden></section>
   <section id="frontier" hidden></section>
   <section id="research" hidden></section>
   <section id="experiments" hidden></section>
@@ -557,12 +559,12 @@ function renderPrograms(D) {
       h("td", {class: "num"}, fmt.si(r.params)), h("td", {class: "num"}, fmt.si(r.tokens_per_sec)), h("td", {class: "muted"}, r.by),
       h("td", {style: "max-width:420px"}, h("div", {}, r.rationale), r.reason ? h("div", {class: "muted", style: "font-size:12px"}, r.reason) : null)))))));
 }
-async function openProgram(id) {
+async function openProgram(id, session) {
   const dlg = document.getElementById("detail"), body = document.getElementById("detailBody");
-  document.getElementById("detailTitle").textContent = "program " + id;
+  document.getElementById("detailTitle").textContent = "program " + (session ? session + "/" : "") + id;
   body.replaceChildren(h("p", {class: "muted"}, "loading…"));
   if (!dlg.open) dlg.showModal();
-  const r = await (await fetch(BASE + "api/program/" + encodeURIComponent(id))).json();
+  const r = await (await fetch(BASE + "api/program/" + encodeURIComponent(id) + (session ? "?session=" + encodeURIComponent(session) : ""))).json();
   const P = r.program; body.replaceChildren();
   body.append(h("div", {class: "card"}, h("h3", {}, progStatus(P), " ", h("span", {class: "muted"}, `stage ${P.stage} · parent ${P.parent_id || "–"} · by ${P.created_by} · ${fmt.time(P.created_at)}`)),
     h("p", {}, P.rationale || "(no rationale)"), P.reason ? h("p", {class: "ink2"}, P.reason) : null,
@@ -789,6 +791,88 @@ function scatterChart(points, opts = {}) {
   return wrap;
 }
 let frontierSession = null;
+let lineageShowEarly = false;
+const NODE_STYLE = {
+  accepted: {fill: "--good", label: "accepted"}, contender: {fill: "--warning", label: "contender (within noise)"},
+  evaluated: {fill: "--serious", label: "not better"}, rejected: {ring: "--critical", label: "rejected at screen/full"},
+  early: {ring: "--critical", small: true, label: "rejected before training"}, running: {ring: "--s1", label: "in evaluation"},
+};
+function nodeStyle(n) {
+  if (n.early) return NODE_STYLE.early;
+  if (["queued", "running", "blocked"].includes(n.status)) return NODE_STYLE.running;
+  return NODE_STYLE[n.status] || NODE_STYLE.evaluated;
+}
+async function refreshLineage() {
+  const el = document.getElementById("lineage");
+  let Lg;
+  try { Lg = await (await fetch(BASE + "api/lineage", {cache: "no-store"})).json(); } catch (e) { return; }
+  el.replaceChildren();
+  const nodes = Lg.nodes.filter(n => lineageShowEarly || !n.early || n.champion);
+  const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
+  const primary = n => { const l = n.links.find(l => l.kind === "parent") || n.links.find(l => l.kind !== "port"); return l && byId[l.to] ? l : null; };
+  const kids = {}; const roots = [];
+  for (const n of nodes) { const p = primary(n); if (p) (kids[p.to] = kids[p.to] || []).push(n); else roots.push(n); }
+  for (const k in kids) kids[k].sort((a, b) => (a.created || "").localeCompare(b.created || ""));
+  // tidy layout: leaves take successive slots, parents sit over the middle of their children
+  const DX = 30, DY = 74, M = {l: 30, t: 34, r: 30, b: 30};
+  let slot = 0; const pos = {}; let maxDepth = 0;
+  const place = (n, depth) => {
+    maxDepth = Math.max(maxDepth, depth);
+    const ch = kids[n.id] || [];
+    if (!ch.length) { pos[n.id] = {x: slot++, y: depth}; return; }
+    ch.forEach(c => place(c, depth + 1));
+    pos[n.id] = {x: (pos[ch[0].id].x + pos[ch[ch.length - 1].id].x) / 2, y: depth};
+  };
+  roots.sort((a, b) => (a.created || "").localeCompare(b.created || "")).forEach(r => { place(r, 0); slot += 1; });
+  const W = M.l + M.r + Math.max(1, slot) * DX, H = M.t + M.b + (maxDepth + 1) * DY;
+  const X = id => M.l + pos[id].x * DX, Y = id => M.t + pos[id].y * DY;
+  const svg = s("svg", {viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": "program lineage tree"});
+  const edge = (a, b, style) => { const y1 = Y(a) + 7, y2 = Y(b) - 7, my = (y1 + y2) / 2;
+    return s("path", {d: `M${X(a)},${y1} C${X(a)},${my} ${X(b)},${my} ${X(b)},${y2}`, fill: "none", ...style}); };
+  const tip = h("div", {class: "tip", hidden: true});
+  for (const n of nodes) for (const l of n.links) {
+    if (!byId[l.to] || !pos[n.id] || !pos[l.to]) continue;
+    const prim = primary(n) === l;
+    if (l.kind === "port") svg.append(edge(l.to, n.id, {stroke: cssVar("--s1"), "stroke-width": 1.5, "stroke-dasharray": "2 3", opacity: 0.8}));
+    else if (l.kind === "parent") svg.append(edge(l.to, n.id, {stroke: cssVar("--axis"), "stroke-width": 1.5}));
+    else { svg.append(edge(l.to, n.id, {stroke: cssVar("--ink-2"), "stroke-width": 2.5, "stroke-dasharray": "6 4"}));
+      svg.append(s("text", {x: (X(l.to) + X(n.id)) / 2 + 6, y: (Y(l.to) + Y(n.id)) / 2, class: "lbl", style: "font-size:11px"}, l.detail || l.kind)); }
+  }
+  for (const n of nodes) {
+    if (!pos[n.id]) continue;
+    const st = nodeStyle(n), x = X(n.id), y = Y(n.id), r = st.small ? 4 : 6.5;
+    const g = s("g", {tabindex: 0, style: "cursor:pointer"});
+    g.append(s("circle", {cx: x, cy: y, r: 14, fill: "transparent"}));
+    if (n.champion) g.append(s("circle", {cx: x, cy: y, r: r + 5, fill: "none", stroke: cssVar("--ink"), "stroke-width": 2}));
+    if (n.frontier) g.append(s("circle", {cx: x, cy: y, r: r + (n.champion ? 8.5 : 4), fill: "none", stroke: cssVar("--s1"), "stroke-width": 2}));
+    g.append(s("circle", {cx: x, cy: y, r, fill: st.fill ? cssVar(st.fill) : cssVar("--surface"),
+      stroke: st.ring ? cssVar(st.ring) : cssVar("--surface"), "stroke-width": st.ring ? 2 : 1.5}));
+    if (n.pid === "p0") g.append(s("text", {x, y: y - 16, "text-anchor": "middle", class: "lbl", style: "font-weight:600"}, n.session));
+    if (!n.early) g.append(s("text", {x, y: y + 20, "text-anchor": "middle", style: "font-size:10px"}, n.pid));
+    const show = () => { tip.replaceChildren(h("div", {}, h("b", {}, n.id), " ", h("span", {class: "muted"}, nodeStyle(n).label + (n.champion ? " · champion" : "") + (n.frontier ? " · frontier" : ""))),
+        n.full_mean != null ? h("div", {}, "full val ", h("b", {}, fmt.loss(n.full_mean)), ` (${n.n_seeds} seed${n.n_seeds === 1 ? "" : "s"})`) : (n.screen != null ? h("div", {}, "screen ", h("b", {}, fmt.loss(n.screen))) : null),
+        h("div", {class: "muted"}, n.change), h("div", {style: "max-width:360px;white-space:normal"}, n.rationale.slice(0, 180) + (n.rationale.length > 180 ? "…" : "")),
+        n.reason ? h("div", {class: "muted", style: "max-width:360px;white-space:normal"}, n.reason) : null, h("div", {class: "muted"}, `by ${n.by}`));
+      const wr = wrap.getBoundingClientRect(), sv = svg.getBoundingClientRect();
+      tip.hidden = false; tip.style.left = Math.min(x + sv.left - wr.left + wrap.scrollLeft + 14, wrap.scrollWidth - 380) + "px"; tip.style.top = (y + 12) + "px"; };
+    g.addEventListener("pointerenter", show); g.addEventListener("focus", show);
+    g.addEventListener("pointerleave", () => tip.hidden = true); g.addEventListener("blur", () => tip.hidden = true);
+    g.addEventListener("click", () => openProgram(n.pid, n.session));
+    svg.append(g);
+  }
+  const wrap = h("div", {class: "chart", style: "overflow-x:auto;position:relative"}, svg, tip);
+  const counts = {}; for (const n of Lg.nodes) { const k = nodeStyle(n).label; counts[k] = (counts[k] || 0) + 1; }
+  const key = (st) => h("span", {}, h("span", {style: `display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:middle;` +
+      (st.fill ? `background:${cssVar(st.fill)}` : `border:2px solid ${cssVar(st.ring)}`)}), `${st.label} (${counts[st.label] || 0})`);
+  el.append(h("div", {class: "card"}, h("h3", {}, "How the programs evolved"),
+    h("p", {class: "ink2", style: "margin:4px 0"}, "Each node is a program; solid lines go from parent to child. Dashed dark lines start a new session from the previous session's program (data policy / compute ladder), and dotted blue lines are programs ported into a new session. Hover for the change and outcome, click for the diff."),
+    h("div", {class: "legend"}, [NODE_STYLE.accepted, NODE_STYLE.contender, NODE_STYLE.evaluated, NODE_STYLE.rejected, NODE_STYLE.early, NODE_STYLE.running].map(key),
+      h("span", {}, h("span", {style: `display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:middle;border:2px solid ${cssVar("--ink")}`}), "session champion"),
+      h("span", {}, h("span", {style: `display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:middle;border:2px solid ${cssVar("--s1")}`}), "on the Pareto frontier")),
+    h("label", {class: "muted", style: "font-size:13px"}, h("input", {type: "checkbox", checked: lineageShowEarly, onchange: e => { lineageShowEarly = e.target.checked; refreshLineage(); }}),
+      " show programs rejected before training")), h("div", {class: "card"}, wrap));
+}
+
 async function refreshFrontier() {
   const el = document.getElementById("frontier");
   let F;
@@ -908,6 +992,7 @@ function showTab(name) {
   if (name === "live") refreshLive();
   if (name === "research") refreshResearch();
   if (name === "frontier") refreshFrontier();
+  if (name === "lineage") refreshLineage();
   for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", b.dataset.tab === name);
   for (const sec of document.querySelectorAll("main > section")) sec.hidden = sec.id !== name;
   try { localStorage.setItem("autolab.tab", name); } catch (e) {}
@@ -916,7 +1001,7 @@ document.getElementById("tabs").addEventListener("click", e => { if (e.target.da
 document.getElementById("detailClose").addEventListener("click", () => document.getElementById("detail").close());
 let initial = location.hash.slice(1);
 if (!initial) { try { initial = localStorage.getItem("autolab.tab") || ""; } catch (e) {} }
-showTab(["live", "overview", "programs", "frontier", "research", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
+showTab(["live", "overview", "programs", "lineage", "frontier", "research", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
 let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 200); });
 setInterval(() => { if (!document.hidden && !document.getElementById("live").hidden && !document.getElementById("detail").open) refreshLive(); }, 10000);
 refresh(); setInterval(() => { if (!document.hidden && !document.getElementById("detail").open) refresh(); }, 30000);

@@ -1,6 +1,6 @@
 # Autolab session report
 
-Generated 2026-09-28T14:51+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k@122M`.
+Generated 2026-09-28T20:08+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k@122M`.
 
 ## Headline
 
@@ -41,6 +41,12 @@ Generated 2026-09-28T14:51+00:00 by `autolab session-report` (the daemon refresh
 | 1 | 2026-09-28T07:01 | s2+data40k@122M/p1 (data40k) | 4.4709 | 4.4709 |
 | 2 | 2026-09-28T07:03 | s2+data40k@122M/p2 (data40k) | 4.3861 | 4.3861 |
 | 3 | 2026-09-28T07:14 | s2+data40k@122M/p3 (data40k) | 4.2999 | 4.2999 |
+| 4 | 2026-09-28T16:19 | s2+data40k@122M/p7 (data40k) | 4.3006 | 4.2999 |
+| 5 | 2026-09-28T16:20 | s2+data40k@122M/p5 (data40k) | 4.2794 | 4.2794 |
+| 6 | 2026-09-28T16:20 | s2+data40k@122M/p6 (data40k) | 4.3317 | 4.2794 |
+| 7 | 2026-09-28T16:24 | s2+data40k@122M/p8 (data40k) | 4.2806 | 4.2794 |
+| 8 | 2026-09-28T16:30 | s2+data40k@122M/p4 (data40k) | 4.2824 | 4.2794 |
+| 9 | 2026-09-28T16:50 | s2+data40k@122M/p9 (data40k) | 4.3033 | 4.2794 |
 
 ## Lineage of the best program
 
@@ -69,33 +75,34 @@ Generated 2026-09-28T14:51+00:00 by `autolab session-report` (the daemon refresh
   - p12 (claude-opus-5-5) @ screen: screen 6.3576 > incumbent 5.7621 + margin 0.25
   - p13 (claude-sonnet-5) @ cpu: shape: 1 failed: tests/autolab/test_causal_leak.py::test_shapes_and_backward
   - p15 (claude-opus-5-5) @ cpu: tests: 1 failed: tests/test_model.py::test_overfits_one_batch
-- `s2+data40k@122M`: 3 children — evaluated 1, contender 1, accepted 1
+- `s2+data40k@122M`: 9 children — evaluated 4, contender 4, accepted 1
 
 ## Proposer (Claude) statistics
 
 | proposer | proposed | trained | accepted | contender | evaluated | rejected |
 | --- | --- | --- | --- | --- | --- | --- |
-| claude-opus-5-5 | 16 | 14 | 2 | 3 | 8 | 3 |
+| claude-opus-5-5 | 22 | 20 | 2 | 6 | 11 | 3 |
 | claude-sonnet-5 | 7 | 5 | 1 | 2 | 2 | 2 |
 | human | 8 | 1 | 0 | 1 | 0 | 7 |
 | mutation | 1 | 1 | 0 | 0 | 1 | 0 |
 | port | 4 | 4 | 2 | 1 | 1 | 0 |
 
-- Claude calls: 35 (33 ok), $9.11. Failures: exit 1 ×1, rate_limited: {"is_error":true,"duration_api_ms":63194,"num_ ×1.
+- Claude calls: 42 (40 ok), $10.73. Failures: exit 1 ×1, rate_limited: {"is_error":true,"duration_api_ms":63194,"num_ ×1.
 - Fallback mutations (proposer failed): 1.
 
 ## Spend
 
 | stage | runs | GPU-hours | $ |
 | --- | --- | --- | --- |
-| full runs | 24 | 13.49 | 10.78 |
-| confirmations | 24 | 13.26 | 10.59 |
+| full runs | 30 | 19.16 | 15.32 |
+| confirmations | 30 | 18.60 | 14.87 |
 | baselines & prep experiments | 25 | 6.23 | 4.98 |
 | data checks | 9 | 5.40 | 4.32 |
-| screens | 28 | 2.08 | 1.66 |
+| screens | 34 | 2.60 | 2.08 |
+| other | 1 | 0.82 | 0.66 |
 | data-switch screens | 3 | 0.20 | 0.16 |
-| **Modal total** | 113 | 40.66 | **32.50** |
-| Claude | 35 calls | | 9.11 |
+| **Modal total** | 132 | 53.02 | **42.37** |
+| Claude | 42 calls | | 10.73 |
 
 Modal $ = wall time × GPU list price (L4); CPU/memory charges excluded, so a lower bound.
 
