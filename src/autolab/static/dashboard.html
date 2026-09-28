@@ -335,7 +335,10 @@ function renderOverview(D) {
     controllerTile(D.controller),
     tile("Claude (proposer)", fmt.usd(D.llm.usd), `${D.llm.calls} calls · ${D.llm.failed} failed`),
     tile("Trials", `${D.counts.finished} done`, `${D.counts.pending} running · ${D.counts.failed} failed · ${fmt.val(sp.gpu_hours)} GPU-h`),
-    tile("Best full val loss", D.best ? fmt.loss(D.best.full_val) : "–", D.best ? `${D.best.run_id} (${D.best.experiment}, ${D.best.budget_name} budget)` : "no finished runs"),
+    D.incumbent ? tile("Best (accepted incumbent)", fmt.loss(D.incumbent.full_mean),
+        `${D.incumbent.session}/${D.incumbent.program} · mean of ${D.incumbent.n_seeds} seeds · ${D.incumbent.dataset} @ ${fmt.si(D.incumbent.tokens)} tokens` +
+        (D.best ? ` · lowest single run anywhere: ${fmt.loss(D.best.full_val)} (${D.best.run_id}, ${D.best.dataset || "?"} @ ${fmt.si(D.best.tokens_seen)} tokens; different regime, not comparable)` : ""))
+      : tile("Best full val loss", D.best ? fmt.loss(D.best.full_val) : "–", D.best ? `${D.best.run_id} (${D.best.experiment}, ${D.best.budget_name} budget)` : "no finished runs"),
     tile("Daemon", h("span", {}, statusEl(dk, dt.split(" · ")[0].replace("daemon ", ""))), D.daemon ? `last cycle ${fmt.ago(D.daemon.age_s)} · ${D.daemon.pending ?? "?"} pending` : "start com.aadil.autolab-daemon"),
     tile("Code", D.git.commit + (D.git.dirty ? " +dirty" : ""), `${D.git.branch} · ${D.git.subject}`),
   ));

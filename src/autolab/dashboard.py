@@ -283,6 +283,19 @@ def evolve_view() -> dict | None:
                        for k in ("queued", "running", "blocked", "rejected", "evaluated", "contender", "accepted")}}
 
 
+def incumbent_view() -> dict | None:
+    """The active evolve session's accepted best: the number autolab optimizes and reports."""
+    root = evolve_root()
+    session = _json(root / "session.json")
+    if not session:
+        return None
+    p = _json(root / "programs" / f"{session['incumbent']}.json") or {}
+    sc = p.get("scores", {})
+    return {"session": session.get("name"), "program": session["incumbent"], "full_mean": sc.get("full_mean"),
+            "n_seeds": sc.get("n_seeds"), "dataset": session.get("dataset_id"),
+            "tokens": session["budgets"]["full_tokens"], "sigma": session["noise"]["full"]["std"]}
+
+
 def controller_view(calls: dict) -> dict:
     ctl = _json(AUTOLAB / "state" / "controller.json", {}) or {}
     cfg = settings().get("config", {}).get("controller", {})
@@ -340,7 +353,7 @@ def overview() -> dict:
         cum += r["usd"] or 0
         timeline.append([r["ended_at"], round(cum, 4), r["run_id"]])
     finished = [r for r in rows if r["full_val"] is not None]
-    best = min(finished, key=lambda r: r["full_val"], default=None)
+    best = min(finished, key=lambda r: r["full_val"], default=None)  # lowest single run, any regime
     llm_calls = []
     try:
         llm_calls = [json.loads(line) for line in (AUTOLAB / "state" / "llm_spend.jsonl").read_text().splitlines() if line]
@@ -362,7 +375,9 @@ def overview() -> dict:
         "counts": {s: sum(r["state"] == s for r in rows) for s in ("pending", "finished", "failed")},
         "llm": {"calls": len(llm_calls), "failed": sum(not c.get("ok") for c in llm_calls),
                 "usd": round(sum(c.get("usd") or 0 for c in llm_calls), 4)},
-        "best": ({k: best[k] for k in ("run_id", "full_val", "experiment", "variant", "budget_name")} if best else None),
+        "best": ({**{k: best[k] for k in ("run_id", "full_val", "experiment", "variant", "budget_name", "tokens_seen")},
+                  "dataset": (calls.get(best["run_id"], {}).get("request") or {}).get("dataset_id")} if best else None),
+        "incumbent": incumbent_view(),
         "runs": rows,
         "experiments": [{k: e.get(k) for k in ("id", "title", "purpose", "gpu", "dataset_id", "model", "optim", "eval")}
                         | {"jobs": len(e.get("jobs", [])), "analysis": analyze(e, rows)} for e in exps],
