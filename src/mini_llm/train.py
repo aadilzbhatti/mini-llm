@@ -256,7 +256,8 @@ def build_optimizer(model: torch.nn.Module, args: argparse.Namespace) -> torch.o
 
 
 def before_optimizer_step(model: torch.nn.Module, optimizer: torch.optim.Optimizer, step: int) -> None:
-    """AUTOLAB: hook between backward() and optimizer.step() (e.g. gradient clipping). No-op by default."""
+    """AUTOLAB: hook between backward() and optimizer.step() (e.g. gradient clipping)."""
+    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
 # EVOLVE-BLOCK-END optimizer
 
 

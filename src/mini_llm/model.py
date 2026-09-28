@@ -164,8 +164,8 @@ class ModelCustomTransformer(nn.Module):
 
 
     def init_weights(self):
-        nn.init.xavier_uniform_(self.token_embedding_table.weight)
-        nn.init.xavier_uniform_(self.position_embedding_table.weight)
+        nn.init.normal_(self.token_embedding_table.weight, mean=0.0, std=0.02)
+        nn.init.normal_(self.position_embedding_table.weight, mean=0.0, std=0.01)
         # Generic default for every Linear in the tree.
         for layer in self.modules():
             if isinstance(layer, nn.Linear):
