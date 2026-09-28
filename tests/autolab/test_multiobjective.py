@@ -71,27 +71,33 @@ def test_static_rejects_context_that_breaks_tokens_per_update(tmp_path):
     assert "must equal 8192 tokens per update" in p.reason
 
 
-def test_eval_suite_on_a_tiny_model(tmp_path):
+def test_eval_suite_adapter_over_owner_evals(tmp_path):
+    """autolab.evalsuite runs the owner's mini_llm.evals and maps it onto the four dimensions."""
     from mini_llm.config import ModelConfig, build_model
 
     (tmp_path / "checkpoints").mkdir()
     cfg = ModelConfig(vocab_size=50257, block_size=128, n_embd=16, n_head=2, n_layer=1)
     m = build_model(cfg)
-    torch.save({"config": cfg.to_dict(), "model_state_dict": m.state_dict()}, tmp_path / "checkpoints" / "model.pt")
-    torch.save(torch.randint(0, 50257, (20_000,), generator=torch.Generator().manual_seed(0)), tmp_path / "val.pt")
+    torch.save({"config": cfg.to_dict(), "model_state_dict": m.state_dict(), "step": 1,
+                "systems": {"train_tokens_per_sec": 1234.0, "peak_mem_gb": 0.5, "train_sec": 10.0}},
+               tmp_path / "checkpoints" / "model.pt")
+    val = torch.load(ev.REPO_ROOT / "autolab" / "data" / "val_frozen.pt")[:60_000].clone()
+    torch.save(val, tmp_path / "val.pt")
     out = evalsuite.run(tmp_path, tmp_path / "val.pt")
-    acc = out["context_capability"]["accuracy_by_distance"]
-    assert all(acc[str(d)] == 0.0 for d in (128, 256, 992))  # beyond a 128 context: counts as 0
-    assert out["quality"]["short_context_loss"] > 9 and "long_context_loss" not in out["quality"]
-    inf = out["inference"]
-    assert inf["context"] == 128 and inf["decode_tokens_per_s"] > 0 and inf["prefill_ms"] > 0
-    assert json.loads((tmp_path / "eval.json").read_text())["context"] == 128
+    cc = out["context_capability"]
+    assert set(cc["accuracy_by_distance"]) >= {"16", "224", "896"}  # the owner's distances + the longer sweep
+    assert 0.0 <= cc["long_range_score"] <= 1.0 and cc["chance"] == 0.1
+    assert out["quality"]["full_val_at_128"] > 9  # untrained: ~ln(50257)
+    assert out["inference"]["decode_ms_per_token"] > 0 and out["inference"]["prefill_ms"] > 0
+    assert out["training"]["train_tokens_per_sec"] == 1234.0
+    assert "retrieval" in out["owner_evals"] and json.loads((tmp_path / "eval.json").read_text())["context"] == 128
 
 
 def test_run_metrics_from_report():
     rep = {"eval": {"context": 256, "context_capability": {"long_range_score": 0.3, "effective_context": 128},
-                    "quality": {"short_context_loss": 4.5}, "inference": {"decode_ms_per_token": 7.0, "params": 16e6}},
-           "performance": {"tokens_per_sec": 40000.0, "train_wall_s": 2000.0, "peak_train_mem_bytes": 3e9}}
+                    "quality": {"short_context_loss": 4.5}, "inference": {"decode_ms_per_token": 7.0, "params": 16e6},
+                    "training": {"train_tokens_per_sec": 40000.0, "peak_train_mem_bytes": 3e9}},
+           "performance": {"train_wall_s": 2000.0}}
     m = ev.run_metrics(rep)
     assert m["long_range_score"] == 0.3 and m["context"] == 256 and m["train_wall_s"] == 2000.0
     assert ev.run_metrics({"performance": {}}) is None

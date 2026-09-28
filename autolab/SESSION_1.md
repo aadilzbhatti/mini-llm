@@ -1,6 +1,6 @@
 # Autolab session report
 
-Generated 2026-09-28T14:02+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k@122M`.
+Generated 2026-09-28T14:51+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k@122M`.
 
 ## Headline
 
@@ -81,7 +81,7 @@ Generated 2026-09-28T14:02+00:00 by `autolab session-report` (the daemon refresh
 | mutation | 1 | 1 | 0 | 0 | 1 | 0 |
 | port | 4 | 4 | 2 | 1 | 1 | 0 |
 
-- Claude calls: 34 (32 ok), $8.38. Failures: exit 1 ×1, rate_limited: {"is_error":true,"duration_api_ms":63194,"num_ ×1.
+- Claude calls: 35 (33 ok), $9.11. Failures: exit 1 ×1, rate_limited: {"is_error":true,"duration_api_ms":63194,"num_ ×1.
 - Fallback mutations (proposer failed): 1.
 
 ## Spend
@@ -95,7 +95,7 @@ Generated 2026-09-28T14:02+00:00 by `autolab session-report` (the daemon refresh
 | screens | 28 | 2.08 | 1.66 |
 | data-switch screens | 3 | 0.20 | 0.16 |
 | **Modal total** | 113 | 40.66 | **32.50** |
-| Claude | 34 calls | | 8.38 |
+| Claude | 35 calls | | 9.11 |
 
 Modal $ = wall time × GPU list price (L4); CPU/memory charges excluded, so a lower bound.
 

@@ -440,11 +440,11 @@ def _submit(p: Program, stage: str, seeds: list[int], cfg: dict, session: dict, 
     return True
 
 
-METRIC_KEYS = {
+METRIC_KEYS = {  # report path -> metric name (report["eval"] comes from autolab.evalsuite over mini_llm.evals)
     ("eval", "context_capability", "long_range_score"): "long_range_score",
     ("eval", "context_capability", "effective_context"): "effective_context",
+    ("eval", "context_capability", "context_benefit_nats"): "context_benefit_nats",
     ("eval", "quality", "short_context_loss"): "short_context_loss",
-    ("eval", "quality", "long_context_loss"): "long_context_loss",
     ("eval", "inference", "decode_tokens_per_s"): "decode_tokens_per_s",
     ("eval", "inference", "decode_ms_per_token"): "decode_ms_per_token",
     ("eval", "inference", "prefill_ms"): "prefill_ms",
@@ -452,9 +452,9 @@ METRIC_KEYS = {
     ("eval", "inference", "fwd_flops_per_token"): "fwd_flops_per_token",
     ("eval", "inference", "params"): "params",
     ("eval", "context"): "context",
-    ("performance", "tokens_per_sec"): "train_tokens_per_sec",
+    ("eval", "training", "train_tokens_per_sec"): "train_tokens_per_sec",
+    ("eval", "training", "peak_train_mem_bytes"): "peak_train_mem_bytes",
     ("performance", "train_wall_s"): "train_wall_s",
-    ("performance", "peak_train_mem_bytes"): "peak_train_mem_bytes",
 }
 
 
