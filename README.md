@@ -42,9 +42,10 @@ What got here (all in `baselines.md`):
   batch 128 doesn't (best 4.6787). The best LR followed square-root batch
   scaling at batch 64 (3e-4 × √16 = 1.2e-3) and batch 128 (≈1.7e-3).
 - Data: same run and val set, only the unique training data changes:
-  data20k 4.6564 → data40k 4.5415 → data80k 4.4679, train/val gap
-  0.51 → 0.22 → 0.12. Diminishing returns per doubling, and overfitting
-  roughly halves each time.
+  data20k 4.6564 → data40k 4.5415 → data80k 4.4679 → data160k 4.4698,
+  train/val gap 0.51 → 0.22 → 0.12 → 0.05. The gain stops at data80k
+  (~1.5 passes over it costs nothing measurable at this budget), so at
+  122.88M tokens the model is now limited by size or compute, not data.
 
 Datasets and how they were built: `data/*/MANIFEST.md`.
 
