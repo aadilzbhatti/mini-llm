@@ -12,32 +12,35 @@
 
 ## Context benefit
 
-Loss on the second half of 400 val windows, given a 64-token prefix from the same document vs from a different document.
+Loss on the second half of each val window, given the first half from the same document vs from a different one (one window per eligible document, identical windows for every model). Compare cb@128 across all models; cb@256 only across models with context ≥ 256.
 
-- same-document prefix: 4.3569
-- other-document prefix: 4.8059
-- **benefit: 0.4490 nats**
+- **cb@128** (window 128, prefix 64, seed 0, 903 windows): benefit **0.4619 ± 0.0075 nats** (same-doc prefix 4.2959, other-doc prefix 4.7577)
 
 ## Long-range retrieval
 
-Forced choice among 10 single-token words (chance 10%), 60 trials per distance.
+Forced choice among 10 single-token words (chance 10%), 400 trials per distance, identical trials for every model.
 
-| distance | accuracy | log-prob margin | key in context |
-|---|---|---|---|
-| 16 | 90% | +3.47 | yes |
-| 32 | 82% | +2.90 | yes |
-| 64 | 60% | +2.31 | yes |
-| 96 | 45% | +1.80 | yes |
-| 128 | 13% | -0.08 | yes |
-| 160 | 12% | +0.21 | no |
-| 192 | 3% | -0.20 | no |
-| 224 | 18% | +0.25 | no |
+| distance | accuracy | 95% CI | log-prob margin | key in context |
+|---|---|---|---|---|
+| 16 | 87.0% | 83%–90% | +3.33 | yes |
+| 32 | 76.8% | 72%–81% | +2.85 | yes |
+| 64 | 53.0% | 48%–58% | +1.98 | yes |
+| 96 | 41.8% | 37%–47% | +1.43 | yes |
+| 128 | 7.2% | 5%–10% | -0.04 | no |
+| 160 | 11.5% | 9%–15% | +0.08 | no |
+| 192 | 7.0% | 5%–10% | -0.04 | no |
+| 224 | 8.2% | 6%–11% | -0.03 | no |
+| 256 | 9.0% | 7%–12% | -0.05 | no |
+| 320 | 9.5% | 7%–13% | -0.00 | no |
+| 384 | 10.0% | 7%–13% | -0.01 | no |
+| 448 | 8.0% | 6%–11% | -0.01 | no |
+| 496 | 11.0% | 8%–14% | +0.10 | no |
 
 ## Inference
 
 - device: mps
-- prefill, full context: 18.38 ms
-- decode: 38.7 tokens/s (no KV cache: each decode step re-runs the (cropped) window)
+- prefill, full context: 20.07 ms
+- decode: 42.0 tokens/s (no KV cache: each decode step re-runs the (cropped) window)
 - memory: 0.088 GB
 
 ## Training systems (recorded by the run)

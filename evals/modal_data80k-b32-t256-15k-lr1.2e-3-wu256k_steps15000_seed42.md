@@ -14,32 +14,36 @@
 
 ## Context benefit
 
-Loss on the second half of 400 val windows, given a 64-token prefix from the same document vs from a different document.
+Loss on the second half of each val window, given the first half from the same document vs from a different one (one window per eligible document, identical windows for every model). Compare cb@128 across all models; cb@256 only across models with context ≥ 256.
 
-- same-document prefix: 4.4739
-- other-document prefix: 4.9149
-- **benefit: 0.4410 nats**
+- **cb@128** (window 128, prefix 64, seed 0, 903 windows): benefit **0.4611 ± 0.0075 nats** (same-doc prefix 4.4129, other-doc prefix 4.8740)
+- **cb@256** (window 256, prefix 128, seed 0, 762 windows): benefit **0.3602 ± 0.0057 nats** (same-doc prefix 4.3427, other-doc prefix 4.7029)
 
 ## Long-range retrieval
 
-Forced choice among 10 single-token words (chance 10%), 60 trials per distance.
+Forced choice among 10 single-token words (chance 10%), 400 trials per distance, identical trials for every model.
 
-| distance | accuracy | log-prob margin | key in context |
-|---|---|---|---|
-| 16 | 87% | +3.48 | yes |
-| 32 | 80% | +3.21 | yes |
-| 64 | 62% | +2.39 | yes |
-| 96 | 55% | +1.86 | yes |
-| 128 | 22% | +0.79 | yes |
-| 160 | 40% | +1.54 | yes |
-| 192 | 25% | +1.04 | yes |
-| 224 | 27% | +1.01 | yes |
+| distance | accuracy | 95% CI | log-prob margin | key in context |
+|---|---|---|---|---|
+| 16 | 87.0% | 83%–90% | +3.50 | yes |
+| 32 | 77.2% | 73%–81% | +3.04 | yes |
+| 64 | 60.0% | 55%–65% | +2.19 | yes |
+| 96 | 48.5% | 44%–53% | +1.62 | yes |
+| 128 | 27.3% | 23%–32% | +1.04 | yes |
+| 160 | 31.2% | 27%–36% | +1.11 | yes |
+| 192 | 23.8% | 20%–28% | +0.80 | yes |
+| 224 | 20.8% | 17%–25% | +0.75 | yes |
+| 256 | 11.5% | 9%–15% | +0.07 | no |
+| 320 | 10.5% | 8%–14% | -0.02 | no |
+| 384 | 9.2% | 7%–12% | -0.07 | no |
+| 448 | 11.8% | 9%–15% | +0.04 | no |
+| 496 | 10.0% | 7%–13% | +0.12 | no |
 
 ## Inference
 
 - device: mps
-- prefill, full context: 26.02 ms
-- decode: 30.6 tokens/s (no KV cache: each decode step re-runs the (cropped) window)
+- prefill, full context: 17.82 ms
+- decode: 30.2 tokens/s (no KV cache: each decode step re-runs the (cropped) window)
 - memory: 0.117 GB
 
 ## Training systems (recorded by the run)
