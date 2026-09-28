@@ -117,7 +117,7 @@ reference = "data20k"        # a bigger build should contain this (checked, not 
 # The controller (M5): what the daemon proposes on its own. `autolab start` enables it.
 [controller]
 daily_usd = 10.0                  # rolling-24h budget: Modal (actual + committed) + Claude (owner, 2026-09-27)
-max_in_flight = 4                 # unfinished programs at once
+max_in_flight = 6                 # unfinished programs at once (owner: more proposals, 2026-09-28)
 max_programs_per_session = 200
 max_consecutive_early_rejects = 4 # this many rejected before training in a row -> pause 6 h
 p_full = 0.5                      # for the expected cost of one candidate

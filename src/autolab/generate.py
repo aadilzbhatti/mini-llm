@@ -105,6 +105,10 @@ def generate_one(paths: ev.Paths | None = None, rng: random.Random | None = None
     tag = f"{session.get('name', 'session')}-{session['next_id']}"
 
     fallback = None
+    from autolab.activity import set_activity
+
+    set_activity("propose", f"asking Claude ({model}) for a child of {parent.id} — instruction: {pmeta['instruction']}",
+                 parent=parent.id, model=model)
     try:
         res = caller(prompt, (PROMPTS / "system.md").read_text(), REPLY_SCHEMA, model, lcfg,
                      paths.root.parent.parent / "llm" / session.get("name", "session"), tag)

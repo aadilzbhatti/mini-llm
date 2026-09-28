@@ -108,6 +108,22 @@ a { color: var(--s1); }
 .decision .when { color: var(--muted); font-size: 12px; }
 .label-diag { font-weight: 600; }
 .stale { opacity: 0.55; transition: opacity .2s; }
+.now { display: flex; gap: 12px; align-items: flex-start; }
+.now .pulse { width: 12px; height: 12px; border-radius: 50%; margin-top: 5px; flex: none; background: var(--good); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .now .pulse { animation: none; } }
+.now .what { font-size: 16px; font-weight: 600; }
+.board { display: grid; grid-template-columns: repeat(5, minmax(180px, 1fr)); gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+.col { background: var(--surface-2); border-radius: 12px; padding: 8px; min-height: 120px; }
+.col h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); margin: 2px 4px 8px; display: flex; justify-content: space-between; }
+.pcard { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; cursor: pointer; font-size: 13px; }
+.pcard:hover { border-color: var(--axis); }
+.pcard .top { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.pcard .why { color: var(--ink-2); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pcard .run { margin-top: 6px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pcard .progress { margin-top: 3px; }
+.feed div { padding: 4px 0; border-bottom: 1px solid var(--grid); font-size: 13px; }
+.feed .t { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 8px; font-size: 12px; }
 @media (max-width: 560px) { .tile .value { font-size: 20px; } th, td { padding: 5px 6px; } }
 </style>
 </head>
@@ -119,6 +135,7 @@ a { color: var(--s1); }
     <span class="meta" id="meta">loading…</span>
   </div>
   <nav role="tablist" id="tabs">
+    <button role="tab" data-tab="live">Live</button>
     <button role="tab" data-tab="overview">Overview</button>
     <button role="tab" data-tab="programs">Programs</button>
     <button role="tab" data-tab="experiments">Experiments</button>
@@ -129,7 +146,8 @@ a { color: var(--s1); }
   </nav>
 </header>
 <main id="main">
-  <section id="overview"></section>
+  <section id="live" hidden></section>
+  <section id="overview" hidden></section>
   <section id="programs" hidden></section>
   <section id="experiments" hidden></section>
   <section id="runs" hidden></section>
@@ -316,10 +334,12 @@ let DATA = null;
 function tile(label, value, sub, extra) { return h("div", {class: "tile"}, h("div", {class: "label"}, label), h("div", {class: "value"}, value), sub ? h("div", {class: "sub"}, sub) : null, extra); }
 function daemonState(d) {
   if (!d) return ["critical", "daemon not running"];
-  const stale = d.age_s == null || d.age_s > 3 * (d.interval_s || 60);
+  const act = LIVE && LIVE.current ? LIVE.current.age_s : null;  // busy cycles still record activity
+  const age = Math.min(d.age_s ?? 1e9, act ?? 1e9);
+  const stale = age > 3 * (d.interval_s || 60) + (d.in_cycle ? 1200 : 0);
   if (stale) return ["critical", "daemon stale · " + fmt.ago(d.age_s)];
   if (d.last_error && (!d.last_ok || d.last_error.at > d.last_ok)) return ["serious", "daemon erroring"];
-  return ["good", "daemon ok · " + fmt.ago(d.age_s)];
+  return ["good", "daemon ok · " + fmt.ago(age)];
 }
 
 function renderOverview(D) {
@@ -581,6 +601,81 @@ function renderNotebook(D) {
   el.append(c);
 }
 
+// ---------- Live tab ----------
+let LIVE = null;
+const COL_TITLE = {proposing: "Proposing (Claude)", cpu: "CPU checks", screen: "Screen", full: "Full run", confirm: "Confirm seeds", finished: "Finished (6 h)"};
+const KIND_STATUS = {idle: "good", collect: "good", propose: "warning", cpu: "warning", static: "warning", params: "warning",
+  gpu: "warning", data: "warning", accepted: "good"};
+function runLine(r) {
+  if (r.state === "training") {
+    const frac = r.total ? r.step / r.total : 0;
+    return h("div", {class: "run"}, `${r.run_id.replace(/^ev-[^-]+(-[^-]+)?-/, "")}: step ${fmt.int(r.step)}/${fmt.int(r.total)}` +
+        (r.eval_val != null ? ` · val ${Number(r.eval_val).toFixed(3)}` : "") + (r.eta != null ? ` · eta ${fmt.dur(r.eta)}` : ""),
+      h("div", {class: "progress"}, h("span", {style: `width:${(frac * 100).toFixed(1)}%`})));
+  }
+  if (r.full_val != null) return h("div", {class: "run"}, `${r.run_id.split("-").slice(-2).join("-")}: done · full val ${fmt.loss(r.full_val)}`);
+  return h("div", {class: "run"}, `${r.run_id.split("-").slice(-2).join("-")}: ${r.state}${r.error ? " — " + r.error : ""}`);
+}
+function pcard(c) {
+  const [k, label] = c.column === "finished" ? (PROG_STATUS[c.status] || ["serious", c.status]) :
+    (c.status === "blocked" ? ["serious", "waiting ($)"] : c.status === "queued" ? ["warning", "queued"] : ["warning", "running"]);
+  const scores = [c.screen != null ? `screen ${fmt.loss(c.screen)}` : "", c.full_mean != null ? `full ${fmt.loss(c.full_mean)} (${c.n_seeds})` : ""].filter(Boolean).join(" · ");
+  return h("div", {class: "pcard", onclick: () => c.id !== "…" && openProgram(c.id)},
+    h("div", {class: "top"}, h("strong", {}, c.id), c.incumbent ? h("span", {class: "chip"}, "incumbent") : null,
+      statusEl(k, label), h("span", {class: "muted"}, `${c.by || ""}${c.parent ? " · parent " + c.parent : ""}`)),
+    c.instruction ? h("div", {class: "muted", style: "font-size:12px"}, `instruction: ${c.instruction}`) : null,
+    h("div", {class: "why"}, c.rationale || ""),
+    scores ? h("div", {class: "run"}, scores) : null,
+    c.column === "finished" && c.reason ? h("div", {class: "run"}, c.reason) : null,
+    (c.runs || []).map(runLine));
+}
+function renderLive(L) {
+  const el = document.getElementById("live"); el.replaceChildren();
+  const cur = L.current, C = L.controller;
+  const busy = cur && cur.kind !== "idle";
+  const ctlText = !C.enabled ? "controller off (autolab start)" :
+    (C.paused_until && Date.parse(C.paused_until) > Date.now()) ? `paused until ${fmt.time(C.paused_until)}: ${C.pause_reason || ""}` :
+    `proposing up to ${C.max_in_flight} at once · 24h spend ${fmt.usd(C.spend_24h)} of ${fmt.usd(C.daily_usd)}` + (C.override ? ` (raised until ${fmt.time(C.override.until)})` : "");
+  el.append(h("div", {class: "card now"}, h("i", {class: "pulse", style: busy ? "" : "animation:none;background:var(--muted)"}),
+    h("div", {}, h("div", {class: "what"}, cur ? cur.text : "no activity recorded yet"),
+      h("div", {class: "muted"}, `${cur ? "for " + fmt.dur(cur.age_s) + " · " : ""}session ${L.active_session} · ${L.pending_runs} run${L.pending_runs === 1 ? "" : "s"} on Modal · ${ctlText}`),
+      C.data_flow && C.data_flow.state ? h("div", {class: "muted"}, `data policy: ${C.data_flow.state}${C.data_flow.target ? " (" + C.data_flow.target + ")" : ""} · compute ladder: ${C.ladder && C.ladder.state || "idle"}` +
+        (C.ladder && C.ladder.waiting && C.ladder.waiting.stalled !== undefined ? ` (${C.ladder.waiting.stalled} stalled of 4 needed)` : "")) : null)));
+  const board = h("div", {class: "board"});
+  for (const col of L.columns.filter(c => c !== "finished")) {
+    const cards = L.cards.filter(c => c.column === col);
+    board.append(h("div", {class: "col"}, h("h3", {}, h("span", {}, COL_TITLE[col]), h("span", {}, String(cards.length))),
+      cards.length ? cards.map(pcard) : h("div", {class: "muted", style: "font-size:12px;padding:4px"}, "—")));
+  }
+  el.append(h("h2", {}, "Pipeline"), h("div", {class: "muted", style: "font-size:12px;margin:-4px 0 8px"},
+    "Every candidate moves left to right: Claude proposes → CPU checks (shapes, no future/label leakage, full test suite, params) → short screen → full run → extra seeds → accepted or not. Click a card for its diff and stages."), board);
+  const fin = L.cards.filter(c => c.column === "finished").sort((a, b) => (b.created || "").localeCompare(a.created || ""));
+  if (fin.length) el.append(h("h2", {}, "Finished in the last 6 hours"), h("div", {class: "card scroll"}, h("table", {},
+    h("tbody", {}, fin.map(c => { const [k, lab] = PROG_STATUS[c.status] || ["serious", c.status];
+      return h("tr", {class: "click", onclick: () => openProgram(c.id)}, h("td", {}, h("strong", {}, c.id)), h("td", {}, statusEl(k, lab)),
+        h("td", {class: "num"}, c.full_mean != null ? `${fmt.loss(c.full_mean)} (${c.n_seeds})` : c.screen != null ? `screen ${fmt.loss(c.screen)}` : "–"),
+        h("td", {class: "muted"}, c.by), h("td", {style: "max-width:520px"}, c.rationale.slice(0, 160) + (c.rationale.length > 160 ? "…" : ""),
+          c.reason ? h("div", {class: "muted", style: "font-size:12px"}, c.reason) : null)); })))));
+  const llm = h("div", {class: "card"});
+  for (const x of L.llm) llm.append(h("div", {class: "decision"},
+    h("div", {class: "when"}, `${fmt.time(x.at)} · ${x.model || ""} · ${x.duration_s ?? "?"}s · ${fmt.usd3(x.cost_usd)}` + (x.session ? ` · ${x.session}` : "")),
+    x.error ? statusEl("critical", "failed: " + x.error) :
+      h("div", {}, x.program ? h("a", {href: "#", onclick: e => { e.preventDefault(); openProgram(x.program); }}, x.program) : null, " ", x.rationale,
+        h("div", {class: "muted", style: "font-size:12px;margin-top:2px"}, `${x.n_diffs} code diff${x.n_diffs === 1 ? "" : "s"}` +
+          (x.hparams && Object.keys(x.hparams).length ? ` · hparams ${JSON.stringify(x.hparams)}` : "") + (x.expected ? ` · expects: ${x.expected}` : "")))));
+  const feed = h("div", {class: "card feed"}, L.history.map(a => h("div", {}, h("span", {class: "t"}, fmt.time(a.at)), a.text)));
+  el.append(h("div", {class: "grid2", style: "margin-top:14px"},
+    h("div", {}, h("h2", {}, "Claude's latest proposals"), L.llm.length ? llm : h("p", {class: "muted"}, "none yet")),
+    h("div", {}, h("h2", {}, "Activity"), feed)));
+  el.append(h("details", {style: "margin-top:10px"}, h("summary", {class: "muted"}, "Daemon log (latest first)"), h("pre", {}, L.log.join("\n"))));
+}
+async function refreshLive() {
+  try {
+    const r = await fetch(BASE + "api/live", {cache: "no-store"});
+    if (r.ok) { LIVE = await r.json(); renderLive(LIVE); if (DATA) { const [k, txt] = daemonState(DATA.daemon); document.getElementById("daemonBadge").replaceChildren(statusEl(k, txt)); } }
+  } catch (e) {}
+}
+
 function renderDecisions(D) {
   const el = document.getElementById("decisions"); el.replaceChildren();
   el.append(h("p", {class: "muted"}, "From the decision log in autolab/HANDOFF.md, newest first."));
@@ -623,6 +718,7 @@ async function refresh() {
   } finally { main.classList.remove("stale"); }
 }
 function showTab(name) {
+  if (name === "live") refreshLive();
   for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", b.dataset.tab === name);
   for (const sec of document.querySelectorAll("main > section")) sec.hidden = sec.id !== name;
   try { localStorage.setItem("autolab.tab", name); } catch (e) {}
@@ -631,8 +727,9 @@ document.getElementById("tabs").addEventListener("click", e => { if (e.target.da
 document.getElementById("detailClose").addEventListener("click", () => document.getElementById("detail").close());
 let initial = location.hash.slice(1);
 if (!initial) { try { initial = localStorage.getItem("autolab.tab") || ""; } catch (e) {} }
-showTab(["overview", "programs", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "overview");
+showTab(["live", "overview", "programs", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
 let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 200); });
+setInterval(() => { if (!document.hidden && !document.getElementById("live").hidden && !document.getElementById("detail").open) refreshLive(); }, 10000);
 refresh(); setInterval(() => { if (!document.hidden && !document.getElementById("detail").open) refresh(); }, 30000);
 </script>
 </body>

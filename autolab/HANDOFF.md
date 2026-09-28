@@ -615,3 +615,9 @@ Build this first; everything else hill-climbs on it.
 - 2026-09-28 (owner): `autolab-accepted` may be pushed so accepted diffs are visible on GitHub. Pushed
   (base 7a7e0e7 + s2-82m/p6, s2+data40k/p1, s2+data40k/p6), and the daemon now pushes it after each
   acceptance (`[controller] push_accepted`). Never force-pushed.
+- 2026-09-28 (owner): more proposals tonight: max_in_flight 4 → 6 and a one-time $30 budget until
+  16:49 UTC. Dashboard Live tab (the landing tab): what autolab is doing this minute
+  (autolab/state/activity.json, written by the daemon, cascade, proposer and data policy), the pipeline
+  board (proposing → CPU checks → screen → full → confirm, with live training progress per run),
+  Claude's latest proposals, recent finishes, the activity feed and the daemon log. The heartbeat is
+  also written at cycle start, because a cycle with several Claude calls + CPU checks can take minutes.

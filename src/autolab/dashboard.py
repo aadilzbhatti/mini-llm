@@ -389,6 +389,88 @@ def overview() -> dict:
     }
 
 
+PIPE_COLUMNS = ["proposing", "cpu", "screen", "full", "confirm", "finished"]
+
+
+def _run_progress(run_id: str, calls: dict) -> dict:
+    c = calls.get(run_id, {})
+    d = AUTOLAB / "runs" / run_id
+    rep = _json(d / "report.json")
+    if rep:
+        return {"run_id": run_id, "state": c.get("state", "finished"), "full_val": rep["summary"].get("final_full_val_loss")}
+    live = _json(d / "live.json")
+    if live:
+        return {"run_id": run_id, "state": "training", "step": live.get("step"), "total": live.get("total_steps"),
+                "eval_val": live.get("eval_val_loss"), "eta": live.get("eta_sec"), "age_s": _age_s(live.get("updated"))}
+    return {"run_id": run_id, "state": c.get("state", "queued") if c else "queued",
+            "error": (c.get("error") or "")[:200] if c.get("state") == "failed" else None}
+
+
+def live_view() -> dict:
+    """Everything the Live tab shows: now, pipeline, proposals, feed."""
+    calls = _json(AUTOLAB / "state" / "modal_calls.json", {}) or {}
+    act = _json(AUTOLAB / "state" / "activity.json", {}) or {}
+    cur = act.get("current")
+    if cur:
+        cur["age_s"] = _age_s(cur.get("at"))
+    base = AUTOLAB / "state" / "evolve"
+    cards = []
+    for sdir in sorted(p for p in base.iterdir() if (p / "session.json").exists()) if base.exists() else []:
+        sess = _json(sdir / "session.json") or {}
+        inc = sess.get("incumbent")
+        for f in (sdir / "programs").glob("*.json"):
+            p = _json(f)
+            if not p or p.get("parent_id") is None:
+                continue
+            done = p["status"] in ("rejected", "evaluated", "contender", "accepted")
+            if done:
+                last = max((st.get("at", "") for st in p.get("stages", [])), default=p.get("created_at", ""))
+                age = _age_s(last)
+                if age is None or age > 6 * 3600:
+                    continue  # only recent finishes on the board
+                col = "finished"
+            else:
+                col = {"static": "cpu", "params": "cpu"}.get(p["stage"], p["stage"])
+            runs = [_run_progress(r, calls) for r in p.get("runs", {}).get(p["stage"], [])] if not done else []
+            sc = p.get("scores", {})
+            cards.append({"session": sess.get("name"), "id": p["id"], "parent": p.get("parent_id"),
+                          "by": p.get("created_by"), "status": p["status"], "stage": p["stage"], "column": col,
+                          "rationale": " ".join((p.get("rationale") or "").split())[:280], "reason": p.get("reason", "")[:240],
+                          "screen": sc.get("screen_loss"), "full_mean": sc.get("full_mean"), "n_seeds": sc.get("n_seeds"),
+                          "incumbent": p["id"] == inc, "runs": runs, "created": p.get("created_at"),
+                          "instruction": (p.get("meta") or {}).get("instruction"),
+                          "cost_usd": (p.get("meta") or {}).get("cost_usd")})
+    if cur and cur.get("kind") == "propose" and (cur.get("age_s") or 1e9) < 900:
+        cards.append({"session": None, "id": "…", "column": "proposing", "status": "running", "stage": "proposing",
+                      "by": cur.get("model"), "parent": cur.get("parent"), "rationale": cur.get("text"), "runs": []})
+    active = evolve_root()
+    llm = []
+    for f in sorted((AUTOLAB / "state" / "llm").glob("*/*.json"), key=lambda f: f.name, reverse=True)[:12]:
+        r = _json(f) or {}
+        reply = r.get("reply") or {}
+        tag = r.get("tag", "")
+        llm.append({"at": r.get("at"), "model": r.get("model") or r.get("model_requested"), "cost_usd": r.get("cost_usd"),
+                    "duration_s": r.get("duration_s"), "error": r.get("error"), "session": f.parent.name,
+                    "program": "p" + tag.rsplit("-", 1)[-1] if tag.rsplit("-", 1)[-1].isdigit() else None,
+                    "rationale": " ".join((reply.get("rationale") or "").split())[:400],
+                    "expected": reply.get("expected_effect"), "hparams": reply.get("hparams"),
+                    "n_diffs": len(reply.get("diffs") or [])})
+    try:
+        log_tail = (AUTOLAB / "state" / "daemon.log").read_text(errors="replace").splitlines()[-40:][::-1]
+    except OSError:
+        log_tail = []
+    return {"generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "current": cur,
+            "history": act.get("history", [])[:40], "controller": controller_view(calls),
+            "daemon": _json(AUTOLAB / "state" / "daemon.json"), "columns": PIPE_COLUMNS, "cards": cards,
+            "llm": llm, "log": log_tail, "active_session": active.name,
+            "pending_runs": sum(c["state"] == "pending" for c in calls.values())}
+
+
+@app.get("/api/live")
+def api_live() -> JSONResponse:
+    return JSONResponse(live_view())
+
+
 @app.get("/api/overview")
 def api_overview() -> JSONResponse:
     return JSONResponse(overview())

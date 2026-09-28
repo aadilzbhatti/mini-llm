@@ -42,7 +42,10 @@ def write_heartbeat(beat: dict) -> None:
 def cycle(log=print) -> dict:
     from autolab import modal_backend as mb
 
+    from autolab.activity import set_activity
+
     t0 = time.time()
+    set_activity("collect", "collecting finished Modal runs and live progress")
     finished = mb.collect(log=log)
     live = mb.fetch_live()
     from autolab.evaluate import advance_everything
@@ -59,6 +62,8 @@ def cycle(log=print) -> dict:
         build()
         _last_report = time.time()
     calls = mb.load_calls()
+    pending = sum(c["state"] == "pending" for c in calls.values())
+    set_activity("idle", f"waiting for the next cycle ({pending} run{'s' if pending != 1 else ''} training on Modal)")
     return {
         "finished_this_cycle": finished,
         "live_files": live,
@@ -80,6 +85,9 @@ def run(interval: float = 60.0, once: bool = False) -> None:
     while True:
         cycles += 1
         result: dict = {}
+        # heartbeat at the start too: a cycle with Claude calls + CPU checks can take minutes
+        write_heartbeat({"pid": os.getpid(), "started": started, "updated": now_iso(), "interval_s": interval,
+                         "cycles": cycles, "last_ok": last_ok, "last_error": last_error, "in_cycle": True})
         try:
             result = cycle(log)
             last_ok = now_iso()

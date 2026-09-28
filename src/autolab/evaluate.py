@@ -45,6 +45,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean, stdev
 
+from autolab.activity import set_activity
 from autolab.config import REPO_ROOT
 from autolab.program import (
     Program,
@@ -269,6 +270,7 @@ def _env(src: Path, extra: dict | None = None) -> dict:
 
 
 def stage_static(p: Program, cfg: dict, paths: Paths, repo: Path) -> Path | None:
+    set_activity("static", f"{p.id}: static checks (scope, forbidden code, hparams, import)", program=p.id)
     problems = static_violations(p.blocks) + validate_hparams(
         {k: v for k, v in p.hparams.items()}, cfg["hparams"])
     if problems:
@@ -307,7 +309,9 @@ def stage_cpu(p: Program, src: Path, cfg: dict, repo: Path) -> bool:
              ("tests", [str(repo / t) for t in cfg["cpu_tests"]]
               + [f"--deselect={d}" for d in cfg.get("cpu_test_deselect", [])])]  # rootdir-relative node ids
     summary = []
-    for kind, args in steps:
+    for i, (kind, args) in enumerate(steps, 1):
+        set_activity("cpu", f"{p.id}: CPU checks {i}/3 — {'full protected test suite' if kind == 'tests' else kind + ' test'}",
+                     program=p.id)
         cmd = [sys.executable, "-m", "pytest", "-q", "-rf", "--no-header", "-p", "no:cacheprovider",
                "-p", "autolab.pytest_seed", *args]
         try:
@@ -327,6 +331,7 @@ def stage_cpu(p: Program, src: Path, cfg: dict, repo: Path) -> bool:
 
 
 def stage_params(p: Program, src: Path, cfg: dict, session: dict) -> bool:
+    set_activity("params", f"{p.id}: counting parameters", program=p.id)
     code = ("import json,sys; from mini_llm.config import ModelConfig, build_model; "
             "m = build_model(ModelConfig(**json.loads(sys.argv[1]))); print(sum(x.numel() for x in m.parameters()))")
     r = subprocess.run([sys.executable, "-c", code, json.dumps(_model_cfg(p, cfg))], env=_env(src),
@@ -377,6 +382,7 @@ def _submit(p: Program, stage: str, seeds: list[int], cfg: dict, session: dict, 
         ids.append(req.run_id)
     p.runs.setdefault(stage, []).extend(ids)
     p.stage, p.status, p.reason = stage, "running", ""
+    set_activity("gpu", f"{p.id}: {stage} submitted to Modal ({len(ids)} run{'s' if len(ids) > 1 else ''})", program=p.id)
     return True
 
 
@@ -499,6 +505,7 @@ def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths | No
                     session.setdefault("incumbent_history", []).append({"at": now_iso(), "program": p.id, "full_mean": m})
                     save_session(session, paths)
                     log(f"{p.id}: ACCEPTED as new incumbent ({detail})")
+                    set_activity("accepted", f"{p.id} ACCEPTED: {detail}", program=p.id)
                 else:
                     _record(p, "confirm", False, detail)
                     p.stage, p.status, p.reason = "done", "contender", f"not significant: {detail}"

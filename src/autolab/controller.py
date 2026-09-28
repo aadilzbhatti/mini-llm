@@ -300,6 +300,9 @@ def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, pat
             args = (["data", "slice", bigger[0].name, "--docs", str(want)] if bigger
                     else ["data", "build", "--num-examples", str(want)])
             flow.update(state="building", pid=_spawn(args, "data_build.log"), cmd=" ".join(args))
+            from autolab.activity import set_activity
+
+            set_activity("data", f"data policy: {' '.join(args)}")
             log(f"data: {' '.join(args)} (pid {flow['pid']})")
     elif flow["state"] == "building":
         if _alive(flow.get("pid")):
