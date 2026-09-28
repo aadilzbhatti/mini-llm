@@ -109,6 +109,7 @@ from mini_llm.distributed import (
 )
 from mini_llm.generate import generate_text
 from mini_llm.report import write_sample_report
+from mini_llm.systems import SystemsMeter
 
 PLOTS_DIR = Path("plots")
 CHECKPOINTS_DIR = Path("checkpoints")
@@ -282,6 +283,7 @@ def save_checkpoint(
     full_val_history: list[tuple[int, float]],
     lr_history: list[tuple[int, float]],
     batch_rng_states: list[object] | None = None,
+    systems: dict | None = None,
 ) -> Path:
     """`model` must be the bare module, never the DDP wrapper: DDP's own
     state_dict prefixes every key with "module.", which a plain
@@ -294,6 +296,8 @@ def save_checkpoint(
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     extra = {"batch_rng_states": batch_rng_states} if batch_rng_states is not None else {}
+    if systems is not None:
+        extra["systems"] = systems
     torch.save(
         {
             "config": cfg.to_dict(),
@@ -883,6 +887,8 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         else model
     )
 
+    # Throughput / memory / wall-clock for this run (see mini_llm.systems).
+    meter = SystemsMeter(device)
     model.train()
     for local_step in range(args.steps):
         step = start_step + local_step
@@ -941,29 +947,33 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             # every rank (same step, same intervals, live control off).
             loss_value = all_reduce_mean(loss.item(), dist_info)
             print(f"step {step:5d} | loss {loss_value:.4f} | lr {current_lr:.2e}")
+            meter.sample_memory()
             control.scalar("train/batch_loss", loss_value, step)
             control.scalar("train/lr", current_lr, step)
 
-        if eval_now:
-            eval_train_loss = evaluate_fixed(model, train_eval_batches, dist_info)
-            train_history.append((step, eval_train_loss))
-            msg = f"step {step:5d} | eval_train_loss {eval_train_loss:.4f}"
-            if val_eval_batches is not None:
-                eval_val_loss = evaluate_fixed(model, val_eval_batches, dist_info)
-                val_history.append((step, eval_val_loss))
-                msg += f" | eval_val_loss {eval_val_loss:.4f}"
-                control.scalar("eval/val_loss", eval_val_loss, step)
-            control.scalar("eval/train_loss", eval_train_loss, step)
-            print(msg)
+        # Evaluation time is excluded from training throughput. Only paused on
+        # eval steps: pause() synchronizes CUDA, which would stall every step.
+        with meter.pause() if (eval_now or full_eval_now) else contextlib.nullcontext():
+            if eval_now:
+                eval_train_loss = evaluate_fixed(model, train_eval_batches, dist_info)
+                train_history.append((step, eval_train_loss))
+                msg = f"step {step:5d} | eval_train_loss {eval_train_loss:.4f}"
+                if val_eval_batches is not None:
+                    eval_val_loss = evaluate_fixed(model, val_eval_batches, dist_info)
+                    val_history.append((step, eval_val_loss))
+                    msg += f" | eval_val_loss {eval_val_loss:.4f}"
+                    control.scalar("eval/val_loss", eval_val_loss, step)
+                control.scalar("eval/train_loss", eval_train_loss, step)
+                print(msg)
 
-        if full_eval_now:
-            # Chunk size doesn't change the (exhaustive) result, only memory,
-            # so each rank uses its training batch size. Single device:
-            # per_rank_batch == --batch-size.
-            full_val_loss = evaluate_full(model, val_tokens, per_rank_batch, cfg.block_size, device, dist_info)
-            full_val_history.append((step, full_val_loss))
-            print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
-            control.scalar("eval/full_val_loss", full_val_loss, step)
+            if full_eval_now:
+                # Chunk size doesn't change the (exhaustive) result, only memory,
+                # so each rank uses its training batch size. Single device:
+                # per_rank_batch == --batch-size.
+                full_val_loss = evaluate_full(model, val_tokens, per_rank_batch, cfg.block_size, device, dist_info)
+                full_val_history.append((step, full_val_loss))
+                print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
+                control.scalar("eval/full_val_loss", full_val_loss, step)
 
         if ctl.checkpoint_now:
             ctl.checkpoint_now = False
@@ -992,6 +1002,9 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             print(f"step {step:5d} | stopped early by control command", flush=True)
             break
 
+    steps_done = (stopped_at - start_step + 1) if stopped_at is not None else args.steps
+    systems = meter.finish(steps_done, args.batch_size * cfg.block_size, dist_info.world_size)
+
     if stopped_at is not None:
         # Name and record the run by the training it actually got, not the
         # horizon it was launched with.
@@ -1008,6 +1021,12 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     )
     if not dist_info.is_main:
         return
+    print(
+        f"Systems: {systems['train_tokens_per_sec']:,.0f} train tokens/s on {systems['world_size']}x "
+        f"{systems['device']} | peak memory {systems['peak_mem_gb']:.2f} GB per process "
+        f"({systems['peak_mem_kind']}) | wall {systems['wall_sec'] / 60:.1f} min "
+        f"(train {systems['train_sec'] / 60:.1f}, eval {systems['eval_sec'] / 60:.1f})"
+    )
 
     plot_path: Path | None = None
     save_path: Path | None = None
@@ -1033,6 +1052,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             cfg, model, optimizer, batch_rng, total_steps,
             train_history, val_history, full_val_history, lr_history,
             batch_rng_states=batch_rng_states,
+            systems=systems,
         )
         print(f"Saved to {save_path}")
 
