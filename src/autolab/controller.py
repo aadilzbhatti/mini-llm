@@ -570,6 +570,15 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         save_control(ctl)
         return {**status, "paused_until": paused, "pause_reason": ctl.get("pause_reason")}
 
+    alert = STATE / "infra_alert.json"
+    if alert.exists():  # the cascade found the protected test suite broken on the incumbent itself
+        info = json.loads(alert.read_text())
+        ctl.update(paused_until=iso(t + timedelta(hours=24)), pause_reason=f"infrastructure: {info['reason'][:200]}")
+        note("paused", reason=ctl["pause_reason"], until=ctl["paused_until"])
+        alert.unlink()
+        save_control(ctl)
+        return {**status, "paused_until": ctl["paused_until"]}
+
     children = [p for p in progs.values() if p.parent_id is not None]
     recent = sorted(children, key=lambda p: int(p.id[1:]))[-ccfg.get("max_consecutive_early_rejects", 4):]
     if (len(recent) == ccfg.get("max_consecutive_early_rejects", 4)

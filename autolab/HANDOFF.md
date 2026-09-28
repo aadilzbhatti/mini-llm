@@ -634,3 +634,12 @@ Build this first; everything else hill-climbs on it.
   X-Autolab header so a cross-site form can't trigger it; tailnet-only anyway). Every change is a notebook
   entry. The Modal cap is now re-read on each submit (modal_backend.max_usd()), so page changes apply without
   a restart. The header has a "← Control" link back to the owner's control page at /.
+- 2026-09-28 (incident): making the Modal cap live (modal_backend.max_usd()) broke
+  tests/autolab/test_modal_backend.py::test_cost_cap_refuses, and I committed after running only the
+  dashboard tests. The cascade runs the protected suite from this checkout against every candidate, so
+  p11, p12, p14, p15 and p16 were rejected for my bug, and the early-reject guard paused proposals for
+  6 h (the guard did its job). Fixed the test; re-queued the five and lifted the pause. New guard: when a
+  candidate fails the protected suite, the cascade reruns the failing tests on the incumbent's code (a
+  canary). If they fail there too, the candidate is re-queued (not rejected) and the controller pauses
+  24 h with an "infrastructure" reason. Rule for me: run the full suite before every commit. The
+  cascade uses the working tree's tests, so a broken commit breaks evaluation immediately.

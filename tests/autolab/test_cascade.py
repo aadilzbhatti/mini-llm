@@ -219,3 +219,17 @@ def test_data_check_verdicts(lab, monkeypatch):
     s = ev.load_session(lab["paths"])
     assert s["data_checks"][0]["helped"] is True and "helped" in s["data_checks"][0]["verdict"]
     assert s["notebook"][-1] == {**s["notebook"][-1], "action": "build_dataset", "improved": True}
+
+
+def test_suite_failing_on_incumbent_requeues_instead_of_rejecting(lab, tmp_path, monkeypatch):
+    """A protected test that fails for everyone (a broken suite) must not reject candidates."""
+    broken = tmp_path / "test_broken_suite.py"
+    broken.write_text("def test_always_fails():\n    assert False, 'the suite itself is broken'\n")
+    lab["cfg"]["cpu_tests"] = [str(broken)]
+    real_paths = ev.Paths
+    monkeypatch.setattr(ev, "Paths", lambda *a, **k: real_paths(*a, **k) if a or k else lab["paths"])
+    monkeypatch.setattr(ev, "INFRA_ALERT", tmp_path / "infra_alert.json")
+    p = lab["step"](propose(lab, "good_rmsnorm.txt"))
+    assert (p.stage, p.status) == ("static", "queued") and p.reason.startswith("infra:"), p.reason
+    assert json.loads((tmp_path / "infra_alert.json").read_text())["reason"].startswith("infra:")
+    assert not lab["submitted"]

@@ -1,6 +1,6 @@
 # Autolab session report
 
-Generated 2026-09-28T05:00+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k`.
+Generated 2026-09-28T05:06+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k`.
 
 ## Headline
 
@@ -26,6 +26,7 @@ Generated 2026-09-28T05:00+00:00 by `autolab session-report` (the daemon refresh
 - 2026-09-27T22:20 incumbent **p1** 4.5793 — Ported from s2-82m/p6 (4.6636 there): This is a hyperparameter-only change to p2: peak lr goes from 1.2e-3 to 2e-3, and warmup goes from 100 to 300 steps. Mecha
 - 2026-09-28T01:28 incumbent **p6** 4.4983 — The 'current program' shown (p0) is missing two changes already validated in the lineage: (1) using fused scaled_dot_product_attention for the causal self-atten
 - data check `data80k` on p0: did not help: 4.6488 vs 4.6433 (+0.2σ; bar −0.0613)
+- data check `data40k` on p6: running
 
 ## Best so far after each full-budget evaluation (81,920,000 tokens)
 
@@ -61,21 +62,24 @@ Generated 2026-09-28T05:00+00:00 by `autolab session-report` (the daemon refresh
   - p7 (human) @ static: mini_llm/model.py:forward_body: uses forbidden name 'targets' (line 17); mini_llm/model.py:forward_body: uses forbidden name 'targets' (line 18)
   - p8 (human) @ static: hparam lr=0.5 outside [1e-05, 0.01]
 - `s2-82m`: 7 children — evaluated 4, contender 2, accepted 1
-- `s2+data40k`: 13 children — running 3, queued 3, accepted 2, contender 2, rejected 2, evaluated 1 · rejected at cpu 2
+- `s2+data40k`: 16 children — rejected 5, running 3, queued 3, accepted 2, contender 2, evaluated 1 · rejected at cpu 5
   - p3 (claude-sonnet-5) @ cpu: shape: 1 failed: tests/autolab/test_causal_leak.py::test_shapes_and_backward
   - p8 (claude-opus-5-5) @ cpu: shape: 1 failed: tests/autolab/test_causal_leak.py::test_shapes_and_backward
+  - p11 (claude-opus-5-5) @ cpu: tests: 1 failed: tests/autolab/test_modal_backend.py::test_cost_cap_refuses
+  - p12 (claude-opus-5-5) @ cpu: tests: 1 failed: tests/autolab/test_modal_backend.py::test_cost_cap_refuses
+  - p13 (claude-sonnet-5) @ cpu: shape: 1 failed: tests/autolab/test_causal_leak.py::test_shapes_and_backward
 
 ## Proposer (Claude) statistics
 
 | proposer | proposed | trained | accepted | contender | evaluated | rejected |
 | --- | --- | --- | --- | --- | --- | --- |
-| claude-opus-5-5 | 12 | 11 | 1 | 3 | 3 | 1 |
-| claude-sonnet-5 | 6 | 5 | 1 | 1 | 1 | 1 |
+| claude-opus-5-5 | 14 | 11 | 1 | 3 | 3 | 3 |
+| claude-sonnet-5 | 7 | 5 | 1 | 1 | 1 | 2 |
 | human | 8 | 1 | 0 | 1 | 0 | 7 |
 | mutation | 1 | 1 | 0 | 0 | 1 | 0 |
 | port | 1 | 1 | 1 | 0 | 0 | 0 |
 
-- Claude calls: 19 (18 ok), $2.19. Failures: exit 1 ×1.
+- Claude calls: 22 (21 ok), $2.58. Failures: exit 1 ×1.
 - Fallback mutations (proposer failed): 1.
 
 ## Spend
@@ -83,13 +87,13 @@ Generated 2026-09-28T05:00+00:00 by `autolab session-report` (the daemon refresh
 | stage | runs | GPU-hours | $ |
 | --- | --- | --- | --- |
 | confirmations | 16 | 7.88 | 6.30 |
-| full runs | 13 | 6.60 | 5.27 |
+| full runs | 15 | 6.60 | 5.27 |
 | baselines & prep experiments | 25 | 6.23 | 4.98 |
-| data checks | 6 | 2.97 | 2.38 |
-| screens | 16 | 0.93 | 0.74 |
+| data checks | 9 | 2.97 | 2.38 |
+| screens | 16 | 1.09 | 0.87 |
 | data-switch screens | 3 | 0.20 | 0.16 |
-| **Modal total** | 79 | 24.81 | **19.83** |
-| Claude | 19 calls | | 2.19 |
+| **Modal total** | 84 | 24.97 | **19.95** |
+| Claude | 22 calls | | 2.58 |
 
 Modal $ = wall time × GPU list price (L4); CPU/memory charges excluded, so a lower bound.
 

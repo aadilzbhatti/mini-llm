@@ -322,12 +322,48 @@ def stage_cpu(p: Program, src: Path, cfg: dict, repo: Path) -> bool:
         tail = (r.stdout + r.stderr)[-3000:]
         if r.returncode != 0:
             failed = FAILED_LINE.findall(r.stdout)
+            broken = _suite_broken(failed, cmd, env, repo, cfg) if kind == "tests" else []
+            if broken:
+                # The same tests fail on the incumbent's code: the test suite (or the checkout) is broken,
+                # not the candidate. Don't reject: requeue and let the controller pause with an alert.
+                p.stage, p.status, p.reason = "static", "queued", f"infra: protected tests fail on the incumbent too: {', '.join(broken[:4])}"
+                _record(p, "cpu", False, p.reason, infra=True)
+                _write_infra_alert(p.reason)
+                return False
             _reject(p, "cpu", f"{kind}: {len(failed)} failed: {', '.join(failed[:6]) or tail[-500:]}")
             p.stages[-1]["detail"] = tail
             return False
         summary.append(f"{kind}: {tail.strip().splitlines()[-1] if tail.strip() else 'ok'}")
     _record(p, "cpu", True, "; ".join(summary))
     return True
+
+
+INFRA_ALERT = REPO_ROOT / "autolab" / "state" / "infra_alert.json"
+
+
+def _suite_broken(failed: list[str], cmd: list[str], env: dict, repo: Path, cfg: dict) -> list[str]:
+    """Canary: rerun a candidate's failing protected tests against the active incumbent's code.
+    Returns the ones that fail there too (so the failure isn't the candidate's)."""
+    if not failed:
+        return []
+    try:
+        paths = Paths()
+        session = load_session(paths)
+        inc = load(paths.programs / f"{session['incumbent']}.json")
+        src = materialize(render(base_sources(repo, inc.base_commit), inc.blocks), paths.work(f"canary-{inc.id}"))
+        base_env = {**env, "PYTHONPATH": str(src), "AUTOLAB_TEST_MODEL": json.dumps(_model_cfg(inc, cfg))}
+        ids = [f.split(" ")[0] for f in failed]
+        head = [c for c in cmd if not (c.startswith(str(repo / "tests")) or c.startswith("--deselect"))]
+        r = subprocess.run(head + ids, cwd=repo, env=base_env, capture_output=True, text=True,
+                           timeout=cfg["cpu_test_timeout_s"])
+        return FAILED_LINE.findall(r.stdout)
+    except Exception:  # noqa: BLE001 - a broken canary must not hide a real rejection
+        return []
+
+
+def _write_infra_alert(reason: str) -> None:
+    INFRA_ALERT.parent.mkdir(parents=True, exist_ok=True)
+    INFRA_ALERT.write_text(json.dumps({"at": now_iso(), "reason": reason}, indent=2))
 
 
 def stage_params(p: Program, src: Path, cfg: dict, session: dict) -> bool:
@@ -436,6 +472,9 @@ def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths | No
         if src and stage_cpu(p, src, cfg, repo) and stage_params(p, src, cfg, session):
             p.stage, p.status = "screen", "queued"
         save(p, paths.programs)
+        if p.status == "queued" and p.reason.startswith("infra:"):
+            log(f"{p.id}: {p.reason}")
+            return p
         if p.status == "rejected":
             log(f"{p.id}: rejected at {p.stage}: {p.reason[:200]}")
             _cleanup(p, paths)

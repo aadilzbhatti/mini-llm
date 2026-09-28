@@ -48,6 +48,7 @@ def fake(tmp_path, monkeypatch):
     monkeypatch.setattr(mb.modal.Function, "from_name", staticmethod(lambda app, name: FakeFn()))
     monkeypatch.setattr(mb.modal, "FunctionCall", FakeCall)
     monkeypatch.setitem(mb._CFG, "max_usd", 1.0)
+    monkeypatch.setattr(mb, "max_usd", lambda: 1.0)  # the cap is re-read from config on each submit
     FakeCall.results = {}
     return tmp_path
 
