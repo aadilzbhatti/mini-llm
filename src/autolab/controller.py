@@ -154,6 +154,25 @@ def spend_24h(calls: dict, llm_spend: list[dict], t: datetime) -> dict:
             "total": modal_done + modal_pending + llm}
 
 
+def frees_at(calls: dict, llm_spend: list[dict], t: datetime, target: float) -> str | None:
+    """When enough finished spend ages out of the 24-hour window for the total to drop to `target`."""
+    items = []
+    for c in calls.values():
+        if c["state"] != "pending" and c.get("submitted_at"):
+            items.append((datetime.fromisoformat(c["submitted_at"]), c.get("usd") or 0.0))
+    for e in llm_spend:
+        if e.get("at"):
+            items.append((datetime.fromisoformat(e["at"]), e.get("usd") or 0.0))
+    total = spend_24h(calls, llm_spend, t)["total"]
+    for at, usd in sorted(i for i in items if i[0] >= t - timedelta(hours=24)):
+        if total <= target:
+            break
+        total -= usd
+        if total <= target:
+            return iso(at + timedelta(hours=24))
+    return None if total > target else iso(t)
+
+
 def expected_candidate_usd(session: dict, gpu_usd_per_s: float, cfg: dict) -> float:
     """Screen always; full run about half the time; plus a proposer call."""
     caps = session["wall_caps"]
@@ -568,7 +587,8 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     paused = ctl.get("paused_until")
     if paused and datetime.fromisoformat(paused) > t:
         save_control(ctl)
-        return {**status, "paused_until": paused, "pause_reason": ctl.get("pause_reason")}
+        return {**status, "paused_until": paused, "pause_reason": ctl.get("pause_reason"),
+                "blocked": {"kind": "paused", "until": paused, "reason": ctl.get("pause_reason")}}
 
     alert = STATE / "infra_alert.json"
     if alert.exists():  # the cascade found the protected test suite broken on the incumbent itself
@@ -608,9 +628,14 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         daily = daily_budget(ctl, ccfg, t)
         if sp["total"] + need > daily:
             status["budget"] = f"24h spend ${sp['total']:.2f} + next ~${need:.2f} > ${daily}"
+            status["blocked"] = {"kind": "daily", "spend_24h": round(sp["total"], 2), "need": round(need, 2),
+                                 "limit": daily, "unblock_at_limit": round(sp["total"] + need + 0.01, 2),
+                                 "frees_at": frees_at(mb.load_calls(), llm_spend, t, daily - need)}
             break
         if modal_total + need > mb.max_usd():
             status["budget"] = f"Modal total ${modal_total:.2f} + ~${need:.2f} > cap ${mb.max_usd()}"
+            status["blocked"] = {"kind": "modal_cap", "modal_total": round(modal_total, 2), "need": round(need, 2),
+                                 "limit": mb.max_usd(), "unblock_at_limit": round(modal_total + need + 0.01, 2)}
             break
         try:
             child = (generate or _generate)(log)

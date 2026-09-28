@@ -377,3 +377,19 @@ def test_compute_ladder(world, monkeypatch):
     # at the owner's max now: no further rung
     ctl.step(log=lambda m: None, generate=Gen(), t=T)
     assert ctl.load_control()["ladder"].get("state") == "idle"
+
+
+def test_blocked_status_says_how_to_unblock(world, monkeypatch):
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"max_in_flight": 4, "daily_usd": 10.0})
+    world["calls"]["old"] = {"state": "finished", "usd": 6.0, "submitted_at": (T - timedelta(hours=20)).isoformat()}
+    world["calls"]["new"] = {"state": "finished", "usd": 3.9, "submitted_at": (T - timedelta(hours=1)).isoformat()}
+    enable(data_flow={"session": "s2", "state": "not_helped"})
+    s = ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    b = s["blocked"]
+    assert b["kind"] == "daily" and b["spend_24h"] == 9.9 and b["unblock_at_limit"] > 9.9 + b["need"]
+    assert b["frees_at"] == (T - timedelta(hours=20) + timedelta(hours=24)).isoformat(timespec="seconds")
+
+
+def test_sigma_floor():
+    s = {"noise": {"full": {"std": 0.0069}}}
+    assert ev.sigma(s, {"noise_floor": 0.02}) == 0.02 and ev.sigma(s, {"noise_floor": 0.0}) == 0.0069

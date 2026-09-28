@@ -46,8 +46,8 @@ header { position: sticky; top: 0; z-index: 5; background: var(--page); border-b
 .budget form { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-top: 8px; }
 .budget label { display: flex; flex-direction: column; font-size: 12px; color: var(--ink-2); gap: 3px; }
 .budget input { font: inherit; width: 110px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); }
-.budget button, .btn { font: inherit; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
-.budget button.pri { background: var(--s1); border-color: var(--s1); color: #fff; }
+.budget button, .btn, .card .row button { font: inherit; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+button.pri { background: var(--s1); border-color: var(--s1); color: #fff; }
 .bar .meta { color: var(--muted); font-size: 12px; margin-left: auto; }
 nav { max-width: 1200px; margin: 0 auto; padding: 0 16px 8px; display: flex; gap: 4px; overflow-x: auto; }
 nav button { border: 1px solid transparent; background: none; color: var(--ink-2); padding: 6px 10px;
@@ -629,7 +629,8 @@ function pcard(c) {
     (c.status === "blocked" ? ["serious", "waiting ($)"] : c.status === "queued" ? ["warning", "queued"] : ["warning", "running"]);
   const scores = [c.screen != null ? `screen ${fmt.loss(c.screen)}` : "", c.full_mean != null ? `full ${fmt.loss(c.full_mean)} (${c.n_seeds})` : ""].filter(Boolean).join(" · ");
   return h("div", {class: "pcard", onclick: () => c.id !== "…" && openProgram(c.id)},
-    h("div", {class: "top"}, h("strong", {}, c.id), c.incumbent ? h("span", {class: "chip"}, "incumbent") : null,
+    h("div", {class: "top"}, h("strong", {}, c.id), c.session && LIVE && c.session !== LIVE.active_session ? h("span", {class: "chip", title: "from an older session"}, c.session) : null,
+      c.incumbent ? h("span", {class: "chip"}, "incumbent") : null,
       statusEl(k, label), h("span", {class: "muted"}, `${c.by || ""}${c.parent ? " · parent " + c.parent : ""}`)),
     c.instruction ? h("div", {class: "muted", style: "font-size:12px"}, `instruction: ${c.instruction}`) : null,
     h("div", {class: "why"}, c.rationale || ""),
@@ -649,6 +650,28 @@ function renderLive(L) {
       h("div", {class: "muted"}, `${cur ? "for " + fmt.dur(cur.age_s) + " · " : ""}session ${L.active_session} · ${L.pending_runs} run${L.pending_runs === 1 ? "" : "s"} on Modal · ${ctlText}`),
       C.data_flow && C.data_flow.state ? h("div", {class: "muted"}, `data policy: ${C.data_flow.state}${C.data_flow.target ? " (" + C.data_flow.target + ")" : ""} · compute ladder: ${C.ladder && C.ladder.state || "idle"}` +
         (C.ladder && C.ladder.waiting && C.ladder.waiting.stalled !== undefined ? ` (${C.ladder.waiting.stalled} stalled of 4 needed)` : "")) : null)));
+  const B = L.blocked;
+  if (B && C.enabled) {
+    let msg, actions = [];
+    if (B.kind === "daily") {
+      const suggest = Math.ceil(Math.max(B.unblock_at_limit, B.spend_24h + 4 * B.need));
+      msg = `New proposals are blocked by the daily budget: the last 24 h spent ${fmt.usd(B.spend_24h)}, and the next candidate needs about ${fmt.usd(B.need)}, over the ${fmt.usd(B.limit)} budget.` +
+        (B.frees_at ? ` It unblocks by itself around ${fmt.time(B.frees_at)}, when older spend ages out.` : "");
+      actions.push(h("button", {class: "pri", onclick: () => postBudget({action: "override", daily_usd: suggest, hours: 12},
+        `Raise the daily budget to $${suggest} for 12 hours? That's room for about 4 more candidates.`)}, `Raise to $${suggest} for 12 h`));
+    } else if (B.kind === "modal_cap") {
+      const suggest = Math.ceil(B.limit + 25);
+      msg = `New proposals are blocked by the total Modal cap: ${fmt.usd(B.modal_total)} spent or committed of ${fmt.usd(B.limit)}.`;
+      actions.push(h("button", {class: "pri", onclick: () => postBudget({action: "permanent", max_usd: suggest},
+        `Raise the total Modal cap to $${suggest} (saved in config.toml)?`)}, `Raise the cap to $${suggest}`));
+    } else if (B.kind === "paused") {
+      msg = `Proposals are paused until ${fmt.time(B.until)}: ${B.reason || ""}`;
+      actions.push(h("button", {class: "pri", onclick: () => postBudget({action: "resume"}, "Resume proposing now?")}, "Resume now"));
+    }
+    if (msg) el.append(h("div", {class: "card", style: "border-color:var(--serious);border-width:2px"},
+      h("div", {style: "display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap"}, statusEl(B.kind === "paused" ? "warning" : "serious", B.kind === "paused" ? "Paused" : "Blocked on budget"),
+        h("div", {style: "flex:1;min-width:240px"}, msg, " In-flight candidates keep going."), h("div", {class: "row", style: "display:flex;gap:8px"}, actions))));
+  }
   el.append(budgetCard(C));
   const board = h("div", {class: "board"});
   for (const col of L.columns.filter(c => c !== "finished")) {
@@ -656,7 +679,12 @@ function renderLive(L) {
     board.append(h("div", {class: "col"}, h("h3", {}, h("span", {}, COL_TITLE[col]), h("span", {}, String(cards.length))),
       cards.length ? cards.map(pcard) : h("div", {class: "muted", style: "font-size:12px;padding:4px"}, "—")));
   }
-  el.append(h("h2", {}, "Pipeline"), h("div", {class: "muted", style: "font-size:12px;margin:-4px 0 8px"},
+  const SI = L.session_info;
+  el.append(h("h2", {}, "Pipeline" + (SI ? ` — session ${SI.name}` : "")),
+    SI ? h("div", {class: "ink2", style: "font-size:13px;margin:-4px 0 6px"},
+      `Started ${fmt.time(SI.created)} · ${SI.dataset} @ ${fmt.si(SI.tokens)} tokens · incumbent ${SI.incumbent} · ${SI.why}. ` +
+      "Program ids restart at p1 in every session; cards from older sessions carry a session tag.") : null,
+    h("div", {class: "muted", style: "font-size:12px;margin:0 0 8px"},
     "Every candidate moves left to right: Claude proposes → CPU checks (shapes, no future/label leakage, full test suite, params) → short screen → full run → extra seeds → accepted or not. Click a card for its diff and stages."), board);
   const fin = L.cards.filter(c => c.column === "finished").sort((a, b) => (b.created || "").localeCompare(a.created || ""));
   if (fin.length) el.append(h("h2", {}, "Finished in the last 6 hours"), h("div", {class: "card scroll"}, h("table", {},

@@ -97,6 +97,12 @@ def report_summary(p: Program, runs_dir: Path, history=None) -> str:
     return "\n".join(lines)
 
 
+def _sigma(session: dict) -> float:
+    from autolab.evaluate import sigma
+
+    return sigma(session)
+
+
 def session_history(progs: dict[str, Program], session: dict, runs_dir: Path):
     """History for diagnose(): full-run reports of this session's programs, the session's
     notebook (data checks), and the full-budget seed noise."""
@@ -108,7 +114,7 @@ def session_history(progs: dict[str, Program], session: dict, runs_dir: Path):
         rep = _read_json(runs_dir / rid / "report.json") if rid else None
         if rep:
             reports.append(rep)
-    return History(reports=reports, notebook=session.get("notebook", []), noise_std=session["noise"]["full"]["std"])
+    return History(reports=reports, notebook=session.get("notebook", []), noise_std=_sigma(session))
 
 
 def block_diff(a: dict[str, str], b: dict[str, str]) -> str:
@@ -167,7 +173,7 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
     """Return (prompt text, metadata about how it was built)."""
     p0 = progs["p0"]
     inc = progs[session["incumbent"]]
-    sigma = session["noise"]["full"]["std"]
+    sigma = _sigma(session)
     budgets = session["budgets"]
     p0_rep = _read_json(runs_dir / p0.runs["full"][0] / "report.json") or {}
     sc0 = p0_rep.get("scale", {})

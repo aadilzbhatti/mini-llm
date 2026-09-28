@@ -251,7 +251,7 @@ def evolve_view() -> dict | None:
     progs = [_json(p) for p in sorted((root / "programs").glob("*.json"), key=lambda p: int(p.stem[1:]) if p.stem[1:].isdigit() else 0)]
     progs = [p for p in progs if p]
     inc = next((p for p in progs if p["id"] == session["incumbent"]), None)
-    sigma = session["noise"]["full"]["std"]
+    sigma = max(session["noise"]["full"]["std"], float(settings().get("config", {}).get("evolve", {}).get("noise_floor", 0.0)))
     inc_mean = (inc or {}).get("scores", {}).get("full_mean")
     rows = []
     for p in progs:
@@ -411,6 +411,15 @@ def _run_progress(run_id: str, calls: dict) -> dict:
             "error": (c.get("error") or "")[:200] if c.get("state") == "failed" else None}
 
 
+def _session_info(root: Path) -> dict | None:
+    s = _json(root / "session.json")
+    if not s:
+        return None
+    p0 = _json(root / "programs" / "p0.json") or {}
+    return {"name": s.get("name"), "created": s.get("created"), "dataset": s.get("dataset_id"),
+            "tokens": s["budgets"]["full_tokens"], "why": p0.get("rationale", ""), "incumbent": s.get("incumbent")}
+
+
 def live_view() -> dict:
     """Everything the Live tab shows: now, pipeline, proposals, feed."""
     calls = _json(AUTOLAB / "state" / "modal_calls.json", {}) or {}
@@ -467,7 +476,9 @@ def live_view() -> dict:
     return {"generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "current": cur,
             "history": act.get("history", [])[:40], "controller": controller_view(calls),
             "daemon": _json(AUTOLAB / "state" / "daemon.json"), "columns": PIPE_COLUMNS, "cards": cards,
+            "blocked": ((_json(AUTOLAB / "state" / "daemon.json") or {}).get("controller") or {}).get("blocked"),
             "llm": llm, "log": log_tail, "active_session": active.name,
+            "session_info": _session_info(active),
             "pending_runs": sum(c["state"] == "pending" for c in calls.values())}
 
 
@@ -531,6 +542,12 @@ async def api_budget(request: Request) -> JSONResponse:
         ctl.save_control(c)
         ctl.note("budget_override", daily_usd=daily, until=ctl.iso(until), by="dashboard")
         return JSONResponse({"ok": True, "message": f"daily budget ${daily:g} until {ctl.iso(until)}"})
+    if action == "resume":
+        c = ctl.load_control()
+        c.update(enabled=True, paused_until=None, pause_reason=None)
+        ctl.save_control(c)
+        ctl.note("resumed", by="dashboard")
+        return JSONResponse({"ok": True, "message": "resumed: proposals continue on the next cycle"})
     if action == "clear_override":
         c = ctl.load_control()
         c.pop("daily_usd_override", None)

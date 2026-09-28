@@ -447,6 +447,14 @@ def _health(report: dict | None, error: str | None, session: dict, cfg: dict) ->
     return None
 
 
+def sigma(session: dict, cfg: dict | None = None) -> float:
+    """Seed noise used for decisions: the session's measured full-budget std, floored at [evolve]
+    noise_floor. A 3-seed std is a very noisy estimate: s2+data40k@122M measured 0.0069 where every
+    other session measured 0.031-0.043, which would have made the accept bar only 0.014 deep."""
+    cfg = cfg or evolve_cfg()
+    return max(session["noise"]["full"]["std"], float(cfg.get("noise_floor", 0.0)))
+
+
 def incumbent(session: dict, progs: dict[str, Program]) -> Program:
     return progs[session["incumbent"]]
 
@@ -515,7 +523,7 @@ def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths | No
                     loss = rep["summary"]["final_full_val_loss"]
                     p.scores = {**p.scores, **_scores(p.scores.get("screen_loss"), [loss], rep)}
                     inc_mean = inc.scores["full_mean"]
-                    trigger = inc_mean - cfg.get("confirm_trigger_sigma", 0.0) * session["noise"]["full"]["std"]
+                    trigger = inc_mean - cfg.get("confirm_trigger_sigma", 0.0) * sigma(session, cfg)
                     _record(p, "full", True, f"full {loss:.4f} vs incumbent mean {inc_mean:.4f} (confirm below {trigger:.4f})",
                             loss=loss)
                     if loss < trigger:
@@ -533,10 +541,10 @@ def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths | No
                 good = [(rid, rep) for rid, rep, err in res if _health(rep, err, session, cfg) is None]
                 fulls = p.scores["full_losses"] + [rep["summary"]["final_full_val_loss"] for _, rep in good]
                 p.scores = {**p.scores, **_scores(p.scores.get("screen_loss"), fulls, None)}
-                sigma = session["noise"]["full"]["std"]
-                bar = inc.scores["full_mean"] - cfg["accept_sigma"] * sigma
+                sig = sigma(session, cfg)
+                bar = inc.scores["full_mean"] - cfg["accept_sigma"] * sig
                 m = p.scores["full_mean"]
-                detail = f"mean {m:.4f} over {len(fulls)} seeds; bar {bar:.4f} = incumbent {inc.scores['full_mean']:.4f} - {cfg['accept_sigma']}x{sigma:.4f}"
+                detail = f"mean {m:.4f} over {len(fulls)} seeds; bar {bar:.4f} = incumbent {inc.scores['full_mean']:.4f} - {cfg['accept_sigma']}x{sig:.4f}"
                 if len(fulls) >= 2 and m < bar:
                     _record(p, "confirm", True, detail)
                     p.stage, p.status, p.reason = "done", "accepted", detail
@@ -662,18 +670,18 @@ def advance_data_checks(calls: dict, paths: Paths | None = None, runs_dir: Path 
             continue
         losses = [rep["summary"]["final_full_val_loss"] for r in chk["runs"]
                   if (rep := _report(r, runs_dir)) and rep["summary"].get("final_full_val_loss") is not None]
-        sigma = session["noise"]["full"]["std"]
+        sig = sigma(session, cfg)
         chk.update(losses=losses, finished=now_iso())
         if len(losses) < 2:
             chk.update(status="failed", verdict="too few finished runs")
         else:
             m = mean(losses)
-            margin = cfg["accept_sigma"] * sigma
+            margin = cfg["accept_sigma"] * sig
             helped = m < chk["baseline_mean"] - margin
             chk.update(status="done", mean=m, std=stdev(losses), delta=m - chk["baseline_mean"],
-                       delta_sigma=(m - chk["baseline_mean"]) / sigma, helped=helped,
+                       delta_sigma=(m - chk["baseline_mean"]) / sig, helped=helped,
                        verdict=(f"{'helped' if helped else 'did not help'}: {m:.4f} vs {chk['baseline_mean']:.4f} "
-                                f"({(m - chk['baseline_mean']) / sigma:+.1f}σ; bar −{margin:.4f})"))
+                                f"({(m - chk['baseline_mean']) / sig:+.1f}σ; bar −{margin:.4f})"))
             # the notebook-style entry diagnose() reads for capacity_limited / data_limited evidence
             session.setdefault("notebook", []).append({"at": now_iso(),
                                                       "action": "raise_budget" if chk.get("kind") == "budget" else "build_dataset",

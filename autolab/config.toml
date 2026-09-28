@@ -56,6 +56,8 @@ screen_margin = 0.25         # screen must be <= incumbent screen mean + this; w
 confirm_seeds = [2, 3]       # extra seeds for a full-budget result that beats the incumbent...
 confirm_trigger_sigma = 0.5  # ...by at least this x the full seed std (owner: 0.5σ, 2026-09-27)
 accept_sigma = 2.0           # accept iff mean over >= 2 seeds < incumbent mean - accept_sigma x full seed std
+noise_floor = 0.02           # the std used for decisions is max(measured, this): a 3-seed std can come out far
+                             # too small (0.0069 at 122M vs 0.031-0.043 elsewhere), making the accept bar too shallow
 param_cap_mult = 1.5         # reject programs above this x the initial program's parameter count
 throughput_floor = 0.5       # reject screens slower than this x the initial program's tokens/sec
 cpu_tests = ["tests"]        # pytest paths run against every candidate (protected, from this checkout)

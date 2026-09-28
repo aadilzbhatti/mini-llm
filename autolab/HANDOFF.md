@@ -643,3 +643,11 @@ Build this first; everything else hill-climbs on it.
   canary). If they fail there too, the candidate is re-queued (not rejected) and the controller pauses
   24 h with an "infrastructure" reason. Rule for me: run the full suite before every commit. The
   cascade uses the working tree's tests, so a broken commit breaks evaluation immediately.
+- 2026-09-28: the compute ladder fired overnight (4 stalled children after p6) → session
+  `s2+data40k@122M` (p6 at 122.88M tokens: 4.3942). It measured σ = 0.0069 over 3 seeds vs 0.031–0.043
+  in every other session; a 3-seed std is unreliable and would have made the accept bar only 0.014
+  deep, so decisions now use max(measured σ, [evolve] noise_floor = 0.02) (evaluate.sigma).
+- 2026-09-28 (owner): the Live tab shows a "blocked" banner with the cause (daily budget / Modal cap /
+  pause), the numbers, when it unblocks by itself, and a one-click fix (raise for 12 h / raise cap /
+  resume). Controller status carries a structured `blocked`. The board names the current session and
+  how it started; ids restart at p1 per session and cards from older sessions get a session tag.
