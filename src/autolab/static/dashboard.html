@@ -146,6 +146,7 @@ a { color: var(--s1); }
     <button role="tab" data-tab="live">Live</button>
     <button role="tab" data-tab="overview">Overview</button>
     <button role="tab" data-tab="programs">Programs</button>
+    <button role="tab" data-tab="research">Research</button>
     <button role="tab" data-tab="experiments">Experiments</button>
     <button role="tab" data-tab="runs">Runs</button>
     <button role="tab" data-tab="notebook">Notebook</button>
@@ -157,6 +158,7 @@ a { color: var(--s1); }
   <section id="live" hidden></section>
   <section id="overview" hidden></section>
   <section id="programs" hidden></section>
+  <section id="research" hidden></section>
   <section id="experiments" hidden></section>
   <section id="runs" hidden></section>
   <section id="notebook" hidden></section>
@@ -648,6 +650,7 @@ function renderLive(L) {
   el.append(h("div", {class: "card now"}, h("i", {class: "pulse", style: busy ? "" : "animation:none;background:var(--muted)"}),
     h("div", {}, h("div", {class: "what"}, cur ? cur.text : "no activity recorded yet"),
       h("div", {class: "muted"}, `${cur ? "for " + fmt.dur(cur.age_s) + " · " : ""}session ${L.active_session} · ${L.pending_runs} run${L.pending_runs === 1 ? "" : "s"} on Modal · ${ctlText}`),
+      C.research && C.research.state ? h("div", {class: "muted"}, `research: ${C.research.state}${C.research.program ? " (" + C.research.program + ")" : ""}${C.research.waiting ? " · waiting: " + C.research.waiting : ""}`) : null,
       C.data_flow && C.data_flow.state ? h("div", {class: "muted"}, `data policy: ${C.data_flow.state}${C.data_flow.target ? " (" + C.data_flow.target + ")" : ""} · compute ladder: ${C.ladder && C.ladder.state || "idle"}` +
         (C.ladder && C.ladder.waiting && C.ladder.waiting.stalled !== undefined ? ` (${C.ladder.waiting.stalled} stalled of 4 needed)` : "")) : null)));
   const B = L.blocked;
@@ -745,6 +748,43 @@ function budgetCard(C) {
     budgetMsg ? h("div", {style: "margin-top:8px"}, budgetMsg) : null);
 }
 
+function safeUrl(u) { try { const x = new URL(u); return ["http:", "https:"].includes(x.protocol) ? x.href : null; } catch (e) { return null; } }
+const OUTCOME_KIND = {accepted: "good", contender: "warning", evaluated: "serious", rejected: "critical"};
+async function refreshResearch() {
+  const el = document.getElementById("research");
+  let R;
+  try { R = await (await fetch(BASE + "api/research", {cache: "no-store"})).json(); } catch (e) { return; }
+  el.replaceChildren();
+  const S = R.state || {};
+  el.append(h("div", {class: "card"}, h("h3", {}, "How research works"),
+    h("p", {class: "ink2", style: "margin:4px 0"}, "When a program becomes the best (or the search stalls), a research agent with web search audits its code, component by component, for outdated or missing techniques and writes technique cards with sources. Each new card is tested right away by a directed child (\"apply card cN to the incumbent\"); after that, cards are shown to the proposer by how the programs that used them fared. Cards are not pre-approved: their results are the review."),
+    h("div", {class: "muted"}, `State: ${S.state || "idle"}` + (S.program ? ` · last audit of ${S.program}` : "") + (S.waiting ? ` · waiting: ${S.waiting}` : "") +
+      (S.pending_directed && S.pending_directed.length ? ` · cards waiting for their directed child: ${S.pending_directed.join(", ")}` : "") +
+      ` · budget: ${Math.round((R.config.budget_share || 0) * 100)}% of the daily budget · model ${R.config.model || "?"}`)));
+  if (!R.cards.length) { el.append(h("p", {class: "muted"}, "No technique cards yet. The first audit runs when the controller next has budget.")); }
+  for (const c of R.cards) {
+    const st = c.stats || {};
+    const out = Object.entries(st.outcomes || {});
+    el.append(h("details", {class: "card"},
+      h("summary", {style: "cursor:pointer"}, h("strong", {}, `${c.id} · ${c.name}`), " ",
+        h("span", {class: "chip"}, c.category), h("span", {class: "chip"}, c.component),
+        h("span", {class: "muted", style: "font-size:12px"}, ` for ${c.session}/${c.for_program} · ${fmt.time(c.created)} · used ${st.used || 0}× `),
+        out.map(([k, v]) => statusEl(OUTCOME_KIND[k] || "serious", `${k} ${v}`))),
+      h("dl", {class: "kv", style: "margin-top:8px"},
+        h("dt", {}, "Now"), h("dd", {}, c.current), h("dt", {}, "Proposal"), h("dd", {}, c.proposal),
+        h("dt", {}, "Mechanism"), h("dd", {}, c.mechanism), h("dt", {}, "Applicability"), h("dd", {}, c.applicability),
+        h("dt", {}, "Expected"), h("dd", {}, c.expected_effect), h("dt", {}, "Risks"), h("dd", {}, c.risks),
+        h("dt", {}, "Implementation"), h("dd", {}, c.implementation),
+        h("dt", {}, "Evidence"), h("dd", {}, (c.evidence || []).map(e => { const url = safeUrl(e.url);
+          return h("div", {}, url ? h("a", {href: url, target: "_blank", rel: "noopener noreferrer"}, e.source) : e.source,
+            e.year ? ` (${e.year})` : "", ": ", e.finding); })),
+        h("dt", {}, "Programs"), h("dd", {}, (st.programs || []).join(", ") || "none yet"))));
+  }
+  if (R.runs.length) el.append(h("h2", {}, "Research runs"), h("div", {class: "card feed"}, R.runs.map(e =>
+    h("div", {}, h("span", {class: "t"}, fmt.time(e.at)), e.event === "research_started" ? `started: ${e.program} — ${e.trigger}` :
+      `done: ${(e.added || []).join(", ") || "no new cards"} · ${fmt.usd(e.cost_usd)} — ${e.summary || ""}`))));
+}
+
 async function refreshLive() {
   try {
     const r = await fetch(BASE + "api/live", {cache: "no-store"});
@@ -795,6 +835,7 @@ async function refresh() {
 }
 function showTab(name) {
   if (name === "live") refreshLive();
+  if (name === "research") refreshResearch();
   for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", b.dataset.tab === name);
   for (const sec of document.querySelectorAll("main > section")) sec.hidden = sec.id !== name;
   try { localStorage.setItem("autolab.tab", name); } catch (e) {}
@@ -803,7 +844,7 @@ document.getElementById("tabs").addEventListener("click", e => { if (e.target.da
 document.getElementById("detailClose").addEventListener("click", () => document.getElementById("detail").close());
 let initial = location.hash.slice(1);
 if (!initial) { try { initial = localStorage.getItem("autolab.tab") || ""; } catch (e) {} }
-showTab(["live", "overview", "programs", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
+showTab(["live", "overview", "programs", "research", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
 let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 200); });
 setInterval(() => { if (!document.hidden && !document.getElementById("live").hidden && !document.getElementById("detail").open) refreshLive(); }, 10000);
 refresh(); setInterval(() => { if (!document.hidden && !document.getElementById("detail").open) refresh(); }, 30000);

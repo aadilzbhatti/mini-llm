@@ -32,6 +32,29 @@ def _live_switches():
 
 
 @pytest.fixture(autouse=True)
+def _isolated_research_cards(tmp_path, monkeypatch):
+    """Tests never read or write the real technique-card store."""
+    from autolab import research
+
+    monkeypatch.setattr(research, "CARDS", tmp_path / "cards.jsonl")
+    # research runs a real web-enabled Claude agent; off unless a test turns it on explicitly
+    real = research.research_cfg
+    monkeypatch.setattr(research, "research_cfg", lambda: {**real(), "enabled": False})
+
+
+@pytest.fixture(autouse=True)
+def _no_real_subprocess_spawns(monkeypatch):
+    """controller._spawn starts detached real work (research runs, dataset builds, uploads). A test that
+    reaches it without replacing it would launch that for real (once: 7 real research runs, ~$4)."""
+    from autolab import controller
+
+    def refuse(args, logname):
+        raise AssertionError(f"test tried to spawn a real subprocess: autolab {' '.join(args)}")
+
+    monkeypatch.setattr(controller, "_spawn", refuse)
+
+
+@pytest.fixture(autouse=True)
 def _no_real_commits(request, monkeypatch):
     """controller.commit_accepted writes a git branch/worktree. Tests get a recorder unless they
     are marked real_commit (and then must pass an explicit throwaway repo)."""

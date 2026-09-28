@@ -393,3 +393,33 @@ def test_blocked_status_says_how_to_unblock(world, monkeypatch):
 def test_sigma_floor():
     s = {"noise": {"full": {"std": 0.0069}}}
     assert ev.sigma(s, {"noise_floor": 0.02}) == 0.02 and ev.sigma(s, {"noise_floor": 0.0}) == 0.0069
+
+
+def test_research_audits_new_winner_within_its_share(world, monkeypatch):
+    from autolab import research
+
+    monkeypatch.setattr(research, "research_cfg", lambda: {"enabled": True, "budget_share": 0.3, "est_usd_per_run": 1.5,
+                                                           "stall_patience": 6})
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"max_in_flight": 0, "daily_usd": 10.0})
+    spawned = []
+    monkeypatch.setattr(ctl, "_spawn", lambda args, logname: spawned.append(args) or 999)
+    enable(data_flow={"session": "s2", "state": "not_helped"})
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    assert spawned and spawned[0][:2] == ["research", "run"] and ctl.load_control()["research"]["state"] == "running"
+    # finished: its cards become directed proposals, first in line
+    monkeypatch.setattr(ctl, "_alive", lambda pid: False)
+    (world["tmp"] / "state" / "research_result.json").write_text(json.dumps({"added": ["c1", "c2"], "cost_usd": 1.2}))
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    r = ctl.load_control()["research"]
+    assert r["state"] == "idle" and r["pending_directed"] == ["c1", "c2"]
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    assert len(spawned) == 1  # same incumbent, already audited: no second run
+    # over its share: waits
+    monkeypatch.setattr(ctl, "_llm_spend", lambda: [{"at": T.isoformat(), "usd": 2.5, "tag": "research-s2-p0"}])
+    s = ev.load_session()
+    s["incumbent"] = "p0"
+    c = ctl.load_control()
+    c["research"]["audited"] = []
+    ctl.save_control(c)
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    assert "research budget" in ctl.load_control()["research"]["waiting"] and len(spawned) == 1

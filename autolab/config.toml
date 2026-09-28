@@ -134,3 +134,18 @@ ladder = true
 ladder_factor = 1.5
 ladder_patience = 4               # finished children since the last acceptance that didn't beat it
 max_full_tokens = 122880000       # owner's current regime: bs64 x 15k steps. Raise to let it climb further.
+
+# Research (M7): a web-enabled agent audits the current winner for outdated or missing techniques and
+# writes technique cards (autolab/research/cards.jsonl); each new card gets a directed child, and cards
+# are sampled into proposer prompts by how their programs fared.
+[research]
+enabled = true
+budget_share = 0.3          # research may use this share of the (possibly raised) daily budget (owner, 2026-09-28)
+model = "opus"
+est_usd_per_run = 1.5       # for the budget check before a run
+timeout_s = 1500
+max_searches = 8
+max_cards = 5
+cards_in_prompt = 3         # cards sampled (UCB over outcomes) into each regular proposal
+directed_per_card = 1       # children that apply a new card to the incumbent right away
+stall_patience = 6          # also research when this many children since the last acceptance didn't win

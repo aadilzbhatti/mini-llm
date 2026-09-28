@@ -512,6 +512,63 @@ def ladder_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, p
         flow.update(state="switched", new_session=name)
 
 
+# --- research (M7) ------------------------------------------------------------------------------------
+
+
+def research_step(ctl: dict, session: dict, progs: dict, calls: dict, ccfg: dict, t: datetime, log) -> None:
+    """Audit the winner when it changes (or the search stalls); then one directed child per new card."""
+    from autolab import research
+
+    rcfg = research.research_cfg()
+    if not rcfg.get("enabled", False):
+        return
+    st = ctl.setdefault("research", {})
+    if st.get("state") == "running":
+        if _alive(st.get("pid")):
+            return
+        result = STATE / "research_result.json"
+        try:
+            out = json.loads(result.read_text())
+            result.unlink()
+        except (OSError, json.JSONDecodeError):
+            out = {"error": "research run produced no result (see autolab/state/research.log)"}
+        st.update(state="idle", last_finished=iso(t), last_result=out)
+        st.setdefault("pending_directed", []).extend(out.get("added", []))
+        note("research_done", session=session.get("name"), program=st.get("program"), added=out.get("added"),
+             cost_usd=out.get("cost_usd"), summary=(out.get("summary") or out.get("error") or "")[:500])
+        return
+    # when to research: new winner not audited yet, a long stall, or nothing yet this session
+    key = f"{session.get('name')}/{session['incumbent']}"
+    stalled = stalled_children(session, progs)
+    trigger = None
+    if key not in st.get("audited", []):
+        trigger = (f"{session['incumbent']} is the current best (just accepted or never audited): check it for "
+                   "outdated or missing techniques before we build on it.")
+    elif stalled >= rcfg.get("stall_patience", 6) and st.get("stall_mark") != f"{key}@{stalled // rcfg.get('stall_patience', 6)}":
+        trigger = (f"The search has stalled: {stalled} children since {session['incumbent']} was accepted, none better. "
+                   "Look for techniques we haven't tried.")
+        st["stall_mark"] = f"{key}@{stalled // rcfg.get('stall_patience', 6)}"
+    if trigger is None:
+        return
+    share = float(rcfg.get("budget_share", 0.3)) * daily_budget(ctl, ccfg, t)
+    spent = sum(e.get("usd") or 0 for e in _llm_spend() if str(e.get("tag", "")).startswith("research")
+                and e.get("at") and datetime.fromisoformat(e["at"]) >= t - timedelta(hours=24))
+    if spent + rcfg.get("est_usd_per_run", 1.5) > share:
+        st["waiting"] = f"research budget: ${spent:.2f} used of ${share:.2f} (30% of the daily budget)"
+        return
+    total = spend_24h(calls, _llm_spend(), t)["total"]
+    if total + rcfg.get("est_usd_per_run", 1.5) > daily_budget(ctl, ccfg, t):
+        st["waiting"] = "daily budget"
+        return
+    st.pop("waiting", None)
+    st.setdefault("audited", []).append(key)
+    st.update(state="running", program=session["incumbent"], trigger=trigger, started=iso(t),
+              pid=_spawn(["research", "run", "--trigger", trigger, "--result", str(STATE / "research_result.json")],
+                         "research.log"))
+    note("research_started", session=session.get("name"), program=session["incumbent"], trigger=trigger)
+    log(f"research: auditing {session['incumbent']} ({trigger[:80]})")
+
+
 def _llm_spend() -> list[dict]:
     try:
         return [json.loads(x) for x in (STATE / "llm_spend.jsonl").read_text().splitlines() if x.strip()]
@@ -619,6 +676,12 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         llm_spend = [json.loads(x) for x in (STATE / "llm_spend.jsonl").read_text().splitlines() if x.strip()]
     except OSError:
         pass
+    try:
+        research_step(ctl, session, progs, mb.load_calls(), ccfg, t, log)
+    except Exception as exc:  # noqa: BLE001
+        log(f"research error: {type(exc).__name__}: {exc}")
+        ctl.setdefault("research", {}).update(state="idle", error=str(exc)[:500])
+    status["research"] = {k: v for k, v in ctl.get("research", {}).items() if k in ("state", "program", "waiting", "pending_directed")}
     price = mb.price_per_s(ev.evolve_cfg()["gpu"])
     made = 0
     while in_flight < ccfg.get("max_in_flight", 4):
@@ -637,8 +700,16 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
             status["blocked"] = {"kind": "modal_cap", "modal_total": round(modal_total, 2), "need": round(need, 2),
                                  "limit": mb.max_usd(), "unblock_at_limit": round(modal_total + need + 0.01, 2)}
             break
+        pending = ctl.get("research", {}).get("pending_directed") or []
+        card = None
+        if pending:  # test each new research card right away, as a directed child of the incumbent
+            from autolab import research
+
+            card = next((c for c in research.load_cards() if c["id"] == pending[0]), None)
         try:
-            child = (generate or _generate)(log)
+            child = (generate or _generate)(log) if card is None else _generate(log, card=card)
+            if pending:
+                pending.pop(0)
         except RateLimited as exc:
             until = parse_reset(str(exc), t)
             ctl.update(paused_until=iso(until), pause_reason=f"Claude usage limit: {str(exc)[:200]}")
@@ -656,7 +727,7 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     return {**status, "proposed": made, "in_flight": in_flight}
 
 
-def _generate(log):
+def _generate(log, card: dict | None = None):
     from autolab.generate import generate_one
 
-    return generate_one(log=log)
+    return generate_one(log=log, card=card)

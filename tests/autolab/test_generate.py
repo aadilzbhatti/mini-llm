@@ -126,7 +126,8 @@ def fake_run(stdout="", returncode=0, stderr="", raise_timeout=False):
     return run
 
 
-GOOD = {"rationale": "use a shorter warmup", "expected_effect": "-0.01", "diffs": [], "hparams": {"warmup_steps": 32}}
+GOOD = {"rationale": "use a shorter warmup", "expected_effect": "-0.01", "diffs": [], "hparams": {"warmup_steps": 32},
+        "technique_ids": []}
 
 
 @pytest.mark.parametrize("runner,needle", [
@@ -238,3 +239,49 @@ def test_rate_limit_stops_generation(lab):
     with pytest.raises(RateLimited):
         gen(lab, limited)
     assert set(ev.programs(lab["paths"])) == {"p0"}  # no fallback mutation queued
+
+
+# --- research cards in proposals (M7) --------------------------------------------------------------------
+
+
+CARD = {"name": "Decoupled weight decay on matrices only", "category": "optimizer", "component": "optimizer",
+        "current": "AdamW on all params", "proposal": "wd 0.1 on 2-D weights", "mechanism": "limits norm growth",
+        "evidence": [{"source": "Loshchilov & Hutter", "url": "https://arxiv.org/abs/1711.05101", "year": 2019,
+                      "finding": "decoupled wd generalizes better"}],
+        "expected_effect": "-0.02", "applicability": "multi-epoch overfitting", "risks": "slower early progress",
+        "implementation": "param groups in build_optimizer"}
+
+
+def test_cards_store_dedupe_and_bandit(tmp_path):
+    from autolab import research
+
+    added = research.add_cards([CARD, {**CARD, "name": "decoupled weight-decay on matrices ONLY"},
+                                {**CARD, "name": "QK-norm", "category": "attention"}], {"session": "s"})
+    assert [c["id"] for c in added] == ["c1", "c2"] and added[1]["name"] == "QK-norm"
+    cards = research.load_cards()
+    progs = [("s", Program(id="p1", parent_id="p0", base_commit="x", blocks={}, hparams=HP, status="accepted",
+                           meta={"technique_ids": ["c1"]})),
+             ("s", Program(id="p2", parent_id="p0", base_commit="x", blocks={}, hparams=HP, status="rejected",
+                           meta={"technique_ids": ["c2"]}))]
+    stats = research.card_stats(cards, progs)
+    assert stats["c1"]["outcomes"] == {"accepted": 1} and stats["c2"]["mean_reward"] == 0.0
+    research.add_cards([{**CARD, "name": "Muon optimizer"}], {"session": "s"})
+    picked = research.pick_cards(2, random.Random(0), research.load_cards(), research.card_stats(research.load_cards(), progs))
+    assert [c["id"] for c in picked] == ["c3", "c1"]  # untried first, then the winner over the loser
+
+
+def test_directed_child_applies_and_credits_the_card(lab):
+    from autolab import research
+
+    card = research.add_cards([CARD], {"session": "s"})[0]
+    seen = {}
+
+    def caller(prompt, system, schema, model, cfg, log_dir, tag, **kw):
+        seen["prompt"] = prompt
+        return {"reply": {**GOOD, "hparams": {"weight_decay": 0.1}, "technique_ids": []}, "cost_usd": 0.1,
+                "model": "claude-opus-5-5", "duration_s": 1.0, "log": "x"}
+
+    c = generate_one(paths=lab["paths"], rng=random.Random(0), log=lambda m: None, caller=caller, model="opus",
+                     runs_dir=lab["runs"], card=card)
+    assert "Apply technique card **c1**" in seen["prompt"] and "# Relevant techniques" in seen["prompt"]
+    assert c.meta["technique_ids"] == ["c1"] and c.meta["instruction"] == "research" and c.parent_id == "p0"

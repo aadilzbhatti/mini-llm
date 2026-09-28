@@ -328,6 +328,7 @@ def controller_view(calls: dict) -> dict:
             "override": ov if daily == ov.get("usd") else None,
             "pause_reason": ctl.get("pause_reason"), "data_flow": ctl.get("data_flow", {}),
             "ladder": ctl.get("ladder", {}),
+            "research": {k: v for k, v in (ctl.get("research") or {}).items() if k in ("state", "program", "waiting", "pending_directed")},
             "spend_24h": round(spend, 3), "daily_usd": daily, "max_in_flight": cfg.get("max_in_flight")}
 
 
@@ -567,6 +568,21 @@ async def api_budget(request: Request) -> JSONResponse:
         return JSONResponse({"ok": True, "message": "saved to autolab/config.toml: " +
                              ", ".join(f"{k} = {v}" for k, v in changed.items())})
     raise HTTPException(400, "unknown action")
+
+
+@app.get("/api/research")
+def api_research() -> JSONResponse:
+    from autolab import research
+
+    cards = research.load_cards()
+    stats = research.card_stats(cards)
+    ctl = _json(AUTOLAB / "state" / "controller.json", {}) or {}
+    runs = [e for e in notebook_view(1000) if e.get("event") in ("research_started", "research_done")]
+    rcfg = research.research_cfg()
+    return JSONResponse({"cards": [{**c, "stats": stats.get(c["id"])} for c in reversed(cards)],
+                         "state": {k: v for k, v in (ctl.get("research") or {}).items() if k != "audited"},
+                         "audited": (ctl.get("research") or {}).get("audited", []), "runs": runs[:40],
+                         "config": rcfg})
 
 
 @app.get("/api/live")

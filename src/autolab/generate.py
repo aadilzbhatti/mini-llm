@@ -83,7 +83,9 @@ def _clean_hparams(raw: dict, parent: Program) -> dict:
 
 
 def generate_one(paths: ev.Paths | None = None, rng: random.Random | None = None, log=print,
-                 caller=call, model: str | None = None, runs_dir=None) -> Program:
+                 caller=call, model: str | None = None, runs_dir=None, card: dict | None = None,
+                 cards: list[dict] | None = None) -> Program:
+    """One child. `card` = directed: apply that technique card to the incumbent (no sampling)."""
     paths = paths or ev.Paths()
     rng = rng or random.Random()
     cfg, lcfg = ev.evolve_cfg(), llm_cfg()
@@ -97,8 +99,10 @@ def generate_one(paths: ev.Paths | None = None, rng: random.Random | None = None
         log(f"migrated island bests: {session['database']['migrants']}")
     island = next_island(progs, dbc)
     parent, insp = sample(progs, session, island, dbc, rng)
+    if card is not None:  # directed: the card is an upgrade proposed for the incumbent
+        parent = progs[session["incumbent"]]
     runs_dir = runs_dir or REPO_ROOT / "autolab" / "runs"
-    prompt, pmeta = build_prompt(parent, insp, progs, session, cfg, lcfg, runs_dir, rng)
+    prompt, pmeta = build_prompt(parent, insp, progs, session, cfg, lcfg, runs_dir, rng, card=card, cards=cards)
     models = lcfg.get("models", {"opus": 1.0})
     model = model or rng.choices(list(models), weights=list(models.values()))[0]
     meta = {**pmeta, "island": island, "model_requested": model}
@@ -113,8 +117,12 @@ def generate_one(paths: ev.Paths | None = None, rng: random.Random | None = None
         res = caller(prompt, (PROMPTS / "system.md").read_text(), REPLY_SCHEMA, model, lcfg,
                      paths.root.parent.parent / "llm" / session.get("name", "session"), tag)
         reply = res["reply"]
+        known = set(pmeta.get("cards_shown", []))
+        used = [c for c in reply.get("technique_ids", []) if c in known]
+        if card is not None and card["id"] not in used:
+            used.insert(0, card["id"])  # a directed child always counts for its card
         meta.update(model=res["model"], cost_usd=res["cost_usd"], llm_s=res["duration_s"], log=res["log"],
-                    expected_effect=reply.get("expected_effect", ""))
+                    expected_effect=reply.get("expected_effect", ""), technique_ids=used)
         hp = _clean_hparams(reply.get("hparams"), parent)
         diffs = [d for d in reply.get("diffs", []) if d["search"] != d["replace"]]
         problems = validate_hparams({**parent.hparams, **hp}, cfg["hparams"]) if hp else []

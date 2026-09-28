@@ -104,7 +104,7 @@ def e2e(tmp_path, monkeypatch):
     def fake_claude(prompt, system, schema, model, lcfg, log_dir, tag):
         assert "# Current program" in prompt
         lr = round(rng.choice([2e-3, 4e-3, 5e-3]), 6)
-        return {"reply": {"rationale": f"try lr {lr}", "expected_effect": "small", "diffs": [], "hparams": {"lr": lr}},
+        return {"reply": {"rationale": f"try lr {lr}", "expected_effect": "small", "diffs": [], "hparams": {"lr": lr}, "technique_ids": []},
                 "cost_usd": 0.0, "model": "fake-claude", "duration_s": 0.0, "log": "none"}
 
     def generate(log):

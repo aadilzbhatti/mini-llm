@@ -651,3 +651,20 @@ Build this first; everything else hill-climbs on it.
   pause), the numbers, when it unblocks by itself, and a one-click fix (raise for 12 h / raise cap /
   resume). Controller status carries a structured `blocked`. The board names the current session and
   how it started; ids restart at p1 per session and cards from older sessions get a session tag.
+
+- 2026-09-28 (owner): M7 research. Settings: research may use 30% of the daily budget ([research]
+  budget_share); no pre-approval of cards (their results are the review). Focus: upgrade working
+  solutions. Each new incumbent (and each long stall) gets an audit by a web-enabled agent (`claude -p`
+  with only WebSearch/WebFetch), component by component, against current small-LM practice. The agent
+  writes technique cards (autolab/research/cards.jsonl, committed): what the program does now, the
+  proposed change, mechanism, cited evidence, applicability at our scale, risks, and an implementation
+  sketch. Each new card gets one directed child ("apply card cN to the incumbent"), and cards also go into
+  regular prompts via a UCB bandit over the outcomes of the programs that cited them (`technique_ids`
+  in the reply). This is the analogue of the paper's literature-as-explicit-context plus meta-prompt
+  evolution. Card text is untrusted web-derived data: the prompt frames it as claims to weigh, and the
+  dashboard links only http(s) sources.
+- 2026-09-28 (incident): one test run before research was disabled in tests let controller tests
+  call the real `_spawn`, launching 7 detached real research runs (~$4.16 Claude) that wrote 35
+  duplicate cards. Kept only the intended validation run's 5 cards (renumbered c1–c5). Guards: tests
+  can't spawn real subprocesses (conftest makes controller._spawn raise), research is off unless a
+  test enables it, and research runs hold an exclusive lock.

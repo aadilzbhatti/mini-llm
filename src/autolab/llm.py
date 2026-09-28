@@ -48,10 +48,15 @@ def claude_bin(llm_cfg: dict) -> str:
 
 
 def call(prompt: str, system: str, schema: dict, model: str, llm_cfg: dict, log_dir: Path, tag: str,
-         runner=subprocess.run) -> dict:
-    """Return {"reply": <validated object>, "cost_usd", "model", "duration_s", "log"}. Raises LLMError."""
+         runner=subprocess.run, tools: list[str] | None = None, timeout_s: float | None = None) -> dict:
+    """Return {"reply": <validated object>, "cost_usd", "model", "duration_s", "log"}. Raises LLMError.
+
+    `tools`: None = no tools (the proposer). The research agent passes ["WebSearch", "WebFetch"];
+    they are both enabled and pre-allowed, and nothing else is.
+    """
+    tool_args = ["--tools", ""] if not tools else ["--tools", *tools, "--allowed-tools", *tools]
     cmd = [claude_bin(llm_cfg), "-p", "--output-format", "json", "--json-schema", json.dumps(schema),
-           "--tools", "", "--model", model, "--system-prompt", system,
+           *tool_args, "--model", model, "--system-prompt", system,
            "--no-session-persistence", "--strict-mcp-config"]
     log_dir.mkdir(parents=True, exist_ok=True)
     log_path = log_dir / f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S')}-{tag}.json"
@@ -61,10 +66,10 @@ def call(prompt: str, system: str, schema: dict, model: str, llm_cfg: dict, log_
     try:
         with tempfile.TemporaryDirectory() as cwd:
             r = runner(cmd, input=prompt, capture_output=True, text=True, cwd=cwd,
-                       timeout=llm_cfg.get("timeout_s", 600))
+                       timeout=timeout_s or llm_cfg.get("timeout_s", 600))
     except subprocess.TimeoutExpired:
         _finish(record, log_path, t0, error="timeout")
-        raise LLMError(f"timeout after {llm_cfg.get('timeout_s', 600)}s") from None
+        raise LLMError(f"timeout after {timeout_s or llm_cfg.get('timeout_s', 600)}s") from None
     record.update(returncode=r.returncode, stdout=r.stdout[-200_000:], stderr=r.stderr[-20_000:])
     if r.returncode != 0:
         # The CLI still prints its JSON result on failure; its `result` is the readable message.

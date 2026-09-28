@@ -36,6 +36,12 @@ def main(argv: list[str] | None = None) -> None:
     stp.add_argument("--cancel-running", action="store_true", help="Also cancel running Modal trials")
     sub.add_parser("status", help="Controller, budget and session summary")
     sub.add_parser("session-report", help="Regenerate autolab/SESSION_1.md")
+    rs = sub.add_parser("research", help="Research agent: audit the incumbent, write technique cards")
+    rsub = rs.add_subparsers(dest="research_cmd", required=True)
+    rr = rsub.add_parser("run")
+    rr.add_argument("--trigger", default="Manual run: audit the current best program for outdated or missing techniques.")
+    rr.add_argument("--result", default=None, help="Write the run's result JSON here (the controller uses this)")
+    rsub.add_parser("cards")
     tr = sub.add_parser("transfer", help="Run a program at another dataset/budget (e.g. the owner's regime)")
     tr.add_argument("label")
     tr.add_argument("program", help="session/program, e.g. s2+data40k/p1")
@@ -84,6 +90,26 @@ def main(argv: list[str] | None = None) -> None:
         from autolab.daemon import run
 
         run(args.interval, args.once)
+    elif args.cmd == "research":
+        import json
+        from pathlib import Path
+
+        from autolab import research
+
+        if args.research_cmd == "run":
+            try:
+                out = research.run(args.trigger)
+            except Exception as exc:  # noqa: BLE001 - the controller reads the result file
+                out = {"error": f"{type(exc).__name__}: {exc}", "added": []}
+            if args.result:
+                Path(args.result).write_text(json.dumps(out, indent=2))
+            print(json.dumps(out, indent=2))
+        else:
+            cards = research.load_cards()
+            stats = research.card_stats(cards)
+            for c in cards:
+                s = stats[c["id"]]
+                print(f"{c['id']:4} {c['category']:14} used {s['used']} {s['outcomes']}  {c['name']}")
     elif args.cmd == "transfer":
         import json
 
