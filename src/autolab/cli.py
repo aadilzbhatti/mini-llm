@@ -36,6 +36,9 @@ def main(argv: list[str] | None = None) -> None:
     stp.add_argument("--cancel-running", action="store_true", help="Also cancel running Modal trials")
     sub.add_parser("status", help="Controller, budget and session summary")
     sub.add_parser("session-report", help="Regenerate autolab/SESSION_1.md")
+    bud = sub.add_parser("budget", help="One-time daily budget override that expires by itself")
+    bud.add_argument("--daily", type=float, required=True, help="Rolling-24h budget in $ while the override lasts")
+    bud.add_argument("--hours", type=float, default=24.0)
     e = sub.add_parser("evolve", help="Program database + evaluation cascade (autolab.evaluate)")
     esub = e.add_subparsers(dest="evolve_cmd", required=True)
     ini = esub.add_parser("init")
@@ -73,6 +76,17 @@ def main(argv: list[str] | None = None) -> None:
         from autolab.daemon import run
 
         run(args.interval, args.once)
+    elif args.cmd == "budget":
+        from datetime import timedelta
+
+        from autolab import controller as c
+
+        ctl = c.load_control()
+        until = c.now() + timedelta(hours=args.hours)
+        ctl["daily_usd_override"] = {"usd": args.daily, "until": c.iso(until), "set": c.iso(c.now())}
+        c.save_control(ctl)
+        c.note("budget_override", daily_usd=args.daily, until=c.iso(until))
+        print(f"daily budget ${args.daily} until {c.iso(until)} (then back to [controller] daily_usd)")
     elif args.cmd == "session-report":
         from autolab.session_report import build
 

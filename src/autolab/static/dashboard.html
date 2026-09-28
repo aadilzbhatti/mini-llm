@@ -553,7 +553,7 @@ function controllerTile(C) {
   if (C.enabled && C.paused_until && Date.parse(C.paused_until) > Date.now()) { kind = "warning"; text = "paused"; }
   else if (C.enabled) { kind = "good"; text = "running"; }
   const sub = [C.enabled && C.paused_until && Date.parse(C.paused_until) > Date.now() ? `until ${fmt.time(C.paused_until)}: ${C.pause_reason || ""}` : "",
-    `24h spend ${fmt.usd(C.spend_24h)} of ${fmt.usd(C.daily_usd)}`,
+    `24h spend ${fmt.usd(C.spend_24h)} of ${fmt.usd(C.daily_usd)}` + (C.override ? ` (raised until ${fmt.time(C.override.until)})` : ""),
     C.data_flow && C.data_flow.state ? `data: ${C.data_flow.state}${C.data_flow.target ? " " + C.data_flow.target : ""}` : ""].filter(Boolean).join(" · ");
   const meter = h("div", {class: "meter"}, h("span", {style: `width:${C.daily_usd ? Math.min(100, C.spend_24h / C.daily_usd * 100) : 0}%;background:var(--s1)`}));
   return tile("Controller", h("span", {}, statusEl(kind, text)), sub || (C.enabled ? "" : "autolab start to enable"), meter);

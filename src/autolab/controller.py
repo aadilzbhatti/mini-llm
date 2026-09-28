@@ -65,6 +65,17 @@ def controller_cfg() -> dict:
     return tomllib.loads((REPO_ROOT / "autolab" / "config.toml").read_text()).get("controller", {})
 
 
+def daily_budget(ctl: dict, ccfg: dict, t: datetime | None = None) -> float:
+    """[controller] daily_usd, unless a one-time override (autolab budget --daily X --hours H) is active."""
+    ov = ctl.get("daily_usd_override") or {}
+    try:
+        if ov and datetime.fromisoformat(ov["until"]) > (t or now()):
+            return float(ov["usd"])
+    except (KeyError, ValueError):
+        pass
+    return float(ccfg.get("daily_usd", 10.0))
+
+
 def load_control(path: Path | None = None) -> dict:
     path = path or CONTROL  # resolved at call time (tests redirect CONTROL)
     try:
@@ -332,7 +343,7 @@ def budget_ok(flow: dict, session: dict, calls: dict, cfg: dict) -> bool:
     except OSError:
         pass
     cost = 3 * (session["wall_caps"]["full"] + 180) * mb.price_per_s(ev.evolve_cfg()["gpu"])
-    ok = spend_24h(calls, llm, now())["total"] + cost <= cfg.get("daily_usd", 10.0)
+    ok = spend_24h(calls, llm, now())["total"] + cost <= daily_budget(load_control(), cfg)
     flow["waiting_for_budget"] = not ok
     return ok
 
@@ -485,8 +496,9 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         sp = spend_24h(mb.load_calls(), llm_spend, t)
         need = expected_candidate_usd(session, price, ccfg)
         modal_total = sum(c.get("usd") or c.get("usd_estimate") or 0 for c in mb.load_calls().values())
-        if sp["total"] + need > ccfg.get("daily_usd", 10.0):
-            status["budget"] = f"24h spend ${sp['total']:.2f} + next ~${need:.2f} > ${ccfg.get('daily_usd', 10.0)}"
+        daily = daily_budget(ctl, ccfg, t)
+        if sp["total"] + need > daily:
+            status["budget"] = f"24h spend ${sp['total']:.2f} + next ~${need:.2f} > ${daily}"
             break
         if modal_total + need > mb._CFG.get("max_usd", 25.0):
             status["budget"] = f"Modal total ${modal_total:.2f} + ~${need:.2f} > cap ${mb._CFG.get('max_usd')}"

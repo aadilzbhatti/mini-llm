@@ -310,3 +310,13 @@ def test_session_report(world, monkeypatch, tmp_path):
     assert "Best: **s2/p1**, full val loss **4.6000**" in text
     assert "Start at the same budget: `s2` p0 4.7533" in text
     assert "| 1 | 2026-09-27T20:00 | s2/p1" in text and "higher lr" in text
+
+
+def test_one_time_budget_override(world, monkeypatch):
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"max_in_flight": 2, "daily_usd": 10.0})
+    world["calls"]["x"] = {"state": "finished", "usd": 9.8, "submitted_at": T.isoformat()}
+    enable(data_flow={"session": "s2", "state": "not_helped"},
+           daily_usd_override={"usd": 20.0, "until": (T + timedelta(hours=24)).isoformat()})
+    assert ctl.step(log=lambda m: None, generate=Gen(), t=T)["proposed"] == 2
+    ctl.save_control({**ctl.load_control(), "daily_usd_override": {"usd": 20.0, "until": (T - timedelta(hours=1)).isoformat()}})
+    assert ctl.daily_budget(ctl.load_control(), {"daily_usd": 10.0}, T) == 10.0  # expired

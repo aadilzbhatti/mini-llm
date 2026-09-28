@@ -302,9 +302,14 @@ def controller_view(calls: dict) -> dict:
     spend = (sum(c.get("usd") or 0 for c in calls.values() if c["state"] != "pending" and recent(c.get("submitted_at")))
              + sum(c.get("usd_estimate") or 0 for c in calls.values() if c["state"] == "pending")
              + sum(e.get("usd") or 0 for e in llm if recent(e.get("at"))))
+    ov = ctl.get("daily_usd_override") or {}
+    daily = cfg.get("daily_usd")
+    if ov.get("until") and _age_s(ov["until"]) is not None and _age_s(ov["until"]) < 0:
+        daily = ov.get("usd")
     return {"enabled": ctl.get("enabled", False), "paused_until": ctl.get("paused_until"),
+            "override": ov if daily == ov.get("usd") else None,
             "pause_reason": ctl.get("pause_reason"), "data_flow": ctl.get("data_flow", {}),
-            "spend_24h": round(spend, 3), "daily_usd": cfg.get("daily_usd"), "max_in_flight": cfg.get("max_in_flight")}
+            "spend_24h": round(spend, 3), "daily_usd": daily, "max_in_flight": cfg.get("max_in_flight")}
 
 
 def notebook_view(limit: int = 200) -> list[dict]:
