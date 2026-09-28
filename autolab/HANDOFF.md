@@ -689,3 +689,15 @@ Build this first; everything else hill-climbs on it.
   (launch.json + reports), exact costs included ($32.50). Nothing was in flight, so no results were lost.
   Restored entries have no call id and are collected from the runs volume. Guards: every test gets its own
   call file, and any test touching real Modal (Function.from_name / FunctionCall.from_id) fails.
+- 2026-09-28 (owner): **don't duplicate the owner's work; copy it.** He is implementing ChatGPT's
+  suggestions in ~/dev/wiki-llm (evals, systems metrics, context experiments). Merged origin/minimal
+  (452fd3b: mini_llm.evals, mini_llm.systems, train.py systems meter, data80k/160k, inference UI).
+  autolab.evalsuite is now a thin adapter over mini_llm.evals.evaluate_checkpoint, which provides
+  quality at a fixed 128 window, context_benefit, forced-choice retrieval vs distance, and inference cost.
+  The only addition is a longer distance sweep via the owner's own retrieval(distances=...), since
+  candidates may use up to 1024 context. Training compute comes from the checkpoint's `systems`. My
+  duplicate train.py memory line is gone. The active session's programs were re-based onto the merge
+  commit, since the protected tests now include the owner's new ones. A fixed-seed CPU run of the
+  champion's blocks is identical (44/44 log lines) at the old and new base. Rule: before building a
+  measurement or training feature, check the owner's repo (git log origin/minimal) and merge instead of
+  reimplementing.
