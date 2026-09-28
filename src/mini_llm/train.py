@@ -10,6 +10,13 @@ own new horizon rather than the original run's). --min-lr is the actual
 decay knob -- set it equal to --lr to disable decay and train at a constant
 rate; --warmup-steps 0 disables warmup.
 
+--warmup-tokens N sets the warmup in tokens instead: it becomes
+ceil(N / (batch_size * block_size)) steps. Use it when comparing batch
+sizes, so every run warms up over the same data. At an equal token budget
+that is also the same fraction of the run, whereas a fixed --warmup-steps
+covers 16x the tokens at 16x the batch, and a bigger share of a run that
+now has fewer steps.
+
 Reproducibility: --seed drives (a) model init, via torch.manual_seed before
 the model is built, and (b) the training batch sequence, via a dedicated
 Generator so it doesn't depend on how many random draws init happened to
@@ -78,6 +85,7 @@ import argparse
 import contextlib
 import math
 import os
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -101,6 +109,7 @@ from mini_llm.distributed import (
 )
 from mini_llm.generate import generate_text
 from mini_llm.report import write_sample_report
+from mini_llm.systems import SystemsMeter
 
 PLOTS_DIR = Path("plots")
 CHECKPOINTS_DIR = Path("checkpoints")
@@ -304,6 +313,7 @@ def save_checkpoint(
     full_val_history: list[tuple[int, float]],
     lr_history: list[tuple[int, float]],
     batch_rng_states: list[object] | None = None,
+    systems: dict | None = None,
 ) -> Path:
     """`model` must be the bare module, never the DDP wrapper: DDP's own
     state_dict prefixes every key with "module.", which a plain
@@ -316,6 +326,8 @@ def save_checkpoint(
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     extra = {"batch_rng_states": batch_rng_states} if batch_rng_states is not None else {}
+    if systems is not None:
+        extra["systems"] = systems
     torch.save(
         {
             "config": cfg.to_dict(),
@@ -513,6 +525,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=500,
         help="Linear warmup length before the cosine decay begins. 0 = no warmup.",
     )
+    p.add_argument(
+        "--warmup-tokens",
+        type=int,
+        default=None,
+        help="Warmup length in tokens instead of steps: ceil(N / (batch-size * block-size)) "
+        "steps. Keeps warmup comparable across batch sizes. Can't be combined with "
+        "--warmup-steps.",
+    )
     p.add_argument("--weight-decay", type=float, default=0.0)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument(
@@ -631,8 +651,24 @@ class _SilentControl(RunControl):
         pass
 
 
+def resolve_warmup(args: argparse.Namespace, argv: list[str] | None = None) -> argparse.Namespace:
+    """Turn --warmup-tokens into args.warmup_steps (in place). The schedule
+    itself only ever sees steps; this is the one place tokens get converted."""
+    if args.warmup_tokens is None:
+        return args
+    raw = sys.argv[1:] if argv is None else argv
+    if any(a == "--warmup-steps" or a.startswith("--warmup-steps=") for a in raw):
+        raise SystemExit("Pass --warmup-steps or --warmup-tokens, not both.")
+    if args.warmup_tokens < 0:
+        raise SystemExit("--warmup-tokens must be >= 0.")
+    # Global batch: under DDP every rank takes a step together, so one step is
+    # batch_size * block_size tokens however many ranks share it.
+    args.warmup_steps = math.ceil(args.warmup_tokens / (args.batch_size * args.block_size))
+    return args
+
+
 def main(argv: list[str] | None = None) -> None:
-    args = parse_args(argv)
+    args = resolve_warmup(parse_args(argv), argv)
     # Under torchrun: join the process group. Otherwise a no-op, and
     # dist_info.enabled is False everywhere below.
     dist_info = setup_distributed()
@@ -675,6 +711,11 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     tokenizer = get_tokenizer()
     tokens = load_tokens(args.tokens) if args.tokens else encode(load_text(args.text), tokenizer)
     val_tokens = load_tokens(args.val_tokens) if args.val_tokens else None
+    if val_tokens is not None and tokens.numel() == val_tokens.numel() and torch.equal(tokens, val_tokens):
+        # Training on the val set makes every val loss a memorization score
+        # (it has happened: a run passed val.pt as --tokens and "scored" 0.35).
+        # Caught by content, not path, so a copy under another name is refused too.
+        raise SystemExit("--tokens and --val-tokens contain identical data: refusing to train on the validation set.")
     # DDP: each rank trains only on its own contiguous 1/N of the stream, so
     # no two ranks ever see the same training tokens. `tokens` itself stays
     # whole: the fixed eval batches are sampled from it identically on every
@@ -800,6 +841,9 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         "full_eval_interval": args.full_eval_interval,
         "tokens_processed": tokens_processed,
     }
+    if args.warmup_tokens is not None:
+        # What was asked for; warmup_steps above is what it became.
+        optim_cfg["warmup_tokens"] = args.warmup_tokens
     # Recorded only when they apply, so single-device runs log exactly as before.
     if dist_info.enabled:
         optim_cfg["world_size"] = dist_info.world_size
@@ -873,6 +917,8 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         else model
     )
 
+    # Throughput / memory / wall-clock for this run (see mini_llm.systems).
+    meter = SystemsMeter(device)
     model.train()
     for local_step in range(args.steps):
         step = start_step + local_step
@@ -942,31 +988,35 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             # every rank (same step, same intervals, live control off).
             loss_value = all_reduce_mean(loss.item(), dist_info)
             print(f"step {step:5d} | loss {loss_value:.4f} | lr {current_lr:.2e}")
+            meter.sample_memory()
             control.scalar("train/batch_loss", loss_value, step)
             control.scalar("train/lr", current_lr, step)
             if grad_norm is not None:  # AUTOLAB: see above
                 control.scalar("train/grad_norm", grad_norm, step)
 
-        if eval_now:
-            eval_train_loss = evaluate_fixed(model, train_eval_batches, dist_info)
-            train_history.append((step, eval_train_loss))
-            msg = f"step {step:5d} | eval_train_loss {eval_train_loss:.4f}"
-            if val_eval_batches is not None:
-                eval_val_loss = evaluate_fixed(model, val_eval_batches, dist_info)
-                val_history.append((step, eval_val_loss))
-                msg += f" | eval_val_loss {eval_val_loss:.4f}"
-                control.scalar("eval/val_loss", eval_val_loss, step)
-            control.scalar("eval/train_loss", eval_train_loss, step)
-            print(msg)
+        # Evaluation time is excluded from training throughput. Only paused on
+        # eval steps: pause() synchronizes CUDA, which would stall every step.
+        with meter.pause() if (eval_now or full_eval_now) else contextlib.nullcontext():
+            if eval_now:
+                eval_train_loss = evaluate_fixed(model, train_eval_batches, dist_info)
+                train_history.append((step, eval_train_loss))
+                msg = f"step {step:5d} | eval_train_loss {eval_train_loss:.4f}"
+                if val_eval_batches is not None:
+                    eval_val_loss = evaluate_fixed(model, val_eval_batches, dist_info)
+                    val_history.append((step, eval_val_loss))
+                    msg += f" | eval_val_loss {eval_val_loss:.4f}"
+                    control.scalar("eval/val_loss", eval_val_loss, step)
+                control.scalar("eval/train_loss", eval_train_loss, step)
+                print(msg)
 
-        if full_eval_now:
-            # Chunk size doesn't change the (exhaustive) result, only memory,
-            # so each rank uses its training batch size. Single device:
-            # per_rank_batch == --batch-size.
-            full_val_loss = evaluate_full(model, val_tokens, per_rank_batch, cfg.block_size, device, dist_info)
-            full_val_history.append((step, full_val_loss))
-            print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
-            control.scalar("eval/full_val_loss", full_val_loss, step)
+            if full_eval_now:
+                # Chunk size doesn't change the (exhaustive) result, only memory,
+                # so each rank uses its training batch size. Single device:
+                # per_rank_batch == --batch-size.
+                full_val_loss = evaluate_full(model, val_tokens, per_rank_batch, cfg.block_size, device, dist_info)
+                full_val_history.append((step, full_val_loss))
+                print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
+                control.scalar("eval/full_val_loss", full_val_loss, step)
 
         if ctl.checkpoint_now:
             ctl.checkpoint_now = False
@@ -995,6 +1045,9 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             print(f"step {step:5d} | stopped early by control command", flush=True)
             break
 
+    steps_done = (stopped_at - start_step + 1) if stopped_at is not None else args.steps
+    systems = meter.finish(steps_done, args.batch_size * cfg.block_size, dist_info.world_size)
+
     if stopped_at is not None:
         # Name and record the run by the training it actually got, not the
         # horizon it was launched with.
@@ -1011,6 +1064,12 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     )
     if not dist_info.is_main:
         return
+    print(
+        f"Systems: {systems['train_tokens_per_sec']:,.0f} train tokens/s on {systems['world_size']}x "
+        f"{systems['device']} | peak memory {systems['peak_mem_gb']:.2f} GB per process "
+        f"({systems['peak_mem_kind']}) | wall {systems['wall_sec'] / 60:.1f} min "
+        f"(train {systems['train_sec'] / 60:.1f}, eval {systems['eval_sec'] / 60:.1f})"
+    )
 
     plot_path: Path | None = None
     save_path: Path | None = None
@@ -1036,6 +1095,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             cfg, model, optimizer, batch_rng, total_steps,
             train_history, val_history, full_val_history, lr_history,
             batch_rng_states=batch_rng_states,
+            systems=systems,
         )
         print(f"Saved to {save_path}")
 
