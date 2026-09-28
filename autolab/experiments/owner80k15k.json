@@ -1,0 +1,105 @@
+{
+  "id": "owner80k15k",
+  "title": "Transfer: autolab's best vs the owner's best at the owner's regime (data80k, 15k steps)",
+  "gpu": "L4",
+  "dataset_id": "data80k",
+  "purpose": "The owner's newest best (4.4679, seed 42) is the base 4-layer program with warmup 32 on data80k at 15k steps (123M tokens). Autolab's sessions fix the budget at 10k steps, so it can't discover 'train longer'; this checks whether what it did find (6 layers + fused attention + lr 2e-3 + warmup 300) still helps at the owner's regime. 2 seeds each, same data and budget.",
+  "model": {},
+  "optim": {},
+  "eval": {
+    "eval_interval": 100,
+    "eval_batches": 20,
+    "eval_seed": 1234,
+    "log_interval": 10,
+    "full_eval_interval": 0,
+    "control_poll": 25
+  },
+  "analysis": {
+    "kind": "noise_and_ranking",
+    "baseline_variant": "owner-4L-wu32",
+    "screen": "",
+    "full": "full"
+  },
+  "jobs": [
+    {
+      "run_id": "tr-owner80k15k-owner-4L-wu32-s1",
+      "variant": "owner-4L-wu32",
+      "budget": "full",
+      "seed": 1,
+      "tokens": 122880000,
+      "wall_clock_s": 4243,
+      "program": "s2+data40k/p0",
+      "hparams": {
+        "n_embd": 256,
+        "n_head": 4,
+        "n_layer": 4,
+        "dropout": 0.0,
+        "batch_size": 64,
+        "lr": 0.0012,
+        "min_lr": 2e-06,
+        "warmup_steps": 32,
+        "weight_decay": 0.0
+      }
+    },
+    {
+      "run_id": "tr-owner80k15k-owner-4L-wu32-s2",
+      "variant": "owner-4L-wu32",
+      "budget": "full",
+      "seed": 2,
+      "tokens": 122880000,
+      "wall_clock_s": 4243,
+      "program": "s2+data40k/p0",
+      "hparams": {
+        "n_embd": 256,
+        "n_head": 4,
+        "n_layer": 4,
+        "dropout": 0.0,
+        "batch_size": 64,
+        "lr": 0.0012,
+        "min_lr": 2e-06,
+        "warmup_steps": 32,
+        "weight_decay": 0.0
+      }
+    },
+    {
+      "run_id": "tr-owner80k15k-autolab-best-6L-s1",
+      "variant": "autolab-best-6L",
+      "budget": "full",
+      "seed": 1,
+      "tokens": 122880000,
+      "wall_clock_s": 6214,
+      "program": "s2+data40k/p1",
+      "hparams": {
+        "n_embd": 256,
+        "n_head": 4,
+        "n_layer": 6,
+        "dropout": 0.0,
+        "batch_size": 64,
+        "lr": 0.002,
+        "min_lr": 2e-06,
+        "warmup_steps": 300,
+        "weight_decay": 0.0
+      }
+    },
+    {
+      "run_id": "tr-owner80k15k-autolab-best-6L-s2",
+      "variant": "autolab-best-6L",
+      "budget": "full",
+      "seed": 2,
+      "tokens": 122880000,
+      "wall_clock_s": 6214,
+      "program": "s2+data40k/p1",
+      "hparams": {
+        "n_embd": 256,
+        "n_head": 4,
+        "n_layer": 6,
+        "dropout": 0.0,
+        "batch_size": 64,
+        "lr": 0.002,
+        "min_lr": 2e-06,
+        "warmup_steps": 300,
+        "weight_decay": 0.0
+      }
+    }
+  ]
+}

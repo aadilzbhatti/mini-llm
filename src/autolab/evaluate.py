@@ -635,3 +635,54 @@ def advance_data_checks(calls: dict, paths: Paths | None = None, runs_dir: Path 
         for w in (paths.root / "work").glob(f"data-{chk_id.rsplit('-', 1)[0]}-*"):
             shutil.rmtree(w, ignore_errors=True)
     return done
+
+
+# --- transfer checks: a program at a different data/budget than its session's --------------------
+
+
+def start_transfer(label: str, program_ref: str, dataset_id: str, steps: int, seeds: list[int],
+                   hparams: dict | None = None, variant: str | None = None, submit=None, repo: Path = REPO_ROOT) -> dict:
+    """Run `session/program` (optionally with an hparam patch) on `dataset_id` for `steps` optimizer steps.
+
+    For questions the fixed-budget sessions can't ask, e.g. "does what autolab found still help at
+    the owner's current regime?". Runs are named tr-<label>-<variant>-s<seed> and listed in
+    autolab/experiments/<label>.json so the dashboard's Experiments tab analyzes them.
+    """
+    import json as _json
+
+    from autolab.config import load_config
+
+    if submit is None:
+        from autolab.modal_backend import submit as modal_submit
+
+        def submit(req, gpu, src):
+            return modal_submit(req, gpu, src_root=src)
+
+    sname, pid = program_ref.split("/")
+    paths = Paths(STATE_ROOT / sname)
+    session, cfg = load_session(paths), evolve_cfg()
+    p = load(paths.programs / f"{pid}.json")
+    p.hparams = {**p.hparams, **(hparams or {})}
+    variant = variant or f"{sname}-{pid}"
+    work = STATE_ROOT / "transfer" / f"{label}-{variant}"
+    shutil.rmtree(work, ignore_errors=True)
+    src = materialize(render(base_sources(repo, p.base_commit), p.blocks), work)
+    tokens = steps * p.hparams["batch_size"] * cfg["block_size"]
+    speed = session.get("initial_tokens_per_sec") or 40_000
+    cap = round(1.5 * tokens / speed * (p.hparams["n_layer"] / 4) + 300)  # generous: deeper = slower
+    exp_path = repo / "autolab" / "experiments" / f"{label}.json"
+    exp = _json.loads(exp_path.read_text()) if exp_path.exists() else {
+        "id": label, "title": f"Transfer check: {label}", "gpu": cfg["gpu"], "dataset_id": dataset_id,
+        "purpose": "", "model": {}, "optim": {}, "eval": session["budgets"]["eval"],
+        "analysis": {"kind": "noise_and_ranking", "baseline_variant": "", "screen": "", "full": "full"}, "jobs": []}
+    for seed in seeds:
+        req = _request(p, "full", seed, cfg, session)
+        req.run_id = f"tr-{label}-{variant}-s{seed}"
+        req.dataset_id = dataset_id
+        req.train_tokens = str(load_config().datasets_dir / dataset_id / "train.pt")
+        req.budget.tokens, req.budget.wall_clock_s = tokens, cap
+        submit(req, cfg["gpu"], src)
+        exp["jobs"].append({"run_id": req.run_id, "variant": variant, "budget": "full", "seed": seed,
+                            "tokens": tokens, "wall_clock_s": cap, "program": program_ref, "hparams": p.hparams})
+    exp_path.write_text(_json.dumps(exp, indent=2))
+    return exp

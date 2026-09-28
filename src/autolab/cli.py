@@ -36,6 +36,14 @@ def main(argv: list[str] | None = None) -> None:
     stp.add_argument("--cancel-running", action="store_true", help="Also cancel running Modal trials")
     sub.add_parser("status", help="Controller, budget and session summary")
     sub.add_parser("session-report", help="Regenerate autolab/SESSION_1.md")
+    tr = sub.add_parser("transfer", help="Run a program at another dataset/budget (e.g. the owner's regime)")
+    tr.add_argument("label")
+    tr.add_argument("program", help="session/program, e.g. s2+data40k/p1")
+    tr.add_argument("--dataset", required=True)
+    tr.add_argument("--steps", type=int, required=True)
+    tr.add_argument("--seeds", type=int, nargs="+", default=[1, 2])
+    tr.add_argument("--hparams", default="{}")
+    tr.add_argument("--variant", default=None)
     bud = sub.add_parser("budget", help="One-time daily budget override that expires by itself")
     bud.add_argument("--daily", type=float, required=True, help="Rolling-24h budget in $ while the override lasts")
     bud.add_argument("--hours", type=float, default=24.0)
@@ -76,6 +84,14 @@ def main(argv: list[str] | None = None) -> None:
         from autolab.daemon import run
 
         run(args.interval, args.once)
+    elif args.cmd == "transfer":
+        import json
+
+        from autolab import evaluate as ev
+
+        exp = ev.start_transfer(args.label, args.program, args.dataset, args.steps, args.seeds,
+                                json.loads(args.hparams), args.variant)
+        print("\n".join(f"{j['run_id']}: {j['tokens']:,} tokens, cap {j['wall_clock_s']}s" for j in exp["jobs"][-len(args.seeds):]))
     elif args.cmd == "budget":
         from datetime import timedelta
 
