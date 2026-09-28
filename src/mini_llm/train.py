@@ -239,8 +239,20 @@ def build_optimizer(model: torch.nn.Module, args: argparse.Namespace) -> torch.o
 
     The loop sets every param group's "lr" to the scheduled value each step, so
     per-group LR multipliers need another mechanism (e.g. scale in before_optimizer_step).
+
+    Decoupled weight decay: only apply decay to >=2D weight matrices (linear
+    and embedding weights), not to 1D params (LayerNorm gains/biases, and any
+    Linear biases). Decaying LayerNorm scale/bias pulls them toward 0/1 for no
+    representational reason and empirically hurts small transformers; this is
+    the standard nanoGPT/GPT-3 split.
     """
-    return AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    decay_params = [p for p in model.parameters() if p.requires_grad and p.dim() >= 2]
+    no_decay_params = [p for p in model.parameters() if p.requires_grad and p.dim() < 2]
+    optim_groups = [
+        {"params": decay_params, "weight_decay": args.weight_decay},
+        {"params": no_decay_params, "weight_decay": 0.0},
+    ]
+    return AdamW(optim_groups, lr=args.lr)
 
 
 def before_optimizer_step(model: torch.nn.Module, optimizer: torch.optim.Optimizer, step: int) -> None:

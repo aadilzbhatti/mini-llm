@@ -1,0 +1,33 @@
+{
+  "program": "p6",
+  "session": "s2+data40k",
+  "hparams": {
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 6,
+    "dropout": 0.0,
+    "batch_size": 64,
+    "lr": 0.002,
+    "min_lr": 2e-06,
+    "warmup_steps": 300,
+    "weight_decay": 0.1
+  },
+  "scores": {
+    "params": 17683281,
+    "screen_loss": 5.762147,
+    "full_losses": [
+      4.499946,
+      4.481164,
+      4.513938
+    ],
+    "tokens_per_sec": 42101.6,
+    "neg_params": -17683281,
+    "full_mean": 4.498349333333333,
+    "n_seeds": 3,
+    "full_std": 0.016445235703185616,
+    "neg_full_val_loss": -4.498349333333333
+  },
+  "rationale": "The 'current program' shown (p0) is missing two changes already validated in the lineage: (1) using fused scaled_dot_product_attention for the causal self-attention forward pass during training (numerically identical, just faster/more stable, letting the larger model train within the time cap), and (2) the larger-capacity/higher-LR config (n_layer 6, lr 2e-3, warmup 300) that took p0's 4.6433 down to 4.5793. I reapply both as a baseline, then add a new, independent idea on top: decoupled weight decay (exclude 1D params - LayerNorm scale/bias - from decay, apply weight_decay=0.1 only to >=2D weight matrices including the tied embedding). The training report for p0 shows the train-val gap (0.17) still slightly widening in the last 20% of training, a classic sign of memorization given each token is seen ~2x; weight decay directly penalizes weight magnitude and is the standard fix, and by excluding LayerNorm/bias we avoid the failure mode that made p3's coarse decay change (decay on everything, combined with beta2 and clipping changes) look bad - here decay is isolated and applied surgically. This is a well-understood mechanism distinct from anything already tried (p2-p5 either changed lr schedule, MLP structure, or position encoding, not decoupled decay).",
+  "parent": "p0",
+  "created_by": "claude-sonnet-5"
+}
