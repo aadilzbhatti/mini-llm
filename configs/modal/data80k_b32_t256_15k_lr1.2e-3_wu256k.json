@@ -1,0 +1,26 @@
+{
+  "name": "data80k-b32-t256-15k-lr1.2e-3-wu256k",
+  "args": {
+    "tokens": "data/data80k/train.pt",
+    "val-tokens": "data/data80k/val.pt",
+    "plot-loss": true,
+    "block-size": 256,
+    "n-embd": 256,
+    "n-head": 4,
+    "n-layer": 4,
+    "dropout": 0.0,
+    "min-lr": 2e-06,
+    "seed": 42,
+    "eval-interval": 100,
+    "eval-batches": 20,
+    "eval-seed": 1234,
+    "full-eval-interval": 1000,
+    "save": true,
+    "sample-report": true,
+    "warmup-tokens": 256000,
+    "batch-size": 32,
+    "steps": 15000,
+    "lr": 0.0012,
+    "plot-suffix": "data80k-b32-t256-15k-lr1.2e-3-wu256k-modal"
+  }
+}
