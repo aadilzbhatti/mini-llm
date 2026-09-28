@@ -28,7 +28,7 @@ Forced choice among 10 single-token words (chance 10%), 60 trials per distance.
 | 32 | 82% | +3.83 | yes |
 | 64 | 47% | +2.17 | yes |
 | 96 | 30% | +1.33 | yes |
-| 128 | 12% | -0.14 | yes |
+| 128 | 12% | -0.14 | no |
 | 160 | 13% | +0.25 | no |
 | 192 | 7% | -0.08 | no |
 | 224 | 15% | +0.32 | no |
@@ -36,8 +36,8 @@ Forced choice among 10 single-token words (chance 10%), 60 trials per distance.
 ## Inference
 
 - device: mps
-- prefill, full context: 18.5 ms
-- decode: 50.4 tokens/s (no KV cache: each decode step re-runs the (cropped) window)
+- prefill, full context: 11.05 ms
+- decode: 59.6 tokens/s (no KV cache: each decode step re-runs the (cropped) window)
 - memory: 0.088 GB
 
 ## Training systems (recorded by the run)

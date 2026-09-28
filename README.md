@@ -25,16 +25,21 @@ project and is **unchanged**. See `BOOTSTRAP_NOTES.md`.
 
 ## Current best
 
-`full_val_loss` **4.4679** on the 937-doc val set shared by data20k, data40k
-and data80k: 4 layers × 256d, block 128, **data80k**, batch 64 (global) ×
-15,000 steps = 122.88M tokens (~1.5 passes), peak LR 1.2e-3 cosine to 2e-6,
-256K-token warmup (32 steps), seed 42. About 31 min on Modal 2×L4.
-Reproduce with
+`full_val_loss` **4.1774** on the 937-doc val set shared by the data20k–160k
+sets: 4 layers × 256d, **context 256**, batch 32 (8,192 tokens/step, same as
+B64 × T128), data160k, 40,000 steps = 327.68M tokens, peak LR 1.2e-3 cosine to
+2e-6, 256K-token warmup (32 steps), seed 42. 81 min on Modal 2×L4.
 
 ```bash
 uv run --group modal modal run --detach src/mini_llm/remote/modal_train.py \
-    --config configs/modal/data80k_bs64_15k_lr1.2e-3_wu256k.json --gpus L4:2
+    --config configs/modal/data160k_b32_t256_40k_lr1.2e-3_wu256k.json --gpus L4:2
 ```
+
+Scored at a matched 128-token window it is 4.2809, a hair behind the same
+recipe at context 128 (4.2601), so the gain comes from using the longer
+context: it retrieves a planted word 53% of the time at 160 tokens back,
+where the 128-context model is at chance. See `evals/summary.md`
+(`mini-llm-eval`) for quality, context use, retrieval and cost side by side.
 
 What got here (all in `baselines.md`):
 - Batch: at a fixed token budget, batch 64 beats the batch-4 baseline (4.7165

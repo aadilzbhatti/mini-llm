@@ -54,7 +54,7 @@
       "128": {
         "accuracy": 0.11666666666666667,
         "mean_logprob_margin": -0.14461733698844909,
-        "key_in_context": true
+        "key_in_context": false
       },
       "160": {
         "accuracy": 0.13333333333333333,
@@ -75,8 +75,8 @@
   },
   "inference": {
     "device": "mps",
-    "prefill_ms_full_context": 18.5,
-    "decode_tokens_per_sec": 50.4,
+    "prefill_ms_full_context": 11.05,
+    "decode_tokens_per_sec": 59.6,
     "memory_gb": 0.088,
     "note": "no KV cache: each decode step re-runs the (cropped) window"
   },
