@@ -1,6 +1,6 @@
 # Autolab session report
 
-Generated 2026-09-27T23:13+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k`.
+Generated 2026-09-28T00:07+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k`.
 
 ## Headline
 
@@ -60,19 +60,19 @@ Generated 2026-09-27T23:13+00:00 by `autolab session-report` (the daemon refresh
   - p7 (human) @ static: mini_llm/model.py:forward_body: uses forbidden name 'targets' (line 17); mini_llm/model.py:forward_body: uses forbidden name 'targets' (line 18)
   - p8 (human) @ static: hparam lr=0.5 outside [1e-05, 0.01]
 - `s2-82m`: 7 children — evaluated 4, contender 2, accepted 1
-- `s2+data40k`: 1 children — accepted 1
+- `s2+data40k`: 5 children — queued 4, accepted 1
 
 ## Proposer (Claude) statistics
 
 | proposer | proposed | trained | accepted | contender | evaluated | rejected |
 | --- | --- | --- | --- | --- | --- | --- |
-| claude-opus-5-5 | 5 | 5 | 1 | 2 | 2 | 0 |
-| claude-sonnet-5 | 1 | 1 | 0 | 0 | 1 | 0 |
+| claude-opus-5-5 | 7 | 7 | 1 | 2 | 2 | 0 |
+| claude-sonnet-5 | 3 | 3 | 0 | 0 | 1 | 0 |
 | human | 8 | 1 | 0 | 1 | 0 | 7 |
 | mutation | 1 | 1 | 0 | 0 | 1 | 0 |
 | port | 1 | 1 | 1 | 0 | 0 | 0 |
 
-- Claude calls: 7 (6 ok), $0.63. Failures: exit 1 ×1.
+- Claude calls: 11 (10 ok), $1.05. Failures: exit 1 ×1.
 - Fallback mutations (proposer failed): 1.
 
 ## Spend
@@ -81,12 +81,12 @@ Generated 2026-09-27T23:13+00:00 by `autolab session-report` (the daemon refresh
 | --- | --- | --- | --- |
 | confirmations | 10 | 4.66 | 3.72 |
 | full runs | 9 | 4.42 | 3.53 |
-| baselines & prep experiments | 21 | 3.15 | 2.52 |
+| baselines & prep experiments | 25 | 3.15 | 2.52 |
 | data checks | 6 | 2.97 | 2.38 |
 | screens | 9 | 0.63 | 0.50 |
 | data-switch screens | 3 | 0.20 | 0.16 |
-| **Modal total** | 58 | 16.03 | **12.81** |
-| Claude | 7 calls | | 0.63 |
+| **Modal total** | 62 | 16.03 | **12.81** |
+| Claude | 11 calls | | 1.05 |
 
 Modal $ = wall time × GPU list price (L4); CPU/memory charges excluded, so a lower bound.
 

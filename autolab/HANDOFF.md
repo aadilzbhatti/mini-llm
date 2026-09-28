@@ -593,3 +593,12 @@ Build this first; everything else hill-climbs on it.
 - 2026-09-27 (M6): prompts now re-diagnose the parent's report with the session's history
   (program reports, data-check notebook, seed noise). The stored diagnosis is made in the
   container without history, so capacity_limited could never reach Claude.
+- 2026-09-28 (transfer check `owner80k15k`): at the owner's newest regime (data80k, 15k steps =
+  123M tokens), the owner's config (4L, lr 1.2e-3, warmup 32) scored 4.4679 (his seed 42, L4:2 DDP,
+  commit c7bdb2f; the earlier val-trained -v2 run was caught by him and removed), 4.5222 and 4.5593
+  (autolab, seeds 1–2, 1×L4): mean 4.516, sd 0.046. His best was the luckiest of three seeds.
+  Autolab's best program (6L + fused attention, lr 2e-3, warmup 300; found at 82M on data20k,
+  accepted on data40k) scored 4.4095 / 4.3993: mean 4.404, −0.11 vs the 3-seed mean (≈ −2.4σ) and
+  below even his best seed, at 9% lower throughput (42.9k vs 46.9k tok/s). So what autolab found
+  at its fixed 82M budget transfers to 123M tokens / data80k. What it can't find by design is the
+  budget itself (15k steps); a compute-ladder policy was proposed to the owner.
