@@ -1,8 +1,12 @@
 # The task
 
 Minimize the **full validation loss** (mean cross-entropy in nats over all {val_tokens:,} tokens of
-a fixed, held-out Wikipedia-style validation set; GPT-2 tokenizer, vocab 50,257) of a small
-decoder-only Transformer trained from scratch on {dataset_tokens:,} training tokens (`data20k`).
+a fixed, held-out validation set; GPT-2 tokenizer, vocab 50,257) of a small decoder-only Transformer
+trained from scratch on {dataset_tokens:,} training tokens (`{dataset_id}`).
+
+The text is FineWeb-Edu (HuggingFaceTB/smollm-corpus, `fineweb-edu-dedup`): English web pages
+filtered for educational value (explainers, articles, how-tos, blog posts), one document per page,
+EOS-separated. Train and validation are disjoint by document hash.
 
 Fixed by the evaluator (you cannot change these):
 - Training budget: **{full_tokens:,} tokens** (≈{epochs:.1f} epochs of the training set), context

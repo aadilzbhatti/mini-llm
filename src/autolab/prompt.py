@@ -173,6 +173,7 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
     sc0 = p0_rep.get("scale", {})
     context = (PROMPTS / "context.md").read_text().format(
         val_tokens=sc0.get("val_tokens") or 0, dataset_tokens=sc0.get("dataset_tokens") or 0,
+        dataset_id=session.get("dataset_id") or cfg.get("dataset_id", "data20k"),
         full_tokens=budgets["full_tokens"], screen_tokens=budgets["screen_tokens"],
         epochs=budgets["full_tokens"] / (sc0.get("dataset_tokens") or 1), block_size=cfg["block_size"],
         gpu=cfg["gpu"], full_cap_min=session["wall_caps"]["full"] / 60, wall_cap_mult=cfg["wall_cap_mult"],

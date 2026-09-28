@@ -312,7 +312,7 @@ Build this first; everything else hill-climbs on it.
   - Failed children are stored with their failure stage and reason. They
     never become parents, but the prompt shows the recent ones.
 - **Prompt sampler** (template files under `src/autolab/prompts/`):
-  - Explicit context: task statement (decoder-only LM on Wikipedia text,
+  - Explicit context: task statement (decoder-only LM on FineWeb-Edu web text,
     minimize full val loss at a fixed token budget on an M-series MacBook Air
     with MPS), the fixed session settings, the hparam keys/ranges, the rules for
     SEARCH/REPLACE and EVOLVE blocks, and "keep throughput".
@@ -621,3 +621,10 @@ Build this first; everything else hill-climbs on it.
   board (proposing → CPU checks → screen → full → confirm, with live training progress per run),
   Claude's latest proposals, recent finishes, the activity feed and the daemon log. The heartbeat is
   also written at cycle start, because a cycle with several Claude calls + CPU checks can take minutes.
+- 2026-09-28 (owner asked to verify): the data is **not Wikipedia**. prepare_dataset streams
+  HuggingFaceTB/smollm-corpus, config fineweb-edu-dedup (FineWeb-Edu: web pages filtered for
+  educational value); sampled val/train docs confirm web prose (health articles, how-tos, blog
+  posts, religious texts). BRIEF.md's "trained on Wikipedia text" (and the repo name) are wrong.
+  Claude's prompt said "Wikipedia-style validation set" and hard-coded the dataset label as
+  data20k; it now names FineWeb-Edu and the session's dataset. Proposals made before this fix
+  (s2-82m, s2+data40k p1-p10) saw the wrong description.
