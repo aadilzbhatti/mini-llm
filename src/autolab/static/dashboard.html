@@ -146,6 +146,7 @@ a { color: var(--s1); }
     <button role="tab" data-tab="live">Live</button>
     <button role="tab" data-tab="overview">Overview</button>
     <button role="tab" data-tab="programs">Programs</button>
+    <button role="tab" data-tab="frontier">Frontier</button>
     <button role="tab" data-tab="research">Research</button>
     <button role="tab" data-tab="experiments">Experiments</button>
     <button role="tab" data-tab="runs">Runs</button>
@@ -158,6 +159,7 @@ a { color: var(--s1); }
   <section id="live" hidden></section>
   <section id="overview" hidden></section>
   <section id="programs" hidden></section>
+  <section id="frontier" hidden></section>
   <section id="research" hidden></section>
   <section id="experiments" hidden></section>
   <section id="runs" hidden></section>
@@ -750,6 +752,75 @@ function budgetCard(C) {
 
 function safeUrl(u) { try { const x = new URL(u); return ["http:", "https:"].includes(x.protocol) ? x.href : null; } catch (e) { return null; } }
 const OUTCOME_KIND = {accepted: "good", contender: "warning", evaluated: "serious", rejected: "critical"};
+// Scatter: points [{x, y, label, on}]; "on" = frontier (filled, labelled), others hollow and muted.
+function scatterChart(points, opts = {}) {
+  const W = opts.width || availW(true), H = 260, m = {l: 56, r: 16, t: 10, b: 34};
+  const wrap = h("div", {class: "chart"});
+  const pts = points.filter(p => isFinite(p.x) && isFinite(p.y));
+  if (!pts.length) { wrap.append(h("p", {class: "muted"}, "No measured programs yet.")); return wrap; }
+  let [x0, x1] = [Math.min(...pts.map(p => p.x)), Math.max(...pts.map(p => p.x))];
+  let [y0, y1] = [Math.min(...pts.map(p => p.y)), Math.max(...pts.map(p => p.y))];
+  const px = (x1 - x0) * 0.08 || Math.abs(x1) * 0.1 || 1, py = (y1 - y0) * 0.1 || 0.01;
+  x0 -= px; x1 += px; y0 -= py; y1 += py;
+  const X = x => m.l + (x - x0) / (x1 - x0) * (W - m.l - m.r), Y = y => H - m.b - (y - y0) / (y1 - y0) * (H - m.t - m.b);
+  const svg = s("svg", {viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": opts.label || "scatter"});
+  for (const v of niceTicks(y0, y1, 4)) { svg.append(s("line", {x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: cssVar("--grid")}));
+    svg.append(s("text", {x: m.l - 6, y: Y(v) + 4, "text-anchor": "end"}, (opts.yFmt || fmt.val)(v))); }
+  for (const v of niceTicks(x0, x1, 5)) svg.append(s("text", {x: X(v), y: H - 16, "text-anchor": "middle"}, (opts.xFmt || fmt.val)(v)));
+  svg.append(s("text", {x: (m.l + W - m.r) / 2, y: H - 2, "text-anchor": "middle", class: "lbl"}, opts.xLabel || ""));
+  svg.append(s("text", {x: 12, y: m.t + 8, class: "lbl"}, opts.yLabel || ""));
+  const tip = attachTip(wrap);
+  for (const p of pts.sort((a, b) => a.on - b.on)) {
+    const g = s("g", {tabindex: 0});
+    g.append(s("circle", {cx: X(p.x), cy: Y(p.y), r: 12, fill: "transparent"}));
+    g.append(s("circle", {cx: X(p.x), cy: Y(p.y), r: p.on ? 5.5 : 4, fill: p.on ? cssVar("--s1") : "transparent",
+      stroke: p.on ? cssVar("--surface") : cssVar("--muted"), "stroke-width": p.on ? 2 : 1.5}));
+    if (p.on) g.append(s("text", {x: X(p.x) + 8, y: Y(p.y) - 6, class: "lbl"}, p.label));
+    const show = () => { tip.replaceChildren(h("div", {}, h("b", {}, p.label), " ", h("span", {class: "muted"}, p.on ? "frontier" : "dominated")),
+      h("div", {}, `${opts.yName}: `, h("b", {}, (opts.yFmt || fmt.val)(p.y))), h("div", {}, `${opts.xName}: `, h("b", {}, (opts.xFmt || fmt.val)(p.x))));
+      placeTip(wrap, tip, X(p.x), Y(p.y)); };
+    g.addEventListener("pointerenter", show); g.addEventListener("focus", show);
+    g.addEventListener("pointerleave", () => tip.hidden = true); g.addEventListener("blur", () => tip.hidden = true);
+    svg.append(g);
+  }
+  wrap.append(svg);
+  wrap.append(h("div", {class: "legend"}, h("span", {}, h("span", {class: "key", style: `background:${cssVar("--s1")};height:8px;width:8px;border-radius:50%`}), "on the frontier"),
+    h("span", {}, h("span", {class: "key", style: `border:1.5px solid ${cssVar("--muted")};height:6px;width:6px;border-radius:50%;background:none`}), "dominated")));
+  return wrap;
+}
+let frontierSession = null;
+async function refreshFrontier() {
+  const el = document.getElementById("frontier");
+  let F;
+  try { F = await (await fetch(BASE + "api/frontier" + (frontierSession ? "?session=" + encodeURIComponent(frontierSession) : ""), {cache: "no-store"})).json(); } catch (e) { return; }
+  el.replaceChildren();
+  const sel = h("select", {"aria-label": "session", onchange: e => { frontierSession = e.target.value; refreshFrontier(); }},
+    F.sessions.map(n => h("option", {value: n, selected: n === F.session}, n)));
+  el.append(h("div", {class: "card"}, h("h3", {}, "Four dimensions, no single winner"),
+    h("p", {class: "ink2", style: "margin:4px 0"}, "Every fully evaluated program is measured on quality (full val loss), context capability (copy-at-distance long-range score and effective context), training compute (time for the budget) and inference cost (batch-1 decode latency). A program is on the frontier if no other program is at least as good on all four and better on one; loss differences within seed noise count as ties. Sessions differ in data and budget, so each has its own frontier."),
+    h("div", {class: "filters", style: "margin:8px 0 0"}, h("span", {class: "muted"}, "Session"), sel,
+      h("span", {class: "muted"}, `${F.measured} of ${F.programs} programs measured · ${F.dataset} @ ${fmt.si(F.tokens)} tokens · ties within ${F.sigma.toFixed(3)} nats · quality champion ${F.incumbent}`))));
+  const pts = key => F.rows.map(r => ({x: r[key], y: r.full_mean, label: r.id, on: r.frontier}));
+  el.append(h("div", {class: "grid2"},
+    h("div", {class: "card"}, h("h3", {}, "Quality vs inference cost"), h("div", {class: "muted", style: "font-size:12px"}, "Down and left is better."),
+      scatterChart(pts("decode_ms_per_token"), {xLabel: "decode ms / token (batch 1)", yLabel: "full val loss", xName: "decode", yName: "loss", yFmt: v => Number(v).toFixed(3), xFmt: v => Number(v).toFixed(1), label: "loss vs decode latency"})),
+    h("div", {class: "card"}, h("h3", {}, "Quality vs long-context capability"), h("div", {class: "muted", style: "font-size:12px"}, "Down and right is better."),
+      scatterChart(pts("long_range_score"), {xLabel: "long-range score (copy at distance)", yLabel: "full val loss", xName: "long-range", yName: "loss", yFmt: v => Number(v).toFixed(3), xFmt: v => Number(v).toFixed(2), label: "loss vs long-range score"}))));
+  const cols = ["program", "frontier", "full val (seeds)", "context", "long-range", "effective ctx", "short-ctx loss", "train min", "train tok/s", "decode ms/tok", "prefill ms", "params", "train mem", "infer mem"];
+  el.append(h("div", {class: "card scroll"}, F.rows.length ? h("table", {}, h("thead", {}, h("tr", {}, cols.map((c, i) => h("th", {class: i > 1 ? "num" : ""}, c)))),
+    h("tbody", {}, F.rows.map(r => h("tr", {class: "click", onclick: () => openProgram(r.id)},
+      h("td", {}, h("strong", {}, r.id), r.id === F.incumbent ? h("span", {class: "chip"}, "champion") : null),
+      h("td", {}, r.frontier ? statusEl("good", "frontier") : h("span", {class: "muted"}, "dominated")),
+      h("td", {class: "num"}, `${fmt.loss(r.full_mean)} (${r.n_seeds})`), h("td", {class: "num"}, r.context ?? "–"),
+      h("td", {class: "num"}, r.long_range_score?.toFixed(2)), h("td", {class: "num"}, r.effective_context ?? "–"),
+      h("td", {class: "num"}, r.short_context_loss != null ? r.short_context_loss.toFixed(3) : "–"),
+      h("td", {class: "num"}, (r.train_wall_s / 60).toFixed(0)), h("td", {class: "num"}, fmt.si(r.train_tokens_per_sec)),
+      h("td", {class: "num"}, r.decode_ms_per_token?.toFixed(1)), h("td", {class: "num"}, r.prefill_ms?.toFixed(1)),
+      h("td", {class: "num"}, fmt.si(r.params)), h("td", {class: "num"}, r.peak_train_mem_bytes ? (r.peak_train_mem_bytes / 2 ** 30).toFixed(1) + " GiB" : "–"),
+      h("td", {class: "num"}, r.peak_inference_mem_bytes ? (r.peak_inference_mem_bytes / 2 ** 20).toFixed(0) + " MiB" : "–"))))) :
+    h("p", {class: "muted", style: "margin:0"}, "No program in this session has all four dimensions measured yet. New full-budget runs measure them automatically, and the quality champion gets a measure run.")));
+}
+
 async function refreshResearch() {
   const el = document.getElementById("research");
   let R;
@@ -836,6 +907,7 @@ async function refresh() {
 function showTab(name) {
   if (name === "live") refreshLive();
   if (name === "research") refreshResearch();
+  if (name === "frontier") refreshFrontier();
   for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", b.dataset.tab === name);
   for (const sec of document.querySelectorAll("main > section")) sec.hidden = sec.id !== name;
   try { localStorage.setItem("autolab.tab", name); } catch (e) {}
@@ -844,7 +916,7 @@ document.getElementById("tabs").addEventListener("click", e => { if (e.target.da
 document.getElementById("detailClose").addEventListener("click", () => document.getElementById("detail").close());
 let initial = location.hash.slice(1);
 if (!initial) { try { initial = localStorage.getItem("autolab.tab") || ""; } catch (e) {} }
-showTab(["live", "overview", "programs", "research", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
+showTab(["live", "overview", "programs", "frontier", "research", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
 let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 200); });
 setInterval(() => { if (!document.hidden && !document.getElementById("live").hidden && !document.getElementById("detail").open) refreshLive(); }, 10000);
 refresh(); setInterval(() => { if (!document.hidden && !document.getElementById("detail").open) refresh(); }, 30000);

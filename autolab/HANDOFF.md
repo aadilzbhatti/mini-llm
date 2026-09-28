@@ -668,3 +668,24 @@ Build this first; everything else hill-climbs on it.
   duplicate cards. Kept only the intended validation run's 5 cards (renumbered c1–c5). Guards: tests
   can't spawn real subprocesses (conftest makes controller._spawn raise), research is off unless a
   test enables it, and research runs hold an exclusive lock.
+- 2026-09-28 (owner: optimize all dimensions, not just loss) — **M8, multi-objective.** Every
+  full-budget run (full / confirm / measure) saves a checkpoint and runs `autolab.evalsuite` in the
+  container with the candidate's own code: quality (full val + loss by position, short- and
+  long-context loss), context capability (copy-at-distance over fixed distances 16–992, beyond-context
+  = 0, long_range_score + effective_context), inference cost (params, FLOPs/token, batch-1 prefill ms,
+  decode ms/token via the model's own generate(): no KV cache), and training compute (tok/s, wall,
+  peak memory via a marked line in train.py). A Pareto frontier over (loss ↓, long-range ↑, train time ↓,
+  decode ms ↓) has noise-aware ties (loss within max(σ, 0.02); others 3%). The owner chose the frontier
+  over a single score. The lowest-loss program stays the "quality champion" (incumbent) for the data and
+  compute policies. Context length is a program hparam (owner: up to 1024) with batch x context fixed at
+  the session's tokens_per_step (8192). MAP-Elites cells are context x decode-latency, and parents are
+  drawn from the frontier 30% of the time. Prompts describe all four dimensions and show a frontier table,
+  with new "context"/"efficiency" instructions. wall_cap_mult is now 3.0 and throughput_floor 0.2: compute is
+  judged on its own axis, not by truncating slower programs. The champion gets a budget-gated measure run
+  if it predates the suite. Dashboard: Frontier tab.
+- 2026-09-28 (incident): with the new measure step, a controller test whose `load_calls` was faked (but
+  not the file it saves to) submitted a real Modal run and overwrote autolab/state/modal_calls.json with
+  one entry. Daemon stopped; the stray run was cancelled; all 113 calls were rebuilt from the run records
+  (launch.json + reports), exact costs included ($32.50). Nothing was in flight, so no results were lost.
+  Restored entries have no call id and are collected from the runs volume. Guards: every test gets its own
+  call file, and any test touching real Modal (Function.from_name / FunctionCall.from_id) fails.

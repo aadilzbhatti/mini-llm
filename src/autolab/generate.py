@@ -38,11 +38,19 @@ def llm_cfg() -> dict:
 def mutate(parent: Program, spec: dict, rng: random.Random) -> tuple[dict, str]:
     """Perturb 1-2 optimization hyperparameters of the parent, staying inside `spec`."""
     hp = parent.hparams
-    keys = [k for k in ("lr", "warmup_steps", "weight_decay", "min_lr", "dropout", "batch_size") if k in spec]
+    # batch_size only moves together with block_size (tokens per update is fixed), see below
+    keys = [k for k in ("lr", "warmup_steps", "weight_decay", "min_lr", "dropout", "block_size") if k in spec]
     patch: dict = {}
     for k in rng.sample(keys, rng.choice([1, 2])):
         r, v = spec[k], hp.get(k)
-        if "choices" in r:
+        if k == "block_size":
+            opts = sorted(r["choices"])
+            cur = v or 128
+            i = opts.index(cur) if cur in opts else 0
+            new = opts[max(0, min(len(opts) - 1, i + rng.choice([-1, 1])))]
+            if new != cur:  # keep tokens per update: batch x context constant
+                patch["batch_size"] = int(hp["batch_size"] * cur // new)
+        elif "choices" in r:
             opts = sorted(r["choices"])
             i = opts.index(v) if v in opts else 0
             new = opts[max(0, min(len(opts) - 1, i + rng.choice([-1, 1])))]

@@ -1095,6 +1095,8 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             "hparam/full_val_loss": full_val_history[-1][1] if full_val_history else float("nan"),
         }
         control.tb.add_hparams(hparams, metrics, run_name=".")
+    if torch.cuda.is_available():  # AUTOLAB: peak training memory for the training-compute dimension
+        print(f"peak_gpu_mem_bytes {torch.cuda.max_memory_allocated()}")
     control.heartbeat(total_steps, total_steps, extra={"finished": True}, force=True)
     control.close()
 

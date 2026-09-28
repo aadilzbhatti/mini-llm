@@ -1,12 +1,12 @@
 # Autolab session report
 
-Generated 2026-09-28T07:48+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k@122M`.
+Generated 2026-09-28T14:02+00:00 by `autolab session-report` (the daemon refreshes it hourly). Active session: `s2+data40k@122M`.
 
 ## Headline
 
-- Best: **s2+data40k/p10**, full val loss **4.3754** over 3 seeds on `data40k` at 81,920,000 tokens.
-- Start at the same budget: `s2-82m` p0 4.7522 (σ 0.0328, `data20k`). Owner's best single run for reference: 4.7118 (seed 42, data20k).
-- Improvement: **0.3767** nats (11.5σ of the starting seed noise).
+- Best: **s2+data40k@122M/p3**, full val loss **4.3044** over 3 seeds on `data40k` at 122,880,000 tokens.
+- Start at the same budget: `s2+data40k@122M` p0 4.3942 (σ 0.0069, `data40k`). Owner's best single run for reference: 4.7118 (seed 42, data20k).
+- Improvement: **0.0898** nats (13.1σ of the starting seed noise).
 
 ## How we got here
 
@@ -32,31 +32,15 @@ Generated 2026-09-28T07:48+00:00 by `autolab session-report` (the daemon refresh
 ### Session `s2+data40k@122M` — data `data40k`, full budget 122,880,000 tokens, seed noise σ 0.0069
 
 - 2026-09-28T06:04 incumbent **p0** 4.3942
+- 2026-09-28T08:04 incumbent **p3** 4.3044 — Ported from s2+data40k/p10 (4.3754 there): Three linked changes, all aimed at letting the model use a faster learning rate safely. (1) Fix the embedding init sc
 
-## Best so far after each full-budget evaluation (81,920,000 tokens)
+## Best so far after each full-budget evaluation (122,880,000 tokens)
 
 | # | when | session/program | full val (1st seed) | best so far |
 | --- | --- | --- | --- | --- |
-| 1 | 2026-09-27T10:11 | s2-82m/p2 (data20k) | 4.7198 | 4.7198 |
-| 2 | 2026-09-27T19:12 | s2-82m/p3 (data20k) | 4.9193 | 4.7198 |
-| 3 | 2026-09-27T20:05 | s2-82m/p4 (data20k) | 4.8255 | 4.7198 |
-| 4 | 2026-09-27T20:09 | s2-82m/p1 (data20k) | 4.7054 | 4.7054 |
-| 5 | 2026-09-27T20:17 | s2-82m/p5 (data20k) | 4.7568 | 4.7054 |
-| 6 | 2026-09-27T20:19 | s2-82m/p6 (data20k) | 4.6479 | 4.6479 |
-| 7 | 2026-09-27T21:06 | s2-82m/p7 (data20k) | 4.6737 | 4.6479 |
-| 8 | 2026-09-27T21:47 | s2+data40k/p1 (data40k) | 4.5765 | 4.5765 |
-| 9 | 2026-09-28T00:47 | s2+data40k/p2 (data40k) | 4.5395 | 4.5395 |
-| 10 | 2026-09-28T00:50 | s2+data40k/p4 (data40k) | 4.5063 | 4.5063 |
-| 11 | 2026-09-28T00:51 | s2+data40k/p5 (data40k) | 4.6362 | 4.5063 |
-| 12 | 2026-09-28T00:54 | s2+data40k/p6 (data40k) | 4.4999 | 4.4999 |
-| 13 | 2026-09-28T05:35 | s2+data40k/p9 (data40k) | 4.4883 | 4.4883 |
-| 14 | 2026-09-28T05:39 | s2+data40k/p7 (data40k) | 4.4939 | 4.4883 |
-| 15 | 2026-09-28T05:41 | s2+data40k/p10 (data40k) | 4.3738 | 4.3738 |
-| 16 | 2026-09-28T06:02 | s2+data40k/p11 (data40k) | 4.7166 | 4.3738 |
-| 17 | 2026-09-28T06:02 | s2+data40k/p14 (data40k) | 4.7065 | 4.3738 |
-| 18 | 2026-09-28T06:09 | s2+data40k/p16 (data40k) | 4.4706 | 4.3738 |
-| 19 | 2026-09-28T06:29 | s2+data40k/p17 (data40k) | 4.4344 | 4.3738 |
-| 20 | 2026-09-28T06:36 | s2+data40k/p18 (data40k) | 4.4803 | 4.3738 |
+| 1 | 2026-09-28T07:01 | s2+data40k@122M/p1 (data40k) | 4.4709 | 4.4709 |
+| 2 | 2026-09-28T07:03 | s2+data40k@122M/p2 (data40k) | 4.3861 | 4.3861 |
+| 3 | 2026-09-28T07:14 | s2+data40k@122M/p3 (data40k) | 4.2999 | 4.2999 |
 
 ## Lineage of the best program
 
@@ -65,6 +49,8 @@ Generated 2026-09-28T07:48+00:00 by `autolab session-report` (the daemon refresh
   - The 'current program' shown (p0) is missing two changes already validated in the lineage: (1) using fused scaled_dot_product_attention for the causal self-attention forward pass during training (numerically identical, just faster/more stable, letting the larger model train within the time cap), and (2) the larger-capacity/higher-LR config (n_layer 6, lr 2e-3, warmup 300) that took p0's 4.6433 down
 - **s2+data40k/p10** (claude-opus-5-5) — 4.3754 over 3 seeds; lr 0.002→0.003, warmup_steps 300→400; code: model_init, optimizer
   - Three linked changes, all aimed at letting the model use a faster learning rate safely. (1) Fix the embedding init scale. xavier_uniform on the 50257×256 token table gives std ≈ 0.0063. On the 128×256 position table it gives std ≈ 0.07, so at init the position signal is about 10× larger than the token signal in the residual stream. Rare tokens get few updates, so their rows stay near that tiny sca
+- **s2+data40k@122M/p3** (port:s2+data40k/p10) — 4.3044 over 3 seeds; lr 0.002→0.003, warmup_steps 300→400; code: model_init, optimizer
+  - Ported from s2+data40k/p10 (4.3754 there): Three linked changes, all aimed at letting the model use a faster learning rate safely. (1) Fix the embedding init scale. xavier_uniform on the 50257×256 token table gives std ≈ 0.0063. On the 128×256 position table it gives std ≈ 0.07, so at init the position signal is about 10× larger than the token signal in the residual stream. Rare tokens get few upd
 
 ## Cascade funnel and rejections
 
@@ -83,7 +69,7 @@ Generated 2026-09-28T07:48+00:00 by `autolab session-report` (the daemon refresh
   - p12 (claude-opus-5-5) @ screen: screen 6.3576 > incumbent 5.7621 + margin 0.25
   - p13 (claude-sonnet-5) @ cpu: shape: 1 failed: tests/autolab/test_causal_leak.py::test_shapes_and_backward
   - p15 (claude-opus-5-5) @ cpu: tests: 1 failed: tests/test_model.py::test_overfits_one_batch
-- `s2+data40k@122M`: 3 children — running 2, evaluated 1
+- `s2+data40k@122M`: 3 children — evaluated 1, contender 1, accepted 1
 
 ## Proposer (Claude) statistics
 
@@ -93,9 +79,9 @@ Generated 2026-09-28T07:48+00:00 by `autolab session-report` (the daemon refresh
 | claude-sonnet-5 | 7 | 5 | 1 | 2 | 2 | 2 |
 | human | 8 | 1 | 0 | 1 | 0 | 7 |
 | mutation | 1 | 1 | 0 | 0 | 1 | 0 |
-| port | 4 | 4 | 1 | 0 | 1 | 0 |
+| port | 4 | 4 | 2 | 1 | 1 | 0 |
 
-- Claude calls: 25 (23 ok), $2.88. Failures: exit 1 ×1, rate_limited: {"is_error":true,"duration_api_ms":63194,"num_ ×1.
+- Claude calls: 34 (32 ok), $8.38. Failures: exit 1 ×1, rate_limited: {"is_error":true,"duration_api_ms":63194,"num_ ×1.
 - Fallback mutations (proposer failed): 1.
 
 ## Spend
@@ -103,13 +89,13 @@ Generated 2026-09-28T07:48+00:00 by `autolab session-report` (the daemon refresh
 | stage | runs | GPU-hours | $ |
 | --- | --- | --- | --- |
 | full runs | 24 | 13.49 | 10.78 |
-| confirmations | 24 | 10.03 | 8.01 |
+| confirmations | 24 | 13.26 | 10.59 |
 | baselines & prep experiments | 25 | 6.23 | 4.98 |
 | data checks | 9 | 5.40 | 4.32 |
 | screens | 28 | 2.08 | 1.66 |
 | data-switch screens | 3 | 0.20 | 0.16 |
-| **Modal total** | 113 | 37.43 | **29.92** |
-| Claude | 25 calls | | 2.88 |
+| **Modal total** | 113 | 40.66 | **32.50** |
+| Claude | 34 calls | | 8.38 |
 
 Modal $ = wall time × GPU list price (L4); CPU/memory charges excluded, so a lower bound.
 

@@ -133,6 +133,24 @@ def hparam_changes(base: dict, hp: dict) -> str:
     return ", ".join(ch) if ch else "none"
 
 
+def metrics_line(p: Program) -> str:
+    m = p.scores.get("metrics") or {}
+    if not m:
+        return ""
+    bits = []
+    if "context" in m:
+        bits.append(f"context {int(m['context'])}")
+    if "long_range_score" in m:
+        bits.append(f"long-range {m['long_range_score']:.2f} (effective {int(m.get('effective_context', 0))})")
+    if "train_wall_s" in m:
+        bits.append(f"train {m['train_wall_s'] / 60:.0f} min")
+    if "decode_ms_per_token" in m:
+        bits.append(f"decode {m['decode_ms_per_token']:.1f} ms/token")
+    if "peak_inference_mem_bytes" in m:
+        bits.append(f"infer mem {m['peak_inference_mem_bytes'] / 2**20:.0f} MiB")
+    return "; ".join(bits)
+
+
 def score_line(p: Program) -> str:
     sc = p.scores
     parts = []
@@ -144,6 +162,8 @@ def score_line(p: Program) -> str:
         parts.append(f"{sc['params']:,} params")
     if sc.get("tokens_per_sec"):
         parts.append(f"{sc['tokens_per_sec']:,.0f} tok/s")
+    if (ml := metrics_line(p)):
+        parts.append(ml)
     return "; ".join(parts) or "not scored"
 
 
@@ -188,10 +208,11 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
         val_tokens=sc0.get("val_tokens") or 0, dataset_tokens=sc0.get("dataset_tokens") or 0,
         dataset_id=session.get("dataset_id") or cfg.get("dataset_id", "data20k"),
         full_tokens=budgets["full_tokens"], screen_tokens=budgets["screen_tokens"],
-        epochs=budgets["full_tokens"] / (sc0.get("dataset_tokens") or 1), block_size=cfg["block_size"],
+        epochs=budgets["full_tokens"] / (sc0.get("dataset_tokens") or 1),
         gpu=cfg["gpu"], full_cap_min=session["wall_caps"]["full"] / 60, wall_cap_mult=cfg["wall_cap_mult"],
         param_cap=int(cfg["param_cap_mult"] * session["initial_params"]), param_cap_mult=cfg["param_cap_mult"],
         throughput_floor=cfg["throughput_floor"], screen_margin=cfg["screen_margin"],
+        tokens_per_step=session.get("budgets", {}).get("tokens_per_step") or 64 * cfg["block_size"],
         inc_screen=inc.scores.get("screen_loss") or float("nan"), confirm_sigma=cfg.get("confirm_trigger_sigma", 0),
         bar=inc.scores["full_mean"] - cfg["accept_sigma"] * sigma, inc_full=inc.scores["full_mean"],
         accept_sigma=cfg["accept_sigma"], sigma=sigma, hparam_ranges=hparam_ranges(cfg["hparams"]),
@@ -213,6 +234,20 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
         f"Rationale when it was made: {parent.rationale or '(initial program)'}\n\n"
         f"Hyperparameters: {json.dumps(parent.hparams)}\n\n## Training report and diagnosis\n\n"
         f"{report_summary(parent, runs_dir, session_history(progs, session, runs_dir))}\n\n## EVOLVE blocks\n\n{blocks}")
+
+    from autolab.pareto import table
+
+    rows = table(list(progs.values()), max(0.02, sigma))
+    if rows:
+        lines = ["| program | frontier | full val loss (seeds) | context | long-range | train min | decode ms/tok | params |",
+                 "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+        for r in rows[:12]:
+            lines.append(f"| {r['id']} | {'yes' if r['frontier'] else ''} | {r['full_mean']:.4f} ({r['n_seeds']}) | "
+                         f"{int(r['context'] or 0)} | {r['long_range_score']:.2f} | {r['train_wall_s'] / 60:.0f} | "
+                         f"{r['decode_ms_per_token']:.1f} | {(r['params'] or 0) / 1e6:.1f}M |")
+        parts.append("# The Pareto frontier so far\n\nPrograms with all four dimensions measured; 'yes' = not beaten "
+                     "on every dimension by another program. Improving any frontier point on one dimension without "
+                     "giving up the others is progress.\n\n" + "\n".join(lines))
 
     others = [q for q in progs.values() if q.parent_id is not None]
     history = others[-cfg["database"].get("history", 30):]

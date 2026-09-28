@@ -58,6 +58,8 @@ class TrainRequest:
     eval: dict = field(default_factory=lambda: dict(DEFAULT_EVAL))
     # Source tree to import mini_llm from (a candidate worktree's src/); None = this repo.
     code_src: str | None = None
+    # M8: save a checkpoint and run the multi-objective eval suite (autolab.evalsuite) after training
+    suite: bool = False
 
     def steps(self) -> int:
         return max(1, math.ceil(self.budget.tokens / (self.optim["batch_size"] * self.model["block_size"])))
@@ -76,6 +78,8 @@ def trainer_argv(req: TrainRequest, val_path: Path) -> list[str]:
     argv = [sys.executable, "-m", "mini_llm.train"]
     for key, value in flags.items():
         argv += [f"--{key.replace('_', '-')}", str(value)]
+    if req.suite:  # the eval suite needs the trained weights
+        argv += ["--save", "--save-name", "model.pt"]
     return argv  # never --baseline, never --no-tensorboard (HANDOFF)
 
 

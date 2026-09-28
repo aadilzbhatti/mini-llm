@@ -5,3 +5,5 @@ diagnosis = "Read the current program's training report and diagnosis carefully,
 optimization = "Propose a change to the optimization: the optimizer, the learning-rate schedule, gradient handling, or the optimization hyperparameters."
 architecture = "Propose an architectural change (attention, MLP, normalization, residual wiring, positional encoding or initialization) that keeps the parameter count and throughput roughly the same."
 simplify = "Propose a simplification or a small, well-understood best practice from modern small-LM training recipes that the current program lacks."
+context = "Improve the program's usable context: its long-range score (copying information from far back in the window) and/or its context length, keeping batch_size x block_size fixed. Keep the extra training and inference cost modest, and keep quality at least as good."
+efficiency = "Make the program cheaper to train or to serve (training time for the budget, decode latency, memory, parameters) while keeping its validation loss within noise of the parent, e.g. fused or batched attention, fewer or cheaper operations, or a better-shaped model."

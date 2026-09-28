@@ -65,7 +65,8 @@ def test_session_from_baseline_runs(lab):
     s = lab["session"]
     assert s["incumbent"] == "p0" and s["noise"]["full"]["n"] == 3
     assert s["noise"]["full"]["std"] == pytest.approx(0.0404, abs=1e-3)
-    assert s["wall_caps"] == {"screen": 187.5, "full": 187.5}
+    cap = ev.evolve_cfg()["wall_cap_mult"] * 150.0
+    assert s["wall_caps"] == {"screen": cap, "full": cap}
     from mini_llm.config import ModelConfig, build_model
 
     m = build_model(ModelConfig(vocab_size=50257, block_size=128, n_embd=256, n_head=4, n_layer=4))
@@ -111,7 +112,8 @@ def test_good_patch_passes_cpu_gates_and_submits_screen(lab):
     assert [s["stage"] for s in p.stages] == ["static", "cpu", "params", ]
     assert all(s["ok"] for s in p.stages)
     req = lab["submitted"][0]
-    assert req.run_id == f"ev-{lab['session']['name']}-{p.id}-screen-s1" and req.budget.wall_clock_s == 187.5
+    assert req.run_id == f"ev-{lab['session']['name']}-{p.id}-screen-s1"
+    assert req.budget.wall_clock_s == ev.evolve_cfg()["wall_cap_mult"] * 150.0
     assert req.model["block_size"] == 128 and req.optim["lr"] == 1.2e-3
 
 
@@ -142,7 +144,7 @@ def test_screen_margin_rejects(lab):
 def test_smoke_rejects_nan_and_slow(lab):
     p = finish(lab, lab["step"](gpu_program(lab)), "screen", [6.5], nan=True)
     assert p.status == "rejected" and "smoke: NaN" in p.reason
-    p = finish(lab, lab["step"](gpu_program(lab)), "screen", [6.5], tps=10_000.0)
+    p = finish(lab, lab["step"](gpu_program(lab)), "screen", [6.5], tps=5_000.0)  # < 0.2 x 40k
     assert p.status == "rejected" and "throughput" in p.reason
 
 

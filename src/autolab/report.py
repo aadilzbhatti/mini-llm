@@ -221,6 +221,8 @@ def parse_train_log(text: str) -> dict:
         out["train_tokens"] = int(m.group(1).replace(",", ""))
     if m := re.search(rf"^Validation tokens:\s+{_INT}", text, re.M):
         out["val_tokens"] = int(m.group(1).replace(",", ""))
+    if m := re.search(r"^peak_gpu_mem_bytes (\d+)", text, re.M):
+        out["peak_train_mem_bytes"] = int(m.group(1))
     out["traceback"] = "Traceback (most recent call last)" in text
     return out
 
@@ -336,7 +338,10 @@ def build_report(run_dir: Path, params: ReportParams | None = None) -> dict:
             "wall_s": launch.get("wall_s"),
             "gpu_wait_s": launch.get("gpu_wait_s"),
             "device": log.get("device"),
+            "peak_train_mem_bytes": log.get("peak_train_mem_bytes"),
         },
+        # M8: the multi-objective eval suite's output, when the trial ran it
+        "eval": json.loads((run_dir / "eval.json").read_text()) if (run_dir / "eval.json").exists() else None,
         "budget": {
             "type": "tokens",
             "tokens": budget.get("tokens"),

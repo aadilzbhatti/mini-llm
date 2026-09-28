@@ -36,6 +36,9 @@ class DBConfig:
     migrate_every: int = 6
     params_bins: tuple = (12e6, 16e6, 20e6)
     tokens_per_sec_bins: tuple = (30e3, 38e3, 45e3)
+    decode_ms_bins: tuple = (5.0, 10.0, 20.0)   # M8 descriptor: batch-1 decode latency
+    p_frontier: float = 0.3                     # M8: chance the parent is a random Pareto-frontier program
+    quality_tol: float = 0.02
     recent_failures: int = 5
     history: int = 30
 
@@ -54,7 +57,13 @@ def fitness(p: Program) -> float | None:
     return -p.scores["full_mean"]
 
 
-def cell(p: Program, cfg: DBConfig) -> tuple[int, int]:
+def cell(p: Program, cfg: DBConfig) -> tuple:
+    """MAP-Elites descriptors. With eval-suite metrics (M8): context length x decode-cost bucket, so a
+    long-context or cheap-to-serve program keeps its cell even when it isn't the lowest-loss one.
+    Otherwise (older programs): parameter count x training throughput."""
+    m = p.scores.get("metrics") or {}
+    if "context" in m and "decode_ms_per_token" in m:
+        return ("ctx", int(m["context"]), bisect.bisect(cfg.decode_ms_bins, m["decode_ms_per_token"]))
     params = p.scores.get("params") or 0
     tps = p.scores.get("tokens_per_sec") or 0
     return bisect.bisect(cfg.params_bins, params), bisect.bisect(cfg.tokens_per_sec_bins, tps)
@@ -85,8 +94,13 @@ def next_island(progs: dict[str, Program], cfg: DBConfig) -> int:
 def sample(progs: dict[str, Program], session: dict, island: int, cfg: DBConfig,
            rng: random.Random) -> tuple[Program, list[Program]]:
     grid = elites(island_members(progs, island, session), cfg)
+    from autolab.pareto import frontier
+
+    front = [p for p in frontier(list(progs.values()), cfg.quality_tol)]
     if not grid:  # nothing evaluated yet: start from the incumbent
         parent = progs[session["incumbent"]]
+    elif front and rng.random() < cfg.p_frontier:  # M8: build on any frontier point, not only the loss leader
+        parent = rng.choice(sorted(front, key=lambda p: p.id))
     elif rng.random() < cfg.p_exploit:
         parent = max(grid.values(), key=fitness)
     else:

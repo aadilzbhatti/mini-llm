@@ -50,7 +50,9 @@ dataset_id = "data20k"
 block_size = 128
 screen_tokens = 5242880      # 640 steps at bs64 x blk128
 full_tokens = 20971520       # 2560 steps, ~1 epoch of data20k
-wall_cap_mult = 1.25         # per-stage wall-clock cap = this x the initial program's wall time
+wall_cap_mult = 3.0          # per-stage wall-clock cap = this x the initial program's wall time. A safety cap
+                             # since M8: training compute is its own dimension, so a slower program should
+                             # still train the full budget and be judged on quality AND cost, not truncated
 screen_margin = 0.25         # screen must be <= incumbent screen mean + this; wide because screens penalize
                              # regularization (dropout/wd) that pays off only after several epochs (owner, 2026-09-27)
 confirm_seeds = [2, 3]       # extra seeds for a full-budget result that beats the incumbent...
@@ -59,7 +61,7 @@ accept_sigma = 2.0           # accept iff mean over >= 2 seeds < incumbent mean 
 noise_floor = 0.02           # the std used for decisions is max(measured, this): a 3-seed std can come out far
                              # too small (0.0069 at 122M vs 0.031-0.043 elsewhere), making the accept bar too shallow
 param_cap_mult = 1.5         # reject programs above this x the initial program's parameter count
-throughput_floor = 0.5       # reject screens slower than this x the initial program's tokens/sec
+throughput_floor = 0.2       # reject screens slower than this x the initial program's tokens/sec (catastrophic only)
 cpu_tests = ["tests"]        # pytest paths run against every candidate (protected, from this checkout)
 # Pins plain AdamW bit for bit, i.e. freezes the evolvable optimizer region; replaced by
 # tests/autolab/test_loop_equivalence.py, which checks the same thing with the program's own optimizer.
@@ -81,7 +83,10 @@ min_lr = { min = 0.0, max = 1e-3 }
 warmup_steps = { min = 0, max = 2000, int = true }
 weight_decay = { min = 0.0, max = 0.5 }
 dropout = { min = 0.0, max = 0.3 }
-batch_size = { choices = [16, 32, 64, 128] }
+batch_size = { choices = [8, 16, 32, 64, 128] }
+# M8: context length is a program dimension; batch_size x block_size must equal the session's tokens per
+# update (8192), so 128x64, 256x32, 512x16, 1024x8 (owner: up to 1024, 2026-09-28)
+block_size = { choices = [128, 256, 512, 1024] }
 n_embd = { choices = [128, 192, 256, 320, 384, 512] }
 n_head = { choices = [1, 2, 4, 8] }
 n_layer = { min = 1, max = 12, int = true }
@@ -97,6 +102,9 @@ params_bins = [12e6, 16e6, 20e6]          # MAP-Elites descriptor 1: parameter c
 tokens_per_sec_bins = [30e3, 38e3, 45e3]  # descriptor 2: training throughput (L4)
 recent_failures = 5          # rejected children shown in the prompt, with reasons
 history = 30                 # one-line summaries of the latest programs, to avoid repeats
+decode_ms_bins = [5.0, 10.0, 20.0]  # M8 MAP-Elites descriptor (with context length): decode latency buckets
+p_frontier = 0.3             # M8: chance a parent is drawn from the Pareto frontier
+quality_tol = 0.02           # M8: loss differences within this count as ties on the frontier (≈ 1 σ)
 
 [llm]
 claude_bin = "~/.local/bin/claude"
@@ -110,6 +118,8 @@ diagnosis = 1.0
 optimization = 1.0
 architecture = 1.0
 simplify = 0.3
+context = 1.0      # M8: longer usable context without much more inference cost
+efficiency = 1.0   # M8: cheaper training or inference at equal quality
 
 [datasets]
 seed = 0                     # prepare_dataset shuffle seed (the CLI default; data20k's was not recorded)

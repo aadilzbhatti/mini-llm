@@ -173,8 +173,11 @@ def init_session(base_commit: str, hparams: dict, runs: dict[str, list[str]], cf
         "created": now_iso(),
         "dataset_id": dataset_id or cfg["dataset_id"],
         # Fixed for the session: what "better" means (token budgets, eval settings).
-        "budgets": budgets or {"screen_tokens": cfg["screen_tokens"], "full_tokens": cfg["full_tokens"],
-                               "eval": dict(cfg["eval"])},
+        "budgets": {**(budgets or {"screen_tokens": cfg["screen_tokens"], "full_tokens": cfg["full_tokens"],
+                                   "eval": dict(cfg["eval"])}),
+                    # M8: fixed tokens per optimizer step (batch x context), from the starting program
+                    "tokens_per_step": (budgets or {}).get("tokens_per_step")
+                    or hparams["batch_size"] * int(hparams.get("block_size", cfg["block_size"]))},
         "base_commit": base_commit,
         "incumbent": "p0",
         "initial_params": reports["full"][0]["scale"]["params"],
@@ -260,8 +263,17 @@ def _reject(p: Program, stage: str, reason: str) -> None:
     _record(p, stage, False, reason)
 
 
+def block_size(p: Program, cfg: dict) -> int:
+    """Context length: an evolvable hparam since M8 (older programs: the config's fixed value)."""
+    return int(p.hparams.get("block_size", cfg["block_size"]))
+
+
+def tokens_per_step(session: dict, cfg: dict) -> int:
+    return int(session.get("budgets", {}).get("tokens_per_step") or 64 * cfg["block_size"])
+
+
 def _model_cfg(p: Program, cfg: dict) -> dict:
-    return {"vocab_size": VOCAB, "block_size": cfg["block_size"], **{k: p.hparams[k] for k in MODEL_KEYS}}
+    return {"vocab_size": VOCAB, "block_size": block_size(p, cfg), **{k: p.hparams[k] for k in MODEL_KEYS}}
 
 
 def _env(src: Path, extra: dict | None = None) -> dict:
@@ -273,6 +285,11 @@ def stage_static(p: Program, cfg: dict, paths: Paths, repo: Path) -> Path | None
     set_activity("static", f"{p.id}: static checks (scope, forbidden code, hparams, import)", program=p.id)
     problems = static_violations(p.blocks) + validate_hparams(
         {k: v for k, v in p.hparams.items()}, cfg["hparams"])
+    session = load_session(paths) or {}
+    tps = tokens_per_step(session, cfg)
+    if p.hparams["batch_size"] * block_size(p, cfg) != tps:
+        problems.append(f"batch_size x block_size = {p.hparams['batch_size']} x {block_size(p, cfg)} must equal "
+                        f"{tps} tokens per update (keep tokens/update fixed when changing context)")
     if problems:
         _reject(p, "static", "; ".join(problems))
         return None
@@ -397,8 +414,9 @@ def _request(p: Program, stage: str, seed: int, cfg: dict, session: dict):
         run_id=f"ev-{session.get('name', 's')}-{p.id}-{stage}-s{seed}", dataset_id=session.get("dataset_id", cfg["dataset_id"]),
         train_tokens=str(load_config().datasets_dir / session.get("dataset_id", cfg["dataset_id"]) / "train.pt"),
         budget=Budget(tokens=tokens, wall_clock_s=cap), seed=seed,
-        model={"block_size": cfg["block_size"], **{k: p.hparams[k] for k in MODEL_KEYS}},
-        optim={k: p.hparams[k] for k in OPTIM_KEYS}, eval=dict(budgets["eval"]))
+        model={"block_size": block_size(p, cfg), **{k: p.hparams[k] for k in MODEL_KEYS}},
+        optim={k: p.hparams[k] for k in OPTIM_KEYS}, eval=dict(budgets["eval"]),
+        suite=stage in ("full", "confirm", "measure"))
 
 
 def _submit(p: Program, stage: str, seeds: list[int], cfg: dict, session: dict, paths: Paths, submit) -> bool:
@@ -420,6 +438,50 @@ def _submit(p: Program, stage: str, seeds: list[int], cfg: dict, session: dict, 
     p.stage, p.status, p.reason = stage, "running", ""
     set_activity("gpu", f"{p.id}: {stage} submitted to Modal ({len(ids)} run{'s' if len(ids) > 1 else ''})", program=p.id)
     return True
+
+
+METRIC_KEYS = {
+    ("eval", "context_capability", "long_range_score"): "long_range_score",
+    ("eval", "context_capability", "effective_context"): "effective_context",
+    ("eval", "quality", "short_context_loss"): "short_context_loss",
+    ("eval", "quality", "long_context_loss"): "long_context_loss",
+    ("eval", "inference", "decode_tokens_per_s"): "decode_tokens_per_s",
+    ("eval", "inference", "decode_ms_per_token"): "decode_ms_per_token",
+    ("eval", "inference", "prefill_ms"): "prefill_ms",
+    ("eval", "inference", "peak_inference_mem_bytes"): "peak_inference_mem_bytes",
+    ("eval", "inference", "fwd_flops_per_token"): "fwd_flops_per_token",
+    ("eval", "inference", "params"): "params",
+    ("eval", "context"): "context",
+    ("performance", "tokens_per_sec"): "train_tokens_per_sec",
+    ("performance", "train_wall_s"): "train_wall_s",
+    ("performance", "peak_train_mem_bytes"): "peak_train_mem_bytes",
+}
+
+
+def run_metrics(rep: dict | None) -> dict | None:
+    """The multi-objective metrics of one run (None if the eval suite didn't run)."""
+    if not rep or not rep.get("eval"):
+        return None
+    out = {}
+    for path, name in METRIC_KEYS.items():
+        v = rep
+        for k in path:
+            v = v.get(k) if isinstance(v, dict) else None
+        if isinstance(v, (int, float)):
+            out[name] = v
+    return out
+
+
+def collect_metrics(p: Program, runs_dir: Path) -> dict | None:
+    """Mean of each metric over the program's full-budget runs (full, confirm, measure) that have them."""
+    rows = [m for rid in p.runs.get("full", []) + p.runs.get("confirm", []) + p.runs.get("measure", [])
+            if (m := run_metrics(_report(rid, runs_dir)))]
+    if not rows:
+        return None
+    keys = set().union(*rows)
+    agg = {k: mean(r[k] for r in rows if k in r) for k in keys}
+    agg["n_runs"] = len(rows)
+    return agg
 
 
 def _results(p: Program, stage: str, calls: dict, runs_dir: Path) -> list[tuple[str, dict | None, str | None]] | None:
@@ -522,6 +584,8 @@ def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths | No
                 else:
                     loss = rep["summary"]["final_full_val_loss"]
                     p.scores = {**p.scores, **_scores(p.scores.get("screen_loss"), [loss], rep)}
+                    if (mt := collect_metrics(p, runs_dir)):
+                        p.scores["metrics"] = mt
                     inc_mean = inc.scores["full_mean"]
                     trigger = inc_mean - cfg.get("confirm_trigger_sigma", 0.0) * sigma(session, cfg)
                     _record(p, "full", True, f"full {loss:.4f} vs incumbent mean {inc_mean:.4f} (confirm below {trigger:.4f})",
@@ -541,6 +605,8 @@ def advance(p: Program, session: dict, cfg: dict, calls: dict, paths: Paths | No
                 good = [(rid, rep) for rid, rep, err in res if _health(rep, err, session, cfg) is None]
                 fulls = p.scores["full_losses"] + [rep["summary"]["final_full_val_loss"] for _, rep in good]
                 p.scores = {**p.scores, **_scores(p.scores.get("screen_loss"), fulls, None)}
+                if (mt := collect_metrics(p, runs_dir)):
+                    p.scores["metrics"] = mt
                 sig = sigma(session, cfg)
                 bar = inc.scores["full_mean"] - cfg["accept_sigma"] * sig
                 m = p.scores["full_mean"]
@@ -584,6 +650,7 @@ def advance_everything(log=print) -> list[str]:
     for paths in all_session_paths():
         touched += [f"{paths.root.name}/{pid}" for pid in advance_all(log=log, paths=paths)]
         touched += [f"{paths.root.name}/{c}" for c in advance_data_checks(load_calls(), paths=paths, log=log)]
+        touched += [f"{paths.root.name}/{pid}" for pid in advance_measures(load_calls(), paths=paths, log=log)]
     return touched
 
 
@@ -746,3 +813,55 @@ def start_transfer(label: str, program_ref: str, dataset_id: str, steps: int, se
                             "tokens": tokens, "wall_clock_s": cap, "program": program_ref, "hparams": p.hparams})
     exp_path.write_text(_json.dumps(exp, indent=2))
     return exp
+
+
+# --- measure: backfill multi-objective metrics for programs scored before the eval suite existed -------
+
+
+def start_measure(program_id: str, paths: Paths | None = None, submit=None, repo: Path = REPO_ROOT, seed: int = 1) -> str:
+    """One full-budget run of the program with the eval suite; its metrics join the program when done."""
+    paths = paths or Paths()
+    cfg, session = evolve_cfg(), load_session(paths)
+    p = load(paths.programs / f"{program_id}.json")
+    if submit is None:
+        from autolab.modal_backend import submit as modal_submit
+
+        def submit(req, gpu, src):
+            return modal_submit(req, gpu, src_root=src)
+
+    src = materialize(render(base_sources(repo, p.base_commit), p.blocks), paths.work(f"measure-{p.id}"))
+    req = _request(p, "measure", seed, cfg, session)
+    submit(req, cfg["gpu"], src)
+    p.runs.setdefault("measure", []).append(req.run_id)
+    save(p, paths.programs)
+    session.setdefault("measures", {})[p.id] = req.run_id
+    save_session(session, paths)
+    set_activity("gpu", f"{p.id}: measuring quality/context/inference metrics ({req.run_id})", program=p.id)
+    return req.run_id
+
+
+def advance_measures(calls: dict, paths: Paths | None = None, runs_dir: Path | None = None, log=print) -> list[str]:
+    paths = paths or Paths()
+    runs_dir = runs_dir or REPO_ROOT / "autolab" / "runs"
+    session = load_session(paths)
+    if not session or not session.get("measures"):
+        return []
+    done = []
+    for pid, rid in list(session["measures"].items()):
+        c = calls.get(rid)
+        if c is None or c["state"] == "pending":
+            continue
+        p = load(paths.programs / f"{pid}.json")
+        mt = collect_metrics(p, runs_dir)
+        if mt:
+            p.scores["metrics"] = mt
+            save(p, paths.programs)
+            log(f"{pid}: metrics measured ({rid})")
+        else:
+            log(f"{pid}: measure run {rid} gave no metrics ({c.get('state')})")
+        del session["measures"][pid]
+        done.append(pid)
+        shutil.rmtree(paths.work(f"measure-{pid}"), ignore_errors=True)
+    if done:
+        save_session(session, paths)
+    return done

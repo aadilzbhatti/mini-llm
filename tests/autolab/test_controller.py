@@ -45,6 +45,7 @@ def world(tmp_path, monkeypatch):
                         ctl.__dict__["_render"](e, s, p, out))
     calls = {}
     monkeypatch.setattr(mb, "load_calls", lambda: calls)
+    monkeypatch.setattr(ctl, "measure_step", lambda *a, **k: None)  # tested on its own below
     monkeypatch.setattr(mb, "price_per_s", lambda gpu: 0.000222)
     head = subprocess.run(["git", "-C", str(REPO_ROOT), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     ev.init_session(head, HP, {"screen": ["screen1", "screen2", "screen3"], "full": ["full1", "full2", "full3"]},
@@ -56,6 +57,7 @@ def world(tmp_path, monkeypatch):
 
 
 ctl._render = ctl.render_notebook_md  # keep the real renderer reachable after monkeypatching
+ctl._real_measure_step = ctl.measure_step
 
 
 def _note(path, event, **fields):
@@ -423,3 +425,29 @@ def test_research_audits_new_winner_within_its_share(world, monkeypatch):
     ctl.save_control(c)
     ctl.step(log=lambda m: None, generate=Gen(), t=T)
     assert "research budget" in ctl.load_control()["research"]["waiting"] and len(spawned) == 1
+
+
+
+def test_measure_step_backfills_incumbent_metrics(world, monkeypatch):
+    """The quality champion without four-dimensional metrics gets one measured run (budget permitting)."""
+    import importlib
+
+    real = importlib.reload(ctl).measure_step if False else ctl.__dict__.get("_real_measure_step")
+    submitted = []
+
+    def fake_start(pid, paths=None):
+        submitted.append(pid)
+        s = ev.load_session(paths)
+        s.setdefault("measures", {})[pid] = f"ev-s2-{pid}-measure-s1"
+        ev.save_session(s, paths)
+        return f"ev-s2-{pid}-measure-s1"
+
+    monkeypatch.setattr(ev, "start_measure", fake_start)
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"max_in_flight": 0, "daily_usd": 100.0})
+    enable(data_flow={"session": "s2", "state": "not_helped"})
+    ctl._real_measure_step(ctl.load_control(), ev.load_session(), ev.programs(), {}, {"daily_usd": 100.0}, T,
+                           ev.Paths(), lambda m: None)
+    assert submitted == ["p0"]
+    ctl._real_measure_step(ctl.load_control(), ev.load_session(), ev.programs(), {}, {"daily_usd": 100.0}, T,
+                           ev.Paths(), lambda m: None)
+    assert submitted == ["p0"]  # already measuring: not again

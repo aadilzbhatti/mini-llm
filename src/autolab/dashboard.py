@@ -570,6 +570,26 @@ async def api_budget(request: Request) -> JSONResponse:
     raise HTTPException(400, "unknown action")
 
 
+@app.get("/api/frontier")
+def api_frontier(session: str | None = None) -> JSONResponse:
+    """The Pareto table for one session (default: the active one); sessions differ in budget/data, so they
+    are never mixed on one frontier."""
+    from autolab import evaluate as ev
+    from autolab.pareto import table
+
+    base = AUTOLAB / "state" / "evolve"
+    names = sorted(q.name for q in base.iterdir() if (q / "session.json").exists()) if base.exists() else []
+    name = session if session in names else evolve_root().name
+    paths = ev.Paths(base / name)
+    sess = ev.load_session(paths) or {}
+    progs = ev.programs(paths)
+    sig = ev.sigma(sess) if sess else 0.02
+    rows = table(list(progs.values()), sig)
+    return JSONResponse({"session": name, "sessions": names, "incumbent": sess.get("incumbent"), "sigma": sig,
+                         "rows": rows, "measured": len(rows), "programs": len(progs),
+                         "tokens": (sess.get("budgets") or {}).get("full_tokens"), "dataset": sess.get("dataset_id")})
+
+
 @app.get("/api/research")
 def api_research() -> JSONResponse:
     from autolab import research

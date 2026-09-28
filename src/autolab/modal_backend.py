@@ -139,6 +139,14 @@ def run_trial(request: dict, meta: dict, code: dict[str, str]) -> dict:
     finally:
         stop.set()
         syncer.join()
+    if req.suite and launch.get("status") == "finished":  # M8: quality / context / inference metrics
+        import subprocess as sp
+
+        r = sp.run([sys.executable, "-m", "autolab.evalsuite", str(run_dir), "--val", str(val_path)],
+                   env={**os.environ, "PYTHONPATH": str(src), "PYTHONUNBUFFERED": "1"},
+                   capture_output=True, text=True, timeout=1200)
+        if r.returncode != 0:
+            (run_dir / "eval_error.txt").write_text((r.stdout + r.stderr)[-8000:])
     out: dict = {"launch": launch, "train_log": (run_dir / "train.log").read_text(errors="replace")[-400_000:]}
     try:
         report = build_report(run_dir)
@@ -262,7 +270,12 @@ def _collect(runs_dir: Path | None, log) -> list[str]:
         if c["state"] != "pending":
             continue
         try:
-            out = modal.FunctionCall.from_id(c["call_id"]).get(timeout=0)
+            if not c.get("call_id"):  # restored entry without a call id: read the result from the runs volume
+                out = from_volume(run_id)
+                if out is None or out["launch"].get("status") not in ("finished", "failed"):
+                    continue
+            else:
+                out = modal.FunctionCall.from_id(c["call_id"]).get(timeout=0)
         except TimeoutError:
             continue
         except Exception as exc:  # noqa: BLE001 - the remote raised; record it
@@ -297,7 +310,7 @@ def from_volume(run_id: str, volume=None) -> dict | None:
     volume = volume or runs_volume
     out: dict = {}
     for name, key in (("launch.json", "launch"), ("report.json", "report"), ("diagnosis.json", "diagnosis"),
-                      ("train.log", "train_log")):
+                      ("train.log", "train_log"), ("eval.json", "eval")):
         try:
             raw = b"".join(volume.read_file(f"/{run_id}/{name}"))
         except Exception:  # noqa: BLE001 - missing file

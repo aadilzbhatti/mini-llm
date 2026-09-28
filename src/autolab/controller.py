@@ -512,6 +512,53 @@ def ladder_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, p
         flow.update(state="switched", new_session=name)
 
 
+# --- M8: measure the incumbent's four dimensions; note frontier changes ----------------------------------
+
+
+def measure_step(ctl: dict, session: dict, progs: dict, calls: dict, ccfg: dict, t: datetime, paths, log) -> None:
+    """The quality champion needs quality/context/train/inference metrics to anchor the frontier; programs
+    accepted before the eval suite existed get one measured run (budget-gated like everything else)."""
+    inc = progs[session["incumbent"]]
+    if (inc.scores.get("metrics") or {}).get("long_range_score") is not None:
+        return
+    if inc.id in (session.get("measures") or {}):
+        return
+    from autolab.modal_backend import price_per_s
+
+    cost = (session["wall_caps"]["full"] / max(ev.evolve_cfg()["wall_cap_mult"], 1) * 1.1 + 300) * price_per_s(ev.evolve_cfg()["gpu"])
+    if spend_24h(calls, _llm_spend(), t)["total"] + cost > daily_budget(ctl, ccfg, t):
+        ctl["measure_waiting"] = f"budget: measuring {inc.id} needs ~${cost:.2f}"
+        return
+    ctl.pop("measure_waiting", None)
+    rid = ev.start_measure(inc.id, paths=paths)
+    note("measure_started", session=session.get("name"), program=inc.id, run=rid)
+    log(f"measuring {inc.id}'s four dimensions ({rid})")
+
+
+def note_frontier(ctl: dict, log) -> None:
+    from autolab.pareto import frontier
+
+    seen = ctl.setdefault("frontier", {})
+    for paths in ev.all_session_paths():
+        sess = ev.load_session(paths)
+        if not sess:
+            continue
+        front = frontier(list(ev.programs(paths).values()), ev.sigma(sess))
+        ids = sorted(p.id for p in front)
+        old = set(seen.get(sess.get("name"), []))
+        for p in front:
+            if p.id not in old:
+                m = p.scores.get("metrics", {})
+                note("frontier_joined", session=sess.get("name"), program=p.id, full_mean=p.scores.get("full_mean"),
+                     long_range_score=m.get("long_range_score"), context=m.get("context"),
+                     train_min=round((m.get("train_wall_s") or 0) / 60, 1),
+                     decode_ms_per_token=m.get("decode_ms_per_token"))
+                log(f"{sess.get('name')}/{p.id} joined the Pareto frontier")
+        for pid in old - set(ids):
+            note("frontier_left", session=sess.get("name"), program=pid)
+        seen[sess.get("name")] = ids
+
+
 # --- research (M7) ------------------------------------------------------------------------------------
 
 
@@ -616,6 +663,10 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
             seen.add(p.id)
         ctl["recorded"][name] = sorted(seen)
     progs = ev.programs(session_paths)
+    try:
+        note_frontier(ctl, log)
+    except Exception as exc:  # noqa: BLE001
+        log(f"frontier error: {type(exc).__name__}: {exc}")
 
     if not ctl.get("enabled"):
         save_control(ctl)
@@ -676,6 +727,10 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         llm_spend = [json.loads(x) for x in (STATE / "llm_spend.jsonl").read_text().splitlines() if x.strip()]
     except OSError:
         pass
+    try:
+        measure_step(ctl, session, progs, mb.load_calls(), ccfg, t, session_paths, log)
+    except Exception as exc:  # noqa: BLE001
+        log(f"measure error: {type(exc).__name__}: {exc}")
     try:
         research_step(ctl, session, progs, mb.load_calls(), ccfg, t, log)
     except Exception as exc:  # noqa: BLE001
