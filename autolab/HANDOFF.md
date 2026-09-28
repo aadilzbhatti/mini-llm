@@ -74,7 +74,8 @@ the "Decision log" at the bottom.
 - **Never modify `~/dev/wiki-llm`.** Reading and copying from it is fine. Never
   run uv, git or anything that writes inside it. The owner works there and his
   launchd runner executes that checkout.
-- **Pushing:** the owner allows pushing the `autolab` branch to `origin`. The
+- **Pushing:** the owner allows pushing the `autolab` and `autolab-accepted` branches to `origin`
+  (the daemon pushes `autolab-accepted` after each acceptance; 2026-09-28). The
   first time, use `git push -u origin autolab`, and push after each commit that
   lands on `autolab`. Never force-push. Never push any other branch (`main`,
   `minimal`, etc.). `autolab/cand-*` branches stay local unless the owner asks.
@@ -611,3 +612,6 @@ Build this first; everything else hill-climbs on it.
   reuse the data-check machinery (kind "budget", notebook action raise_budget). Rationale: longer
   training almost always lowers loss, so the owner's cap, not the gain alone, bounds the climb; the
   plateau trigger spends compute on length only after cheaper program search has stopped paying.
+- 2026-09-28 (owner): `autolab-accepted` may be pushed so accepted diffs are visible on GitHub. Pushed
+  (base 7a7e0e7 + s2-82m/p6, s2+data40k/p1, s2+data40k/p6), and the daemon now pushes it after each
+  acceptance (`[controller] push_accepted`). Never force-pushed.

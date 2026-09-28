@@ -219,6 +219,9 @@ def commit_accepted(p, session: dict, repo: Path | None = None, worktree: Path |
         return None
     sha = git("rev-parse", "--short", "HEAD", cwd=worktree).stdout.strip()
     log(f"{p.id} committed to {ACCEPTED_BRANCH} as {sha}")
+    if controller_cfg().get("push_accepted", False):  # owner allows pushing this branch (never forced)
+        r = git("push", "origin", ACCEPTED_BRANCH, cwd=worktree, check=False)
+        log(f"pushed {ACCEPTED_BRANCH}" if r.returncode == 0 else f"push of {ACCEPTED_BRANCH} failed: {r.stderr[-300:]}")
     return sha
 
 
