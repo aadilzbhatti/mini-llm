@@ -276,7 +276,8 @@ def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, pat
         lab = incumbent_diagnosis(session, progs, runs_dir)
         if not lab or lab["confidence"] < cfg.get("data_trigger_confidence", 0.75):
             return
-        if any(c.get("program") == session["incumbent"] for c in session.get("data_checks", [])):
+        if any(c.get("program") == session["incumbent"] and c.get("kind", "data") == "data"
+               for c in session.get("data_checks", [])):
             return
         cur = session.get("dataset_id") or ev.evolve_cfg()["dataset_id"]
         cur_docs = json.loads((datasets_dir / cur / "dataset.json").read_text())["docs"] \
@@ -364,13 +365,14 @@ def submit_screens(flow: dict, session: dict, progs: dict, paths: ev.Paths, log,
     ids = []
     for seed in (1, 2, 3):
         req = ev._request(p, "screen", seed, cfg, session)
-        req.run_id = f"ev-{session.get('name')}-data-{flow['target']}-{p.id}-screen-s{seed}"
-        req.dataset_id = flow["target"]
-        req.train_tokens = str(load_config().datasets_dir / flow["target"] / "train.pt")
+        dataset = flow.get("dataset", flow["target"])
+        req.run_id = f"ev-{session.get('name')}-{flow.get('kind', 'data')}-{flow['target']}-{p.id}-screen-s{seed}"
+        req.dataset_id = dataset
+        req.train_tokens = str(load_config().datasets_dir / dataset / "train.pt")
         submit(req, cfg["gpu"], src)
         ids.append(req.run_id)
     flow.update(state="baselining", screen_runs=ids)
-    log(f"data: {flow['target']} helped; baselining screens {ids}")
+    log(f"{flow.get('kind', 'data')}: {flow['target']} helped; baselining screens {ids}")
 
 
 def switch_session(flow: dict, session: dict, progs: dict, paths: ev.Paths, log) -> str:
@@ -407,6 +409,89 @@ def port_from_old_sessions(ctl: dict, session: dict, log) -> list[str]:
             log(f"ported {key} -> {session.get('name')}/{child.id}")
             out.append(child.id)
     return out
+
+
+# --- the compute ladder -----------------------------------------------------------------------------
+
+
+def stalled_children(session: dict, progs: dict) -> int:
+    """Finished children since the incumbent was set that didn't beat it (the search has stalled)."""
+    since = (session.get("incumbent_history") or [{}])[-1].get("at", "")
+    return sum(1 for p in progs.values() if p.parent_id and p.status in ev.DONE and p.status != "accepted"
+               and p.created_at >= since)
+
+
+def ladder_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, paths: ev.Paths, log) -> None:
+    """Raise the token budget when searching at this one has stalled and training longer clearly pays.
+
+    idle -> (stalled >= ladder_patience, next budget <= max_full_tokens, data policy quiet, budget ok)
+    checking (incumbent at factor x tokens, 3 seeds) -> not_helped | baselining (3 screens) -> switched
+    (new session "<name>@<N>M" with that budget; the data policy re-arms there).
+    """
+    if not cfg.get("ladder", True):
+        return
+    flow = ctl.setdefault("ladder", {})
+    sname = session.get("name")
+    if flow.get("session") != sname:
+        flow.clear()
+        flow.update(session=sname, state="idle")
+    cur = session["budgets"]["full_tokens"]
+    step_tokens = ev.evolve_cfg()["block_size"] * progs[session["incumbent"]].hparams["batch_size"]
+    nxt = int(round(cur * cfg.get("ladder_factor", 1.5) / step_tokens)) * step_tokens
+    if flow["state"] == "idle":
+        data_busy = ctl.get("data_flow", {}).get("state") not in (None, "idle", "not_helped", "failed")
+        stalled = stalled_children(session, progs)
+        if (data_busy or nxt > cfg.get("max_full_tokens", cur) or stalled < cfg.get("ladder_patience", 4)
+                or any(c.get("kind") == "budget" and c["program"] == session["incumbent"]
+                       for c in session.get("data_checks", []))):
+            flow["waiting"] = {"stalled": stalled, "next_tokens": nxt, "data_busy": data_busy}
+            return
+        from autolab.modal_backend import price_per_s
+
+        cost = 3 * (session["wall_caps"]["full"] * nxt / cur + 180) * price_per_s(ev.evolve_cfg()["gpu"])
+        if spend_24h(calls, _llm_spend(), now())["total"] + cost > daily_budget(ctl, cfg):
+            flow["waiting"] = {"budget": f"needs ~${cost:.2f}"}
+            return
+        dataset = session.get("dataset_id") or ev.evolve_cfg()["dataset_id"]
+        chk = ev.start_data_check(session["incumbent"], dataset, paths=paths, tokens=nxt)
+        flow.update(state="checking", check=chk["id"], kind="budget", target=f"{nxt // 1_000_000}M", dataset=dataset,
+                    tokens=nxt, started=iso(now()))
+        flow.pop("waiting", None)
+        note("ladder_check_started", session=sname, program=session["incumbent"], tokens=nxt, stalled=stalled,
+             runs=chk["runs"])
+        log(f"ladder: {stalled} children stalled; testing {session['incumbent']} at {nxt:,} tokens")
+    elif flow["state"] == "checking":
+        chk = next((c for c in ev.load_session(paths).get("data_checks", []) if c["id"] == flow["check"]), None)
+        if not chk or chk["status"] == "running":
+            return
+        note("ladder_check_done", session=sname, tokens=flow["tokens"], verdict=chk.get("verdict"),
+             helped=chk.get("helped"), losses=chk.get("losses"))
+        if not chk.get("helped"):
+            flow["state"] = "not_helped"
+            return
+        submit_screens(flow, session, progs, paths, log)
+    elif flow["state"] == "baselining":
+        if any(calls.get(r, {}).get("state", "pending") == "pending" for r in flow["screen_runs"]):
+            return
+        chk = next(c for c in session["data_checks"] if c["id"] == flow["check"])
+        inc = progs[session["incumbent"]]
+        name = f"{sname.split('@')[0]}@{flow['target']}"
+        ev.init_session(session["base_commit"], inc.hparams, {"screen": flow["screen_runs"], "full": chk["runs"]},
+                        paths=ev.Paths(ev.STATE_ROOT / name),
+                        budgets={**session["budgets"], "full_tokens": flow["tokens"]}, name=name, blocks=inc.blocks,
+                        dataset_id=flow["dataset"],
+                        rationale=f"{inc.id} of {sname} at {flow['tokens']:,} tokens (compute ladder)")
+        ev.set_active_session(name)
+        note("session_switched", old=sname, new=name, tokens=flow["tokens"], verdict=chk["verdict"])
+        log(f"ladder: switched to session {name}")
+        flow.update(state="switched", new_session=name)
+
+
+def _llm_spend() -> list[dict]:
+    try:
+        return [json.loads(x) for x in (STATE / "llm_spend.jsonl").read_text().splitlines() if x.strip()]
+    except OSError:
+        return []
 
 
 # --- one controller step ------------------------------------------------------------------------------
@@ -463,8 +548,17 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     if ctl.get("data_flow", {}).get("state") == "switched":  # new session: reload
         session_paths = ev.Paths()
         session, progs = ev.load_session(session_paths), ev.programs(ev.Paths())
+    try:
+        ladder_step(ctl, session, progs, calls, ccfg, session_paths, log)
+    except Exception as exc:  # noqa: BLE001
+        log(f"ladder error: {type(exc).__name__}: {exc}")
+        ctl.setdefault("ladder", {})["error"] = str(exc)[:500]
+    if ctl.get("ladder", {}).get("state") == "switched":
+        session_paths = ev.Paths()
+        session, progs = ev.load_session(session_paths), ev.programs(ev.Paths())
     port_from_old_sessions(ctl, session, log)
     status["data"] = {k: v for k, v in ctl.get("data_flow", {}).items() if k in ("state", "target", "check", "new_session")}
+    status["ladder"] = {k: v for k, v in ctl.get("ladder", {}).items() if k in ("state", "target", "waiting", "new_session")}
     paused = ctl.get("paused_until")
     if paused and datetime.fromisoformat(paused) > t:
         save_control(ctl)

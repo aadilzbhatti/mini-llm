@@ -125,3 +125,9 @@ llm_usd_per_call = 0.15
 data_trigger_confidence = 0.75    # incumbent data_limited at least this confident -> try more data
 data_growth = 2                   # next dataset = this x the current number of documents
 commit_accepted = true            # accepted programs -> local branch autolab-accepted (own worktree)
+# Compute ladder: when search at this budget stalls, test the incumbent at ladder_factor x tokens
+# (3 seeds); if it beats the incumbent by > accept_sigma x noise, open a session at that budget.
+ladder = true
+ladder_factor = 1.5
+ladder_patience = 4               # finished children since the last acceptance that didn't beat it
+max_full_tokens = 122880000       # owner's current regime: bs64 x 15k steps. Raise to let it climb further.

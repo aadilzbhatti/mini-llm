@@ -602,3 +602,12 @@ Build this first; everything else hill-climbs on it.
   below even his best seed, at 9% lower throughput (42.9k vs 46.9k tok/s). So what autolab found
   at its fixed 82M budget transfers to 123M tokens / data80k. What it can't find by design is the
   budget itself (15k steps); a compute-ladder policy was proposed to the owner.
+- 2026-09-28 (owner: build it): compute ladder (controller.ladder_step). When search at the current
+  budget stalls (ladder_patience = 4 finished children since the last acceptance, none better), test
+  the incumbent at ladder_factor (1.5) x the tokens, 3 seeds, wall caps scaled. If the mean beats it by
+  > accept_sigma x σ, screen it 3 times and open session `<name>@<N>M` at that budget; the data policy
+  re-arms there (so data80k gets retested where it can matter). Bounded by max_full_tokens, set to the
+  owner's current regime (bs64 x 15k steps = 122.88M tokens), and by the daily budget. Budget checks
+  reuse the data-check machinery (kind "budget", notebook action raise_budget). Rationale: longer
+  training almost always lowers loss, so the owner's cap, not the gain alone, bounds the climb; the
+  plateau trigger spends compute on length only after cheaper program search has stopped paying.

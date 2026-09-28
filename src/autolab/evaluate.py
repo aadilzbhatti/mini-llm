@@ -557,7 +557,7 @@ def advance_all(log=print, paths: Paths | None = None) -> list[str]:
 
 
 def start_data_check(program_id: str, dataset_id: str, seeds: list[int] | None = None, paths: Paths | None = None,
-                     submit=None, repo: Path = REPO_ROOT) -> dict:
+                     submit=None, repo: Path = REPO_ROOT, tokens: int | None = None) -> dict:
     """Train `program_id` on a bigger dataset at the session's full budget, on several seeds.
 
     The daemon (advance_data_checks) judges it when the runs finish: more data "helped" iff the mean
@@ -583,15 +583,20 @@ def start_data_check(program_id: str, dataset_id: str, seeds: list[int] | None =
     src = materialize(render(base_sources(repo, p.base_commit), p.blocks), work)
     seeds = seeds or [1, 2, 3]
     run_ids = []
+    kind = "budget" if tokens else "data"
+    tag = f"{dataset_id}@{tokens // 1_000_000}M" if tokens else dataset_id
     for seed in seeds:
         req = _request(p, "full", seed, cfg, session)
-        req.run_id = f"ev-{session.get('name', 's')}-data-{dataset_id}-{p.id}-s{seed}"
+        req.run_id = f"ev-{session.get('name', 's')}-data-{tag}-{p.id}-s{seed}"
         req.dataset_id = dataset_id
         req.train_tokens = str(load_config().datasets_dir / dataset_id / "train.pt")
+        if tokens:  # compute ladder: longer run, wall cap scaled with it
+            scale = tokens / session["budgets"]["full_tokens"]
+            req.budget.tokens, req.budget.wall_clock_s = tokens, round(req.budget.wall_clock_s * scale)
         submit(req, cfg["gpu"], src)
         run_ids.append(req.run_id)
-    check = {"id": f"{dataset_id}-{p.id}", "program": p.id, "dataset": dataset_id, "runs": run_ids,
-             "baseline_mean": p.scores["full_mean"], "status": "running", "started": now_iso()}
+    check = {"id": f"{tag}-{p.id}", "kind": kind, "program": p.id, "dataset": dataset_id, "tokens": tokens,
+             "runs": run_ids, "baseline_mean": p.scores["full_mean"], "status": "running", "started": now_iso()}
     session.setdefault("data_checks", []).append(check)
     save_session(session, paths)
     return check
@@ -624,7 +629,8 @@ def advance_data_checks(calls: dict, paths: Paths | None = None, runs_dir: Path 
                        verdict=(f"{'helped' if helped else 'did not help'}: {m:.4f} vs {chk['baseline_mean']:.4f} "
                                 f"({(m - chk['baseline_mean']) / sigma:+.1f}σ; bar −{margin:.4f})"))
             # the notebook-style entry diagnose() reads for capacity_limited / data_limited evidence
-            session.setdefault("notebook", []).append({"at": now_iso(), "action": "build_dataset",
+            session.setdefault("notebook", []).append({"at": now_iso(),
+                                                      "action": "raise_budget" if chk.get("kind") == "budget" else "build_dataset",
                                                       "dataset": chk["dataset"], "program": chk["program"],
                                                       "improved": helped, "accepted": helped, "detail": chk["verdict"]})
         log(f"data check {chk['id']}: {chk.get('verdict')}")

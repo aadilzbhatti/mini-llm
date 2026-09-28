@@ -320,3 +320,60 @@ def test_one_time_budget_override(world, monkeypatch):
     assert ctl.step(log=lambda m: None, generate=Gen(), t=T)["proposed"] == 2
     ctl.save_control({**ctl.load_control(), "daily_usd_override": {"usd": 20.0, "until": (T - timedelta(hours=1)).isoformat()}})
     assert ctl.daily_budget(ctl.load_control(), {"daily_usd": 10.0}, T) == 10.0  # expired
+
+
+def test_compute_ladder(world, monkeypatch):
+    """Stalled search -> incumbent at 1.5x tokens (3 seeds, scaled caps) -> helped -> screens -> new session."""
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"daily_usd": 100.0, "max_in_flight": 0, "ladder_patience": 2,
+                                                        "ladder_factor": 1.5, "max_full_tokens": 122_880_000})
+    monkeypatch.setattr(ev, "evolve_cfg", lambda: {**ev.tomllib.loads((REPO_ROOT / "autolab" / "config.toml").read_text())["evolve"]})
+    from autolab import config as acfg
+
+    datasets = world["tmp"] / "datasets"
+    (datasets / "data20k").mkdir(parents=True)
+    (datasets / "data20k" / "train.pt").write_bytes(b"x")
+
+    class Cfg:
+        datasets_dir = datasets
+    monkeypatch.setattr(acfg, "load_config", lambda: Cfg)
+    paths = ev.Paths()
+    s = ev.load_session(paths)
+    s["dataset_id"] = "data20k"
+    ev.save_session(s, paths)
+    enable(data_flow={"session": "s2", "state": "not_helped"})
+    submitted = []
+    import autolab.modal_backend as mbm
+    monkeypatch.setattr(mbm, "submit", lambda req, gpu, src_root=None: submitted.append(req))
+
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    assert ctl.load_control()["ladder"]["state"] == "idle"  # nothing stalled yet
+    for i in (1, 2):
+        save(Program(id=f"p{i}", parent_id="p0", base_commit="x", blocks={}, hparams=HP, stage="done",
+                     status="evaluated", scores={"full_mean": 4.8}, created_at="2099-01-01T00:00:00+00:00"), paths.programs)
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    lad = ctl.load_control()["ladder"]
+    assert lad["state"] == "checking" and lad["tokens"] == 15_000 * 8192
+    assert [r.budget.tokens for r in submitted] == [122_880_000] * 3
+    cap = ev.load_session(paths)["wall_caps"]["full"]
+    assert submitted[0].budget.wall_clock_s == round(cap * 1.5)
+
+    s = ev.load_session(paths)
+    s["data_checks"][0].update(status="done", helped=True, verdict="helped: 4.60 vs 4.753")
+    ev.save_session(s, paths)
+    monkeypatch.setattr(ctl, "submit_screens", lambda flow, s, p, paths, log: flow.update(
+        state="baselining", screen_runs=["b1", "b2", "b3"]))
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    assert ctl.load_control()["ladder"]["state"] == "baselining"
+    for rid, loss in [(submitted[0].run_id, 4.60), (submitted[1].run_id, 4.62), (submitted[2].run_id, 4.61),
+                      ("b1", 5.8), ("b2", 5.82), ("b3", 5.79)]:
+        (world["runs"] / rid).mkdir(exist_ok=True)
+        (world["runs"] / rid / "report.json").write_text(json.dumps(rep(loss)))
+        world["calls"][rid] = {"state": "finished"}
+    monkeypatch.setattr(ev, "_report", lambda rid, runs_dir: json.loads((world["runs"] / rid / "report.json").read_text()))
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    new = ev.load_session()
+    assert new["name"] == "s2@122M" and new["budgets"]["full_tokens"] == 122_880_000
+    assert new["noise"]["full"]["mean"] == pytest.approx(4.61)
+    # at the owner's max now: no further rung
+    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    assert ctl.load_control()["ladder"].get("state") == "idle"

@@ -309,6 +309,7 @@ def controller_view(calls: dict) -> dict:
     return {"enabled": ctl.get("enabled", False), "paused_until": ctl.get("paused_until"),
             "override": ov if daily == ov.get("usd") else None,
             "pause_reason": ctl.get("pause_reason"), "data_flow": ctl.get("data_flow", {}),
+            "ladder": ctl.get("ladder", {}),
             "spend_24h": round(spend, 3), "daily_usd": daily, "max_in_flight": cfg.get("max_in_flight")}
 
 
