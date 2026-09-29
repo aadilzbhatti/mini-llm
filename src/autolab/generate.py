@@ -103,16 +103,21 @@ def generate_one(paths: ev.Paths | None = None, rng: random.Random | None = None
         raise RuntimeError("no evolve session")
     progs = ev.programs(paths)
     dbc = DBConfig.from_cfg(cfg)
-    if maybe_migrate(progs, session, dbc):
-        ev.save_session(session, paths)
-        log(f"migrated island bests: {session['database']['migrants']}")
-    island = next_island(progs, dbc)
-    parent, insp = sample(progs, session, island, dbc, rng)
+    no_evolution = bool(session.get("ablation"))  # autolab.ablation's control arm: always p0, no feedback
+    if no_evolution:
+        island, parent, insp, card, retest, cards = 0, progs["p0"], [], None, None, []
+    else:
+        if maybe_migrate(progs, session, dbc):
+            ev.save_session(session, paths)
+            log(f"migrated island bests: {session['database']['migrants']}")
+        island = next_island(progs, dbc)
+        parent, insp = sample(progs, session, island, dbc, rng)
     if card is not None or retest is not None:  # directed: an upgrade proposed for the incumbent
         parent = progs[session["incumbent"]]
     runs_dir = runs_dir or REPO_ROOT / "autolab" / "runs"
     prompt, pmeta = build_prompt(parent, insp, progs, session, cfg, lcfg, runs_dir, rng, card=card, cards=cards,
-                                 retest=retest, state_root=paths.root.parent)
+                                 retest=retest, state_root=paths.root.parent,
+                                 no_evolution=no_evolution)
     models = lcfg.get("models", {"opus": 1.0})
     model = model or rng.choices(list(models), weights=list(models.values()))[0]
     meta = {**pmeta, "island": island, "model_requested": model}

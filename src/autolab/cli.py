@@ -83,6 +83,13 @@ def main(argv: list[str] | None = None) -> None:
     ab.add_argument("--program", default=None, help="Default: the incumbent")
     ch = dsub.add_parser("check", help="Build a tiny set in scratch and check it is a prefix of the reference")
     ch.add_argument("--num-examples", type=int, default=200)
+    abl = sub.add_parser("ablation", help="No-evolution control arm vs the evolution search (autolab.ablation)")
+    asub = abl.add_subparsers(dest="ablation_cmd", required=True)
+    ast = asub.add_parser("start", help="Open <session>~noevo; the daemon proposes for it within the daily budget")
+    ast.add_argument("--source", default=None, help="session to compare against (default: the active one)")
+    ast.add_argument("--candidates", type=int, default=None, help="default: the source's candidate count now")
+    asta = asub.add_parser("status")
+    asta.add_argument("--source", default=None)
     r = sub.add_parser("report", help="Rebuild report.json + diagnosis.json (needs runs/tb/ locally)")
     r.add_argument("run_dirs", nargs="+")
     args = p.parse_args(argv)
@@ -110,6 +117,19 @@ def main(argv: list[str] | None = None) -> None:
             for c in cards:
                 s = stats[c["id"]]
                 print(f"{c['id']:4} {c['category']:14} used {s['used']} {s['outcomes']}  {c['name']}")
+    elif args.cmd == "ablation":
+        from autolab import ablation
+        from autolab import evaluate as ev
+        from autolab.controller import note
+
+        source = args.source or ev.active_session_name()
+        if args.ablation_cmd == "start":
+            s = ablation.start(source, args.candidates)
+            note("ablation_started", session=s["name"], source=source, target=s["ablation"]["target"])
+            print(f"opened {s['name']}: {s['ablation']['target']} no-evolution candidates from {source}/p0; "
+                  "the daemon proposes them while the controller is on")
+        else:
+            print(ablation.render(ablation.compare(source)))
     elif args.cmd == "transfer":
         import json
 

@@ -55,7 +55,7 @@ def build(out: Path = OUT) -> str:
     sessions = []
     for paths in ev.all_session_paths():
         s = ev.load_session(paths)
-        if s:
+        if s and not s.get("ablation"):  # control arms (autolab ablation) are reported by `autolab ablation status`
             sessions.append((paths, s, ev.programs(paths)))
     sessions.sort(key=lambda t: t[1]["created"])
     calls = load_calls()

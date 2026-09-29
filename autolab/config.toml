@@ -120,7 +120,11 @@ claude_bin = "~/.local/bin/claude"
 timeout_s = 600
 # Model mix: evaluations (minutes of GPU) dwarf LLM latency, so lean on the strongest model.
 models = { opus = 0.8, sonnet = 0.2 }
-# Stochastic formatting: the task instruction varies across calls, with these weights.
+# Meta-prompt evolution (scaled down): each instruction's chance = its weight below x its children's mean
+# reward (accepted 1, contender 0.6, evaluated 0.3, rejected 0), shrunk toward the overall mean and decayed per
+# regime change like the card bandit. false = the fixed weights only.
+instruction_bandit = true
+# Stochastic formatting: the task instruction varies across calls, with these weights (the bandit's prior).
 [llm.instructions]
 open = 1.0
 diagnosis = 1.0
@@ -153,6 +157,7 @@ ladder = true
 ladder_factor = 1.5
 ladder_patience = 4               # finished children since the last acceptance that didn't beat it
 max_full_tokens = 122880000       # owner's current regime: bs64 x 15k steps. Raise to let it climb further.
+ablation_max_in_flight = 2        # no-evolution control arm (autolab ablation start): unfinished candidates at once
 
 # Research (M7): a web-enabled agent audits the current winner for outdated or missing techniques and
 # writes technique cards (autolab/research/cards.jsonl); each new card gets a directed child, and cards

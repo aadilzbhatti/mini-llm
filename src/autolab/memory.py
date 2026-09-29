@@ -224,6 +224,7 @@ def session_weights(active: str | None, root: Path, decay: float = 0.5) -> dict[
         return {}
     dist = distances(session, root)
     far = decay ** len(dist)
-    names = [d.name for d in root.iterdir() if (d / "session.json").exists()] if root.exists() else []
+    names = [d.name for d in root.iterdir() if (d / "session.json").exists()
+             and not (ev.load_session(ev.Paths(d)) or {}).get("ablation")] if root.exists() else []  # control arms learn nothing
     return {n: (decay ** dist[n] if n in dist else far) for n in names}
 

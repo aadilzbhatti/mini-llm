@@ -40,9 +40,12 @@ def chain(tmp_path, monkeypatch):
 
 
 def add(chain, session, pid, status, stage="done", full=None, reason="", at="2026-09-29T00:00:00+00:00", **kw):
+    scores = {"full_mean": full} if full is not None else {}
+    if "full_losses" in kw:
+        scores["full_losses"] = kw.pop("full_losses")
     p = Program(id=pid, parent_id="p0", base_commit="x", blocks=kw.pop("blocks", {}), hparams=kw.pop("hparams", HP),
                 status=status, stage=stage, reason=reason, created_at=at, rationale=f"idea {session}/{pid}",
-                scores={"full_mean": full} if full is not None else {}, **kw)
+                scores=scores, **kw)
     save(p, ev.Paths(chain["root"] / session).programs)
     return p
 
@@ -195,3 +198,20 @@ def test_card_record_halves_per_regime_change(chain):
     assert st["outcomes_here"] == {"accepted": 1}
     text = research.render_cards([card], {card["id"]: st})
     assert "Record in this regime: accepted 1. All regimes: accepted 3" in text
+
+
+def test_instruction_bandit_prefers_what_worked_and_keeps_the_rest_alive(chain):
+    from autolab.prompt import instruction_probs, instruction_stats
+
+    for i, (key, status) in enumerate([("open", "accepted"), ("open", "contender"), ("architecture", "rejected"),
+                                       ("architecture", "rejected"), ("research", "accepted")], 1):
+        add(chain, "c", f"p{i}", status, meta={"instruction": key})
+    add(chain, "b", "p1", "accepted", meta={"instruction": "architecture"})  # one regime ago: counts half
+    stats = instruction_stats(chain["root"], "c")
+    assert stats["open"] == {"n": 2.0, "reward": 1.6} and "research" not in stats  # directed children don't count
+    assert stats["architecture"] == {"n": 2.5, "reward": 0.5}
+    w = {"open": 1.0, "architecture": 1.0, "context": 1.0}
+    probs = instruction_probs(w, stats)
+    assert probs["open"] > probs["context"] > probs["architecture"] > 0.05
+    assert sum(probs.values()) == pytest.approx(1.0)
+    assert instruction_probs(w, {}) == pytest.approx({k: 1 / 3 for k in w})  # no history: the configured weights

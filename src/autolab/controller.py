@@ -437,8 +437,8 @@ def port_from_old_sessions(ctl: dict, session: dict, log) -> list[str]:
     out = []
     for paths in ev.all_session_paths():
         other = ev.load_session(paths)
-        if not other or other.get("name") == session.get("name"):
-            continue
+        if not other or other.get("name") == session.get("name") or other.get("ablation"):
+            continue  # an ablation arm's programs never enter the main search
         for p in ev.programs(paths).values():
             key = f"{other.get('name')}/{p.id}"
             if p.parent_id is None or p.status != "accepted" or key in ported:
@@ -472,6 +472,53 @@ def retest_step(ctl: dict, session: dict, log, root: Path | None = None) -> list
     if picks:
         log(f"retest: near misses from earlier regimes queued for {name}: {', '.join(picks)}")
     return picks
+
+
+# --- the no-evolution ablation (autolab.ablation) -------------------------------------------------------
+
+
+def affordable(session: dict, t: datetime, ctl: dict, ccfg: dict) -> bool:
+    """Room for one more candidate of `session` in the rolling-24h budget and under the Modal cap."""
+    from autolab import modal_backend as mb
+
+    calls = mb.load_calls()
+    need = expected_candidate_usd(session, mb.price_per_s(ev.evolve_cfg()["gpu"]), ccfg)
+    modal_total = sum(c.get("usd") or c.get("usd_estimate") or 0 for c in calls.values())
+    return (spend_24h(calls, _llm_spend(), t)["total"] + need <= daily_budget(ctl, ccfg, t)
+            and modal_total + need <= mb.max_usd())
+
+
+def ablation_step(ctl: dict, ccfg: dict, t: datetime, log) -> int:
+    """Propose for running no-evolution arms (at most ablation_max_in_flight unfinished each, within budget),
+    and note each arm's comparison once all its candidates have finished. Returns the number proposed."""
+    from autolab import ablation
+
+    made = 0
+    for apaths in ablation.active_arms():
+        asess, progs = ev.load_session(apaths), ev.programs(apaths)
+        in_flight = sum(p.status not in ev.DONE for p in progs.values() if p.parent_id)
+        left = asess["ablation"]["target"] - len(ablation.candidates(progs))
+        while in_flight < ccfg.get("ablation_max_in_flight", 2) and left > 0 and affordable(asess, t, ctl, ccfg):
+            child = _generate(log, paths=apaths)
+            note("proposed", session=asess["name"], program=child.id, parent=child.parent_id, arm=ablation.ARM,
+                 created_by=child.created_by, rationale=child.rationale[:400], status=child.status,
+                 fallback=child.meta.get("fallback_reason"), cost_usd=child.meta.get("cost_usd"))
+            made += 1
+            left -= 1
+            in_flight += child.status not in ev.DONE
+    for apaths in ev.all_session_paths():
+        asess = ev.load_session(apaths)
+        if not ablation.is_ablation(asess) or asess["ablation"].get("finished"):
+            continue
+        cands = ablation.candidates(ev.programs(apaths))
+        if len(cands) >= asess["ablation"]["target"] and all(p.status in ev.DONE for p in cands):
+            cmp = ablation.compare(asess["name"], apaths.root.parent)
+            asess["ablation"]["finished"] = iso(t)
+            ev.save_session(asess, apaths)
+            note("ablation_finished", session=asess["name"], source=cmp["source"], compared_at=cmp["compared_at"],
+                 arms=cmp["arms"], summary=ablation.render(cmp))
+            log(ablation.render(cmp))
+    return made
 
 
 # --- the compute ladder -----------------------------------------------------------------------------
@@ -704,7 +751,7 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
             note("program_done", session=name, program=p.id, status=p.status, stage=p.stage,
                  reason=p.reason[:300], full_mean=p.scores.get("full_mean"), n_seeds=p.scores.get("n_seeds"),
                  created_by=p.created_by)
-            if p.status == "accepted" and ccfg.get("commit_accepted", True):
+            if p.status == "accepted" and ccfg.get("commit_accepted", True) and not sess.get("ablation"):
                 p.meta["commit"] = commit_accepted(p, sess, log=log)
                 save(p, spaths.programs)
             seen.add(p.id)
@@ -790,6 +837,16 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     status["research"] = {k: v for k, v in ctl.get("research", {}).items() if k in ("state", "program", "waiting", "pending_directed")}
     price = mb.price_per_s(ev.evolve_cfg()["gpu"])
     made = 0
+    try:
+        made += ablation_step(ctl, ccfg, t, log)
+    except RateLimited as exc:
+        until = parse_reset(str(exc), t)
+        ctl.update(paused_until=iso(until), pause_reason=f"Claude usage limit: {str(exc)[:200]}")
+        note("paused", reason=ctl["pause_reason"], until=ctl["paused_until"])
+        save_control(ctl)
+        return {**status, "paused_until": ctl["paused_until"]}
+    except Exception as exc:  # noqa: BLE001
+        log(f"ablation error: {type(exc).__name__}: {exc}")
     while in_flight < ccfg.get("max_in_flight", 4):
         sp = spend_24h(mb.load_calls(), llm_spend, t)
         need = expected_candidate_usd(session, price, ccfg)
@@ -840,7 +897,7 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     return {**status, "proposed": made, "in_flight": in_flight}
 
 
-def _generate(log, card: dict | None = None, retest: str | None = None):
+def _generate(log, card: dict | None = None, retest: str | None = None, paths: ev.Paths | None = None):
     from autolab.generate import generate_one
 
-    return generate_one(log=log, card=card, retest=retest)
+    return generate_one(log=log, card=card, retest=retest, paths=paths)

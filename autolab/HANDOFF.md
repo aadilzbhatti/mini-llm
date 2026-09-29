@@ -720,3 +720,19 @@ Build this first; everything else hill-climbs on it.
   runs measured p0 only. Observation: confirmed programs' within-program spread is 0.001–0.027, well below
   p0's 0.03, so the pooled σ (≈ 0.01 at 122M) sits under `noise_floor` = 0.02, which stays the binding bar.
   Lowering the floor would make acceptance easier; that is the owner's call.
+- 2026-09-29 (owner: build the remaining milestones) — **meta-prompt evolution, scaled down.** The task
+  instruction (open / diagnosis / optimization / architecture / simplify / context / efficiency) is sampled with
+  probability ∝ its configured weight (the prior) × its children's mean reward (accepted 1, contender 0.6,
+  evaluated 0.3, rejected 0), shrunk toward the overall mean with 3 pseudo-children, floored at a quarter of it,
+  and decayed 0.5 per regime change like the cards (`prompt.instruction_probs`; `[llm] instruction_bandit`).
+  Directed children (research, retest) and mutation fallbacks don't count. On the history so far the shift is
+  mild (architecture 0.16 → 0.11 after 2 weak children; optimization 0.16 → 0.18). The paper also has the LLM
+  rewrite the instructions themselves; not built, since tens of evaluations can't tell instruction texts apart.
+- 2026-09-29 — **no-evolution ablation** (`autolab.ablation`, the paper's §3.4 baseline). `autolab ablation start`
+  opens `<active>~noevo`: same p0 / data / budget / noise / cascade, children always from p0 and the prompt
+  without anything learned from evaluations (prior programs, tried list, frontier, rejections, cards,
+  instruction bandit, children's reports). The controller proposes for it (ablation_max_in_flight = 2) within
+  the same daily budget until it matches the source's candidate count, then notes `ablation_finished` with the
+  comparison at equal candidate counts on the first-seed full loss (`autolab ablation status` any time). The
+  arm is off the regime chain and out of the bandits, never ported from, never committed, and left out of
+  SESSION_1.md. Opt-in: it spends ~ one candidate's cost per child. Not started.

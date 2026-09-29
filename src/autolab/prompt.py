@@ -10,7 +10,8 @@ Sections, in order:
 4. what has been tried: one line per remembered program, scoped by regime (autolab.memory: a rejection
    stops suppressing its idea after regime changes, depending on how it failed), and the latest
    rejections with reasons;
-5. the task instruction, drawn from prompts/instructions.toml (stochastic formatting).
+5. the task instruction, drawn from prompts/instructions.toml (stochastic formatting), with each instruction's
+   chance adapted to how its children fared (instruction_probs: the scaled-down meta-prompt evolution).
 """
 
 from __future__ import annotations
@@ -185,23 +186,68 @@ def hparam_ranges(spec: dict) -> str:
     return "\n".join(rows)
 
 
-def pick_instruction(weights: dict[str, float], rng: random.Random) -> tuple[str, str]:
+DIRECTED = {"research", "retest"}  # instructions the controller chooses, not the sampler
+
+
+def instruction_stats(root: Path, active: str | None, decay: float = 0.5) -> dict[str, dict]:
+    """Per sampled instruction: how its children fared, {"n": weighted finished children, "reward": weighted
+    reward (research.REWARD)}, each outcome weighted decay^(regime changes since), like the card bandit."""
+    from autolab import evaluate as ev
+    from autolab.memory import session_weights
+    from autolab.research import REWARD
+
+    weights = session_weights(active, root, decay)
+    stats: dict[str, dict] = {}
+    for name, w in weights.items():
+        for p in ev.programs(ev.Paths(root / name)).values():
+            key = (p.meta or {}).get("instruction")
+            if key and key not in DIRECTED and p.status in REWARD and not (p.meta or {}).get("fallback_reason"):
+                st = stats.setdefault(key, {"n": 0.0, "reward": 0.0})
+                st["n"] += w
+                st["reward"] += w * REWARD[p.status]
+    return stats
+
+
+def instruction_probs(weights: dict[str, float], stats: dict[str, dict] | None = None,
+                      prior_n: float = 3.0) -> dict[str, float]:
+    """Meta-prompt evolution, scaled down: the chance of each task instruction is its configured weight (the
+    prior) x its children's mean reward, shrunk toward the overall mean with prior_n pseudo-children, and never
+    below a quarter of the overall mean, so no instruction dies out on a few unlucky children."""
     texts = tomllib.loads((PROMPTS / "instructions.toml").read_text())
     keys = [k for k in weights if k in texts and weights[k] > 0]
-    key = rng.choices(keys, weights=[weights[k] for k in keys])[0]
+    stats = stats or {}
+    n = sum(stats.get(k, {}).get("n", 0.0) for k in keys)
+    overall = sum(stats.get(k, {}).get("reward", 0.0) for k in keys) / n if n else 0.3
+    overall = max(overall, 0.05)
+
+    def mean_reward(k):
+        st = stats.get(k, {"n": 0.0, "reward": 0.0})
+        return max((st["reward"] + prior_n * overall) / (st["n"] + prior_n), overall / 4)
+
+    raw = {k: weights[k] * mean_reward(k) for k in keys}
+    total = sum(raw.values())
+    return {k: v / total for k, v in raw.items()}
+
+
+def pick_instruction(weights: dict[str, float], rng: random.Random,
+                     stats: dict[str, dict] | None = None) -> tuple[str, str]:
+    texts = tomllib.loads((PROMPTS / "instructions.toml").read_text())
+    probs = instruction_probs(weights, stats)
+    key = rng.choices(list(probs), weights=list(probs.values()))[0]
     return key, texts[key]
 
 
 def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, Program], session: dict,
                  cfg: dict, llm_cfg: dict, runs_dir: Path, rng: random.Random, card: dict | None = None,
                  cards: list[dict] | None = None, retest: str | None = None,
-                 state_root: Path | None = None) -> tuple[str, dict]:
+                 state_root: Path | None = None, no_evolution: bool = False) -> tuple[str, dict]:
     """Return (prompt text, metadata about how it was built).
 
     `card`: a directed proposal ("apply this technique card"). `cards`: literature context; None = sample
     from the research store by the card bandit, [] = none. `retest`: 'session/pid' of a near miss from an
     earlier regime to re-apply to the current program. `state_root`: the directory holding every session
-    (default: the live one), where earlier regimes are looked up.
+    (default: the live one), where earlier regimes are looked up. `no_evolution`: the ablation's control arm
+    (autolab.ablation): only the context, the current program and the task; nothing learned from evaluations.
     """
     from autolab import memory
     from autolab.evaluate import STATE_ROOT
@@ -228,7 +274,7 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
     )
     parts = [context]
 
-    if inspirations:
+    if inspirations and not no_evolution:
         parts.append("# Prior programs\n\nPreviously evaluated programs, as changes relative to the initial program:")
         for q in inspirations:
             d = block_diff(p0.blocks, q.blocks)
@@ -242,11 +288,12 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
         f"# Current program ({parent.id}) — the one to modify\n\n{score_line(parent)}. "
         f"Rationale when it was made: {parent.rationale or '(initial program)'}\n\n"
         f"Hyperparameters: {json.dumps(parent.hparams)}\n\n## Training report and diagnosis\n\n"
-        f"{report_summary(parent, runs_dir, session_history(progs, session, runs_dir))}\n\n## EVOLVE blocks\n\n{blocks}")
+        f"{report_summary(parent, runs_dir, session_history({'p0': p0} if no_evolution else progs, session, runs_dir))}"
+        f"\n\n## EVOLVE blocks\n\n{blocks}")
 
     from autolab.pareto import table
 
-    rows = table(list(progs.values()), max(0.02, sigma))
+    rows = [] if no_evolution else table(list(progs.values()), max(0.02, sigma))
     if rows:
         lines = ["| program | frontier | full val loss (seeds) | context | long-range | train min | decode ms/tok | params |",
                  "| --- | --- | --- | --- | --- | --- | --- | --- |"]
@@ -259,10 +306,10 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
                      "giving up the others is progress.\n\n" + "\n".join(lines))
 
     others = [q for q in progs.values() if q.parent_id is not None]
-    remembered = memory.remembered(session, progs, cfg, state_root)
+    remembered = [] if no_evolution else memory.remembered(session, progs, cfg, state_root)
     if remembered:
         parts.append(memory.HEADER + "\n\n" + memory.render(remembered, outcome))
-    fails = [q for q in others if q.status == "rejected"][-cfg["database"].get("recent_failures", 5):]
+    fails = [] if no_evolution else [q for q in others if q.status == "rejected"][-cfg["database"].get("recent_failures", 5):]
     if fails:
         parts.append("# Recent rejections and why (avoid these mistakes; a bug doesn't rule out the idea)\n\n"
                      + "\n".join(f"- {q.id}: {q.rationale[:200]}\n  → rejected at **{q.stage}**"
@@ -270,6 +317,8 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
 
     from autolab import research
 
+    if no_evolution:
+        cards = []
     if cards is None:
         k = int(research.research_cfg().get("cards_in_prompt", 3))
         cards = research.pick_cards(k, rng) if k else []
@@ -300,7 +349,13 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
                                         "as a minimal, faithful implementation within the EVOLVE blocks and/or hparams. "
                                         "Keep everything else unchanged so its effect can be measured.")
     else:
-        key, instruction = pick_instruction(llm_cfg.get("instructions", {"open": 1.0}), rng)
+        stats = None
+        if llm_cfg.get("instruction_bandit", True) and not no_evolution:
+            try:
+                stats = instruction_stats(state_root, session.get("name"), memory.memory_cfg(cfg)["card_decay"])
+            except (OSError, KeyError, ValueError):
+                stats = None  # the fixed weights still work
+        key, instruction = pick_instruction(llm_cfg.get("instructions", {"open": 1.0}), rng, stats)
     parts.append(f"# Task\n\n{instruction}\n\nState the mechanism in `rationale`, predict the effect in "
                  f"`expected_effect`, give the change as `diffs` (exact SEARCH text from the current "
                  f"program's blocks) and/or `hparams`, and list any technique cards you applied in `technique_ids`.")

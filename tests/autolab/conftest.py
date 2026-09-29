@@ -70,7 +70,7 @@ def _no_real_subprocess_spawns(monkeypatch):
 
     monkeypatch.setattr(controller, "_spawn", refuse)
 
-    def refuse_generate(log, card=None, retest=None):
+    def refuse_generate(log, **kw):
         raise AssertionError("test reached controller._generate (a real Claude call); pass generate= or patch it")
 
     # directed children (research cards, near-miss retests) go through _generate even when a test passes generate=
