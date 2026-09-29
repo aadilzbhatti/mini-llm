@@ -207,7 +207,7 @@ def inference_cost(model, block_size: int, device, decode_tokens: int = 64, runs
                     "each decode step re-runs the (cropped) window"}
 
 
-def evaluate_checkpoint(path: str | Path, val_path: str | Path = DEFAULT_VAL, device=None) -> dict:
+def evaluate_checkpoint(path: str | Path, val_path: str | Path = DEFAULT_VAL, device=None, gpu_shared: bool = False) -> dict:
     device = torch.device(device) if device else select_device()
     model, cfg, ckpt = load_model(path, device)
     tokenizer = get_tokenizer()
@@ -232,7 +232,9 @@ def evaluate_checkpoint(path: str | Path, val_path: str | Path = DEFAULT_VAL, de
         "quality": quality,
         "context_benefit": cb,
         "retrieval": retrieval(model, tokenizer, val, T, device),
-        "inference": inference_cost(model, T, device),
+        "inference": {**(inf := inference_cost(model, T, device)),
+                      **({"note": inf["note"] + " -- MEASURED WHILE A TRAINING JOB SHARED THE GPU: timings skewed"}
+                         if gpu_shared else {})},
         "training_systems": ckpt.get("systems"),
     }
 
@@ -340,11 +342,13 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--out-dir", default=str(EVALS_DIR))
     p.add_argument("--reference", default="data160k-bs64-15k-lr1.2e-3-wu256k-v4",
                    help="Substring of the checkpoint to pair every other model against in the summary.")
+    p.add_argument("--gpu-shared", action="store_true",
+                   help="Mark inference timings as skewed (another job was using the GPU).")
     args = p.parse_args(argv)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     for ck in args.checkpoints:
-        r = evaluate_checkpoint(ck, args.val_tokens, args.device)
+        r = evaluate_checkpoint(ck, args.val_tokens, args.device, args.gpu_shared)
         stem = Path(ck).stem
         (out / f"{stem}.json").write_text(json.dumps(r, indent=2))
         (out / f"{stem}.md").write_text(render_markdown(r))

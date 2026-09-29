@@ -194,6 +194,8 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--stale-after", type=float, default=900.0,
                    help="Seconds without a heartbeat before a run shows as interrupted.")
     p.add_argument("--once", action="store_true", help="Sync once and exit.")
+    p.add_argument("--no-auto-eval", action="store_true",
+                   help="Don't evaluate finished runs (see mini_llm.auto_eval).")
     args = p.parse_args(argv)
 
     import modal
@@ -202,11 +204,20 @@ def main(argv: list[str] | None = None) -> None:
     vol = modal.Volume.from_name(RUNS_VOLUME)
     runner = load_runner(repo)
     seen: dict[str, str] = {}
+    # Evaluates finished runs (Modal and local) on this machine's GPU, one at a time.
+    evaluator = None
+    if not (args.once or args.no_auto_eval):
+        from mini_llm.auto_eval import AutoEvaluator
+        evaluator = AutoEvaluator(repo)
+        print(f"[auto-eval] on: evaluating runs that complete after {evaluator.since}", flush=True)
     while True:
         for st in mirror_all(vol, repo, runner, args.stale_after):
             if seen.get(st["run_id"]) != st["status"]:
                 print(f"[mirror] {st['run_id']}: {st['status']}", flush=True)
                 seen[st["run_id"]] = st["status"]
+        if evaluator is not None:
+            for run_id in evaluator.scan():
+                print(f"[auto-eval] queued {run_id}", flush=True)
         if args.once:
             return
         time.sleep(args.interval)

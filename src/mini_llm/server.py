@@ -260,7 +260,7 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             status = _read_json(path) or {}
             run_id = status.get("run_id") or path.name.removesuffix(".status.json")
             row = {k: status.get(k) for k in
-                   ("run_id", "name", "kind", "status", "started", "finished", "duration_sec", "error", "remote")}
+                   ("run_id", "name", "kind", "status", "started", "finished", "duration_sec", "error", "remote", "eval")}
             row["run_id"] = run_id
             met = status.get("metrics") or {}
             row["full_val_loss"] = met.get("full_val_loss")

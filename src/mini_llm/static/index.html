@@ -342,6 +342,7 @@ function histCard(r) {
       <button onclick="showDetail('${id}', this)">Details</button>
       ${r.kind !== 'prepare-data' ? `<button onclick="showPlot('${id}', this)">Plot</button><button onclick="showReport('${id}', this)">Samples</button>` : ''}
       <button onclick="showLog('${id}', this)">Log</button>
+      ${r.eval?.state === 'done' ? `<button onclick="showEval('${esc(r.eval.report)}')">Evals</button>` : r.eval?.state ? `<span class="pill ${r.eval.state === 'failed' ? 's-failed' : 's-running'}" title="${esc(r.eval.error || '')}">eval ${esc(r.eval.state)}</span>` : ''}
       <button onclick="cloneJob('${id}')">Clone</button>
       ${r.status === 'completed' && r.kind !== 'prepare-data' ? `<button onclick="continueFrom('/api/runs/${id}/continuation')">Continue</button>` : ''}
     </div>
@@ -562,7 +563,7 @@ async function refresh() {
       <div class="mut" style="overflow-wrap:anywhere; margin:4px 0 8px">${esc(Object.entries(q.job?.args || {}).map(([k, v]) => `${k}=${v}`).join('  '))}</div>
       <div class="row">${(q.job?.kind || 'train') === 'train' && q.job?.args?.save ? `<button onclick="continueFrom('/api/queue/${encodeURIComponent(q.file)}/continuation')">Continue after</button>` : ''}${q.running ? '' : `<button class="danger" onclick="cancelJob('${esc(q.file)}')">Cancel</button>`}</div></div>`).join('') || '<div class="card mut">Queue is empty.</div>';
     const hist = runs.filter(r => r.status !== 'running');
-    const sig = JSON.stringify(hist.map(r => [r.run_id, r.status]));
+    const sig = JSON.stringify(hist.map(r => [r.run_id, r.status, r.eval?.state]));
     if (sig !== HIST_SIG) {  // only rebuild when a run appears or changes status, so open plots stay put
       const st = openState('#history');
       $('#history').innerHTML = hist.map(histCard).join('') || '<div class="card mut">No runs yet.</div>';
