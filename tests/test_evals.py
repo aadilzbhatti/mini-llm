@@ -30,10 +30,14 @@ def test_full_report_and_summary(tmp_path):
     cb = r["context_benefit"]["cb@128"]
     assert cb["protocol"] == "window 128, prefix 64, seed 0" and cb["windows"] == len(cb["per_window_benefit"]) > 0
     assert "cb@256" not in r["context_benefit"] and "full_val@128" in r["quality"]
+    cc = r["context_curve"]
+    assert list(cc["by_context"]) == ["16", "32", "64", "128"] and list(cc["gain"]) == ["16->32", "32->64", "64->128"]
+    assert all(len(v) == evals.CURVE_TARGETS for v in cc["per_target"].values())
     assert r["training_systems"]["train_tokens_per_sec"] == 123.0
     md, table = evals.render_markdown(r), evals.summary_table([r, {**r, "checkpoint": "other.pt"}], reference="t128")
     assert "## Long-range retrieval" in md and "| t128 | 128 |" in table
     assert "## Paired against t128" in table and "+0.0000 ± 0.0000" in table  # identical model: zero paired difference
+    assert "## Context curve (fixed targets)" in md and "L(c=128)" in table
 
 
 def test_key_outside_context_cannot_be_retrieved(tmp_path):
@@ -44,3 +48,14 @@ def test_key_outside_context_cannot_be_retrieved(tmp_path):
     r = evals.retrieval(model, get_tokenizer(), torch.load(val), cfg.block_size, "cpu", distances=(256,), trials=40)
     # With the key gone, the prediction is identical whichever word was planted: accuracy is ~chance.
     assert r["by_distance"]["256"]["accuracy"] <= 0.35
+
+
+def test_bench_runs_models_in_one_session(tmp_path):
+    from mini_llm import bench
+    a, _ = tiny(tmp_path, 128)
+    b, _ = tiny(tmp_path, 256)
+    res = bench.benchmark([str(a), str(b)], device="cpu", rounds=2, prefills_per_round=2)
+    assert set(res["models"]) == {"t128", "t256"}
+    m = res["models"]["t256"]
+    assert m["block_size"] == 256 and m["decode_tok_s"]["n"] == 2 and m["prefill_full_ms"]["n"] == 4
+    assert "| t128 | 128 |" in bench.render(res)

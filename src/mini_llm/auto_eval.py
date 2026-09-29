@@ -125,6 +125,11 @@ class AutoEvaluator:
             with log.open("w") as fh:
                 cmd = [self.python, "-m", "mini_llm.evals", str(ckpt)] + (["--gpu-shared"] if contended else [])
                 rc = subprocess.run(cmd, cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT).returncode
+            if rc == 0 and not contended:
+                # Re-run the controlled inference benchmark across every evaluated model, so the
+                # summary's cost columns come from one session (skipped if the GPU is shared).
+                with log.open("a") as fh:
+                    subprocess.run([self.python, "-m", "mini_llm.bench"], cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT)
             self._set(status_path, state="done" if rc == 0 else "failed", finished=_now(),
                       **({} if rc == 0 else {"error": f"mini-llm-eval exited {rc}; see runs/{run_id}.eval.log"}))
             print(f"[auto-eval] {run_id}: {'done' if rc == 0 else f'FAILED ({rc})'}", flush=True)
