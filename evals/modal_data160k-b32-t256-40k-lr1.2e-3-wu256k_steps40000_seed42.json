@@ -1854,10 +1854,23 @@
   },
   "inference": {
     "device": "mps",
-    "prefill_ms_full_context": 25.77,
-    "decode_tokens_per_sec": 16.7,
-    "memory_gb": 0.117,
-    "note": "no KV cache: each decode step re-runs the (cropped) window"
+    "prefill_ms_full_context": 13.42,
+    "prefill_ms_iqr": [
+      13.37,
+      13.44
+    ],
+    "decode_tokens_per_sec": 64.9,
+    "decode_runs": [
+      63.9,
+      64.9,
+      65.0,
+      64.8,
+      64.7,
+      64.9,
+      65.0
+    ],
+    "memory_gb": 0.104,
+    "note": "medians of 21 prefills / 7 decode runs of 64 tokens; no KV cache: each decode step re-runs the (cropped) window"
   },
   "training_systems": {
     "device": "NVIDIA L4",

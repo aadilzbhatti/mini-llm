@@ -39,8 +39,8 @@ Forced choice among 10 single-token words (chance 10%), 400 trials per distance,
 ## Inference
 
 - device: mps
-- prefill, full context: 10.93 ms
-- decode: 77.4 tokens/s (no KV cache: each decode step re-runs the (cropped) window)
+- prefill, full context: 11.12 ms
+- decode: 69.1 tokens/s (medians of 21 prefills / 7 decode runs of 64 tokens; no KV cache: each decode step re-runs the (cropped) window)
 - memory: 0.088 GB
 
 ## Training systems (recorded by the run)
