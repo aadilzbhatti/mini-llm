@@ -65,11 +65,20 @@ def checkpoint_of(status: dict, repo: Path) -> Path | None:
     return path if path and path.is_file() else None
 
 
-def training_running() -> bool:
+def _pgrep(pattern: str) -> bool:
     try:
-        return subprocess.run(["pgrep", "-f", "mini-llm-train"], capture_output=True).returncode == 0
+        return subprocess.run(["pgrep", "-f", pattern], capture_output=True).returncode == 0
     except OSError:
         return False
+
+
+def training_running() -> bool:
+    return _pgrep("mini-llm-train")
+
+
+def gpu_busy() -> bool:
+    """Training, or another eval/benchmark (e.g. a manual backfill) outside this worker."""
+    return _pgrep("mini-llm-train|mini-llm-eval|mini_llm[.]evals|mini-llm-bench|mini_llm[.]bench")
 
 
 class AutoEvaluator:
@@ -125,7 +134,7 @@ class AutoEvaluator:
             with log.open("w") as fh:
                 cmd = [self.python, "-m", "mini_llm.evals", str(ckpt)] + (["--gpu-shared"] if contended else [])
                 rc = subprocess.run(cmd, cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT).returncode
-            if rc == 0 and not contended:
+            if rc == 0 and not gpu_busy():
                 # Re-run the controlled inference benchmark across every evaluated model, so the
                 # summary's cost columns come from one session (skipped if the GPU is shared).
                 with log.open("a") as fh:
