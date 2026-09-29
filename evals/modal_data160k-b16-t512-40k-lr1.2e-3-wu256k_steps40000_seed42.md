@@ -7,6 +7,8 @@
 
 ## Quality
 
+full_val@W averages over targets at positions 0..W-1, so it mixes in how much history each target had. Use the context curve below to compare context lengths.
+
 - full_val@128: **4.3381**
 - by_position@128: pos 0-15: 4.9075, pos 16-63: 4.3475, pos 64-127: 4.1888
 - full_val@256: **4.2286**
@@ -14,12 +16,34 @@
 - full_val@512: **4.1550**
 - by_position@512: pos 0-15: 4.8916, pos 16-63: 4.3686, pos 64-127: 4.1827, pos 128-255: 4.1255, pos 256-511: 4.0767
 
+## Context curve (fixed targets)
+
+The same 8,000 target tokens, each predicted from exactly c preceding tokens (identical targets for every model). Gain = paired loss reduction from doubling c.
+
+| history c | loss | ± SE |
+|---|---|---|
+| 16 | 4.5308 | 0.0365 |
+| 32 | 4.3546 | 0.0360 |
+| 64 | 4.2206 | 0.0358 |
+| 128 | 4.1351 | 0.0359 |
+| 256 | 4.0788 | 0.0358 |
+| 512 | 4.0626 | 0.0358 |
+
+| doubling | gain (nats) | ± SE |
+|---|---|---|
+| 16->32 | +0.1762 | 0.0097 |
+| 32->64 | +0.1340 | 0.0089 |
+| 64->128 | +0.0856 | 0.0074 |
+| 128->256 | +0.0563 | 0.0063 |
+| 256->512 | +0.0162 | 0.0048 |
+
 ## Context benefit
 
-Loss on the second half of each val window, given the first half from the same document vs from a different one (one window per eligible document, identical windows for every model). Compare cb@128 across all models; cb@256 only across models with context ≥ 256.
+Loss on the second half of each val window, given the first half from the same document vs from a different one (one window per eligible document, identical windows for every model). Compare cb@W only across models with context ≥ W.
 
 - **cb@128** (window 128, prefix 64, seed 0, 903 windows): benefit **0.5134 ± 0.0085 nats** (same-doc prefix 4.1464, other-doc prefix 4.6598)
 - **cb@256** (window 256, prefix 128, seed 0, 762 windows): benefit **0.4046 ± 0.0062 nats** (same-doc prefix 4.0576, other-doc prefix 4.4621)
+- **cb@512** (window 512, prefix 256, seed 0, 534 windows): benefit **0.2784 ± 0.0049 nats** (same-doc prefix 4.0210, other-doc prefix 4.2994)
 
 ## Long-range retrieval
 
@@ -40,12 +64,16 @@ Forced choice among 10 single-token words (chance 10%), 400 trials per distance,
 | 384 | 43.0% | 38%–48% | +1.71 | yes |
 | 448 | 32.8% | 28%–37% | +1.34 | yes |
 | 496 | 37.2% | 33%–42% | +1.45 | yes |
+| 640 | 9.2% | 7%–12% | +0.04 | no |
+| 768 | 9.2% | 7%–12% | -0.06 | no |
+| 896 | 9.5% | 7%–13% | -0.02 | no |
+| 992 | 9.5% | 7%–13% | +0.03 | no |
 
-## Inference
+## Inference (this eval run; see evals/inference.md for the controlled comparison)
 
 - device: mps
-- prefill, full context: 19.29 ms
-- decode: 54.8 tokens/s (medians of 21 prefills / 7 decode runs of 64 tokens; no KV cache: each decode step re-runs the (cropped) window)
+- prefill, full context: 25.96 ms
+- decode: 41.3 tokens/s (medians of 21 prefills / 7 decode runs of 64 tokens; no KV cache: each decode step re-runs the (cropped) window)
 - memory: 0.145 GB
 
 ## Training systems (recorded by the run)

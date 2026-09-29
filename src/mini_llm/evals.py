@@ -62,6 +62,9 @@ POSITION_BUCKETS = ((0, 16), (16, 64), (64, 128), (128, 256), (256, 512), (512, 
 EVAL_WINDOWS = (128, 256, 512, 1024)  # full_val and context-benefit windows, each run when <= block_size
 CONTEXTS = (16, 32, 64, 128, 256, 512, 1024)  # history lengths for the fixed-target curve
 CURVE_TARGETS = 8000
+# Tokens per forward pass. Batches are sized by tokens, not sequences: 32 x 1024-token windows
+# would need ~13 GB just for the fp32 logits and their log-softmax (vocab 50257).
+BATCH_TOKENS = 8192
 # Single GPT-2 tokens (with leading space), deliberately unrelated to each other.
 CANDIDATES = (" apple", " river", " castle", " tiger", " violin", " copper", " garden", " rocket", " marble", " desert")
 KEY_PREFIX = " The secret word is"
@@ -76,6 +79,10 @@ def load_model(path: str | Path, device: torch.device):
     return model, cfg, ckpt
 
 
+def _rows(T: int) -> int:
+    return max(1, BATCH_TOKENS // T)
+
+
 def _sync(device: torch.device) -> None:
     if device.type == "cuda":
         torch.cuda.synchronize(device)
@@ -84,9 +91,9 @@ def _sync(device: torch.device) -> None:
 
 
 @torch.no_grad()
-def position_losses(model, val: torch.Tensor, T: int, device, batch: int = 32) -> torch.Tensor:
+def position_losses(model, val: torch.Tensor, T: int, device) -> torch.Tensor:
     """Mean loss at each position 0..T-1 over every non-overlapping T-window."""
-    n = (val.numel() - 1) // T
+    n, batch = (val.numel() - 1) // T, _rows(T)
     tot, cnt = torch.zeros(T, dtype=torch.float64), 0
     for s in range(0, n, batch):
         offs = range(s, min(s + batch, n))
@@ -126,10 +133,10 @@ def context_benefit(model, val: torch.Tensor, T: int, device, max_windows: int |
         ys.append(w[1:T + 1])
 
     def second_half_loss(xs):  # -> per-window mean loss over the second half
-        losses = []
-        for s in range(0, len(xs), 32):
-            x = torch.stack(xs[s:s + 32]).to(device)
-            y = torch.stack(ys[s:s + 32]).to(device)
+        losses, batch = [], _rows(T)
+        for s in range(0, len(xs), batch):
+            x = torch.stack(xs[s:s + batch]).to(device)
+            y = torch.stack(ys[s:s + batch]).to(device)
             logits, _ = model(x)
             lp = F.cross_entropy(logits[:, half:].reshape(-1, logits.size(-1)).float(),
                                  y[:, half:].reshape(-1), reduction="none")
@@ -146,7 +153,7 @@ def context_benefit(model, val: torch.Tensor, T: int, device, max_windows: int |
 
 @torch.no_grad()
 def context_curve(model, val: torch.Tensor, block_size: int, device, n_targets: int = CURVE_TARGETS,
-                  seed: int = 0, batch: int = 32) -> dict:
+                  seed: int = 0) -> dict:
     """loss(y_p | x_{p-c}..x_{p-1}) for fixed targets p and each history length c <= block_size.
 
     History is the raw val stream (it can cross a document boundary, as in
@@ -157,7 +164,7 @@ def context_curve(model, val: torch.Tensor, block_size: int, device, n_targets: 
     pos = torch.randint(max(CONTEXTS), val.numel(), (n_targets,), generator=g)
     per: dict[int, torch.Tensor] = {}
     for c in (c for c in CONTEXTS if c <= block_size):
-        losses = []
+        losses, batch = [], _rows(c)
         for s in range(0, n_targets, batch):
             p = pos[s:s + batch].tolist()
             x = torch.stack([val[q - c:q] for q in p]).to(device)

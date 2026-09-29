@@ -25,21 +25,27 @@ project and is **unchanged**. See `BOOTSTRAP_NOTES.md`.
 
 ## Current best
 
-`full_val_loss` **4.1774** on the 937-doc val set shared by the data20k–160k
-sets: 4 layers × 256d, **context 256**, batch 32 (8,192 tokens/step, same as
+`full_val_loss` **4.1141** on the 937-doc val set shared by the data20k–160k
+sets: 4 layers × 256d, **context 1024**, batch 8 (8,192 tokens/step, same as
 B64 × T128), data160k, 40,000 steps = 327.68M tokens, peak LR 1.2e-3 cosine to
-2e-6, 256K-token warmup (32 steps), seed 42. 81 min on Modal 2×L4.
+2e-6, 256K-token warmup (32 steps), seed 42. 133 min on Modal 2×L4.
 
 ```bash
 uv run --group modal modal run --detach src/mini_llm/remote/modal_train.py \
-    --config configs/modal/data160k_b32_t256_40k_lr1.2e-3_wu256k.json --gpus L4:2
+    --config configs/modal/data160k_b8_t1024_40k_lr1.2e-3_wu256k.json --gpus L4:2
 ```
 
-Scored at a matched 128-token window it is 4.2809, a hair behind the same
-recipe at context 128 (4.2601), so the gain comes from using the longer
-context: it retrieves a planted word 53% of the time at 160 tokens back,
-where the 128-context model is at chance. See `evals/summary.md`
-(`mini-llm-eval`) for quality, context use, retrieval and cost side by side.
+Same recipe across contexts (only batch × context changes, tokens/step fixed):
+T128 4.2601 → T256 4.1774 → T512 4.1550 → T1024 4.1141. The gain is from
+using more history, not better modelling per token: on the same 8,000 target
+tokens given the same c tokens of history, the longer-context models are
+*worse* at short c (T1024 is +0.126 ± 0.010 nats behind T128 at c=16, +0.062
+at c=128), and T1024 at c=1024 (4.0407) only matches T256 at c=256 (4.0417).
+T1024 still gains 0.020 ± 0.005 nats going from 512 to 1024 tokens of history,
+and it retrieves a planted word 63% of the time at 256 tokens back (T256: 12%,
+chance 10%) and 34% at 992. Decoding is 2.6× slower than T128 on the Mac
+(17.4 vs 48.6 tok/s, uncached, full context). See `evals/summary.md`
+(`mini-llm-eval`) and `evals/inference.md` (`mini-llm-bench`).
 
 What got here (all in `baselines.md`):
 - Batch: at a fixed token budget, batch 64 beats the batch-4 baseline (4.7165
