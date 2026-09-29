@@ -137,13 +137,23 @@ class Block(nn.Module):
         self.ffwd = FeedForward(n_embd, dropout)
         self.ln1 = nn.LayerNorm(n_embd)
         self.ln2 = nn.LayerNorm(n_embd)
+        # Canon layers (c12): causal depthwise convs, kernel 4, residual on sublayer inputs
+        self.canon_a = nn.Conv1d(n_embd, n_embd, 4, groups=n_embd, bias=False)
+        self.canon_c = nn.Conv1d(n_embd, n_embd, 4, groups=n_embd, bias=False)
+        nn.init.normal_(self.canon_a.weight, mean=0.0, std=0.02)
+        nn.init.normal_(self.canon_c.weight, mean=0.0, std=0.02)
+
+    @staticmethod
+    def _canon(conv: nn.Conv1d, h: torch.Tensor) -> torch.Tensor:
+        c = F.pad(h.transpose(1, 2), (3, 0))  # left pad only -> causal
+        return h + conv(c).transpose(1, 2)
 
     def forward(self, x: torch.Tensor):
         # FIX (#2): mask parameter dropped. ln1/ln2 stay exactly where they
         # were: this is the only LayerNorm on the attention path now that the
         # per-head one is gone (#1).
-        x = x + self.sa(self.ln1(x))
-        x = x + self.ffwd(self.ln2(x))
+        x = x + self.sa(self._canon(self.canon_a, self.ln1(x)))
+        x = x + self.ffwd(self._canon(self.canon_c, self.ln2(x)))
         return x
 # EVOLVE-BLOCK-END block
 
