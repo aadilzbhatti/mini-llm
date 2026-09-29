@@ -101,10 +101,19 @@ migrate_every = 6            # after this many finished children, copy each isla
 params_bins = [12e6, 16e6, 20e6]          # MAP-Elites descriptor 1: parameter count
 tokens_per_sec_bins = [30e3, 38e3, 45e3]  # descriptor 2: training throughput (L4)
 recent_failures = 5          # rejected children shown in the prompt, with reasons
-history = 30                 # one-line summaries of the latest programs, to avoid repeats
+history = 60                 # cap on the "what has been tried" list (regime-scoped, see [evolve.memory])
 decode_ms_bins = [5.0, 10.0, 20.0]  # M8 MAP-Elites descriptor (with context length): decode latency buckets
 p_frontier = 0.3             # M8: chance a parent is drawn from the Pareto frontier
 quality_tol = 0.02           # M8: loss differences within this count as ties on the frontier (≈ 1 σ)
+
+# Regime-scoped memory of rejections (autolab.memory; owner, 2026-09-29). A rejection stops suppressing its
+# idea after regime changes (a new session: data switch or compute ladder), not after a time: bugs (failed
+# before training) never count against the idea; screen rejections last until the next regime change; full-run
+# failures are strong in their regime, weak one change later, gone after two; near misses are never suppressed.
+[evolve.memory]
+near_miss_sigma = 2.0        # a full-run result within this x σ of the incumbent then (or a contender) is a near miss
+retest_per_regime = 3        # near misses from earlier regimes re-applied to the new champion after each regime change
+card_decay = 0.5             # a card's bandit record counts this^(regime changes since) per outcome
 
 [llm]
 claude_bin = "~/.local/bin/claude"

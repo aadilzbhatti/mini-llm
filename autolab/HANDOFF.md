@@ -701,3 +701,22 @@ Build this first; everything else hill-climbs on it.
   champion's blocks is identical (44/44 log lines) at the old and new base. Rule: before building a
   measurement or training feature, check the owner's repo (git log origin/minimal) and merge instead of
   reimplementing.
+- 2026-09-29 (owner: build it) — **regime-scoped memory** (`autolab.memory`). A rejection used to suppress its
+  idea for good: the prompt listed every past program as "tried" with no regime, and only winners crossed a
+  session switch. Now a rejection's memory is scoped by what failed and how many regime changes (sessions on
+  the origin chain) ago, not by time: a failure before training (scope/static/CPU/params, or a crashed run) is
+  shown as "attempt failed (bug)", untested; a screen rejection lasts until the next regime change; a full run
+  > 2σ worse than the incumbent of its time is "don't repeat" in its regime, weak (tagged with its regime) one
+  change later, gone after two; a near miss (contender, or within 2σ) is never suppressed. After each regime
+  change the controller queues `retest_per_regime` (3) near misses from earlier regimes as directed children
+  of the new champion (`retest_step`, after research-card children). The card bandit weights each outcome by
+  0.5^(regime changes since). The "tried" list is capped at 60 entries. Everything stays in the database and
+  the Lineage tree. Settings: `[evolve.memory]`. Tests: `tests/autolab/test_memory.py`; conftest now refuses
+  `controller._generate` (directed children bypass a test's `generate=`).
+- 2026-09-29: the data policy and the compute ladder **re-arm for a new incumbent**. A finished flow
+  (not_helped / failed) records the program it tested and resets to idle once another program is accepted.
+- 2026-09-29: **seed noise is pooled** over the base runs and every program with >= 2 full seeds
+  (`evaluate.pooled_full_std`, kept up to date by the controller; `noise_updated` notebook entries). The base
+  runs measured p0 only. Observation: confirmed programs' within-program spread is 0.001–0.027, well below
+  p0's 0.03, so the pooled σ (≈ 0.01 at 122M) sits under `noise_floor` = 0.02, which stays the binding bar.
+  Lowering the floor would make acceptance easier; that is the owner's call.

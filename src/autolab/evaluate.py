@@ -510,12 +510,38 @@ def _health(report: dict | None, error: str | None, session: dict, cfg: dict) ->
     return None
 
 
+def pooled_full_std(session: dict) -> tuple[float, int]:
+    """(std, degrees of freedom): the session's seed noise pooled over its base runs and every program with
+    >= 2 full-budget seeds (session["noise"]["full"]["programs"], kept by update_noise_pool). The base runs
+    measure p0 only; once the incumbent is a different architecture, its own seeds (and the contenders')
+    are the better evidence, and pooling them costs no extra compute."""
+    full = session["noise"]["full"]
+    progs = [(len(v), stdev(v)) for v in (full.get("programs") or {}).values() if len(v) >= 2]
+    if not progs:
+        return full["std"], full.get("n", 1) - 1
+    groups = [(full.get("n", 3), full["std"])] + progs
+    df = sum(n - 1 for n, _ in groups)
+    return (sum((n - 1) * s * s for n, s in groups) / df) ** 0.5, df
+
+
+def update_noise_pool(session: dict, progs: dict[str, Program]) -> bool:
+    """Add every finished program's full-budget seeds (>= 2) to the session's noise pool. True if it changed."""
+    pool = session["noise"]["full"].setdefault("programs", {})
+    changed = False
+    for p in progs.values():
+        losses = p.scores.get("full_losses") or []
+        if p.parent_id is not None and p.status in DONE and len(losses) >= 2 and pool.get(p.id) != losses:
+            pool[p.id] = list(losses)
+            changed = True
+    return changed
+
+
 def sigma(session: dict, cfg: dict | None = None) -> float:
-    """Seed noise used for decisions: the session's measured full-budget std, floored at [evolve]
-    noise_floor. A 3-seed std is a very noisy estimate: s2+data40k@122M measured 0.0069 where every
+    """Seed noise used for decisions: the session's pooled full-budget std (pooled_full_std), floored at
+    [evolve] noise_floor. A 3-seed std is a very noisy estimate: s2+data40k@122M measured 0.0069 where every
     other session measured 0.031-0.043, which would have made the accept bar only 0.014 deep."""
     cfg = cfg or evolve_cfg()
-    return max(session["noise"]["full"]["std"], float(cfg.get("noise_floor", 0.0)))
+    return max(pooled_full_std(session)[0], float(cfg.get("noise_floor", 0.0)))
 
 
 def incumbent(session: dict, progs: dict[str, Program]) -> Program:

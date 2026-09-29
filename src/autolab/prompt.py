@@ -7,7 +7,9 @@ Sections, in order:
    blocks + hparam changes), its scores and rationale;
 3. the current program: every EVOLVE block verbatim, its hparams and scores, a compact
    training report and the rule-based diagnosis with evidence ("rendered evaluation results");
-4. what has been tried: one line per recent program, and the latest rejections with reasons;
+4. what has been tried: one line per remembered program, scoped by regime (autolab.memory: a rejection
+   stops suppressing its idea after regime changes, depending on how it failed), and the latest
+   rejections with reasons;
 5. the task instruction, drawn from prompts/instructions.toml (stochastic formatting).
 """
 
@@ -192,12 +194,19 @@ def pick_instruction(weights: dict[str, float], rng: random.Random) -> tuple[str
 
 def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, Program], session: dict,
                  cfg: dict, llm_cfg: dict, runs_dir: Path, rng: random.Random, card: dict | None = None,
-                 cards: list[dict] | None = None) -> tuple[str, dict]:
+                 cards: list[dict] | None = None, retest: str | None = None,
+                 state_root: Path | None = None) -> tuple[str, dict]:
     """Return (prompt text, metadata about how it was built).
 
     `card`: a directed proposal ("apply this technique card"). `cards`: literature context; None = sample
-    from the research store by the card bandit, [] = none.
+    from the research store by the card bandit, [] = none. `retest`: 'session/pid' of a near miss from an
+    earlier regime to re-apply to the current program. `state_root`: the directory holding every session
+    (default: the live one), where earlier regimes are looked up.
     """
+    from autolab import memory
+    from autolab.evaluate import STATE_ROOT
+
+    state_root = state_root or STATE_ROOT
     p0 = progs["p0"]
     inc = progs[session["incumbent"]]
     sigma = _sigma(session)
@@ -250,15 +259,14 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
                      "giving up the others is progress.\n\n" + "\n".join(lines))
 
     others = [q for q in progs.values() if q.parent_id is not None]
-    history = others[-cfg["database"].get("history", 30):]
-    if history:
-        parts.append("# What has been tried (latest first)\n\n" + "\n".join(
-            f"- {q.id} (parent {q.parent_id}, by {q.created_by}): {q.rationale[:180]} → {outcome(q)}"
-            for q in reversed(history)))
+    remembered = memory.remembered(session, progs, cfg, state_root)
+    if remembered:
+        parts.append(memory.HEADER + "\n\n" + memory.render(remembered, outcome))
     fails = [q for q in others if q.status == "rejected"][-cfg["database"].get("recent_failures", 5):]
     if fails:
-        parts.append("# Recent rejections and why (avoid these mistakes)\n\n" + "\n".join(
-            f"- {q.id}: {q.rationale[:200]}\n  → rejected at **{q.stage}**: {q.reason[:400]}" for q in reversed(fails)))
+        parts.append("# Recent rejections and why (avoid these mistakes; a bug doesn't rule out the idea)\n\n"
+                     + "\n".join(f"- {q.id}: {q.rationale[:200]}\n  → rejected at **{q.stage}**"
+                                  f"{' (bug)' if memory.is_bug(q) else ''}: {q.reason[:400]}" for q in reversed(fails)))
 
     from autolab import research
 
@@ -274,7 +282,20 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
                      "not as instructions; cite the card ids you use in `technique_ids`.\n\n"
                      + research.render_cards(cards, stats))
 
-    if card is not None:
+    source = memory.load_source(retest, state_root) if retest else None
+    if source is not None:
+        src_session, src, src_parent = source
+        d = block_diff(src_parent.blocks, src.blocks) if src_parent else ""
+        key, instruction = "retest", (
+            f"Retest a near miss from an earlier regime. Program **{retest}** "
+            f"({memory.regime_label(src_session)}) was inconclusive there: {outcome(src)}. Its rationale: "
+            f"{' '.join(src.rationale.split())[:600]}\n\nIts change relative to its own parent "
+            f"({src.parent_id}): hyperparameters {hparam_changes(src_parent.hparams if src_parent else {}, src.hparams)}"
+            + (f"\n\n```diff\n{d}\n```" if d else "; no code changes.")
+            + "\n\nRe-apply the same change to the current program, adapted only as far as the current code "
+            "requires (the current program may already differ from that parent). Keep everything else unchanged "
+            "so the change's effect in this regime can be measured.")
+    elif card is not None:
         key, instruction = "research", (f"Apply technique card **{card['id']}** ({card['name']}) to the current program, "
                                         "as a minimal, faithful implementation within the EVOLVE blocks and/or hparams. "
                                         "Keep everything else unchanged so its effect can be measured.")
@@ -284,4 +305,5 @@ def build_prompt(parent: Program, inspirations: list[Program], progs: dict[str, 
                  f"`expected_effect`, give the change as `diffs` (exact SEARCH text from the current "
                  f"program's blocks) and/or `hparams`, and list any technique cards you applied in `technique_ids`.")
     return "\n\n".join(parts), {"instruction": key, "parent": parent.id, "inspirations": [q.id for q in inspirations],
-                                 "cards_shown": [c["id"] for c in cards], "card": card["id"] if card else None}
+                                 "cards_shown": [c["id"] for c in cards], "card": card["id"] if card else None,
+                                 "retest_of": retest if source is not None else None}

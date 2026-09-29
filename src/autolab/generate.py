@@ -92,8 +92,9 @@ def _clean_hparams(raw: dict, parent: Program) -> dict:
 
 def generate_one(paths: ev.Paths | None = None, rng: random.Random | None = None, log=print,
                  caller=call, model: str | None = None, runs_dir=None, card: dict | None = None,
-                 cards: list[dict] | None = None) -> Program:
-    """One child. `card` = directed: apply that technique card to the incumbent (no sampling)."""
+                 cards: list[dict] | None = None, retest: str | None = None) -> Program:
+    """One child. `card` = directed: apply that technique card to the incumbent (no sampling).
+    `retest` = directed: re-apply that near miss ('session/pid', an earlier regime) to the incumbent."""
     paths = paths or ev.Paths()
     rng = rng or random.Random()
     cfg, lcfg = ev.evolve_cfg(), llm_cfg()
@@ -107,10 +108,11 @@ def generate_one(paths: ev.Paths | None = None, rng: random.Random | None = None
         log(f"migrated island bests: {session['database']['migrants']}")
     island = next_island(progs, dbc)
     parent, insp = sample(progs, session, island, dbc, rng)
-    if card is not None:  # directed: the card is an upgrade proposed for the incumbent
+    if card is not None or retest is not None:  # directed: an upgrade proposed for the incumbent
         parent = progs[session["incumbent"]]
     runs_dir = runs_dir or REPO_ROOT / "autolab" / "runs"
-    prompt, pmeta = build_prompt(parent, insp, progs, session, cfg, lcfg, runs_dir, rng, card=card, cards=cards)
+    prompt, pmeta = build_prompt(parent, insp, progs, session, cfg, lcfg, runs_dir, rng, card=card, cards=cards,
+                                 retest=retest, state_root=paths.root.parent)
     models = lcfg.get("models", {"opus": 1.0})
     model = model or rng.choices(list(models), weights=list(models.values()))[0]
     meta = {**pmeta, "island": island, "model_requested": model}

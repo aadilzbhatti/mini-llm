@@ -451,3 +451,35 @@ def test_measure_step_backfills_incumbent_metrics(world, monkeypatch):
     ctl._real_measure_step(ctl.load_control(), ev.load_session(), ev.programs(), {}, {"daily_usd": 100.0}, T,
                            ev.Paths(), lambda m: None)
     assert submitted == ["p0"]  # already measuring: not again
+
+
+def test_noise_is_pooled_over_multi_seed_programs(world):
+    paths = ev.Paths(world["root"] / "s2")
+    session = ev.load_session(paths)
+    base = session["noise"]["full"]["std"]
+    p = Program(id="p1", parent_id="p0", base_commit="x", blocks={}, hparams=HP, status="contender", stage="done",
+                scores={"full_losses": [4.70, 4.70, 4.70]})
+    q = Program(id="p2", parent_id="p0", base_commit="x", blocks={}, hparams=HP, status="evaluated", stage="done",
+                scores={"full_losses": [4.80]})  # one seed: no information about noise
+    assert ev.update_noise_pool(session, {"p0": ev.programs(paths)["p0"], "p1": p, "p2": q})
+    assert session["noise"]["full"]["programs"] == {"p1": [4.70, 4.70, 4.70]}
+    std, df = ev.pooled_full_std(session)
+    assert df == 4 and std == pytest.approx(base / 2 ** 0.5)  # a zero-spread program halves the variance
+    assert not ev.update_noise_pool(session, {"p1": p})
+    assert ev.sigma(session, {"noise_floor": 0.0}) == pytest.approx(std)
+
+
+@pytest.mark.parametrize("flow_key,step", [("data_flow", "data_step"), ("ladder", "ladder_step")])
+def test_policies_rearm_for_a_new_incumbent(world, monkeypatch, flow_key, step):
+    paths = ev.Paths(world["root"] / "s2")
+    session, progs = ev.load_session(paths), ev.programs(paths)
+    state = {flow_key: {"session": "s2", "state": "not_helped", "program": "p0"}}
+    monkeypatch.setattr(ctl, "budget_ok", lambda *a: False)  # stop right after re-arming
+    cfg = {"ladder_patience": 99, "max_full_tokens": 10**12}
+    getattr(ctl, step)(state, session, progs, {}, cfg, paths, lambda m: None)
+    assert state[flow_key]["state"] == "not_helped"  # same incumbent: stays done
+    session["incumbent"] = "p9"
+    progs["p9"] = progs["p0"]
+    getattr(ctl, step)(state, session, progs, {}, cfg, paths, lambda m: None)
+    assert state[flow_key]["state"] == "idle" and "program" not in state[flow_key]
+    assert any(e["event"].endswith("_rearmed") for e in _read(world["tmp"] / "notebook.jsonl"))

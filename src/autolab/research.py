@@ -118,10 +118,24 @@ def all_programs() -> list[tuple[str, Program]]:
     return out
 
 
-def card_stats(cards: list[dict], progs: list[tuple[str, Program]] | None = None) -> dict[str, dict]:
-    progs = progs if progs is not None else all_programs()
-    stats = {c["id"]: {"used": 0, "finished": 0, "reward": 0.0, "outcomes": {}, "programs": []} for c in cards}
+def card_stats(cards: list[dict], progs: list[tuple[str, Program]] | None = None,
+               weights: dict[str, float] | None = None) -> dict[str, dict]:
+    """Outcomes of the programs that cited each card. `finished` and `reward` are weighted by the session's
+    regime distance (autolab.memory.session_weights: halved per regime change), so a card's record fades
+    after the regime changes; `outcomes` / `outcomes_here` are raw counts (all sessions / weight-1 sessions).
+    Without `progs` (the live sessions) the weights come from the live chain; a session missing from
+    `weights` counts fully."""
+    if progs is None:
+        from autolab.memory import memory_cfg, session_weights
+
+        progs = all_programs()
+        if weights is None:
+            weights = session_weights(ev.active_session_name(), ev.STATE_ROOT, memory_cfg(ev.evolve_cfg())["card_decay"])
+    weights = weights or {}
+    stats = {c["id"]: {"used": 0, "finished": 0.0, "reward": 0.0, "outcomes": {}, "outcomes_here": {},
+                       "programs": []} for c in cards}
     for sess, p in progs:
+        w = weights.get(sess, 1.0)
         for cid in (p.meta or {}).get("technique_ids", []) or []:
             st = stats.get(cid)
             if st is None:
@@ -129,9 +143,11 @@ def card_stats(cards: list[dict], progs: list[tuple[str, Program]] | None = None
             st["used"] += 1
             st["programs"].append(f"{sess}/{p.id}")
             if p.status in REWARD:
-                st["finished"] += 1
-                st["reward"] += REWARD[p.status]
+                st["finished"] += w
+                st["reward"] += w * REWARD[p.status]
                 st["outcomes"][p.status] = st["outcomes"].get(p.status, 0) + 1
+                if w >= 1.0:
+                    st["outcomes_here"][p.status] = st["outcomes_here"].get(p.status, 0) + 1
     for st in stats.values():
         st["mean_reward"] = st["reward"] / st["finished"] if st["finished"] else None
     return stats
@@ -162,7 +178,11 @@ def render_cards(cards: list[dict], stats: dict | None = None) -> str:
         st = (stats or {}).get(c["id"])
         record = ""
         if st and st["finished"]:
-            record = " Record so far: " + ", ".join(f"{k} {v}" for k, v in st["outcomes"].items()) + "."
+            here = st.get("outcomes_here", st["outcomes"])
+            record = " Record in this regime: " + (", ".join(f"{k} {v}" for k, v in here.items()) or "none") + "."
+            if here != st["outcomes"]:
+                record += (" All regimes: " + ", ".join(f"{k} {v}" for k, v in st["outcomes"].items())
+                           + " (earlier regimes are weak evidence here).")
         src = "; ".join(f"{e['source']} ({e.get('year', '?')}): {e['finding']}" for e in c["evidence"])
         out.append(f"### {c['id']}: {c['name']} [{c['category']} · {c['component']}]\n"
                    f"- Now: {c['current']}\n- Proposal: {c['proposal']}\n- Mechanism: {c['mechanism']}\n"
@@ -178,13 +198,13 @@ def research_prompt(trigger: str, session: dict, progs: dict[str, Program], runs
                     rcfg: dict) -> str:
     import torch
 
+    from autolab import memory
     from autolab.prompt import _read_json, hparam_ranges, outcome, report_summary, session_history
 
     inc = progs[session["incumbent"]]
     p0 = progs["p0"]
     rep0 = _read_json(runs_dir / p0.runs["full"][0] / "report.json") or {}
     sc0 = rep0.get("scale", {})
-    tried = [q for q in progs.values() if q.parent_id]
     blocks = "\n\n".join(f"### `{k}`\n```python\n{v}\n```" for k, v in inc.blocks.items())
     existing = load_cards()
     return (PROMPTS / "research.md").read_text().format(
@@ -198,7 +218,8 @@ def research_prompt(trigger: str, session: dict, progs: dict[str, Program], runs
         full_mean=inc.scores.get("full_mean") or float("nan"), n_seeds=inc.scores.get("n_seeds") or 0,
         hparams=json.dumps(inc.hparams), report=report_summary(inc, runs_dir, session_history(progs, session, runs_dir)),
         blocks=blocks,
-        tried="\n".join(f"- {q.id}: {' '.join(q.rationale.split())[:220]} → {outcome(q)}" for q in tried[-40:]) or "(nothing yet)",
+        tried=memory.render(memory.remembered(session, progs, {**cfg, "database": {**cfg.get("database", {}), "history": 40}},
+                                              ev.STATE_ROOT), outcome, width=220) or "(nothing yet)",
         cards="\n".join(f"- {c['id']}: {c['name']} ({c['category']})" for c in existing) or "(none yet)",
         max_searches=rcfg.get("max_searches", 8), max_cards=rcfg.get("max_cards", 5),
     ) + "\n\nHyperparameter ranges:\n" + hparam_ranges(cfg["hparams"])

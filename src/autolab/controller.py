@@ -11,12 +11,13 @@ Each cycle, after the cascade has advanced (autolab.evaluate.advance_all), `step
    `max_consecutive_early_rejects` programs in a row rejected at static/cpu/params means the
    prompt or code is broken, and more calls would only burn budget.
 3. Data policy. If the incumbent's full-budget runs read `data_limited` with confidence >=
-   data_trigger_confidence and no bigger dataset has been tried in this session: build one
+   data_trigger_confidence and no bigger dataset has been tried for this incumbent: build one
    (data_growth x the current docs; a doc-prefix slice if a bigger set already exists), upload
    it, and start a data check (autolab.evaluate.start_data_check). If the check says it helped,
    run the incumbent's screens on the new data and start a new session there (noise from the
    check's 3 full seeds + those screens). Otherwise the "didn't help" note stays in the
-   notebook as capacity evidence. Builds and uploads run as detached subprocesses so the daemon
+   notebook as capacity evidence, and the policy re-arms when a new incumbent is accepted (so
+   does the compute ladder). Builds and uploads run as detached subprocesses so the daemon
    keeps cycling.
 4. Proposals: keep up to max_in_flight unfinished programs, each new one only if the
    rolling-24h spend (Modal actual + committed estimates of pending calls + Claude) plus
@@ -281,6 +282,18 @@ def _alive(pid: int | None) -> bool:
         return True
 
 
+def rearm(flow: dict, session: dict, what: str) -> bool:
+    """A finished policy flow (not_helped / failed) was about one incumbent; a new one gets its own check.
+    Reset the flow to idle when the incumbent has changed since."""
+    if flow.get("state") not in ("not_helped", "failed") or flow.get("program") in (None, session["incumbent"]):
+        return False
+    note(f"{what}_rearmed", session=session.get("name"), program=session["incumbent"], previous=flow.get("program"),
+         previous_state=flow.get("state"))
+    flow.clear()
+    flow.update(session=session.get("name"), state="idle")
+    return True
+
+
 def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, paths: ev.Paths, log) -> None:
     from autolab.config import load_config
 
@@ -289,6 +302,7 @@ def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, pat
     if flow.get("session") != sname:
         flow.clear()
         flow.update(session=sname, state="idle")
+    rearm(flow, session, "data_policy")
     datasets_dir = load_config().datasets_dir
     runs_dir = RUNS
 
@@ -308,7 +322,7 @@ def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, pat
         from autolab.datasets import dataset_id
 
         target = dataset_id(want)
-        flow.update(target=target, trigger=lab, started=iso(now()))
+        flow.update(target=target, trigger=lab, started=iso(now()), program=session["incumbent"])
         note("data_limited", session=sname, program=session["incumbent"], confidence=lab["confidence"],
              evidence=lab["evidence"], plan=f"build {target} ({want:,} docs) and test the incumbent on it")
         if (datasets_dir / target / "train.pt").exists():
@@ -438,6 +452,28 @@ def port_from_old_sessions(ctl: dict, session: dict, log) -> list[str]:
     return out
 
 
+def retest_step(ctl: dict, session: dict, log, root: Path | None = None) -> list[str]:
+    """Once per regime change (a session with an origin), queue targeted retests of near misses from earlier
+    regimes: [evolve.memory] retest_per_regime of them, each re-applied to the new champion by a directed
+    child. Near misses are the results most likely to flip with more data or compute, and waiting for the
+    proposer to rediscover a specific one is unreliable. Other rejections simply expire (autolab.memory)."""
+    from autolab import memory
+
+    st = ctl.setdefault("retest", {})
+    sessions, done, pending = (st.setdefault(k, []) for k in ("sessions", "done", "pending"))
+    name = session.get("name")
+    if not (session.get("origin") or {}).get("session") or name in sessions:
+        return []
+    sessions.append(name)
+    picks = [m.key for m in memory.retest_candidates(session, ev.evolve_cfg(), root or ev.STATE_ROOT, set(done))]
+    done.extend(picks)
+    pending.extend(picks)
+    note("retest_queued", session=name, programs=picks)
+    if picks:
+        log(f"retest: near misses from earlier regimes queued for {name}: {', '.join(picks)}")
+    return picks
+
+
 # --- the compute ladder -----------------------------------------------------------------------------
 
 
@@ -462,6 +498,7 @@ def ladder_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, p
     if flow.get("session") != sname:
         flow.clear()
         flow.update(session=sname, state="idle")
+    rearm(flow, session, "ladder")
     cur = session["budgets"]["full_tokens"]
     step_tokens = ev.evolve_cfg()["block_size"] * progs[session["incumbent"]].hparams["batch_size"]
     nxt = int(round(cur * cfg.get("ladder_factor", 1.5) / step_tokens)) * step_tokens
@@ -482,7 +519,7 @@ def ladder_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, p
         dataset = session.get("dataset_id") or ev.evolve_cfg()["dataset_id"]
         chk = ev.start_data_check(session["incumbent"], dataset, paths=paths, tokens=nxt)
         flow.update(state="checking", check=chk["id"], kind="budget", target=f"{nxt // 1_000_000}M", dataset=dataset,
-                    tokens=nxt, started=iso(now()))
+                    tokens=nxt, started=iso(now()), program=session["incumbent"])
         flow.pop("waiting", None)
         note("ladder_check_started", session=sname, program=session["incumbent"], tokens=nxt, stalled=stalled,
              runs=chk["runs"])
@@ -654,8 +691,14 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         if not sess:
             continue
         name = sess.get("name")
+        sprogs = ev.programs(spaths)
+        if ev.update_noise_pool(sess, sprogs):  # re-estimate seed noise from every multi-seed program
+            ev.save_session(sess, spaths)
+            std, df = ev.pooled_full_std(sess)
+            note("noise_updated", session=name, pooled_std=round(std, 5), df=df,
+                 base_std=round(sess["noise"]["full"]["std"], 5), sigma=round(ev.sigma(sess), 5))
         seen = set(ctl.setdefault("recorded", {}).get(name, []))
-        for p in ev.programs(spaths).values():
+        for p in sprogs.values():
             if p.parent_id is None or p.id in seen or p.status not in ev.DONE:
                 continue
             note("program_done", session=name, program=p.id, status=p.status, stage=p.stage,
@@ -694,6 +737,10 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         session_paths = ev.Paths()
         session, progs = ev.load_session(session_paths), ev.programs(ev.Paths())
     port_from_old_sessions(ctl, session, log)
+    try:
+        retest_step(ctl, session, log)
+    except Exception as exc:  # noqa: BLE001
+        log(f"retest error: {type(exc).__name__}: {exc}")
     status["data"] = {k: v for k, v in ctl.get("data_flow", {}).items() if k in ("state", "target", "check", "new_session")}
     status["ladder"] = {k: v for k, v in ctl.get("ladder", {}).items() if k in ("state", "target", "waiting", "new_session")}
     paused = ctl.get("paused_until")
@@ -760,15 +807,21 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
                                  "limit": mb.max_usd(), "unblock_at_limit": round(modal_total + need + 0.01, 2)}
             break
         pending = ctl.get("research", {}).get("pending_directed") or []
-        card = None
+        retests = ctl.get("retest", {}).get("pending") or []
+        card = retest = None
         if pending:  # test each new research card right away, as a directed child of the incumbent
             from autolab import research
 
             card = next((c for c in research.load_cards() if c["id"] == pending[0]), None)
+        elif retests:  # then near misses from earlier regimes, re-applied to the incumbent
+            retest = retests[0]
         try:
-            child = (generate or _generate)(log) if card is None else _generate(log, card=card)
+            directed = card is not None or retest is not None
+            child = _generate(log, card=card, retest=retest) if directed else (generate or _generate)(log)
             if pending:
                 pending.pop(0)
+            elif retests:
+                retests.pop(0)
         except RateLimited as exc:
             until = parse_reset(str(exc), t)
             ctl.update(paused_until=iso(until), pause_reason=f"Claude usage limit: {str(exc)[:200]}")
@@ -778,7 +831,8 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
              created_by=child.created_by, rationale=child.rationale[:400], hparams_patch={
                  k: v for k, v in child.hparams.items() if progs.get(child.parent_id) and
                  progs[child.parent_id].hparams.get(k) != v},
-             status=child.status, fallback=child.meta.get("fallback_reason"), cost_usd=child.meta.get("cost_usd"))
+             status=child.status, fallback=child.meta.get("fallback_reason"), cost_usd=child.meta.get("cost_usd"),
+             retest_of=child.meta.get("retest_of"))
         made += 1
         in_flight += child.status not in ev.DONE
     save_control(ctl)
@@ -786,7 +840,7 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     return {**status, "proposed": made, "in_flight": in_flight}
 
 
-def _generate(log, card: dict | None = None):
+def _generate(log, card: dict | None = None, retest: str | None = None):
     from autolab.generate import generate_one
 
-    return generate_one(log=log, card=card)
+    return generate_one(log=log, card=card, retest=retest)
