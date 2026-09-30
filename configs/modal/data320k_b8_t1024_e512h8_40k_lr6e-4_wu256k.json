@@ -1,0 +1,26 @@
+{
+  "name": "data320k-b8-t1024-e512h8-40k-lr6e-4-wu256k",
+  "args": {
+    "tokens": "data/data320k/train.pt",
+    "val-tokens": "data/data160k/val.pt",
+    "plot-loss": true,
+    "steps": 40000,
+    "n-embd": 512,
+    "n-head": 8,
+    "n-layer": 4,
+    "block-size": 1024,
+    "lr": 0.0006,
+    "min-lr": 2e-06,
+    "full-eval-interval": 3000,
+    "save": true,
+    "sample-report": true,
+    "plot-suffix": "data320k-b8-t1024-e512h8-40k-lr6e-4-wu256k-modal",
+    "batch-size": 8,
+    "dropout": 0,
+    "eval-batches": 20,
+    "eval-interval": 100,
+    "eval-seed": 1234,
+    "seed": 42,
+    "warmup-tokens": 256000
+  }
+}
