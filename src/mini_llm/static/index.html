@@ -64,7 +64,7 @@
   #doctoc a { display:block; padding:5px 0; text-decoration:none; }
   #doctoc a.h3 { padding-left:16px; font-size:14px; }
   .md h1 { font-size:20px; margin:18px 0 8px; } .md h2 { font-size:18px; margin:22px 0 8px; padding-top:6px; border-top:1px solid var(--line); }
-  .md h3 { font-size:15px; margin:16px 0 6px; } .md h2, .md h3 { scroll-margin-top:70px; }
+  .md h3 { font-size:15px; margin:16px 0 6px; } .md h4 { font-size:13px; margin:12px 0 4px; color:var(--mut); } .md h2, .md h3 { scroll-margin-top:70px; }
   .md p { margin:6px 0; } .md ul { margin:6px 0; padding-left:20px; }
   .md code { font:12px ui-monospace, Menlo, monospace; background:var(--card); padding:1px 4px; border-radius:4px; }
   .md pre { max-height:none; background:var(--card); border:1px solid var(--line); }
@@ -72,6 +72,23 @@
   #totop { position:fixed; right:14px; bottom:calc(16px + env(safe-area-inset-bottom)); z-index:21; }
   .genout { white-space:pre-wrap; word-break:break-word; font:13px/1.45 ui-monospace, Menlo, monospace; background:var(--bg); padding:10px; border-radius:8px; margin-top:8px; }
   .genout b { color:var(--mut); font-weight:400; }
+  /* Decoding knobs: a number box and a slider per knob, kept in sync, both bounded to the server's range. */
+  .knob { margin:10px 0; }
+  .knob .top { display:flex; gap:8px; align-items:center; }
+  .knob .top label { flex:1; font-size:13px; font-weight:600; }
+  .knob .top input { width:96px; text-align:right; }
+  .knob input[type=range] { width:100%; margin:6px 0 0; accent-color:var(--acc); }
+  .presets { display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 2px; }
+  .presets button { padding:5px 10px; font-size:13px; }
+  .regime { border-left:3px solid var(--acc); }
+  .regime.warn { border-left-color:var(--warn); }
+  .dist { display:grid; grid-template-columns:minmax(0, 8em) 1fr 3.6em; gap:3px 8px; align-items:center; font-size:12px; margin-top:6px; }
+  .dist .tok { font:12px ui-monospace, Menlo, monospace; white-space:pre; overflow:hidden; text-overflow:ellipsis; }
+  .dist .track { position:relative; height:12px; background:var(--bg); border-radius:3px; overflow:hidden; }
+  .dist .raw { position:absolute; inset:0 auto 0 0; border:1px dashed var(--mut); border-left:0; border-radius:0 3px 3px 0; opacity:.6; }
+  .dist .fin { position:absolute; inset:0 auto 0 0; background:var(--acc); border-radius:3px; }
+  .dist .cut { opacity:.4; text-decoration:line-through; }
+  .dist .pct { text-align:right; font-variant-numeric:tabular-nums; }
 </style>
 </head>
 <body>
@@ -132,12 +149,23 @@
     <div class="field"><label for="g-ckpt">checkpoint</label><select id="g-ckpt"></select>
       <div class="mut hint" id="g-ckpt-info"></div></div>
     <div class="field"><label for="g-prompt">prompt</label><textarea id="g-prompt" style="min-height:110px" placeholder="Photosynthesis is a process that"></textarea></div>
+    <div class="mut">Presets (same settings for every model you compare):</div>
+    <div class="presets">
+      <button onclick="genPreset(0.6, 20, 1)">Coherent · 0.6 / 20</button>
+      <button onclick="genPreset(0.7, 40, 1)">Default · 0.7 / 40</button>
+      <button onclick="genPreset(0.8, 50, 1)">Variety · 0.8 / 50</button>
+      <button onclick="genPreset(0.7, 0, 0.9)">Nucleus · 0.7 / p 0.9</button>
+      <button onclick="genPreset(0, 0, 1)">Greedy</button>
+    </div>
+    <div id="g-knobs"></div>
+    <div class="note regime" id="g-regime"></div>
+    <div class="card" style="margin:8px 0 0; padding:10px" id="g-preview">
+      <div class="row"><strong style="flex:1; font-size:14px">Next token under these settings</strong><span class="mut" id="g-prev-state"></span></div>
+      <div class="mut hint" id="g-prev-sum"></div>
+      <div class="dist" id="g-dist"></div>
+      <div class="mut hint">Solid bar: probability with the current settings. Dashed: the model's raw probability (T=1, no cutoff). Struck out: excluded by top-k / top-p.</div>
+    </div>
     <div class="grid">
-      <div class="field"><label for="g-method">method</label><select id="g-method" onchange="genMethodChanged()">
-        <option value="topk">top-k sampling</option><option value="sample">sampling</option><option value="argmax">argmax (greedy)</option></select></div>
-      <div class="field"><label for="g-max">max new tokens</label><input id="g-max" inputmode="numeric" value="128"></div>
-      <div class="field" id="g-temp-f"><label for="g-temp">temperature</label><input id="g-temp" inputmode="decimal" value="0.8"></div>
-      <div class="field" id="g-topk-f"><label for="g-topk">top-k</label><input id="g-topk" inputmode="numeric" value="50"></div>
       <div class="field"><label for="g-seed">seed (blank = random)</label><input id="g-seed" inputmode="numeric" value=""></div>
       <div class="field"><label for="g-device">device</label><select id="g-device"><option value="cpu">cpu</option><option value="mps">mps (GPU; shares with training)</option></select></div>
     </div>
@@ -183,7 +211,7 @@ document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
   document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b));
   document.querySelectorAll('section').forEach(s => s.classList.toggle('hidden', s.id !== b.dataset.tab));
   try { localStorage.setItem('mini-llm-tab', b.dataset.tab); } catch {}
-  if (b.dataset.tab === 'gen') loadCheckpoints();
+  if (b.dataset.tab === 'gen') { renderKnobs(); knobsChanged(); loadCheckpoints(); }
 });
 
 async function cmd(runId, body, label) {
@@ -260,11 +288,11 @@ function md(src) {
   while (i < lines.length) {
     const l = lines[i];
     if (l.startsWith('```')) { const code = []; i++; while (i < lines.length && !lines[i].startsWith('```')) code.push(lines[i++]); i++; out.push(`<pre>${esc(code.join('\n'))}</pre>`); continue; }
-    const h = l.match(/^(#{1,3}) (.*)$/);
+    const h = l.match(/^(#{1,4}) (.*)$/);
     if (h) {
       const lvl = h[1].length, text = h[2], id = slug((lvl === 3 ? section + ' ' : '') + text);
       if (lvl === 2) section = text;
-      if (lvl > 1) toc.push({ lvl, text: lvl === 3 ? text : text, id });
+      if (lvl === 2 || lvl === 3) toc.push({ lvl, text: lvl === 3 ? text : text, id });
       out.push(`<h${lvl} id="${id}">${inline(text)}</h${lvl}>`); i++; continue;
     }
     if (l.startsWith('|')) { const rows = []; while (i < lines.length && lines[i].startsWith('|')) rows.push(lines[i++]);
@@ -298,6 +326,7 @@ async function loadCheckpoints(force) {
     $('#g-ckpt').innerHTML = CKPTS.filter(c => !c.error).map(c => `<option value="${esc(c.name)}">${esc(c.name.replace(/\.pt$/, ''))}${c.full_val_loss != null ? ` · val ${f4(c.full_val_loss)}` : ''}</option>`).join('');
     if (keep && CKPTS.some(c => c.name === keep)) $('#g-ckpt').value = keep;
     ckptInfo();
+    scheduleDist();
   } catch (e) { toast(e.message); }
 }
 function ckptInfo() {
@@ -305,26 +334,129 @@ function ckptInfo() {
   const k = c.config || {};
   $('#g-ckpt-info').textContent = `${k.n_layer}L × ${k.n_embd}d, context ${k.block_size} · step ${(c.step ?? 0).toLocaleString()} · ${c.size_mb} MB · ${c.modified}`;
 }
-function genMethodChanged() {
-  const m = $('#g-method').value;
-  $('#g-temp-f').classList.toggle('hidden', m === 'argmax');
-  $('#g-topk-f').classList.toggle('hidden', m !== 'topk');
+// --- decoding knobs + live next-token preview ---------------------------------------
+// Ranges come from the server (/api/meta "sampling"), which enforces the same ones.
+const SAMPLING_FALLBACK = { temperature: { min: 0, max: 1.5, default: 0.7 }, top_k: { min: 0, max: 200, default: 40 },
+  top_p: { min: 0.05, max: 1, default: 1 }, max_new_tokens: { min: 1, max: 1024, default: 256 } };
+const KNOBS = [
+  { key: 'temperature', label: 'temperature', step: 0.05, int: false, note: '0 = greedy' },
+  { key: 'top_k', label: 'top-k', step: 1, int: true, note: '0 = off' },
+  { key: 'top_p', label: 'top-p (nucleus)', step: 0.05, int: false, note: '1 = off' },
+  { key: 'max_new_tokens', label: 'max new tokens', step: 1, int: true, note: '' },
+];
+let DIST = null, distTimer = null, distSeq = 0;
+const samp = () => META?.sampling || SAMPLING_FALLBACK;
+function renderKnobs() {
+  if ($('#g-knobs').dataset.ready) return;
+  $('#g-knobs').innerHTML = KNOBS.map(k => { const r = samp()[k.key];
+    return `<div class="knob"><div class="top"><label for="g-${k.key}">${k.label} <span class="mut" style="font-weight:400">${r.min}–${r.max}${k.note ? ` · ${k.note}` : ''}</span></label>
+      <input id="g-${k.key}" type="number" inputmode="decimal" min="${r.min}" max="${r.max}" step="${k.step}" value="${r.default}"></div>
+      <input id="g-${k.key}-r" type="range" min="${r.min}" max="${r.max}" step="${k.step}" value="${r.default}" aria-label="${k.label}">
+      <div class="err hidden" id="g-${k.key}-e"></div></div>`; }).join('');
+  for (const k of KNOBS) {
+    const box = $(`#g-${k.key}`), slider = $(`#g-${k.key}-r`);
+    slider.oninput = () => { box.value = slider.value; knobsChanged(); };
+    box.oninput = () => { if (knobValue(k) != null) slider.value = box.value; knobsChanged(); };
+    box.onchange = () => { const r = samp()[k.key]; let v = Number(box.value);  // on blur/enter: snap into range
+      if (box.value.trim() === '' || !Number.isFinite(v)) v = r.default;
+      v = Math.min(r.max, Math.max(r.min, k.int ? Math.round(v) : v)); box.value = slider.value = v; knobsChanged(); };
+  }
+  $('#g-knobs').dataset.ready = '1';
+}
+function knobValue(k) {  // -> number, or null (with the reason shown under the knob) if out of range
+  const r = samp()[k.key], box = $(`#g-${k.key}`), raw = box.value.trim(), v = Number(raw);
+  const bad = raw === '' || !Number.isFinite(v) ? 'enter a number' : k.int && !Number.isInteger(v) ? 'must be a whole number'
+    : v < r.min || v > r.max ? `must be between ${r.min} and ${r.max}` : '';
+  box.classList.toggle('bad', !!bad); $(`#g-${k.key}-e`).textContent = bad; $(`#g-${k.key}-e`).classList.toggle('hidden', !bad);
+  return bad ? null : v;
+}
+function knobValues() { const o = {}; for (const k of KNOBS) o[k.key] = knobValue(k); return o; }
+function genPreset(t, k, p) { for (const [key, v] of [['temperature', t], ['top_k', k], ['top_p', p]]) { $(`#g-${key}`).value = $(`#g-${key}-r`).value = v; } knobsChanged(); }
+function knobsChanged() {
+  const v = knobValues(), ok = Object.values(v).every(x => x != null);
+  $('#g-go').disabled = !ok;
+  const greedy = v.temperature === 0;
+  for (const key of ['top_k', 'top_p']) $(`#g-${key}`).closest('.knob').style.opacity = greedy ? .45 : 1;
+  describeRegime(v); renderDist(v);
+}
+function describeRegime(v) {
+  const el = $('#g-regime'), T = v.temperature, k = v.top_k, p = v.top_p, lines = []; let warn = false;
+  if (T == null || k == null || p == null) { el.textContent = 'Fix the highlighted value to see how the model will respond.'; el.classList.add('warn'); return; }
+  if (T === 0) lines.push('<b>Greedy</b>: always the single most likely token. Deterministic; small models often fall into repetition loops. top-k and top-p do nothing here.');
+  else {
+    if (T <= 0.6) lines.push('<b>Maximum coherence</b>: sharpens the model toward its strongest preferences. Grammatical but conservative, often repetitive.');
+    else if (T <= 0.75) lines.push('<b>Default for qualitative evals</b>: trusts the model\'s strong preferences more than its uncertain tail. Best starting compromise.');
+    else if (T <= 0.85) lines.push('<b>More variety</b>: more interesting continuations, more errors and topic jumps.');
+    else if (T <= 1) lines.push('<b>Creative stress test</b>: samples close to the raw distribution; likely pretty bad for a 16M-parameter model.');
+    else { lines.push('<b>Above 1</b>: flattens the distribution toward the garbage tail. Not useful for this model yet.'); warn = true; }
+    if (k === 0 && p >= 1) { lines.push('No top-k or top-p cutoff: every one of the 50,257 tokens can be drawn, including the tail.'); warn = warn || T > 0.8; }
+    else if (k > 100) lines.push(`top-k ${k} barely cuts anything beyond what k≈50 would; the extra candidates are mostly tail.`);
+    else if (k > 0 && k <= 20) lines.push(`top-k ${k}: only the ${k} most likely tokens are allowed. Safe, but less varied.`);
+    else if (k > 0) lines.push(`top-k ${k}: tokens outside the ${k} most likely are never drawn.`);
+    if (p < 1) lines.push(`top-p ${p}: keeps just enough tokens to cover ${Math.round(p * 100)}% of the probability. Few when the model is confident, many when it isn't${k ? ', and never more than top-k' : ''}.`);
+  }
+  const c = (CKPTS || []).find(x => x.name === $('#g-ckpt').value), bs = c?.config?.block_size, n = DIST?.prompt_tokens;
+  if (v.max_new_tokens != null && bs && n != null) {
+    if (n >= bs) lines.push(`The prompt (${n} tokens) is longer than the ${bs}-token context: only its last ${bs} tokens are seen.`);
+    else if (v.max_new_tokens > bs - n) lines.push(`After ${bs - n + 1} new tokens the prompt starts scrolling out of the ${bs}-token context${v.max_new_tokens >= bs ? `, and it is gone entirely by ${bs}` : ''}: the model is then continuing its own text.`);
+  }
+  el.innerHTML = lines.join('<br>'); el.classList.toggle('warn', warn);
+}
+function decodeLogits(b64) { const bin = atob(b64), buf = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i); return new Float32Array(buf.buffer); }
+function applySettings(z, order, T, k, p) {  // -> {probs: Float32Array, kept}; mirrors report.generate_until_eos
+  const n = z.length, probs = new Float32Array(n);
+  if (T === 0) { probs[order[0]] = 1; return { probs, kept: 1 }; }
+  const limit = k > 0 ? Math.min(k, n) : n, zmax = z[order[0]] / T; let sum = 0;
+  for (let r = 0; r < limit; r++) { const i = order[r], e = Math.exp(z[i] / T - zmax); probs[i] = e; sum += e; }
+  for (let r = 0; r < limit; r++) probs[order[r]] /= sum;
+  let kept = limit;
+  if (p < 1) { let cum = 0, keep = 0; for (let r = 0; r < limit; r++) { if (cum >= p) break; cum += probs[order[r]]; keep++; }
+    for (let r = keep; r < limit; r++) probs[order[r]] = 0; for (let r = 0; r < keep; r++) probs[order[r]] /= cum; kept = keep; }
+  return { probs, kept };
+}
+function renderDist(v) {
+  if (!DIST) return;
+  if (Object.values(v).some(x => x == null)) { $('#g-prev-sum').textContent = ''; $('#g-dist').innerHTML = ''; return; }
+  const { z, order, raw } = DIST, { probs, kept } = applySettings(z, order, v.temperature, v.top_k, v.top_p);
+  let H = 0; for (let r = 0; r < kept; r++) { const q = probs[order[r]]; if (q > 0) H -= q * Math.log(q); }
+  const show = DIST.top.slice(0, 12), shown = show.reduce((a, t) => a + probs[t.id], 0);
+  $('#g-prev-sum').textContent = `Draws from ${kept.toLocaleString()} candidate${kept === 1 ? '' : 's'} · most likely token ${(probs[order[0]] * 100).toFixed(1)}% · ≈${Math.exp(H).toFixed(1)} effective choices (e^entropy) · ${((1 - shown) * 100).toFixed(1)}% of the draw falls outside the 12 shown`;
+  const tok = s => esc(s.replace(/\n/g, '⏎').replace(/\t/g, '⇥').replace(/^ /, '␣'));
+  $('#g-dist').innerHTML = show.map(t => { const q = probs[t.id], r0 = raw[t.id], cut = q === 0;
+    return `<span class="tok${cut ? ' cut' : ''}" title="${esc(JSON.stringify(t.text))} (id ${t.id})">${tok(t.text)}</span>
+      <span class="track"><span class="raw" style="width:${(r0 * 100).toFixed(2)}%"></span><span class="fin" style="width:${(q * 100).toFixed(2)}%"></span></span>
+      <span class="pct${cut ? ' cut' : ''}">${(q * 100).toFixed(1)}%</span>`; }).join('');
+}
+function scheduleDist() { clearTimeout(distTimer); $('#g-prev-state').textContent = '…'; distTimer = setTimeout(fetchDist, 350); }
+async function fetchDist() {
+  const ckpt = $('#g-ckpt').value; if (!ckpt) return;
+  const seq = ++distSeq;
+  try {
+    const r = await api('/api/next_token', { method: 'POST', body: JSON.stringify({ checkpoint: ckpt, prompt: $('#g-prompt').value, device: $('#g-device').value }) });
+    if (seq !== distSeq) return;  // a newer prompt is already on its way
+    const z = decodeLogits(r.logits), order = Array.from(z.keys()).sort((a, b) => z[b] - z[a]);
+    const raw = applySettings(z, order, 1, 0, 1).probs;
+    DIST = { ...r, z, order, raw }; $('#g-prev-state').textContent = `after ${r.prompt_tokens} prompt token${r.prompt_tokens === 1 ? '' : 's'}`;
+    knobsChanged();
+  } catch (e) { if (seq === distSeq) $('#g-prev-state').textContent = e.message; }
 }
 async function runGenerate() {
-  const out = $('#g-out'), btn = $('#g-go');
-  const body = { checkpoint: $('#g-ckpt').value, prompt: $('#g-prompt').value, method: $('#g-method').value,
-    max_new_tokens: Number($('#g-max').value), temperature: Number($('#g-temp').value), top_k: Number($('#g-topk').value),
+  const out = $('#g-out'), btn = $('#g-go'), v = knobValues();
+  if (Object.values(v).some(x => x == null)) return;
+  const body = { checkpoint: $('#g-ckpt').value, prompt: $('#g-prompt').value, ...v,
     seed: $('#g-seed').value.trim() === '' ? null : Number($('#g-seed').value), device: $('#g-device').value, stop_at_eos: $('#g-eos').checked };
   btn.disabled = true; out.innerHTML = '<div class="mut" style="margin-top:8px">generating…</div>';
   try {
     const r = await api('/api/generate', { method: 'POST', body: JSON.stringify(body) });
-    const how = r.method === 'argmax' ? 'argmax' : r.method === 'sample' ? `sampling, T=${r.temperature}` : `top-k ${r.top_k}, T=${r.temperature}`;
+    const how = r.greedy ? 'greedy' : [`T=${r.temperature}`, r.top_k ? `top-k ${r.top_k}` : null, r.top_p ? `top-p ${r.top_p}` : null, !r.top_k && !r.top_p ? 'no cutoff' : null].filter(Boolean).join(', ');
     out.innerHTML = `<div class="genout"><b>${esc(r.prompt)}</b>${esc(r.completion)}</div>
       <div class="mut" style="margin-top:6px">${how}${r.seed != null ? `, seed ${r.seed}` : ''} · ${r.new_tokens} tokens${r.hit_eos ? ' (stopped at EOS)' : ''} · ${r.seconds}s · ${r.tokens_per_sec} tok/s on ${r.device}${r.prompt_truncated ? ` · prompt (${r.prompt_tokens} tokens) is longer than the ${r.block_size}-token context: only its last ${r.block_size} tokens are seen` : ''}</div>`;
   } catch (e) { out.innerHTML = `<div class="err" style="margin-top:8px">${esc(e.message)}</div>`; }
-  finally { btn.disabled = false; }
+  finally { knobsChanged(); }
 }
-$('#g-ckpt').onchange = ckptInfo;
+$('#g-prompt').addEventListener('input', scheduleDist);
+$('#g-device').addEventListener('change', scheduleDist);
+$('#g-ckpt').onchange = () => { ckptInfo(); scheduleDist(); };
 async function showDetail(id, btn) {
   const pre = mark(btn, 'detail').querySelector('pre'); pre.classList.remove('hidden');
   try { const s = await api(`/api/runs/${id}`); const m = { ...(s.metrics || {}) }; delete m.full_val_curve;

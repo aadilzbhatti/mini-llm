@@ -10,7 +10,8 @@ runs/*.status.json for runs that
   - have their checkpoint in checkpoints/: a Modal run once it's imported, a
     local queue run as soon as the runner has saved it,
 
-and queues `mini-llm-eval <checkpoint>` for them. A single worker thread runs
+and queues `mini-llm-eval <checkpoint>` for them, then (GPU permitting) the
+inference benchmark and the samples report (mini_llm.samples). A single worker thread runs
 them one at a time on the local GPU (serialised so two evals never share it)
 and regenerates evals/summary.md. Progress is written into the run's status
 file ("eval": {"state": "queued" | "running" | "done" | "failed", ...}) so the
@@ -137,8 +138,11 @@ class AutoEvaluator:
             if rc == 0 and not gpu_busy():
                 # Re-run the controlled inference benchmark across every evaluated model, so the
                 # summary's cost columns come from one session (skipped if the GPU is shared).
+                # Then the fixed-prompt samples of the best model per context (evals/samples.md),
+                # which a new best model changes.
                 with log.open("a") as fh:
                     subprocess.run([self.python, "-m", "mini_llm.bench"], cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT)
+                    subprocess.run([self.python, "-m", "mini_llm.samples"], cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT)
             self._set(status_path, state="done" if rc == 0 else "failed", finished=_now(),
                       **({} if rc == 0 else {"error": f"mini-llm-eval exited {rc}; see runs/{run_id}.eval.log"}))
             print(f"[auto-eval] {run_id}: {'done' if rc == 0 else f'FAILED ({rc})'}", flush=True)

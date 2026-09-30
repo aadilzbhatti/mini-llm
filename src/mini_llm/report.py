@@ -9,17 +9,21 @@ Everything that could drift is pinned: the prompts, the token budget, the
 seed, and the order the samples are drawn in. The only thing that varies
 between two reports is the model.
 
-Sections, in reading order: top-k sampling (temperature 0.8, k=50) first,
-since it is the most readable; then plain sampling (temperature 1); then
-greedy/argmax last -- the model's single most-likely continuation, where the
-step at which it collapses into a repetition loop is a cheap progress metric.
-Each sampled section seeds its own stream once (top-k: seed+1, plain: seed)
-and draws sequentially, so each prompt consumes a different slice of the
-random stream. Seeding per prompt instead would hand every prompt the same
-uniform draws, which on a weak model produces near-identical text and looks
-like a model pathology rather than the sampling artefact it is. Because every
-section seeds itself, section ORDER never changes the text; and new prompts
-are only ever appended, so earlier prompts keep their exact draws.
+One section: top-k sampling (temperature 0.8, k=50). Plain sampling
+(temperature 1) and greedy/argmax used to follow it; they were dropped because
+neither is how anyone would decode from this model -- plain sampling reads
+the garbage tail, greedy loops -- so they cost two thirds of the report's time
+for text nobody reads. The section seeds its stream once (seed+1, as when it
+shared the report with the others, so its text is unchanged) and draws
+sequentially, so each prompt consumes a different slice of the random stream.
+Seeding per prompt instead would hand every prompt the same uniform draws,
+which on a weak model produces near-identical text and looks like a model
+pathology rather than the sampling artefact it is. New prompts are only ever
+appended, so earlier prompts keep their exact draws.
+
+Cross-model comparisons at the recommended 0.7/40 live in evals/samples.md
+(mini_llm.samples); this per-run report keeps 0.8/50 so it stays comparable
+with every earlier run's report.
 
 Reports are reproducible on the same device. MPS and CPU do not produce
 identical streams from the same seed, so a report regenerated on CPU from a
@@ -161,6 +165,7 @@ def generate_until_eos(
     temperature: float | None = None,
     top_k: int | None = None,
     eos_token_id: int | None = EOS_TOKEN_ID,
+    top_p: float | None = None,
 ) -> tuple[torch.Tensor, bool]:
     """Generate, stopping as soon as EOS is sampled. Returns (idx, hit_eos).
 
@@ -190,6 +195,8 @@ def generate_until_eos(
                 kth = torch.topk(logits, k, dim=-1).values[:, -1:]
                 logits = logits.masked_fill(logits < kth, float("-inf"))
             probs = F.softmax(logits, dim=-1)
+            if top_p is not None and top_p < 1:
+                probs = nucleus(probs, top_p)
             nxt = torch.argmax(probs, dim=-1, keepdim=True) if greedy else torch.multinomial(probs, num_samples=1)
             if eos_token_id is not None and int(nxt.item()) == eos_token_id:
                 return idx, True
@@ -197,6 +204,15 @@ def generate_until_eos(
         return idx, False
     finally:
         model.train(was_training)
+
+
+def nucleus(probs: torch.Tensor, top_p: float) -> torch.Tensor:
+    """Keep the smallest set of most-likely tokens whose mass reaches top_p (always >= 1 token), renormalised."""
+    sorted_p, order = probs.sort(dim=-1, descending=True)
+    drop = sorted_p.cumsum(-1) - sorted_p >= top_p  # mass *before* a token already reaches top_p
+    sorted_p = sorted_p.masked_fill(drop, 0.0)
+    kept = torch.zeros_like(probs).scatter(-1, order, sorted_p)
+    return kept / kept.sum(-1, keepdim=True)
 
 
 def generate_sample(
@@ -250,8 +266,8 @@ def sample_report(
         "",
     ]
 
-    # Top-k first: the most readable. Its own stream (seed + 1), exactly as when
-    # it was the third section, so its text for a given checkpoint is unchanged.
+    # Its own stream (seed + 1), exactly as when the report had other sections,
+    # so its text for a given checkpoint is unchanged.
     lines += [f"## Sampled, temperature {temperature}, top-k {top_k}", ""]
     torch.manual_seed(seed + 1)  # its own stream, independent of the section above
     for label, prompt in PROMPTS:
@@ -267,27 +283,6 @@ def sample_report(
                 temperature=temperature, top_k=top_k,
             )
             lines += [f"draw {i + 1}:", "", "```", text, "```", _footer(n, eos, max_new_tokens), ""]
-
-    lines += ["## Sampled", ""]
-    torch.manual_seed(seed)  # once, then draw sequentially -- see module docstring
-    for label, prompt in PROMPTS:
-        lines += [f"### {label}", "", f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", ""]
-        for i in range(samples_per_prompt):
-            text, n, eos = generate_sample(
-                model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=False
-            )
-            lines += [f"draw {i + 1}:", "", "```", text, "```", _footer(n, eos, max_new_tokens), ""]
-
-    lines += ["## Greedy / argmax (deterministic)", ""]
-    for label, prompt in PROMPTS:
-        text, n, eos = generate_sample(
-            model, tokenizer, prompt, max_new_tokens, block_size, device, greedy=True
-        )
-        lines += [
-            f"### {label}", "",
-            f"prompt: {prompt!r}  [{context_note(n_tokens[label], block_size, max_new_tokens)}]", "",
-            "```", text, "```", _footer(n, eos, max_new_tokens), "",
-        ]
 
     return "\n".join(lines)
 

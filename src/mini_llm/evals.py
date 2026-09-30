@@ -360,6 +360,12 @@ def paired(ref: dict, other: dict) -> dict:
     return out
 
 
+def eval_results(out_dir: Path) -> list[dict]:
+    """Per-checkpoint eval reports in out_dir (skips inference.json, samples.json)."""
+    rs = [json.loads(f.read_text()) for f in sorted(out_dir.glob("*.json"))]
+    return [r for r in rs if isinstance(r, dict) and "quality" in r]
+
+
 def load_bench(out_dir: Path) -> dict:
     try:
         return json.loads((out_dir / "inference.json").read_text())
@@ -442,7 +448,7 @@ def main(argv: list[str] | None = None) -> None:
         (out / f"{stem}.md").write_text(render_markdown(r))
         print(f"{stem}: val@128 {r['quality'].get('full_val@128', math.nan):.4f}  "
               f"{' '.join(f'{k} {_cb_line(v)}' for k, v in r['context_benefit'].items())}  -> {out / (stem + '.md')}", flush=True)
-    results = [json.loads(f.read_text()) for f in sorted(out.glob("*.json")) if f.name != "inference.json"]
+    results = eval_results(out)
     (out / "summary.md").write_text(summary_table(results, args.reference, load_bench(out)))
     print(f"summary of {len(results)} checkpoints -> {out / 'summary.md'}")
 

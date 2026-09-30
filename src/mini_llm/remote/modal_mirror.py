@@ -210,17 +210,27 @@ def main(argv: list[str] | None = None) -> None:
         from mini_llm.auto_eval import AutoEvaluator
         evaluator = AutoEvaluator(repo)
         print(f"[auto-eval] on: evaluating runs that complete after {evaluator.since}", flush=True)
+    failures = 0
     while True:
-        for st in mirror_all(vol, repo, runner, args.stale_after):
-            if seen.get(st["run_id"]) != st["status"]:
-                print(f"[mirror] {st['run_id']}: {st['status']}", flush=True)
-                seen[st["run_id"]] = st["status"]
+        try:
+            for st in mirror_all(vol, repo, runner, args.stale_after):
+                if seen.get(st["run_id"]) != st["status"]:
+                    print(f"[mirror] {st['run_id']}: {st['status']}", flush=True)
+                    seen[st["run_id"]] = st["status"]
+            failures = 0
+        except Exception as exc:  # noqa: BLE001 - e.g. Modal unreachable: retry, don't exit
+            # Exiting would also kill an eval the auto-eval worker has running, and launchd's
+            # restart re-queues it. Local runs don't need Modal, so keep scanning them below.
+            if args.once:
+                raise
+            failures += 1
+            print(f"[mirror] poll failed ({type(exc).__name__}: {exc}); retry #{failures}", file=sys.stderr, flush=True)
         if evaluator is not None:
             for run_id in evaluator.scan():
                 print(f"[auto-eval] queued {run_id}", flush=True)
         if args.once:
             return
-        time.sleep(args.interval)
+        time.sleep(min(args.interval * 2 ** min(failures, 4), 600))
 
 
 if __name__ == "__main__":

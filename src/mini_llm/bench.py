@@ -37,7 +37,7 @@ from pathlib import Path
 import torch
 
 from mini_llm.device import select_device
-from mini_llm.evals import EVALS_DIR, _sync, load_model
+from mini_llm.evals import EVALS_DIR, _sync, eval_results, load_model
 
 DECODE_TOKENS = 64
 
@@ -121,8 +121,7 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--reference", default="data160k-bs64-15k-lr1.2e-3-wu256k-v4")
     args = p.parse_args(argv)
     out = Path(args.out_dir)
-    cks = args.checkpoints or [json.loads(f.read_text())["checkpoint"] for f in sorted(out.glob("*.json"))
-                               if f.name != "inference.json"]
+    cks = args.checkpoints or [r["checkpoint"] for r in eval_results(out)]
     b = benchmark(cks, args.device, args.rounds)
     out.mkdir(parents=True, exist_ok=True)
     (out / "inference.json").write_text(json.dumps(b, indent=2))
@@ -130,7 +129,7 @@ def main(argv: list[str] | None = None) -> None:
     print(render(b))
     # Refresh the eval summary so its inference columns use these numbers.
     from mini_llm.evals import load_bench, summary_table
-    results = [json.loads(f.read_text()) for f in sorted(out.glob("*.json")) if f.name != "inference.json"]
+    results = eval_results(out)
     if results:
         (out / "summary.md").write_text(summary_table(results, args.reference, load_bench(out)))
 

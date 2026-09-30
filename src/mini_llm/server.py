@@ -47,7 +47,15 @@ MODAL_GPUS = re.compile(r"^(cpu|[A-Za-z0-9-]{2,20}(:[1-8])?)$")
 MODAL_KEYS = ("target", "gpus", "timeout_hours")
 CKPT_NAME = re.compile(r"^[A-Za-z0-9._-]{1,200}\.pt$")
 EVAL_NAME = re.compile(r"^[A-Za-z0-9._-]{1,200}$")
-GEN_METHODS = {"topk", "sample", "argmax"}
+# Decoding knobs the page offers and /api/generate accepts: (min, max, default).
+# temperature 0 = greedy; top_k 0 and top_p 1 = off. Ranges stop where they stop
+# being useful for a ~16M-param model: above T=1 or k=100 it samples its garbage tail.
+SAMPLING = {
+    "temperature": (0.0, 1.5, 0.7),
+    "top_k": (0, 200, 40),
+    "top_p": (0.05, 1.0, 1.0),
+    "max_new_tokens": (1, 1024, 256),
+}
 EOS_TOKEN_ID = 50256
 STATIC = Path(__file__).parent / "static"
 
@@ -244,6 +252,7 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             },
             "knobs": {k: {"type": t.__name__, "min": lo, "max": hi} for k, (t, lo, hi) in KNOBS.items()},
             "commands": sorted(COMMAND_TYPES),
+            "sampling": {k: {"min": lo, "max": hi, "default": d} for k, (lo, hi, d) in SAMPLING.items()},
             "form": job_schema(),
             "datasets": sorted(
                 str(p.parent.relative_to(repo)) for p in (repo / "data").rglob("train.pt")
@@ -544,61 +553,97 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             out.append(row)
         return out
 
-    @app.post("/api/generate", dependencies=[Depends(auth)])
-    def generate(body: dict) -> dict:
+    def inference_request(body: dict):
+        """Validate the fields /api/generate and /api/next_token share -> (path, prompt, device, model, cfg, tokenizer)."""
         import torch
-        from mini_llm.data import decode, encode, get_tokenizer
-        from mini_llm.report import generate_until_eos
+        from mini_llm.data import get_tokenizer
 
         path = ckpt_path(body.get("checkpoint"))
-        method = body.get("method", "topk")
-        if method not in GEN_METHODS:
-            raise HTTPException(422, f"method must be one of {sorted(GEN_METHODS)}")
         prompt = body.get("prompt", "")
         if not isinstance(prompt, str) or len(prompt) > 20_000:
             raise HTTPException(422, "prompt must be a string of at most 20,000 characters")
-        try:
-            max_new = int(body.get("max_new_tokens", 128))
-            temperature = float(body.get("temperature", 0.8))
-            top_k = int(body.get("top_k", 50))
-            seed = None if body.get("seed") in (None, "") else int(body["seed"])
-        except (TypeError, ValueError):
-            raise HTTPException(422, "max_new_tokens, top_k and seed must be integers; temperature a number") from None
-        if not 1 <= max_new <= 1024:
-            raise HTTPException(422, "max_new_tokens must be between 1 and 1024")
-        if not 0.05 <= temperature <= 5:
-            raise HTTPException(422, "temperature must be between 0.05 and 5")
-        if not 1 <= top_k <= 50257:
-            raise HTTPException(422, "top_k must be between 1 and 50257")
         device = body.get("device", "cpu")
         if device not in ("cpu", "mps") or (device == "mps" and not torch.backends.mps.is_available()):
             raise HTTPException(422, "device must be cpu (default) or mps (if available)")
-
         model, cfg = load_for_inference(path, device)
         if not tokenizer_box:
             tokenizer_box.append(get_tokenizer())
-        tokenizer = tokenizer_box[0]
-        kwargs = {"greedy": True} if method == "argmax" else (
-            {"temperature": temperature} if method == "sample" else {"temperature": temperature, "top_k": top_k})
-        ids = encode(prompt, tokenizer) if prompt else torch.tensor([EOS_TOKEN_ID])
-        idx = ids.unsqueeze(0).to(device)
+        return path, prompt, device, model, cfg, tokenizer_box[0]
+
+    def prompt_ids(prompt: str, tokenizer):
+        import torch
+        from mini_llm.data import encode
+        return encode(prompt, tokenizer) if prompt else torch.tensor([EOS_TOKEN_ID])
+
+    @app.post("/api/generate", dependencies=[Depends(auth)])
+    def generate(body: dict) -> dict:
+        import torch
+        from mini_llm.data import decode
+        from mini_llm.report import generate_until_eos
+
+        knobs = {}
+        for k, (lo, hi, default) in SAMPLING.items():
+            v = body.get(k, default)
+            try:
+                v = float(v)
+            except (TypeError, ValueError):
+                v = None
+            if isinstance(lo, int) and v is not None and v.is_integer():
+                v = int(v)
+            if v is None or (isinstance(lo, int) and not isinstance(v, int)) or not lo <= v <= hi:
+                raise HTTPException(422, f"{k} must be {'an integer' if isinstance(lo, int) else 'a number'} from {lo} to {hi}")
+            knobs[k] = v
+        try:
+            seed = None if body.get("seed") in (None, "") else int(body["seed"])
+        except (TypeError, ValueError):
+            raise HTTPException(422, "seed must be an integer") from None
+        path, prompt, device, model, cfg, tokenizer = inference_request(body)
+        temperature, top_k, top_p = knobs["temperature"], knobs["top_k"], knobs["top_p"]
+        greedy = temperature == 0
+        kwargs = {"greedy": True} if greedy else {
+            "temperature": temperature, "top_k": top_k or None, "top_p": top_p if top_p < 1 else None}
+        idx = prompt_ids(prompt, tokenizer).unsqueeze(0).to(device)
         with gen_lock:
             if seed is not None:
                 torch.manual_seed(seed)
             t = time.perf_counter()
             out, hit_eos = generate_until_eos(
-                model, idx, max_new, cfg.block_size,
+                model, idx, knobs["max_new_tokens"], cfg.block_size,
                 eos_token_id=EOS_TOKEN_ID if body.get("stop_at_eos", True) else None, **kwargs)
             seconds = time.perf_counter() - t
         n_prompt, n_new = idx.size(1), out.size(1) - idx.size(1)
         return {
-            "checkpoint": path.name, "method": method, "device": device,
-            "temperature": None if method == "argmax" else temperature,
-            "top_k": top_k if method == "topk" else None, "seed": seed,
+            "checkpoint": path.name, "device": device, "greedy": greedy,
+            "temperature": temperature, "top_k": None if greedy else top_k or None,
+            "top_p": None if greedy or top_p >= 1 else top_p, "seed": seed,
             "prompt": prompt, "completion": decode(out[0, n_prompt:], tokenizer),
             "prompt_tokens": n_prompt, "new_tokens": n_new, "hit_eos": hit_eos,
             "block_size": cfg.block_size, "prompt_truncated": n_prompt > cfg.block_size,
             "seconds": round(seconds, 3), "tokens_per_sec": round(n_new / seconds, 1) if seconds > 0 else None,
+        }
+
+    @app.post("/api/next_token", dependencies=[Depends(auth)])
+    def next_token(body: dict) -> dict:
+        """The model's raw next-token logits after the prompt, for the page to preview decoding settings.
+
+        All logits go back (base64 float32, ~200 KB) so the page can apply any
+        temperature / top-k / top-p exactly, on every keystroke, without another
+        forward pass; `top` names the 200 highest, the only ones any setting can
+        make visible.
+        """
+        import base64
+        import torch
+
+        path, prompt, device, model, cfg, tokenizer = inference_request(body)
+        ids = prompt_ids(prompt, tokenizer)
+        with gen_lock, torch.no_grad():
+            logits, _ = model(ids[-cfg.block_size:].unsqueeze(0).to(device))
+        z = logits[0, -1].float().cpu()
+        top = torch.topk(z, 200)
+        return {
+            "checkpoint": path.name, "prompt_tokens": ids.numel(), "block_size": cfg.block_size,
+            "logits": base64.b64encode(z.numpy().astype("<f4").tobytes()).decode(),
+            "top": [{"id": i, "text": tokenizer.decode([i])} for i in top.indices.tolist()],
         }
 
     @app.get("/api/evals", dependencies=[Depends(auth)])
