@@ -126,3 +126,12 @@ def test_finished_run_is_imported_once(tmp_path, repo, monkeypatch):
     vol.reads.clear()
     mirror_run(vol, "r-done", repo, load_runner(repo))                  # finished + synced: no more reads
     assert vol.reads == []
+
+
+def test_finished_run_without_save_is_synced_not_imported(tmp_path, repo):
+    # LR proxies train with a val set but no --save: nothing to import, and trying used to
+    # SystemExit the whole mirror on every poll.
+    vol = FakeVolume(tmp_path / "vol")
+    remote_run(vol.root, "r-proxy", finished=True, argv=["--val-tokens", "/data/val.pt", "--steps", "20"])
+    [st] = mirror_all(vol, repo, load_runner(repo))
+    assert st["status"] == "completed" and not st["remote"]["imported"] and st["remote"]["synced"]

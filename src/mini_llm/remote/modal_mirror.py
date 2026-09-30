@@ -130,7 +130,9 @@ def mirror_run(vol: VolumeLike, run_id: str, repo: Path, runner: Any, stale_afte
     # Where the import puts the sample report, so the page's Samples button finds it.
     args["save-name"] = f"{stem}.pt"
     started = _iso_z(record.get("started_at"))
-    importable = returncode == 0 and "--val-tokens" in record.get("resolved_argv", [])
+    argv = record.get("resolved_argv", [])
+    # Only a saved run has a checkpoint to import (LR proxies run without --save).
+    importable = returncode == 0 and "--val-tokens" in argv and "--save" in argv
 
     status = {
         "run_id": run_id,
@@ -179,7 +181,7 @@ def mirror_all(vol: VolumeLike, repo: Path, runner: Any, stale_after: float = 90
             continue
         try:
             status = mirror_run(vol, entry.path, repo, runner, stale_after)
-        except Exception as exc:  # noqa: BLE001 - one bad run must not stop the others
+        except (Exception, SystemExit) as exc:  # noqa: BLE001 - one bad run must not stop the others (import_run exits on errors)
             print(f"[mirror] {entry.path}: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
             continue
         if status:
