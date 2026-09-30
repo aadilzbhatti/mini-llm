@@ -554,7 +554,11 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         return out
 
     def inference_request(body: dict):
-        """Validate the fields /api/generate and /api/next_token share -> (path, prompt, device, model, cfg, tokenizer)."""
+        """Validate the fields /api/generate and /api/next_token share -> (path, prompt, device, tokenizer).
+
+        The model itself is loaded by the caller *inside* gen_lock: moving a model onto MPS while another
+        request runs on it trips a Metal assertion that aborts the whole server.
+        """
         import torch
         from mini_llm.data import get_tokenizer
 
@@ -565,10 +569,9 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         device = body.get("device", "cpu")
         if device not in ("cpu", "mps") or (device == "mps" and not torch.backends.mps.is_available()):
             raise HTTPException(422, "device must be cpu (default) or mps (if available)")
-        model, cfg = load_for_inference(path, device)
         if not tokenizer_box:
             tokenizer_box.append(get_tokenizer())
-        return path, prompt, device, model, cfg, tokenizer_box[0]
+        return path, prompt, device, tokenizer_box[0]
 
     def prompt_ids(prompt: str, tokenizer):
         import torch
@@ -597,13 +600,14 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             seed = None if body.get("seed") in (None, "") else int(body["seed"])
         except (TypeError, ValueError):
             raise HTTPException(422, "seed must be an integer") from None
-        path, prompt, device, model, cfg, tokenizer = inference_request(body)
+        path, prompt, device, tokenizer = inference_request(body)
         temperature, top_k, top_p = knobs["temperature"], knobs["top_k"], knobs["top_p"]
         greedy = temperature == 0
         kwargs = {"greedy": True} if greedy else {
             "temperature": temperature, "top_k": top_k or None, "top_p": top_p if top_p < 1 else None}
-        idx = prompt_ids(prompt, tokenizer).unsqueeze(0).to(device)
         with gen_lock:
+            model, cfg = load_for_inference(path, device)
+            idx = prompt_ids(prompt, tokenizer).unsqueeze(0).to(device)
             if seed is not None:
                 torch.manual_seed(seed)
             t = time.perf_counter()
@@ -634,9 +638,10 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         import base64
         import torch
 
-        path, prompt, device, model, cfg, tokenizer = inference_request(body)
+        path, prompt, device, tokenizer = inference_request(body)
         ids = prompt_ids(prompt, tokenizer)
         with gen_lock, torch.no_grad():
+            model, cfg = load_for_inference(path, device)
             logits, _ = model(ids[-cfg.block_size:].unsqueeze(0).to(device))
         z = logits[0, -1].float().cpu()
         top = torch.topk(z, 200)
