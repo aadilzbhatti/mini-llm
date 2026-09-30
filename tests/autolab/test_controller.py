@@ -499,3 +499,41 @@ def test_policies_rearm_for_a_new_incumbent(world, monkeypatch, flow_key, step):
     getattr(ctl, step)(state, session, progs, {}, cfg, paths, lambda m: None)
     assert state[flow_key]["state"] == "idle" and "program" not in state[flow_key]
     assert any(e["event"].endswith("_rearmed") for e in _read(world["tmp"] / "notebook.jsonl"))
+
+
+def test_probes_grow_capacity_and_context_once_when_stalled(world, monkeypatch):
+    paths = ev.Paths(world["root"] / "s2")
+    monkeypatch.setattr(ctl, "affordable", lambda *a: True)
+    for i in range(1, 5):  # four finished children that didn't beat p0: stalled
+        save(Program(id=f"p{i}", parent_id="p0", base_commit="x", blocks={}, hparams=HP, status="evaluated",
+                     stage="done", scores={"full_mean": 4.9}), paths.programs)
+    session = ev.load_session(paths)
+    session["next_id"] = 5
+    ev.save_session(session, paths)
+    state, ccfg = {}, {"probe_patience": 4, "ladder_patience": 4, "max_full_tokens": 81_920_000}
+    made = ctl.probe_step(state, session, ev.programs(paths), ccfg, T, paths, lambda m: None)
+    by = {c.meta["probe"]: c for c in made}
+    assert by["capacity"].hparams["n_layer"] == 6 and by["capacity"].parent_id == "p0"
+    assert (by["context"].hparams["block_size"], by["context"].hparams["batch_size"]) == (256, 32)
+    assert by["context"].created_by == "probe:context" and not state["probes"]["ceilings"]
+    assert ctl.probe_step(state, session, ev.programs(paths), ccfg, T, paths, lambda m: None) == []  # once each
+
+
+def test_ceilings_name_the_setting_to_raise(world, monkeypatch):
+    paths = ev.Paths(world["root"] / "s2")
+    session, progs = ev.load_session(paths), ev.programs(paths)
+    inc = progs["p0"]
+    cfg = ev.evolve_cfg()
+    got = ctl.probe_patches(inc, session, {**cfg, "param_cap_mult": 1.0}, {})
+    assert got["capacity"][0] is None and "param_cap_mult" in got["capacity"][1]
+    inc.hparams = {**HP, "n_layer": 12, "block_size": 1024, "batch_size": 8}
+    got = ctl.probe_patches(inc, session, cfg, {})
+    assert got["capacity"][0] is None and "n_layer" in got["capacity"][1]
+    assert got["context"][0] is None and "1024" in got["context"][1]
+    state = {"ladder": {"state": "idle", "waiting": {"stalled": 5, "next_tokens": 276_480_000}},
+             "probes": {"ceilings": {"capacity": {"kind": "capacity", "program": "p0", "why": "over [evolve] param_cap_mult = 2.0"}}}}
+    out = {c["kind"]: c for c in ctl.ceilings(state, session, progs, {"ladder_patience": 4, "max_full_tokens": 184_320_000})}
+    assert out["tokens"]["key"] == "max_full_tokens" and out["tokens"]["suggest"] == 276_480_000
+    assert out["capacity"]["key"] == "param_cap_mult" and out["capacity"]["suggest"] == cfg["param_cap_mult"] + 0.5
+    quiet = {"ladder": {"state": "idle", "waiting": {"stalled": 1, "next_tokens": 276_480_000}}}
+    assert ctl.ceilings(quiet, session, progs, {"ladder_patience": 4, "max_full_tokens": 184_320_000}) == []

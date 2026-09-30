@@ -186,7 +186,7 @@ def hparam_ranges(spec: dict) -> str:
     return "\n".join(rows)
 
 
-DIRECTED = {"research", "retest"}  # instructions the controller chooses, not the sampler
+DIRECTED = {"research", "retest", "probe_capacity", "probe_context"}  # instructions the controller chooses, not the sampler
 
 
 def instruction_stats(root: Path, active: str | None, decay: float = 0.5) -> dict[str, dict]:

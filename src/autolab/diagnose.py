@@ -40,6 +40,7 @@ class Thresholds:
     gap_growth: float = 0.005
     gap_stable_max: float = 0.01
     epochs_support: float = 1.0
+    epochs_overfit: float = 2.0
     data_gap_large: float = 0.15
     tokens_per_param_ref: float = 20.0
     spike_rate_max: float = 0.03
@@ -261,14 +262,20 @@ def diagnose(report: dict, history: History | None = None, th: Thresholds | None
     classic = t_train in ("falling", "crawl") and t_val in ("flat", "rising") and gap_growing
     annealed = (t_train in ("falling", "crawl") and t_val == "crawl" and gap_growing
                 and train_outpaces_val and multi_epoch)
-    if classic or annealed:
+    # Longer runs keep val falling while they overfit (s2+data40k@122M/p21: val -1.2% over the tail, but 3 epochs,
+    # gap 0.28 growing at t ~ 12, train falling faster): still_improving AND data_limited, so the data policy can
+    # test more data instead of waiting for val to flatten (owner, 2026-09-30).
+    improving_but_overfitting = (t_train == "falling" and t_val == "falling" and gap_growing and train_outpaces_val
+                                 and epochs is not None and epochs >= th.epochs_overfit)
+    if classic or annealed or improving_but_overfitting:
         supported = multi_epoch or (ds_tok_per_param is not None and ds_tok_per_param < th.tokens_per_param_ref)
         conf = (0.5 + (0.25 if supported else 0.0) + (0.1 if t_val == "rising" else 0.0)
                 + (0.1 if gap is not None and gap >= th.data_gap_large else 0.0))
         labels.append(Label("data_limited", round(conf, 2),
                             {**base_ev, "epochs": epochs, "dataset_tokens_per_param": _r(ds_tok_per_param, 2),
                              "tokens_per_param": scale.get("tokens_per_param"), "supported": supported,
-                             "pattern": "val flat/rising" if classic else "train outpaces a crawling val"},
+                             "pattern": "val flat/rising" if classic else "train outpaces a crawling val" if annealed
+                             else "overfitting while val still falls"},
                             "build_dataset (bigger), or more regularization (dropout / weight decay)."))
 
     # --- optimization_limited / capacity_limited ---------------------------------------

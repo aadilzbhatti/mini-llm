@@ -679,6 +679,16 @@ function renderLive(L) {
       h("div", {style: "display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap"}, statusEl(B.kind === "paused" ? "warning" : "serious", B.kind === "paused" ? "Paused" : "Blocked on budget"),
         h("div", {style: "flex:1;min-width:240px"}, msg, " In-flight candidates keep going."), h("div", {class: "row", style: "display:flex;gap:8px"}, actions))));
   }
+  for (const X of (L.ceilings || [])) {  // limits only the owner can raise, shown while they block growth
+    const act = X.key ? h("button", {class: "pri", onclick: () => postBudget({action: "permanent", [X.key]: X.suggest},
+      `Raise ${X.setting} from ${X.current} to ${X.suggest} (saved in config.toml)? Autolab can then grow ${X.kind} one more step.`)},
+      `Raise to ${X.key === "max_full_tokens" ? fmt.si(X.suggest) + " tokens" : X.suggest}`) : null;
+    el.append(h("div", {class: "card", style: "border-color:var(--warning);border-width:2px"},
+      h("div", {style: "display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap"}, statusEl("warning", `Ceiling: ${X.kind}`),
+        h("div", {style: "flex:1;min-width:240px"}, `Autolab wants more ${X.kind} but can't: ${X.why}. Only you can raise `,
+          h("code", {}, X.setting), X.key ? "." : " (edit autolab/config.toml)."),
+        act ? h("div", {class: "row", style: "display:flex;gap:8px"}, act) : null)));
+  }
   el.append(budgetCard(C));
   const board = h("div", {class: "board"});
   for (const col of L.columns.filter(c => c !== "finished")) {

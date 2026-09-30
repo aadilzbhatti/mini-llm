@@ -29,6 +29,7 @@ gap_stable_max = 0.01        # stable = |change| below this (for optimization/ca
 
 # data_limited support: epochs over the train set, or tokens per parameter.
 epochs_support = 1.0
+epochs_overfit = 2.0         # data_limited also fires while val still falls, if train outpaces it with a growing gap past this many epochs
 data_gap_large = 0.15       # a gap this large after >= 1 epoch adds confidence to data_limited
 tokens_per_param_ref = 20.0
 

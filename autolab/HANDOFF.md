@@ -746,3 +746,14 @@ Build this first; everything else hill-climbs on it.
   the frontier's context axis, and measure_step resubmitted the same run id every cycle (FileExistsError). The
   suite now runs with the candidate's src first on sys.path; an eval failure lands in launch.json (`eval_error`);
   a failed measure is retried once with the next seed, then left. Redeployed the Modal app.
+- 2026-09-30 (owner: do all three + a ceiling banner) — **growth moves.** (1) `max_full_tokens` 122.88M → 184.32M
+  (one ladder rung) and `param_cap_mult` 1.5 → 2.0. (2) `data_limited` also fires while val still falls when train
+  outpaces it with a growing gap past `epochs_overfit` = 2 epochs ("overfitting while val still falls"; p21: 3 epochs,
+  gap 0.28 growing at t ≈ 12 → 0.85). The data policy now re-diagnoses the incumbent's reports with the current rules
+  instead of reading the container's frozen diagnosis.json. (3) Probes: when the search stalls (`probe_patience` = 4),
+  the incumbent gets one plain-hparam child per growth move, once each: +50% layers within the parameter cap, and 2x
+  context with the batch halved (`controller.probe_step`; no Claude call). (4) Ceilings: when the ladder's next rung is
+  above `max_full_tokens`, or a probe can't be made (parameter cap, n_layer max, block_size max 1024), or a data build
+  failed, the Live tab shows a "Ceiling" banner naming the setting, with a one-click raise for max_full_tokens and
+  param_cap_mult (POST /api/budget "permanent"); each new ceiling is a `ceiling` notebook entry. Order: the data check
+  runs first (the ladder waits while it's busy), since a bigger budget makes data more binding.

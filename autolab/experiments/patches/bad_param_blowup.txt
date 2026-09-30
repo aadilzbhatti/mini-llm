@@ -1,10 +1,10 @@
-8x wider MLP (must be rejected by the parameter cap).
+16x wider MLP, ~3x the parameters (must be rejected by the parameter cap, 2.0x since 2026-09-30).
 <<<<<<< SEARCH
             nn.Linear(n_embd, 4 * n_embd),
             nn.GELU(),
             nn.Linear(4 * n_embd, n_embd),
 =======
-            nn.Linear(n_embd, 32 * n_embd),
+            nn.Linear(n_embd, 64 * n_embd),
             nn.GELU(),
-            nn.Linear(32 * n_embd, n_embd),
+            nn.Linear(64 * n_embd, n_embd),
 >>>>>>> REPLACE

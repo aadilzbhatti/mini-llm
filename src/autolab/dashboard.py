@@ -478,13 +478,16 @@ def live_view() -> dict:
             "history": act.get("history", [])[:40], "controller": controller_view(calls),
             "daemon": _json(AUTOLAB / "state" / "daemon.json"), "columns": PIPE_COLUMNS, "cards": cards,
             "blocked": ((_json(AUTOLAB / "state" / "daemon.json") or {}).get("controller") or {}).get("blocked"),
+            "ceilings": ((_json(AUTOLAB / "state" / "daemon.json") or {}).get("controller") or {}).get("ceilings") or [],
             "llm": llm, "log": log_tail, "active_session": active.name,
             "session_info": _session_info(active),
             "pending_runs": sum(c["state"] == "pending" for c in calls.values())}
 
 
-BUDGET_BOUNDS = {"daily_usd": (0.0, 200.0), "max_usd": (0.0, 1000.0), "max_in_flight": (1, 12)}
-CONFIG_KEYS = {"daily_usd": "controller", "max_in_flight": "controller", "max_usd": "modal"}
+BUDGET_BOUNDS = {"daily_usd": (0.0, 200.0), "max_usd": (0.0, 1000.0), "max_in_flight": (1, 12),
+                 "max_full_tokens": (1_000_000, 2_000_000_000), "param_cap_mult": (1.0, 4.0)}  # the last two: ceilings
+CONFIG_KEYS = {"daily_usd": "controller", "max_in_flight": "controller", "max_usd": "modal",
+               "max_full_tokens": "controller", "param_cap_mult": "evolve"}
 
 
 def set_config_value(path: Path, section: str, key: str, value) -> None:
@@ -557,7 +560,7 @@ async def api_budget(request: Request) -> JSONResponse:
         return JSONResponse({"ok": True, "message": "one-time raise cleared"})
     if action == "permanent":
         changed = {}
-        for key in ("daily_usd", "max_usd", "max_in_flight"):
+        for key in CONFIG_KEYS:
             if body.get(key) not in (None, ""):
                 value = _bounded(key, body[key])
                 set_config_value(AUTOLAB / "config.toml", CONFIG_KEYS[key], key, value)

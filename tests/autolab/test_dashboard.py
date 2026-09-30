@@ -111,3 +111,12 @@ def test_budget_controls(client, tmp_path, monkeypatch):
     assert "# cap" in cfg.read_text() and "# per day" in cfg.read_text()  # comments kept
     events = [json.loads(x)["event"] for x in (tmp_path / "notebook.jsonl").read_text().splitlines()]
     assert events == ["budget_override", "budget_override_cleared", "settings_changed"]
+
+    # ceilings: the token cap and the parameter cap can be raised from the page, within bounds
+    cfg.write_text("[evolve]\nparam_cap_mult = 2.0   # cap\n\n[controller]\nmax_full_tokens = 184320000\n")
+    r = client.post("/api/budget", json={"action": "permanent", "max_full_tokens": 276480000, "param_cap_mult": 2.5},
+                    headers=h)
+    assert r.status_code == 200, r.text
+    got = tomllib.loads(cfg.read_text())
+    assert got["controller"]["max_full_tokens"] == 276480000 and got["evolve"]["param_cap_mult"] == 2.5
+    assert client.post("/api/budget", json={"action": "permanent", "param_cap_mult": 9}, headers=h).status_code == 400

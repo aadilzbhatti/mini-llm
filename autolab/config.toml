@@ -31,7 +31,7 @@ runs_volume = "autolab-runs"
 data_volume = "autolab-data"
 default_gpu = "L4"
 max_containers = 8          # parallel trials
-max_usd = 50.0              # refuse submits once spent + committed estimate would exceed this (owner, 2026-09-27)
+max_usd = 75.0                    # refuse submits once spent + committed estimate would exceed this (owner, 2026-09-27)
 # $/sec per GPU (modal.com/pricing, 2026-09-26, via the owner's README). CPU/memory
 # charges come on top and aren't counted, so treat totals as a lower bound.
 [modal.gpu_usd_per_s]
@@ -60,7 +60,7 @@ confirm_trigger_sigma = 0.5  # ...by at least this x the full seed std (owner: 0
 accept_sigma = 2.0           # accept iff mean over >= 2 seeds < incumbent mean - accept_sigma x full seed std
 noise_floor = 0.02           # the std used for decisions is max(measured, this): a 3-seed std can come out far
                              # too small (0.0069 at 122M vs 0.031-0.043 elsewhere), making the accept bar too shallow
-param_cap_mult = 1.5         # reject programs above this x the initial program's parameter count
+param_cap_mult = 2.0         # reject programs above this x the initial program's parameter count (1.5 → 2.0, owner, 2026-09-30)
 throughput_floor = 0.2       # reject screens slower than this x the initial program's tokens/sec (catastrophic only)
 cpu_tests = ["tests"]        # pytest paths run against every candidate (protected, from this checkout)
 # Pins plain AdamW bit for bit, i.e. freezes the evolvable optimizer region; replaced by
@@ -156,7 +156,14 @@ push_accepted = true              # ...and push it to origin after each acceptan
 ladder = true
 ladder_factor = 1.5
 ladder_patience = 4               # finished children since the last acceptance that didn't beat it
-max_full_tokens = 122880000       # owner's current regime: bs64 x 15k steps. Raise to let it climb further.
+max_full_tokens = 184320000       # one rung above the owner's regime (122.88M = bs64 x 15k steps; owner, 2026-09-30).
+                                  # The dashboard shows a "ceiling" banner when the ladder wants the next rung.
+# Probes: when the search stalls (probe_patience children since the last acceptance, none better), the incumbent
+# gets one plain-hparam child per growth move: +50% layers (capacity) and 2x context (batch halved). A move the
+# settings don't allow shows as a ceiling on the dashboard (owner, 2026-09-30).
+probes = true
+probe_patience = 4
+probe_capacity_pct = 150
 ablation_max_in_flight = 2        # no-evolution control arm (autolab ablation start): unfinished candidates at once
 
 # Research (M7): a web-enabled agent audits the current winner for outdated or missing techniques and

@@ -227,3 +227,16 @@ def test_data_limited_under_annealing_val_still_crawls():
     assert lab is not None, d.summary()
     assert lab.evidence["pattern"] == "train outpaces a crawling val" and lab.confidence >= 0.85
     assert d.primary == "data_limited"
+
+
+def test_data_limited_while_val_still_falls_after_several_epochs():
+    """Long runs keep val falling while they overfit: train falls faster and the gap grows (p21 at 122M: 3 epochs,
+    gap 0.28 growing). That is still_improving AND data_limited; before 2 epochs it is only still_improving."""
+    train = lambda s: 3.8 + 3.0 * math.exp(-s / 2500)  # noqa: E731
+    val = lambda s: 4.0 + 2.2 * math.exp(-s / 2500)  # noqa: E731
+    d = diagnose(make_report(train, val, epochs=3.0, gap_noise=0.0005), History(), TH)
+    assert d.get("still_improving") is not None
+    lab = d.get("data_limited")
+    assert lab is not None and lab.confidence >= 0.75 and lab.evidence["pattern"] == "overfitting while val still falls"
+    early = diagnose(make_report(train, val, epochs=1.5, gap_noise=0.0005), History(), TH)
+    assert early.get("data_limited") is None

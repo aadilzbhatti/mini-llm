@@ -249,13 +249,20 @@ def commit_accepted(p, session: dict, repo: Path | None = None, worktree: Path |
 
 
 def incumbent_diagnosis(session: dict, progs: dict, runs_dir: Path) -> dict | None:
+    """The strongest data_limited label over the incumbent's full-budget runs, re-diagnosed from report.json with
+    the current rules (the diagnosis.json saved in the container is frozen at the rules of its day)."""
+    from autolab.diagnose import History, diagnose
+
     inc = progs[session["incumbent"]]
     best = None
     for rid in inc.runs.get("full", []) + inc.runs.get("confirm", []):
         try:
-            d = json.loads((runs_dir / rid / "diagnosis.json").read_text())
-        except (OSError, json.JSONDecodeError):
-            continue
+            d = diagnose(json.loads((runs_dir / rid / "report.json").read_text()), History()).to_dict()
+        except (OSError, json.JSONDecodeError, KeyError, TypeError):
+            try:
+                d = json.loads((runs_dir / rid / "diagnosis.json").read_text())
+            except (OSError, json.JSONDecodeError):
+                continue
         lab = next((x for x in d["labels"] if x["name"] == "data_limited"), None)
         if lab and (best is None or lab["confidence"] > best["confidence"]):
             best = lab
@@ -519,6 +526,106 @@ def ablation_step(ctl: dict, ccfg: dict, t: datetime, log) -> int:
                  arms=cmp["arms"], summary=ablation.render(cmp))
             log(ablation.render(cmp))
     return made
+
+
+# --- capacity and context probes, and the ceilings that need the owner --------------------------------------
+
+
+def _choices(spec: dict) -> list:
+    return sorted(spec["choices"]) if "choices" in spec else []
+
+
+def probe_patches(inc, session: dict, cfg: dict, ccfg: dict) -> dict[str, tuple[dict | None, str]]:
+    """kind -> (hparam patch or None, why). None = a ceiling: the probe can't be made within the settings."""
+    hp, spec = inc.hparams, cfg["hparams"]
+    out: dict[str, tuple[dict | None, str]] = {}
+    # capacity: +50% layers (depth is safe for any block code), within n_layer's range and the parameter cap
+    n, emb = int(hp["n_layer"]), int(hp["n_embd"])
+    params = inc.scores.get("params") or session["initial_params"]
+    cap = cfg["param_cap_mult"] * session["initial_params"]
+    per_layer = 12 * emb * emb  # attention + MLP weights of one block
+    want = min(int(spec["n_layer"]["max"]), -(-n * int(ccfg.get("probe_capacity_pct", 150)) // 100))
+    fit = max(n, min(want, n + int((cap - params) // per_layer)))
+    if fit > n:
+        out["capacity"] = ({"n_layer": fit}, f"n_layer {n} → {fit} (~{(params + (fit - n) * per_layer) / 1e6:.1f}M "
+                                             f"params, cap {cap / 1e6:.1f}M)")
+    elif want <= n:
+        out["capacity"] = (None, f"n_layer is at its maximum ({spec['n_layer']['max']}, [evolve.hparams] n_layer)")
+    else:
+        out["capacity"] = (None, f"one more layer (~{per_layer / 1e6:.1f}M params) would pass the parameter cap: "
+                                 f"{params / 1e6:.1f}M of {cap / 1e6:.1f}M ([evolve] param_cap_mult = {cfg['param_cap_mult']})")
+    # context: 2x block_size with the batch halved (tokens per step stay fixed)
+    ctx = int(hp.get("block_size", cfg["block_size"]))
+    tps = session["budgets"].get("tokens_per_step") or ctx * int(hp["batch_size"])
+    new = ctx * 2
+    if new in _choices(spec.get("block_size", {})) and tps // new in _choices(spec["batch_size"]):
+        out["context"] = ({"block_size": new, "batch_size": tps // new}, f"context {ctx} → {new}, batch "
+                                                                          f"{hp['batch_size']} → {tps // new}")
+    else:
+        top = max(_choices(spec.get("block_size", {})) or [ctx])
+        out["context"] = (None, f"context {ctx} is the largest allowed ({top}, [evolve.hparams] block_size)")
+    return out
+
+
+def probe_step(ctl: dict, session: dict, progs: dict, ccfg: dict, t: datetime, paths: ev.Paths, log) -> list:
+    """When the search stalls (probe_patience children since the last acceptance, none better), try the obvious
+    growth moves on the incumbent once each: more layers, and 2x context. Plain hparam children (no Claude call),
+    judged by the normal cascade. A move the settings don't allow is recorded as a ceiling for the dashboard."""
+    if not ccfg.get("probes", True):
+        return []
+    inc = progs[session["incumbent"]]
+    st = ctl.setdefault("probes", {})
+    done = st.setdefault("done", [])
+    ceilings = {}
+    made = []
+    if stalled_children(session, progs) >= ccfg.get("probe_patience", 4):
+        for kind, (patch, why) in probe_patches(inc, session, ev.evolve_cfg(), ccfg).items():
+            key = f"{session.get('name')}/{inc.id}/{kind}"
+            if patch is None:
+                ceilings[kind] = {"kind": kind, "program": inc.id, "why": why}
+                continue
+            if key in done or not affordable(session, t, ctl, ccfg):
+                continue
+            child = ev.propose(inc.id, [], patch, f"Probe ({kind}): {why}. The search has stalled since {inc.id}; "
+                               f"this tests whether more {kind} pays at this budget.", created_by=f"probe:{kind}",
+                               paths=paths)
+            child.meta = {"instruction": f"probe_{kind}", "probe": kind}
+            from autolab.program import save
+
+            save(child, paths.programs)
+            done.append(key)
+            made.append(child)
+            note("probe", session=session.get("name"), program=child.id, parent=inc.id, kind=kind, change=why)
+            log(f"probe: {child.id} = {inc.id} with {why}")
+    st["ceilings"] = ceilings
+    return made
+
+
+def ceilings(ctl: dict, session: dict, progs: dict, ccfg: dict) -> list[dict]:
+    """Limits only the owner can raise, reported only while they block the next growth step."""
+    out = []
+    lad = ctl.get("ladder", {})
+    w = lad.get("waiting") or {}
+    cur = session["budgets"]["full_tokens"]
+    if (lad.get("state") == "idle" and w.get("stalled", 0) >= ccfg.get("ladder_patience", 4)
+            and (w.get("next_tokens") or 0) > ccfg.get("max_full_tokens", cur)):
+        out.append({"kind": "tokens", "setting": "[controller] max_full_tokens", "key": "max_full_tokens",
+                    "current": ccfg.get("max_full_tokens"), "suggest": w["next_tokens"],
+                    "why": f"the search stalled ({w['stalled']} children) and the compute ladder's next step "
+                           f"({w['next_tokens'] / 1e6:.0f}M tokens) is above the cap ({ccfg.get('max_full_tokens', 0) / 1e6:.0f}M)"})
+    for kind, c in (ctl.get("probes", {}).get("ceilings") or {}).items():
+        item = {"kind": kind, "why": f"{c['program']} can't probe more {kind}: {c['why']}"}
+        if kind == "capacity" and "param_cap_mult" in c["why"]:
+            mult = ev.evolve_cfg()["param_cap_mult"]
+            item.update(setting="[evolve] param_cap_mult", key="param_cap_mult", current=mult, suggest=round(mult + 0.5, 2))
+        else:
+            item["setting"] = "[evolve.hparams] " + ("n_layer" if kind == "capacity" else "block_size")
+        out.append(item)
+    df = ctl.get("data_flow", {})
+    if df.get("state") == "failed" and df.get("session") == session.get("name"):
+        out.append({"kind": "data", "setting": "[datasets] max_total_gb", "why": f"building {df.get('target')} failed "
+                    "(disk cap or network; see autolab/state/data_build.log)"})
+    return out
 
 
 # --- the compute ladder -----------------------------------------------------------------------------
@@ -838,6 +945,17 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         log(f"research error: {type(exc).__name__}: {exc}")
         ctl.setdefault("research", {}).update(state="idle", error=str(exc)[:500])
     status["research"] = {k: v for k, v in ctl.get("research", {}).items() if k in ("state", "program", "waiting", "pending_directed")}
+    try:
+        in_flight += sum(p.status not in ev.DONE for p in probe_step(ctl, session, progs, ccfg, t, session_paths, log))
+    except Exception as exc:  # noqa: BLE001
+        log(f"probe error: {type(exc).__name__}: {exc}")
+    status["ceilings"] = ceilings(ctl, session, ev.programs(session_paths), ccfg)
+    seen_ceilings = ctl.setdefault("ceilings_noted", [])
+    for c in status["ceilings"]:
+        key = f"{session.get('name')}/{session['incumbent']}/{c['kind']}"
+        if key not in seen_ceilings:
+            seen_ceilings.append(key)
+            note("ceiling", session=session.get("name"), program=session["incumbent"], **c)
     price = mb.price_per_s(ev.evolve_cfg()["gpu"])
     made = 0
     try:
