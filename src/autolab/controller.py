@@ -611,6 +611,9 @@ def measure_step(ctl: dict, session: dict, progs: dict, calls: dict, ccfg: dict,
         return
     if inc.id in (session.get("measures") or {}):
         return
+    tried = len(inc.runs.get("measure", []))
+    if tried >= 2:  # measured twice without metrics: don't keep paying for it (see eval_error in launch.json)
+        return
     from autolab.modal_backend import price_per_s
 
     cost = (session["wall_caps"]["full"] / max(ev.evolve_cfg()["wall_cap_mult"], 1) * 1.1 + 300) * price_per_s(ev.evolve_cfg()["gpu"])
@@ -618,7 +621,7 @@ def measure_step(ctl: dict, session: dict, progs: dict, calls: dict, ccfg: dict,
         ctl["measure_waiting"] = f"budget: measuring {inc.id} needs ~${cost:.2f}"
         return
     ctl.pop("measure_waiting", None)
-    rid = ev.start_measure(inc.id, paths=paths)
+    rid = ev.start_measure(inc.id, paths=paths, seed=tried + 1)  # a new run id per attempt
     note("measure_started", session=session.get("name"), program=inc.id, run=rid)
     log(f"measuring {inc.id}'s four dimensions ({rid})")
 
@@ -892,6 +895,7 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
              retest_of=child.meta.get("retest_of"))
         made += 1
         in_flight += child.status not in ev.DONE
+        save_control(ctl)  # now, not at the end: a later failure in this cycle must not re-send queued work
     save_control(ctl)
     render_notebook_md(read_notebook(), ev.load_session(ev.Paths()), ev.programs(ev.Paths()))
     return {**status, "proposed": made, "in_flight": in_flight}

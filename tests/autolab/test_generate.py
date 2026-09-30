@@ -285,3 +285,15 @@ def test_directed_child_applies_and_credits_the_card(lab):
                      runs_dir=lab["runs"], card=card)
     assert "Apply technique card **c1**" in seen["prompt"] and "# Relevant techniques" in seen["prompt"]
     assert c.meta["technique_ids"] == ["c1"] and c.meta["instruction"] == "research" and c.parent_id == "p0"
+
+
+def test_explore_handles_mixed_cell_kinds(lab):
+    """Older programs sit in (params, tps) cells and M8 ones in ("ctx", context, latency) cells; picking a random
+    cell once crashed every such cycle (TypeError comparing str and int)."""
+    add(lab, "p1", "evaluated", 4.70, 0)
+    p = add(lab, "p2", "evaluated", 4.69, 0)
+    p.scores["metrics"] = {"context": 256, "decode_ms_per_token": 7.0}
+    save(p, lab["paths"].programs)
+    progs, session = ev.programs(lab["paths"]), ev.load_session(lab["paths"])
+    seen = {sample(progs, session, 0, DBConfig(p_exploit=0.0, p_frontier=0.0), random.Random(s))[0].id for s in range(20)}
+    assert "p2" in seen and "p1" in seen

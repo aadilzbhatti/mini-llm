@@ -736,3 +736,13 @@ Build this first; everything else hill-climbs on it.
   comparison at equal candidate counts on the first-seed full loss (`autolab ablation status` any time). The
   arm is off the regime chain and out of the bandits, never ported from, never committed, and left out of
   SESSION_1.md. Opt-in: it spends ~ one candidate's cost per child. Not started.
+- 2026-09-30 (incidents, fixed): (1) Since M8, MAP-Elites cells mixed (params, tps) and ("ctx", context, latency)
+  tuples, and the "random cell" branch sorted them: TypeError, so ~35% of proposal attempts crashed the cycle
+  (since ~2026-09-29 16:38 UTC). A crash after a proposal also skipped saving controller state, so the queued
+  near-miss retests were re-sent: p28–p31 duplicate p24–p26 (~$3). Cells now sort by repr, and the controller saves
+  its state after every proposal. (2) On Modal the eval suite ran with the image's base `mini_llm` ahead of the
+  candidate's code (`python -m` puts cwd /root first), so every program with new parameters (Canon layers: p19,
+  p21, ...) failed to load its checkpoint and got no context/inference metrics; the champion p21 was invisible on
+  the frontier's context axis, and measure_step resubmitted the same run id every cycle (FileExistsError). The
+  suite now runs with the candidate's src first on sys.path; an eval failure lands in launch.json (`eval_error`);
+  a failed measure is retried once with the next seed, then left. Redeployed the Modal app.

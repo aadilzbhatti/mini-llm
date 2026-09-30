@@ -104,7 +104,7 @@ def sample(progs: dict[str, Program], session: dict, island: int, cfg: DBConfig,
     elif rng.random() < cfg.p_exploit:
         parent = max(grid.values(), key=fitness)
     else:
-        parent = grid[rng.choice(sorted(grid))]
+        parent = grid[rng.choice(sorted(grid, key=repr))]  # cells mix (params, tps) and ("ctx", ...) tuples
     all_elites = [p for p in elites(list(progs.values()), cfg).values() if p.id != parent.id]
     # the global grid keeps one per cell; the top list should see every finished program
     finished = sorted((p for p in progs.values() if fitness(p) is not None and p.id != parent.id),

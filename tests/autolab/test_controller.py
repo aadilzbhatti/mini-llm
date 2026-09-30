@@ -435,12 +435,23 @@ def test_measure_step_backfills_incumbent_metrics(world, monkeypatch):
     real = importlib.reload(ctl).measure_step if False else ctl.__dict__.get("_real_measure_step")
     submitted = []
 
-    def fake_start(pid, paths=None):
+    def fake_start(pid, paths=None, seed=1):
         submitted.append(pid)
+        rid = f"ev-s2-{pid}-measure-s{seed}"
+        if any(rid in (p.runs.get("measure") or []) for p in ev.programs(paths).values()):
+            raise FileExistsError(rid)  # what the real submit does for a run id it has seen
         s = ev.load_session(paths)
-        s.setdefault("measures", {})[pid] = f"ev-s2-{pid}-measure-s1"
+        s.setdefault("measures", {})[pid] = rid
         ev.save_session(s, paths)
-        return f"ev-s2-{pid}-measure-s1"
+        p = ev.programs(paths)[pid]
+        p.runs.setdefault("measure", []).append(rid)
+        save(p, paths.programs)
+        return rid
+
+    def finish_without_metrics():  # what advance_measures does when the eval suite failed
+        s = ev.load_session(ev.Paths())
+        s["measures"] = {}
+        ev.save_session(s, ev.Paths())
 
     monkeypatch.setattr(ev, "start_measure", fake_start)
     monkeypatch.setattr(ctl, "controller_cfg", lambda: {"max_in_flight": 0, "daily_usd": 100.0})
@@ -451,6 +462,11 @@ def test_measure_step_backfills_incumbent_metrics(world, monkeypatch):
     ctl._real_measure_step(ctl.load_control(), ev.load_session(), ev.programs(), {}, {"daily_usd": 100.0}, T,
                            ev.Paths(), lambda m: None)
     assert submitted == ["p0"]  # already measuring: not again
+    for want in (["p0", "p0"], ["p0", "p0"]):  # a failed measure is retried once, with a new run id, then left
+        finish_without_metrics()
+        ctl._real_measure_step(ctl.load_control(), ev.load_session(), ev.programs(), {}, {"daily_usd": 100.0}, T,
+                               ev.Paths(), lambda m: None)
+        assert submitted == want
 
 
 def test_noise_is_pooled_over_multi_seed_programs(world):

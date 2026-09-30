@@ -142,11 +142,17 @@ def run_trial(request: dict, meta: dict, code: dict[str, str]) -> dict:
     if req.suite and launch.get("status") == "finished":  # M8: quality / context / inference metrics
         import subprocess as sp
 
-        r = sp.run([sys.executable, "-m", "autolab.evalsuite", str(run_dir), "--val", str(val_path)],
-                   env={**os.environ, "PYTHONPATH": str(src), "PYTHONUNBUFFERED": "1"},
+        # The candidate's src goes first on sys.path. With `python -m`, the cwd (/root, which holds the image's
+        # base mini_llm next to autolab) came first and shadowed the candidate's code, so any program with new
+        # parameters (e.g. Canon layers) failed to load its checkpoint and silently got no eval metrics.
+        boot = (f"import runpy, sys; sys.path.insert(0, {str(src)!r}); "
+                f"sys.argv = ['evalsuite', {str(run_dir)!r}, '--val', {str(val_path)!r}]; "
+                "runpy.run_module('autolab.evalsuite', run_name='__main__')")
+        r = sp.run([sys.executable, "-c", boot], env={**os.environ, "PYTHONPATH": str(src), "PYTHONUNBUFFERED": "1"},
                    capture_output=True, text=True, timeout=1200)
         if r.returncode != 0:
             (run_dir / "eval_error.txt").write_text((r.stdout + r.stderr)[-8000:])
+            launch["eval_error"] = (r.stdout + r.stderr)[-1500:]  # comes back in launch.json, so it's visible locally
     out: dict = {"launch": launch, "train_log": (run_dir / "train.log").read_text(errors="replace")[-400_000:]}
     try:
         report = build_report(run_dir)
