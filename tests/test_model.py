@@ -133,7 +133,7 @@ def test_weight_tying_appears_once_in_named_parameters(model: ModelCustomTransfo
     assert matches == ["token_embedding_table.weight"]
 
 
-def test_generate_with_different_block_size(model: ModelCustomTransformer):
+def test_inference(model: ModelCustomTransformer):
     # load data/tiny.txt, encode, and train a small model on it
     text = load_text("data/tiny.txt")
     tokenizer = get_tokenizer()
@@ -141,7 +141,8 @@ def test_generate_with_different_block_size(model: ModelCustomTransformer):
     model = model.to(device)  # the fixture builds on CPU; the data goes to MPS when available
     tokens = encode(text, tokenizer).unsqueeze(0).to(device)
     # train the model on this data for a few steps
-    x, y = make_batch(tokens.squeeze(0), batch_size=4, block_size=BLOCK_SIZE, device=device)
+    generator = torch.Generator().manual_seed(42)
+    x, y = make_batch(tokens.squeeze(0), batch_size=4, block_size=BLOCK_SIZE, device=device, generator=generator)
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
     model.train()
     for _ in range(1000):
