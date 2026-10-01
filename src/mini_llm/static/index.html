@@ -713,6 +713,28 @@ async function refresh() {
 }
 // --- Best tab: every hyperparameter, sortable, run name pinned while scrolling sideways ---
 let BEST = [], BEST_SORT = { key: 'full_val_loss', dir: 1 }, EVALS = null;
+// Eval reports: one per evaluated model, sortable by loss / date / name (choice remembered per device).
+let EVAL_SORT = 'val';
+try { EVAL_SORT = localStorage.getItem('mini-llm-eval-sort') || 'val'; } catch {}
+const EVAL_SORTS = { val: ['best loss', (a, b) => (a.val ?? Infinity) - (b.val ?? Infinity)],
+  date: ['newest', (a, b) => String(b.date).localeCompare(String(a.date))],
+  name: ['name', (a, b) => a.label.localeCompare(b.label)] };
+function sortEvals(k) { EVAL_SORT = k; try { localStorage.setItem('mini-llm-eval-sort', k); } catch {} renderBest(); }
+function evalsCard() {
+  const rows = [...EVALS.reports].sort(EVAL_SORTS[EVAL_SORT]?.[1] || EVAL_SORTS.val[1]);
+  const doc = (title, key) => `<button onclick="openDoc('${title}', EVALS.${key})">${title}</button>`;
+  return `<div class="card" style="margin-top:10px"><strong>Evals</strong>
+    <div class="mut" style="margin:4px 0 8px">Every trained model gets one evaluation on the Mac: quality, context use, long-range retrieval, generation samples, inference cost.</div>
+    <div class="row">${EVALS.summary ? `<button class="pri" onclick="openDoc('Evals summary', EVALS.summary)">Summary table</button>` : ''}
+      ${EVALS.shared.includes('samples') ? `<button onclick="showEval('samples')">Samples side by side</button>` : ''}
+      ${EVALS.shared.includes('inference') ? `<button onclick="showEval('inference')">Inference benchmark</button>` : ''}
+      ${EVALS.guide ? doc('How to read the evals', 'guide') : ''}</div>
+    <div class="row" style="margin:12px 0 6px"><span class="mut">Model reports, sorted by</span>
+      ${Object.entries(EVAL_SORTS).map(([k, [name]]) => `<button class="${k === EVAL_SORT ? 'on' : ''}" style="padding:4px 10px; font-size:13px" onclick="sortEvals('${k}')">${name}</button>`).join('')}</div>
+    <div class="scroll"><table>${rows.map(r => `<tr onclick="showEval('${esc(r.name)}')" style="cursor:pointer">
+      <td><a href="javascript:void 0">${esc(r.label)}</a></td><td class="num">${r.val != null ? f4(r.val) : '–'}</td><td class="mut num">${esc(String(r.date).slice(0, 10))}</td></tr>`).join('')}</table></div>
+  </div>`;
+}
 async function showEval(name) { try { openDoc(`Evals · ${name}`, await api(`/api/evals/${encodeURIComponent(name)}`)); } catch (e) { toast(e.message); } }
 try { BEST_SORT = JSON.parse(localStorage.getItem('mini-llm-best-sort')) || BEST_SORT; } catch {}
 const sci = v => v == null ? '–' : Number(v).toExponential(0).replace('e-', 'e-');
@@ -756,10 +778,7 @@ function renderBest() {
     <tr><th onclick="sortBest('run')">run${arrow('run')}</th>${BEST_COLS.map(([k, label]) => `<th onclick="sortBest('${k}')">${label}${arrow(k)}</th>`).join('')}</tr>
     ${rows.map(x => `<tr><td>${esc(x.run)}</td>${BEST_COLS.map(([k, , f]) => `<td class="num">${f(x)}</td>`).join('')}</tr>`).join('')}
   </table></div></div><div class="mut" style="padding:0 4px">Tap a column to sort. Scroll sideways for more.</div>
-  ${EVALS && (EVALS.summary || EVALS.reports.length) ? `<div class="card" style="margin-top:10px"><strong>Evals</strong>
-    <div class="mut" style="margin:4px 0 8px">Quality at matched context, context use, long-range retrieval and inference cost (<code>mini-llm-eval</code>).</div>
-    <div class="row">${EVALS.summary ? `<button class="pri" onclick="openDoc('Evals summary', EVALS.summary)">Summary table</button>` : ''}
-    ${EVALS.reports.map(n => `<button onclick="showEval('${esc(n)}')">${esc(n.replace(/^modal_/, '').replace(/_seed\d+$/, ''))}</button>`).join('')}</div></div>` : ''}`;
+  ${EVALS && (EVALS.summary || EVALS.reports.length) ? evalsCard() : ''}`;
   $('#best .scroll').scrollLeft = left;
 }
 

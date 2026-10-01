@@ -298,9 +298,14 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
 
     @app.get("/api/runs/{run_id}/report", dependencies=[Depends(auth)], response_class=PlainTextResponse)
     def get_report(run_id: str) -> str:
-        """The fixed-prompt sample report, found via the run's save-name."""
+        """The run's generation samples: from its eval (every evaluated model), else the old per-run report."""
         status = status_of(check_id(run_id))
         save_name = (status.get("args") or {}).get("save-name")
+        if save_name:
+            ev = _read_json(repo / "evals" / f"{Path(save_name).stem}.json")
+            if isinstance(ev, dict) and ev.get("samples"):
+                from mini_llm.samples import render_model
+                return render_model(ev)
         candidates = []
         if save_name:
             candidates.append(repo / "checkpoints" / f"{Path(save_name).stem}.md")
@@ -653,10 +658,26 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
 
     @app.get("/api/evals", dependencies=[Depends(auth)])
     def list_evals() -> dict:
+        """Summary, guide, cross-model reports, and one row per model report (for sorting on the page)."""
         d = repo / "evals"
-        summary = d / "summary.md"
-        return {"summary": summary.read_text() if summary.exists() else None,
-                "reports": sorted(q.stem for q in d.glob("*.md") if q.stem != "summary") if d.exists() else []}
+        text = lambda n: (d / f"{n}.md").read_text() if (d / f"{n}.md").exists() else None
+        shared = [n for n in ("samples", "inference") if (d / f"{n}.md").exists()]
+        rows = []
+        for md in (sorted(d.glob("*.md")) if d.exists() else []):
+            if md.stem in ("summary", "GUIDE", *shared) or md.stem.startswith("sweep"):
+                continue
+            ev = _read_json(md.with_suffix(".json"))
+            row = {"name": md.stem, "label": md.stem, "val": None, "ctx": None, "params": None,
+                   "date": datetime.fromtimestamp((repo / "checkpoints" / f"{md.stem}.pt").stat().st_mtime
+                                                  if (repo / "checkpoints" / f"{md.stem}.pt").exists()
+                                                  else md.stat().st_mtime).isoformat(timespec="minutes")}
+            if isinstance(ev, dict) and "config" in ev:
+                from mini_llm.samples import label
+                T = ev["config"]["block_size"]
+                row.update(label=label(ev), ctx=T, params=ev.get("params"),
+                           val=(ev.get("quality") or {}).get(f"full_val@{T}"))
+            rows.append(row)
+        return {"summary": text("summary"), "guide": text("GUIDE"), "shared": shared, "reports": rows}
 
     @app.get("/api/evals/{name}", dependencies=[Depends(auth)], response_class=PlainTextResponse)
     def get_eval(name: str) -> str:

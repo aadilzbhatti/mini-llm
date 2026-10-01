@@ -34,9 +34,14 @@ def test_full_report_and_summary(tmp_path):
     assert list(cc["by_context"]) == ["16", "32", "64", "128"] and list(cc["gain"]) == ["16->32", "32->64", "64->128"]
     assert all(len(v) == evals.CURVE_TARGETS for v in cc["per_target"].values())
     assert r["training_systems"]["train_tokens_per_sec"] == 123.0
+    from mini_llm.samples import DRAWS, PROMPT_LABELS, label, render_comparison, render_model
+    sm = r["samples"]
+    assert [p["label"] for p in sm["prompts"]] == list(PROMPT_LABELS) and all(len(p["draws"]) == DRAWS for p in sm["prompts"])
+    assert sm["summary"]["n"] == len(PROMPT_LABELS) * DRAWS and {"rep4", "looped", "topic"} <= set(sm["prompts"][0]["draws"][0])
     md, table = evals.render_markdown(r), evals.summary_table([r, {**r, "checkpoint": "other.pt"}], reference="t128")
-    assert "## Long-range retrieval" in md and "| t128 | 128 |" in table
-    assert "## Paired against t128" in table and "+0.0000 ± 0.0000" in table  # identical model: zero paired difference
+    assert "## Long-range retrieval" in md and "## Generation samples" in md and f"| {label(r)} | 128 |" in table
+    assert f"## Paired against {label(r)}" in table and "+0.0000 ± 0.0000" in table  # identical model: zero paired difference
+    assert render_model(r).startswith(f"# Samples: {label(r)}") and "| M1 | " in render_comparison([r])
     assert "## Context curve (fixed targets)" in md and "L(c=128)" in table
 
 
@@ -59,3 +64,14 @@ def test_bench_runs_models_in_one_session(tmp_path):
     m = res["models"]["t256"]
     assert m["block_size"] == 256 and m["decode_tok_s"]["n"] == 2 and m["prefill_full_ms"]["n"] == 4
     assert "| t128 | 128 |" in bench.render(res)
+
+
+def test_sample_metrics():
+    from mini_llm.samples import loop_info, rep4, topic_retention
+    assert loop_info(list(range(40)))["looped"] is False
+    looped = list(range(10)) + [7, 8, 9] * 12  # a 3-token cycle from token 7 to the end
+    assert loop_info(looped) == {"looped": True, "period": 3, "onset": 7}
+    assert rep4([1, 2, 3, 4] * 5) > 0.7 and rep4(list(range(20))) == 0
+    p = "Albert Einstein was a German-born theoretical physicist who"
+    assert topic_retention(p, "Einstein studied physics in Germany") == 3 / 6  # einst, germa, physi of 6 stems
+    assert topic_retention(p, "the cat sat on the mat") == 0

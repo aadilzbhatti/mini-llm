@@ -1,5 +1,7 @@
 """Control API: checkpoint listing, inference, eval reports."""
 
+import json
+
 import torch
 from fastapi.testclient import TestClient
 
@@ -68,10 +70,18 @@ def test_nucleus_keeps_smallest_set_reaching_p():
 
 def test_evals_endpoints(repo):  # noqa: F811
     c = TestClient(create_app(repo=repo, uv="uv"))
-    assert c.get("/api/evals").json() == {"summary": None, "reports": []}
+    assert c.get("/api/evals").json() == {"summary": None, "guide": None, "shared": [], "reports": []}
     (repo / "evals").mkdir()
-    (repo / "evals" / "summary.md").write_text("# Evals summary\n")
-    (repo / "evals" / "m1.md").write_text("# Evals: m1\n")
-    assert c.get("/api/evals").json() == {"summary": "# Evals summary\n", "reports": ["m1"]}
+    for n, t in (("summary", "# Evals summary\n"), ("GUIDE", "# Guide\n"), ("samples", "# Samples\n"), ("m1", "# Evals: m1\n")):
+        (repo / "evals" / f"{n}.md").write_text(t)
+    (repo / "evals" / "m2_data80k.md").write_text("# Evals: m2\n")
+    (repo / "evals" / "m2_data80k.json").write_text(json.dumps({
+        "checkpoint": "checkpoints/m2_data80k.pt", "config": {"block_size": 256, "n_embd": 256, "n_layer": 4},
+        "params": 16_000_000, "step": 15000, "quality": {"full_val@256": 4.5}}))
+    j = c.get("/api/evals").json()
+    assert j["summary"] == "# Evals summary\n" and j["guide"] == "# Guide\n" and j["shared"] == ["samples"]
+    rows = {r["name"]: r for r in j["reports"]}
+    assert set(rows) == {"m1", "m2_data80k"} and rows["m1"]["val"] is None
+    assert rows["m2_data80k"]["val"] == 4.5 and rows["m2_data80k"]["label"] == "data80k · d256-L4 · 16.0M · T256 · 15K steps"
     assert c.get("/api/evals/m1").text.startswith("# Evals: m1")
     assert c.get("/api/evals/..%2Fsecret").status_code == 404

@@ -1,4 +1,14 @@
-"""Post-hoc evals: quality, context use, long-range retrieval, inference cost.
+"""The evaluation of a trained model: one task, run on the Mac for every model.
+
+    uv run mini-llm-eval checkpoints/a.pt     # evaluate a, then refresh every shared report
+    uv run mini-llm-eval --all                # re-evaluate every model that has a report
+    uv run mini-llm-eval --all --only samples # just (re)generate samples, keep the rest
+
+Per model -> evals/<model>.json|md: everything below, plus generation samples
+(mini_llm.samples). Then, across all evaluated models: the controlled inference
+benchmark (evals/inference.md), the summary table (evals/summary.md) and the
+side-by-side samples (evals/samples.md). What each eval measures and how to
+read it: evals/GUIDE.md.
 
 Validation loss alone can't separate "a better model" from "a model that got
 more context at eval time", and says nothing about cost. This scores a saved
@@ -32,7 +42,9 @@ checkpoint along several axes so models can be compared on a Pareto table:
               (this model has no KV cache, so each new token re-runs the
               cropped window), peak memory.
 
-    uv run mini-llm-eval checkpoints/a.pt checkpoints/b.pt      # -> evals/*.json|md, evals/summary.md
+  samples     10 prompts x 5 draws of free-running generation at T=0.7 /
+              top-k 40, identical seeds for every model, scored for
+              repetition, exact loops and topic retention (mini_llm.samples).
 
 Everything is seeded; run all models on the same device before comparing the
 inference numbers.
@@ -255,10 +267,19 @@ def inference_cost(model, block_size: int, device, decode_tokens: int = 64, runs
                     "each decode step re-runs the (cropped) window"}
 
 
-def evaluate_checkpoint(path: str | Path, val_path: str | Path = DEFAULT_VAL, device=None, gpu_shared: bool = False) -> dict:
+def evaluate_checkpoint(path: str | Path, val_path: str | Path = DEFAULT_VAL, device=None, gpu_shared: bool = False,
+                        only: set[str] | None = None, previous: dict | None = None) -> dict:
+    """All evals for one checkpoint. `only={"samples"}` recomputes just those parts on top of `previous`."""
+    from mini_llm.samples import generate_samples
+
     device = torch.device(device) if device else select_device()
     model, cfg, ckpt = load_model(path, device)
     tokenizer = get_tokenizer()
+    if only:
+        r = dict(previous or {})
+        if "samples" in only:
+            r["samples"] = generate_samples(model, tokenizer, cfg.block_size, device)
+        return r
     val = load_tokens(val_path)
     T = cfg.block_size
     quality = {}
@@ -287,6 +308,7 @@ def evaluate_checkpoint(path: str | Path, val_path: str | Path = DEFAULT_VAL, de
                       **({"note": inf["note"] + " -- MEASURED WHILE A TRAINING JOB SHARED THE GPU: timings skewed"}
                          if gpu_shared else {})},
         "training_systems": ckpt.get("systems"),
+        "samples": generate_samples(model, tokenizer, T, device),
     }
 
 
@@ -296,7 +318,8 @@ def _cb_line(cb: dict) -> str:
 
 def render_markdown(r: dict) -> str:
     q, rt, inf, ts = r["quality"], r["retrieval"], r["inference"], r.get("training_systems") or {}
-    lines = [f"# Evals: {Path(r['checkpoint']).stem}", "",
+    from mini_llm.samples import label
+    lines = [f"# Evals: {label(r)}", "", f"- checkpoint: {Path(r['checkpoint']).stem}",
              f"- config: {r['config']}", f"- params: {r['params']:,}", f"- step: {r['step']}",
              f"- val: {r['val_tokens']}", "", "## Quality", "",
              "full_val@W averages over targets at positions 0..W-1, so it mixes in how much history each "
@@ -333,7 +356,20 @@ def render_markdown(r: dict) -> str:
     lines += ["", "## Inference (this eval run; see evals/inference.md for the controlled comparison)", "",
               f"- device: {inf['device']}", f"- prefill, full context: {inf['prefill_ms_full_context']} ms",
               f"- decode: {inf['decode_tokens_per_sec']} tokens/s ({inf['note']})",
-              f"- memory: {inf['memory_gb']} GB", "", "## Training systems (recorded by the run)", ""]
+              f"- memory: {inf['memory_gb']} GB", ""]
+    sm = r.get("samples")
+    if sm:
+        from mini_llm.samples import _summary_cells
+        lines += ["## Generation samples", "", f"{sm['protocol']}. The samples themselves: this run's Samples "
+                  "button, or evals/samples.md next to every other model.", "",
+                  "| rep4 | looping | topic held | stopped at EOS |", "|---|---|---|---|",
+                  f"| {_summary_cells(sm['summary'])} |", "", "| prompt | rep4 | looping |", "|---|---|---|"]
+        for p in sm["prompts"]:
+            ds = p["draws"]
+            lines.append(f"| {p['label']} | {sum(x['rep4'] for x in ds) / len(ds):.2f} | "
+                         f"{sum(bool(x.get('looped')) for x in ds)}/{len(ds)} |")
+        lines.append("")
+    lines += ["## Training systems (recorded by the run)", ""]
     lines += [f"- {k}: {v}" for k, v in ts.items()] if ts else ["- not recorded (run predates mini_llm.systems)"]
     return "\n".join(lines) + "\n"
 
@@ -377,15 +413,17 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
     dists = [str(x) for x in DISTANCES]
     ctxs = [str(c) for c in CONTEXTS]
     cbs = [f"cb@{w}" for w in EVAL_WINDOWS]
+    from mini_llm.samples import label
     name = lambda r: Path(r["checkpoint"]).stem
     bench = (bench or {}).get("models", {})
-    head = ["model", "ctx", "val@ctx"] + [f"L(c={c})" for c in ctxs] + cbs + [f"ret@{d}" for d in dists] + \
+    head = ["model", "ctx", "val@ctx", "rep4", "looping", "topic held"] + [f"L(c={c})" for c in ctxs] + cbs + [f"ret@{d}" for d in dists] + \
            ["train tok/s", "train peak GB", "prefill@ctx ms", "decode tok/s"]
     lines = ["# Evals summary", "",
              "One row per checkpoint. **L(c)**: loss on the same 8,000 target tokens given exactly c tokens of "
              "history (compare models at equal c; this is the fair context comparison, not val@ctx). "
              "**cb@W**: context benefit in nats ± SE on identical windows, only for models with context ≥ W. "
              "**ret@d**: forced-choice retrieval at distance d (chance 10%), identical trials. "
+             "**rep4 / looping / topic held**: generation samples (see evals/samples.md). "
              "Inference columns come from `mini-llm-bench` (all models in one session, interleaved rounds; "
              "median, p10–p90) when available.", "",
              "| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
@@ -394,7 +432,10 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
         by = r["retrieval"]["by_distance"]; cb = r["context_benefit"]
         curve = (r.get("context_curve") or {}).get("by_context", {})
         bm = bench.get(name(r))
-        cells = [name(r), str(T), f"{q[f'full_val@{T}']:.4f}" if f"full_val@{T}" in q else "–"]
+        ss = (r.get("samples") or {}).get("summary")
+        cells = [label(r), str(T), f"{q[f'full_val@{T}']:.4f}" if f"full_val@{T}" in q else "–"]
+        cells += ([f"{ss['rep4']:.3f}", f"{ss['looped']}/{ss['n']}", "–" if ss["topic"] is None else f"{ss['topic']:.0%}"]
+                  if ss else ["–", "–", "–"])
         cells += [f"{curve[c]['loss']:.4f}" if c in curve else "–" for c in ctxs]
         cells += [_cb_line(cb[k]) if k in cb and "benefit_se" in cb[k] else "–" for k in cbs]
         cells += [f"{by[d]['accuracy']:.0%}" if d in by else "" for d in dists]
@@ -410,7 +451,7 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
         lines += ["", "\\* from the model's own eval run, not the controlled benchmark: don't compare across rows."]
     ref = next((r for r in results if reference and reference in name(r)), None)
     if ref is not None:
-        lines += ["", f"## Paired against {name(ref)}", "",
+        lines += ["", f"## Paired against {label(ref)}", "",
                   "Differences on identical targets / windows / trials, other − reference ± paired SE. "
                   "L(c): negative = this model predicts the same tokens better from the same history. "
                   "ret: trials only this model got right / only the reference got right.", "",
@@ -422,15 +463,56 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
                 continue
             pr = paired(ref, r)
             cell = lambda k: f"{pr[k][0]:+.4f} ± {pr[k][1]:.4f}" if k in pr else "–"
-            lines.append(f"| {name(r)} | " + " | ".join(cell(f"L@{c}") for c in ctxs) + " | " +
+            lines.append(f"| {label(r)} | " + " | ".join(cell(f"L@{c}") for c in ctxs) + " | " +
                          " | ".join(cell(k) for k in cbs) + " | " +
                          " | ".join(f"{pr[f'ret@{d}'][0]}/{pr[f'ret@{d}'][1]}" if f"ret@{d}" in pr else "–" for d in dists) + " |")
     return "\n".join(lines) + "\n"
 
 
+def _other_gpu_jobs() -> bool:
+    """Is training, or another eval/benchmark (not this process or its launchers), running?"""
+    import os
+    import subprocess
+    try:
+        out = subprocess.run(["pgrep", "-f", "mini-llm-train|mini-llm-eval|mini_llm[.]evals|mini-llm-bench|mini_llm[.]bench"],
+                             capture_output=True, text=True).stdout.split()
+    except OSError:
+        return False
+    mine, pid = set(), os.getpid()
+    while pid > 1 and pid not in mine:  # this process and its ancestors (uv run, caffeinate, ...)
+        mine.add(pid)
+        try:
+            pid = int(subprocess.run(["ps", "-o", "ppid=", "-p", str(pid)], capture_output=True, text=True).stdout.strip() or 1)
+        except (OSError, ValueError):
+            break
+    return any(int(x) not in mine for x in out)
+
+
+def refresh(out: Path, reference: str | None, bench: bool = True, device=None) -> None:
+    """Rebuild every cross-model report from the per-model evals: benchmark, summary, samples."""
+    from mini_llm.samples import render_comparison
+    results = eval_results(out)
+    if bench and results:
+        if _other_gpu_jobs():
+            print("[eval] another GPU job is running: keeping the previous inference benchmark", flush=True)
+        else:
+            from mini_llm.bench import benchmark, render
+            b = benchmark([r["checkpoint"] for r in results], device)
+            (out / "inference.json").write_text(json.dumps(b, indent=2))
+            (out / "inference.md").write_text(render(b))
+    (out / "summary.md").write_text(summary_table(results, reference, load_bench(out)))
+    (out / "samples.md").write_text(render_comparison(results))
+    print(f"[eval] refreshed summary.md, samples.md{', inference.md' if bench else ''} for {len(results)} models", flush=True)
+
+
 def main(argv: list[str] | None = None) -> None:
-    p = argparse.ArgumentParser(description="Quality, context, retrieval and inference evals for checkpoints.")
-    p.add_argument("checkpoints", nargs="+")
+    p = argparse.ArgumentParser(description="Evaluate checkpoints (quality, context, retrieval, samples), "
+                                            "then refresh the cross-model reports.")
+    p.add_argument("checkpoints", nargs="*")
+    p.add_argument("--all", action="store_true", help="Every checkpoint that already has an eval report.")
+    p.add_argument("--only", choices=["samples"], action="append",
+                   help="Recompute just these parts, keeping the rest of each existing report.")
+    p.add_argument("--no-bench", action="store_true", help="Skip the inference benchmark when refreshing.")
     p.add_argument("--val-tokens", default=str(DEFAULT_VAL))
     p.add_argument("--device", default=None)
     p.add_argument("--out-dir", default=str(EVALS_DIR))
@@ -441,16 +523,22 @@ def main(argv: list[str] | None = None) -> None:
     args = p.parse_args(argv)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    for ck in args.checkpoints:
-        r = evaluate_checkpoint(ck, args.val_tokens, args.device, args.gpu_shared)
+    cks = list(args.checkpoints) + ([r["checkpoint"] for r in eval_results(out)] if args.all else [])
+    for ck in dict.fromkeys(cks):
         stem = Path(ck).stem
-        (out / f"{stem}.json").write_text(json.dumps(r, indent=2))
+        prev_path = out / f"{stem}.json"
+        previous = json.loads(prev_path.read_text()) if args.only and prev_path.exists() else None
+        if args.only and previous is None:
+            print(f"{stem}: no existing report, evaluating everything", flush=True)
+        r = evaluate_checkpoint(ck, args.val_tokens, args.device, args.gpu_shared,
+                                only=set(args.only) if previous else None, previous=previous)
+        prev_path.write_text(json.dumps(r, indent=2))
         (out / f"{stem}.md").write_text(render_markdown(r))
+        ss = (r.get("samples") or {}).get("summary") or {}
         print(f"{stem}: val@128 {r['quality'].get('full_val@128', math.nan):.4f}  "
-              f"{' '.join(f'{k} {_cb_line(v)}' for k, v in r['context_benefit'].items())}  -> {out / (stem + '.md')}", flush=True)
-    results = eval_results(out)
-    (out / "summary.md").write_text(summary_table(results, args.reference, load_bench(out)))
-    print(f"summary of {len(results)} checkpoints -> {out / 'summary.md'}")
+              f"{' '.join(f'{k} {_cb_line(v)}' for k, v in r['context_benefit'].items())}  "
+              f"rep4 {ss.get('rep4')} looping {ss.get('looped')}/{ss.get('n')}  -> {out / (stem + '.md')}", flush=True)
+    refresh(out, args.reference, bench=not args.no_bench, device=args.device)
 
 
 if __name__ == "__main__":

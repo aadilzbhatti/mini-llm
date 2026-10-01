@@ -10,11 +10,11 @@ runs/*.status.json for runs that
   - have their checkpoint in checkpoints/: a Modal run once it's imported, a
     local queue run as soon as the runner has saved it,
 
-and queues `mini-llm-eval <checkpoint>` for them (first writing the checkpoint's
-sample report if the run asked for one and doesn't have it: Modal runs skip it), then (GPU permitting) the
-inference benchmark and the samples report (mini_llm.samples). A single worker thread runs
-them one at a time on the local GPU (serialised so two evals never share it)
-and regenerates evals/summary.md. Progress is written into the run's status
+and queues `mini-llm-eval <checkpoint>` for them: the one evaluation task
+(quality, context, retrieval, generation samples, then the refreshed
+benchmark, summary and side-by-side samples). A single worker thread runs
+them one at a time on the local GPU (serialised so two evals never share it).
+Progress is written into the run's status
 file ("eval": {"state": "queued" | "running" | "done" | "failed", ...}) so the
 page can show it, and a failed eval keeps its log (runs/<id>.eval.log) and
 isn't retried. Inference timings taken while a local training job holds the
@@ -78,11 +78,6 @@ def training_running() -> bool:
     return _pgrep("mini-llm-train")
 
 
-def gpu_busy() -> bool:
-    """Training, or another eval/benchmark (e.g. a manual backfill) outside this worker."""
-    return _pgrep("mini-llm-train|mini-llm-eval|mini_llm[.]evals|mini-llm-bench|mini_llm[.]bench")
-
-
 class AutoEvaluator:
     def __init__(self, repo: Path, python: str = sys.executable):
         self.repo, self.python = Path(repo), python
@@ -134,23 +129,10 @@ class AutoEvaluator:
             print(f"[auto-eval] {run_id}: evaluating {ckpt.name}"
                   f"{' (a local training job is running: timings will be skewed)' if contended else ''}", flush=True)
             with log.open("w") as fh:
-                # Modal runs don't write their sample report (it would hold billed GPUs); write it here.
-                args = _read(status_path).get("args") or {}
-                if args.get("sample-report") and not ckpt.with_suffix(".md").exists():
-                    print(f"[auto-eval] {run_id}: writing sample report", flush=True)
-                    extra = ["--max-new-tokens", str(args["sample-report-tokens"])] if args.get("sample-report-tokens") else []
-                    subprocess.run([self.python, "-m", "mini_llm.report", "--checkpoint", str(ckpt), *extra],
-                                   cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT)
+                # One task: this model's evals and samples, then every cross-model report
+                # (benchmark, summary, side-by-side samples). See mini_llm.evals.
                 cmd = [self.python, "-m", "mini_llm.evals", str(ckpt)] + (["--gpu-shared"] if contended else [])
                 rc = subprocess.run(cmd, cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT).returncode
-            if rc == 0 and not gpu_busy():
-                # Re-run the controlled inference benchmark across every evaluated model, so the
-                # summary's cost columns come from one session (skipped if the GPU is shared).
-                # Then the fixed-prompt samples of the best model per context (evals/samples.md),
-                # which a new best model changes.
-                with log.open("a") as fh:
-                    subprocess.run([self.python, "-m", "mini_llm.bench"], cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT)
-                    subprocess.run([self.python, "-m", "mini_llm.samples"], cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT)
             self._set(status_path, state="done" if rc == 0 else "failed", finished=_now(),
                       **({} if rc == 0 else {"error": f"mini-llm-eval exited {rc}; see runs/{run_id}.eval.log"}))
             print(f"[auto-eval] {run_id}: {'done' if rc == 0 else f'FAILED ({rc})'}", flush=True)
