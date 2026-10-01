@@ -718,7 +718,7 @@ let EVAL_SORT = 'val';
 try { EVAL_SORT = localStorage.getItem('mini-llm-eval-sort') || 'val'; } catch {}
 const EVAL_SORTS = { val: ['best loss', (a, b) => (a.val ?? Infinity) - (b.val ?? Infinity)],
   date: ['newest', (a, b) => String(b.date).localeCompare(String(a.date))],
-  name: ['name', (a, b) => a.label.localeCompare(b.label)] };
+  name: ['name', (a, b) => a.label.localeCompare(b.label, undefined, { numeric: true })] };
 function sortEvals(k) { EVAL_SORT = k; try { localStorage.setItem('mini-llm-eval-sort', k); } catch {} renderBest(); }
 function evalsCard() {
   const rows = [...EVALS.reports].sort(EVAL_SORTS[EVAL_SORT]?.[1] || EVAL_SORTS.val[1]);
