@@ -10,7 +10,8 @@ runs/*.status.json for runs that
   - have their checkpoint in checkpoints/: a Modal run once it's imported, a
     local queue run as soon as the runner has saved it,
 
-and queues `mini-llm-eval <checkpoint>` for them, then (GPU permitting) the
+and queues `mini-llm-eval <checkpoint>` for them (first writing the checkpoint's
+sample report if the run asked for one and doesn't have it: Modal runs skip it), then (GPU permitting) the
 inference benchmark and the samples report (mini_llm.samples). A single worker thread runs
 them one at a time on the local GPU (serialised so two evals never share it)
 and regenerates evals/summary.md. Progress is written into the run's status
@@ -133,6 +134,13 @@ class AutoEvaluator:
             print(f"[auto-eval] {run_id}: evaluating {ckpt.name}"
                   f"{' (a local training job is running: timings will be skewed)' if contended else ''}", flush=True)
             with log.open("w") as fh:
+                # Modal runs don't write their sample report (it would hold billed GPUs); write it here.
+                args = _read(status_path).get("args") or {}
+                if args.get("sample-report") and not ckpt.with_suffix(".md").exists():
+                    print(f"[auto-eval] {run_id}: writing sample report", flush=True)
+                    extra = ["--max-new-tokens", str(args["sample-report-tokens"])] if args.get("sample-report-tokens") else []
+                    subprocess.run([self.python, "-m", "mini_llm.report", "--checkpoint", str(ckpt), *extra],
+                                   cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT)
                 cmd = [self.python, "-m", "mini_llm.evals", str(ckpt)] + (["--gpu-shared"] if contended else [])
                 rc = subprocess.run(cmd, cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT).returncode
             if rc == 0 and not gpu_busy():

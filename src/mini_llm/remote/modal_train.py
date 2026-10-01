@@ -50,6 +50,10 @@ DATA_VOLUME, DATA_MOUNT = "wiki-llm-data", "/data"
 BUNDLED_DATA = "/opt/mini-llm/data"  # data/tiny.txt, baked into the image
 PATH_FLAGS = {"--tokens", "--val-tokens", "--text", "--resume"}
 DEFAULT_ARGS = {"save": True, "plot-loss": True}  # a remote run is useless without its outputs
+# Not run on Modal: generating the sample report there holds the GPUs (billed) for
+# minutes of uncached inference. The flag stays in the config as a request, and the
+# Mac's auto-eval writes the report after import (mini_llm.auto_eval).
+LOCAL_ONLY_FLAGS = {"sample-report", "sample-report-tokens"}
 # Push partial outputs to the volume this often, so a live run can be fetched and
 # mini_llm.remote.modal_mirror can show its progress in the control web app.
 COMMIT_EVERY_SEC = 30
@@ -203,7 +207,7 @@ def train_remote(run_id: str, train_argv: list[str], nproc: int, meta: dict) -> 
 def config_to_argv(config: dict) -> list[str]:
     argv: list[str] = []
     for flag, value in {**DEFAULT_ARGS, **config.get("args", config)}.items():
-        if flag == "name":
+        if flag == "name" or flag in LOCAL_ONLY_FLAGS:
             continue
         if value is True:
             argv.append(f"--{flag}")

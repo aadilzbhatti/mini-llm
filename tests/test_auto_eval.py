@@ -50,3 +50,25 @@ def test_evaluates_new_finished_runs_once(tmp_path):
     assert st("old") is None and st("noval") is None and st("pending") is None
     calls = (tmp_path / "calls.txt").read_text().split()
     assert len(calls) == 3 and len(set(calls)) == 3
+
+
+def test_writes_missing_sample_report_before_eval(tmp_path):
+    repo = tmp_path / "repo"
+    (repo / "runs").mkdir(parents=True); (repo / "checkpoints").mkdir()
+    (repo / "runs" / "auto_eval.json").write_text(json.dumps({"since": "2026-09-28T00:00:00Z"}))
+    for name in ("modal_a.pt", "modal_b.pt"):
+        (repo / "checkpoints" / name).write_bytes(b"")
+    (repo / "checkpoints" / "modal_b.md").write_text("# Sample report\n")  # already has one
+    for rid in ("a", "b"):
+        run(repo, rid, "2026-09-28T01:00:00Z", remote={"provider": "modal"},
+            args={"val-tokens": "v", "save-name": f"modal_{rid}.pt", "sample-report": True})
+    script = tmp_path / "python"
+    script.write_text(f'#!/bin/sh\necho "$*" >> "{tmp_path}/calls.txt"\nexit 0\n')
+    script.chmod(script.stat().st_mode | stat.S_IEXEC)
+
+    ev = AutoEvaluator(repo, python=str(script))
+    ev.scan(); ev.jobs.join()
+    calls = [c for c in (tmp_path / "calls.txt").read_text().splitlines() if "report" in c or "evals" in c]
+    a = [c for c in calls if "modal_a" in c]
+    assert a[0].startswith("-m mini_llm.report --checkpoint") and a[1].startswith("-m mini_llm.evals")
+    assert [c.split()[1] for c in calls if "modal_b" in c] == ["mini_llm.evals"]

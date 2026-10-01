@@ -35,3 +35,8 @@ def test_resolve_args_maps_data_paths(tmp_path, monkeypatch):
     assert out == ["--tokens", str(tmp_path / "vol/data10k/train.pt"), "--resume=/runs/x/c.pt", "--steps", "5"]
     with pytest.raises(FileNotFoundError, match="modal volume put"):
         modal_train.resolve_args(["--val-tokens", "data/missing.pt"])
+
+
+def test_sample_report_is_never_run_on_modal():
+    argv = modal_train.config_to_argv({"steps": 10, "sample-report": True, "sample-report-tokens": 64})
+    assert argv == ["--save", "--plot-loss", "--steps", "10"]
