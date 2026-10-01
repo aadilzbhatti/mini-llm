@@ -313,8 +313,8 @@ def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, pat
     datasets_dir = load_config().datasets_dir
     runs_dir = RUNS
 
-    if flow["state"] in ("idle", "uploading", "checking") and not budget_ok(flow, session, calls, cfg):
-        return  # the data check trains 3 full seeds; wait for the rolling-24h budget like proposals do
+    if flow["state"] == "uploading" and not _alive(flow.get("pid")) and not budget_ok(flow, session, calls, cfg):
+        return  # the data check trains 3 full seeds; it starts once the rolling-24h window has room (reserved above)
     if flow["state"] == "idle":
         lab = incumbent_diagnosis(session, progs, runs_dir)
         if not lab or lab["confidence"] < cfg.get("data_trigger_confidence", 0.75):
@@ -378,6 +378,29 @@ def data_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, pat
         flow["new_session"] = new
 
 
+def check_usd(session: dict, tokens_factor: float = 1.0) -> float:
+    """Expected cost of a 3-seed full-budget check. The session's wall cap is wall_cap_mult x the typical run (a
+    safety cap); pricing at the cap made a data check look 3x dearer than it is, so it never fit in the budget."""
+    from autolab import modal_backend as mb
+
+    cfg = ev.evolve_cfg()
+    typical = session["wall_caps"]["full"] / max(float(cfg.get("wall_cap_mult", 1.0)), 1.0)
+    return 3 * (typical * 1.1 * tokens_factor + 180) * mb.price_per_s(cfg["gpu"])
+
+
+def hold_for_data_check(flow: dict, session: dict) -> None:
+    """While the data policy is committed to a check (building, built, uploading), hold its cost from proposals."""
+    if flow.get("state") in ("building", "built", "uploading"):
+        flow["reserve_usd"] = round(check_usd(session), 2)
+    else:
+        flow.pop("reserve_usd", None)
+
+
+def reserved_usd(ctl: dict) -> float:
+    """Budget held back from new proposals for policy checks that are waiting to be submitted (data, ladder)."""
+    return sum(float((ctl.get(k) or {}).get("reserve_usd") or 0) for k in ("data_flow", "ladder"))
+
+
 def budget_ok(flow: dict, session: dict, calls: dict, cfg: dict) -> bool:
     """Room in the rolling-24h budget for what the next data step will submit."""
     from autolab import modal_backend as mb
@@ -389,7 +412,7 @@ def budget_ok(flow: dict, session: dict, calls: dict, cfg: dict) -> bool:
         llm = [json.loads(x) for x in (STATE / "llm_spend.jsonl").read_text().splitlines() if x.strip()]
     except OSError:
         pass
-    cost = 3 * (session["wall_caps"]["full"] + 180) * mb.price_per_s(ev.evolve_cfg()["gpu"])
+    cost = check_usd(session)
     ok = spend_24h(calls, llm, now())["total"] + cost <= daily_budget(load_control(), cfg)
     flow["waiting_for_budget"] = not ok
     return ok
@@ -491,7 +514,7 @@ def affordable(session: dict, t: datetime, ctl: dict, ccfg: dict) -> bool:
     calls = mb.load_calls()
     need = expected_candidate_usd(session, mb.price_per_s(ev.evolve_cfg()["gpu"]), ccfg)
     modal_total = sum(c.get("usd") or c.get("usd_estimate") or 0 for c in calls.values())
-    return (spend_24h(calls, _llm_spend(), t)["total"] + need <= daily_budget(ctl, ccfg, t)
+    return (spend_24h(calls, _llm_spend(), t)["total"] + need + reserved_usd(ctl) <= daily_budget(ctl, ccfg, t)
             and modal_total + need <= mb.max_usd())
 
 
@@ -664,12 +687,12 @@ def ladder_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, p
                        for c in session.get("data_checks", []))):
             flow["waiting"] = {"stalled": stalled, "next_tokens": nxt, "data_busy": data_busy}
             return
-        from autolab.modal_backend import price_per_s
-
-        cost = 3 * (session["wall_caps"]["full"] * nxt / cur + 180) * price_per_s(ev.evolve_cfg()["gpu"])
+        cost = check_usd(session, nxt / cur)
         if spend_24h(calls, _llm_spend(), now())["total"] + cost > daily_budget(ctl, cfg):
             flow["waiting"] = {"budget": f"needs ~${cost:.2f}"}
+            flow["reserve_usd"] = round(cost, 2)  # hold it from new proposals until the window has room
             return
+        flow.pop("reserve_usd", None)
         dataset = session.get("dataset_id") or ev.evolve_cfg()["dataset_id"]
         chk = ev.start_data_check(session["incumbent"], dataset, paths=paths, tokens=nxt)
         flow.update(state="checking", check=chk["id"], kind="budget", target=f"{nxt // 1_000_000}M", dataset=dataset,
@@ -882,6 +905,7 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
     except Exception as exc:  # noqa: BLE001 - never let the data policy take the loop down
         log(f"data policy error: {type(exc).__name__}: {exc}")
         ctl.setdefault("data_flow", {})["error"] = str(exc)[:500]
+    hold_for_data_check(ctl.get("data_flow", {}), session)
     if ctl.get("data_flow", {}).get("state") == "switched":  # new session: reload
         session_paths = ev.Paths()
         session, progs = ev.load_session(session_paths), ev.programs(ev.Paths())
@@ -973,11 +997,13 @@ def step(log=print, generate=None, t: datetime | None = None) -> dict:
         need = expected_candidate_usd(session, price, ccfg)
         modal_total = sum(c.get("usd") or c.get("usd_estimate") or 0 for c in mb.load_calls().values())
         daily = daily_budget(ctl, ccfg, t)
-        if sp["total"] + need > daily:
+        held = reserved_usd(ctl)
+        if sp["total"] + need + held > daily:
             status["budget"] = f"24h spend ${sp['total']:.2f} + next ~${need:.2f} > ${daily}"
             status["blocked"] = {"kind": "daily", "spend_24h": round(sp["total"], 2), "need": round(need, 2),
-                                 "limit": daily, "unblock_at_limit": round(sp["total"] + need + 0.01, 2),
-                                 "frees_at": frees_at(mb.load_calls(), llm_spend, t, daily - need)}
+                                 "limit": daily, "reserved": round(held, 2),
+                                 "unblock_at_limit": round(sp["total"] + need + held + 0.01, 2),
+                                 "frees_at": frees_at(mb.load_calls(), llm_spend, t, daily - need - held)}
             break
         if modal_total + need > mb.max_usd():
             status["budget"] = f"Modal total ${modal_total:.2f} + ~${need:.2f} > cap ${mb.max_usd()}"

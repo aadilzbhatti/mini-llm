@@ -287,13 +287,39 @@ def test_old_session_programs_still_advance_and_accepted_ones_are_ported(world, 
 
 
 def test_data_policy_waits_for_budget(world, monkeypatch):
-    monkeypatch.setattr(ctl, "controller_cfg", lambda: {"daily_usd": 1.0, "data_trigger_confidence": 0.75})
-    spawned = []
+    """Building/uploading is free and goes ahead; the paid check waits for room, and its cost is held back from new
+    proposals meanwhile (before, proposals kept the 24 h window full and the check never started)."""
+    from autolab import config as acfg
+
+    datasets = world["tmp"] / "datasets"
+    for name, docs in (("data20k", 20000), ("data40k", 40000)):
+        (datasets / name).mkdir(parents=True)
+        (datasets / name / "dataset.json").write_text(json.dumps({"docs": docs}))
+    (datasets / "data40k" / "train.pt").write_bytes(b"x")
+
+    class Cfg:
+        datasets_dir = datasets
+    monkeypatch.setattr(acfg, "load_config", lambda: Cfg)
+    budget = {"daily_usd": 1.0, "max_in_flight": 4, "data_trigger_confidence": 0.75}
+    monkeypatch.setattr(ctl, "controller_cfg", lambda: budget)
+    spawned, started = [], []
     monkeypatch.setattr(ctl, "_spawn", lambda args, logname: spawned.append(args) or 1)
+    monkeypatch.setattr(ctl, "_alive", lambda pid: False)
+    monkeypatch.setattr(ev, "start_data_check", lambda pid, ds, paths=None: started.append(ds) or {"id": ds, "runs": []})
     enable()
-    ctl.step(log=lambda m: None, generate=Gen(), t=T)
+    gen = Gen()
+    ctl.step(log=lambda m: None, generate=gen, t=T)
     flow = ctl.load_control()["data_flow"]
-    assert flow["state"] == "idle" and flow["waiting_for_budget"] and not spawned
+    assert flow["state"] == "uploading" and spawned == [["modal", "upload-data"]] and flow["reserve_usd"] > 0
+    ctl.step(log=lambda m: None, generate=gen, t=T)
+    flow = ctl.load_control()["data_flow"]
+    assert flow["state"] == "uploading" and flow["waiting_for_budget"] and not started
+    assert gen.n == 0  # proposals are held while the check waits
+    assert ctl.check_usd(ev.load_session()) == pytest.approx(3 * (1800 * 1.1 + 180) * 0.000222)  # typical, not the cap
+    budget["daily_usd"] = 100.0
+    ctl.step(log=lambda m: None, generate=gen, t=T)
+    flow = ctl.load_control()["data_flow"]
+    assert flow["state"] == "checking" and started == ["data40k"] and "reserve_usd" not in flow
 
 
 def test_session_report(world, monkeypatch, tmp_path):
@@ -491,6 +517,7 @@ def test_policies_rearm_for_a_new_incumbent(world, monkeypatch, flow_key, step):
     session, progs = ev.load_session(paths), ev.programs(paths)
     state = {flow_key: {"session": "s2", "state": "not_helped", "program": "p0"}}
     monkeypatch.setattr(ctl, "budget_ok", lambda *a: False)  # stop right after re-arming
+    monkeypatch.setattr(ctl, "incumbent_diagnosis", lambda *a: None)
     cfg = {"ladder_patience": 99, "max_full_tokens": 10**12}
     getattr(ctl, step)(state, session, progs, {}, cfg, paths, lambda m: None)
     assert state[flow_key]["state"] == "not_helped"  # same incumbent: stays done

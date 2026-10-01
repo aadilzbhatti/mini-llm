@@ -757,3 +757,9 @@ Build this first; everything else hill-climbs on it.
   failed, the Live tab shows a "Ceiling" banner naming the setting, with a one-click raise for max_full_tokens and
   param_cap_mult (POST /api/budget "permanent"); each new ceiling is a `ceiling` notebook entry. Order: the data check
   runs first (the ladder waits while it's busy), since a bigger budget makes data more binding.
+- 2026-10-01 (owner: "I still only see 40k") — the data check was **starved**: priced at the 3x safety wall cap ($5.94
+  instead of ~$2.25) and only allowed when 24 h spend + that ≤ daily, which proposals never left room for. Now
+  `check_usd` prices the typical run, building/uploading (free) start at once, and from then until the check is
+  submitted its cost is **held back** from proposals, probes and the ablation arm (`reserved_usd`; the ladder does
+  the same). The daily-budget banner shows the held amount. Also: p34–p36 were the three retests sent a third time
+  (stale queue entries from the crash fixed in b462680); the queue is empty now.

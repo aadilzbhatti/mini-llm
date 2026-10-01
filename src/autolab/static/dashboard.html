@@ -661,8 +661,9 @@ function renderLive(L) {
   if (B && C.enabled) {
     let msg, actions = [];
     if (B.kind === "daily") {
-      const suggest = Math.ceil(Math.max(B.unblock_at_limit, B.spend_24h + 4 * B.need));
-      msg = `New proposals are blocked by the daily budget: the last 24 h spent ${fmt.usd(B.spend_24h)}, and the next candidate needs about ${fmt.usd(B.need)}, over the ${fmt.usd(B.limit)} budget.` +
+      const suggest = Math.ceil(Math.max(B.unblock_at_limit, B.spend_24h + (B.reserved || 0) + 4 * B.need));
+      msg = `New proposals are blocked by the daily budget: the last 24 h spent ${fmt.usd(B.spend_24h)}, and the next candidate needs about ${fmt.usd(B.need)}` +
+        (B.reserved ? `, with ${fmt.usd(B.reserved)} held for a waiting data/compute check` : "") + `, over the ${fmt.usd(B.limit)} budget.` +
         (B.frees_at ? ` It unblocks by itself around ${fmt.time(B.frees_at)}, when older spend ages out.` : "");
       actions.push(h("button", {class: "pri", onclick: () => postBudget({action: "override", daily_usd: suggest, hours: 12},
         `Raise the daily budget to $${suggest} for 12 hours? That's room for about 4 more candidates.`)}, `Raise to $${suggest} for 12 h`));
