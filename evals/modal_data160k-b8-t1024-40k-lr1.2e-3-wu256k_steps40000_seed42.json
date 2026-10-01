@@ -58815,5 +58815,582 @@
     "train_tokens_per_sec": 52094.4,
     "peak_mem_gb": 3.927,
     "peak_mem_kind": "cuda max_memory_allocated"
+  },
+  "samples": {
+    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "temperature": 0.7,
+    "top_k": 40,
+    "new_tokens": 256,
+    "draws": 5,
+    "summary": {
+      "n": 50,
+      "rep4": 0.578,
+      "looped": 15,
+      "eos": 2,
+      "topic": 0.24,
+      "tokens": 249.9
+    },
+    "prompts": [
+      {
+        "label": "definition",
+        "prompt": "Photosynthesis is a process that",
+        "draws": [
+          {
+            "text": " we can take for granted to a better future.\n- Science of the world\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\nIn the future, scientists will be able to explore the future\n- Science of the future\n- Science of the future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the Future\n- Science of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.854,
+            "looped": true,
+            "loop_onset": 83,
+            "loop_period": 6,
+            "topic": 0.0
+          },
+          {
+            "text": " is carried out by a mixture of different molecules of the same molecules. When the molecules are so excited, they can be created with the same molecule, which allows them to produce a molecule to produce an energy.\nA molecule is formed when the molecules are so excited, but the molecules are so excited. The molecule that is then excited, and the molecules are so excited, but the molecules are excited, and so excited are excited.\nThe molecules are excited and excited. They are excited and excited because they are excited because they are excited. They are excited because they are excited, and they come together and excited, but they are excited. They are excited because they are excited.\nThe molecules are excited because they are excited because they are excited because they are excited because they are excited because they do not have enough energy to produce the same molecule.\nThe molecules are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.534,
+            "looped": true,
+            "loop_onset": 174,
+            "loop_period": 4,
+            "topic": 0.0
+          },
+          {
+            "text": " is used to develop energy-efficient components of the atmosphere.\nThe process of energy is usually called energy. Thus, the energy is called energy.\nThe energy is used to make energy efficient, like for example. In this case, energy can be used to produce energy, which can be used to produce energy for energy.\nThe energy is used to produce energy in various ways of energy.\nThe energy is used to produce energy in different ways.\nEnergy is also used to produce energy from energy.\nEnergy is used to produce energy from energy.\nThe energy is used to produce energy from energy and to produce energy as energy, which is used to produce energy and energy.\nEnergy is used to produce energy from energy by heating and cooling and cooling.\nThe energy is used to produce energy from energy by heating and cooling and cooling.\nThe energy is used to produce energy from steam and other energy by heating and cooling.\nThe energy is used to produce energy from electricity and electricity by heating and cooling.\nThe energy is used to produce energy from electricity and cooling.\nThe energy is used to produce energy from heat and water.\nThe energy produced by heating and cooling is the system of energy from the heat and steam.\nThe energy produced",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.415,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " will help you create the system by converting the cells into a single cell into a cell that is responsible for producing the cell.\nThis is a simple and simple process that is used to get your cells to be able to make the cells into the cells. In this system the cells are able to produce cells that are producing the cells into cells. In addition to producing cells, their cells can be used to store the cells into cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that get cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that produce cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.628,
+            "looped": true,
+            "loop_onset": 223,
+            "loop_period": 4,
+            "topic": 0.0
+          },
+          {
+            "text": " is carried out in a number of different forms of life.\nSolving and learning is a crucial part of understanding this process.\nAn example of the concept of nature is that it is a person\u2019s ability to learn and understand what they are and how they are.\nGrammar is a type of cognitive process that is a part of the human being. It is a person\u2019s ability to learn, learn, and understand what they are, what they are and what they are learning.\nGrammar is an artificial intelligence technique that is used to manipulate the brain in a way that they are used to control the brain. It is used to control the brain and learn to control the brain, and how they are learning, learn, and learn from the perspective of the world.\nGrammar has a specialized skill to learn, and it is used to learn and to learn. It is one of the most powerful tools in learning, and is used to train people. It is also used to train people to learn and learn from the perspective of the world.\nGrammar is taught in an academic setting. It is used to train people to learn, learn, and learn from the perspective of the world, and learn from the perspective of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.202,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "biography",
+        "prompt": "Albert Einstein was a German-born theoretical physicist who",
+        "draws": [
+          {
+            "text": " was not in Berlin but in the late 1800's. His experiments and observations of Einstein's work were not found in the United States.\nHe was the first German-born father of the Nobel Prize for Chemistry. He was also a fellow German-born mathematician, and he used the scientific theory to prove the best way in the scientific world. He was a chemist and scientist, while he was the first one to be called the physicist. He was a German chemist and chemist, and his team of physicists at the University of California.\nPhysicist works in Germany in the 18th and early 1900's. He graduated from the University of California, Berkeley, a scientist of the American Academy of Sciences. He has been a pioneer in the science of science. He has studied physics and physics, chemistry, chemistry and chemistry, and chemistry. He has been working on science and science at the University of California.\nThe University of Oregon is studying physics and chemistry, chemistry, chemistry, chemistry, and physics. He is a chemistry professor at the University of California. He has been studying physics and chemistry, chemistry, chemistry, and chemistry. He has been working on science, chemistry, chemistry, and science at the University of California.\nHe is a chemistry physicist and science at",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.154,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " was involved in the creation of a new generation of physicists. His work was the first of the first time, and he was eventually able to find the Universe, a new physics-science-based experimental physicist, known as Einstein.\nResearchers from the University of California have found that there are several different types of magnetic fields that have been used in the field of physics. These are highly specialized applications in computer science, which are magnetically studied.\nThere is also a new study on how magnetic fields are used in magnetic fields, such as the magnetic fields.\nThe magnetic field of physics is a very new study of how magnetic fields are studied.\nThe magnetic fields are a large magnetic field, or a large magnetic field, and their magnetic fields are magnetic fields.\nThe magnetic fields are magnetically studied and are known for the magnetic field of physics. The magnetic fields are known for the magnetic field of physics, and they are used in magnetic fields.\nThe magnetic fields are magnetically studied, and are known to be magnetically studied.\nHowever, magnetic fields are highly specialized, as they have a magnetic field.\nThey are magnetically studied, and they have a magnetic field.\nThese fields are magnetically studied and are known for the magnetic fields of physics",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.174,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " has been the first to study Einstein's first English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.953,
+            "looped": true,
+            "loop_onset": 9,
+            "loop_period": 3,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " became the first German-born physicist to be born in Berlin.\nThe German-born physicist who died in Berlin was responsible for having a strong magnetic field physicist who was the first of the German German-born physicist.\nOn October 26, 1942, the German-born physicist named Sch\u00f6nigut von Aberm, was born in Berlin in Berlin in a world known as Berlin on August 12, 1943.\nHe died in Berlin in Berlin in 1942.\nHe died in Berlin in 1941.\nHe died 1st in Berlin, 1945.\nIn 1945 Berlin was an American physicist. He was born in Berlin in the United Kingdom.\nHe died in Berlin in 1945.",
+            "tokens": 139,
+            "eos": true,
+            "rep4": 0.118,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " was the first to think Einstein. He was also an Einstein physicist who was a physicist and physicist who was the first to do research. The term Einstein is the first to think that Einstein has not been a science student since his death.\nA number of physicists would look to Einstein's theory as a scientific physicist. Einstein is a physicist. He would be very interested in Einstein's work, but it would be a lot easier. Einstein's theory is called Einstein. Einstein, though, Einstein would have been a physicist. Einstein would be a physicist.\n\"The first thing we think is to think about Einstein,\" Einstein said. He told the statement.\nThe Einstein Einstein is a physicist who has not been a scientist when he has been a physicist. He would be the best scientist for the matter physics of the time. He worked in the lab, but that doesn't have been a Nobel Prize in Physics.\n\"We are going to be the first of them to be a scientist. They would be a scientist,\" he said.\n\"You have come across the table to find out that the Einstein has made the first time in physics,\" he said.\nThe first time in physics is to think about Einstein's theory. He has been fascinated to think about Einstein's",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.059,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          }
+        ]
+      },
+      {
+        "label": "science_explainer",
+        "prompt": "Oxygen is a chemical element with",
+        "draws": [
+          {
+            "text": " a large amount of chemical particles, but not generally known as particle size, are smaller than the standard size of the solvent.\nThe first known particle size is the particle size of a particle size, and is the size you use to store. The particle size of an particle size is not a large particle size, but may not be any larger than the standard size of the particle size.\nThe second known particle size is not a large particle size, but is the size of particles in the particle size. It is a size of a larger particle size that is larger than the standard size of particles.\nThe first known particle size is the size of particles, and is the size of particles. It is generally smaller than the standard size of particles, and is known for its size.\nIn the process, particles that are larger than the standard size of particles can be larger than the standard size of particles.\nThe particle size of the particle size is different from the standard size of particles, and is the size of particles. The particle size is greater than the standard size of particles, which is larger than the standard size of particles, and varies in size of particles.\nThe particle size of particles can be larger than the standard size of particles, and is the size",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.356,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " a substance called the substance called a substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance. The substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance named the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.937,
+            "looped": true,
+            "loop_onset": 174,
+            "loop_period": 3,
+            "topic": 0.0
+          },
+          {
+            "text": " a few-sexygen containing molecules, including the hydrogen- and oxygen atoms. (From the molecular level of the molecule to the hydrogen- and oxygen atoms, the molecule is at a certain rate), whereas the nucleosomes in the molecular level of the two molecules is only in place, which is known to play a role in the regulation of the cell's structure and the dynamics of the cell's structure.\nThe drug of cancer cells is one of the most promising drugs for cancer, and the drugs are both promising. The drug of cancer drugs is currently linked to the development of cancer.\nThe drugs are now available to help the patients have more opportunities for cancer, and these drugs are very effective against cancer.\nThe drug is then used as a drug to treat cancer. It is used to create high-quality drugs that are used in the prevention of cancer, but this can also help patients develop cancer.\nThe drug of cancer is not as effective as long as it is, and it can be used as a drug to treat cancer.\nThis drug is used to treat cancer in patients with cancer but also for cancer patients with cancer.\nThe drug of cancer is also used to treat cancer in patients with cancer and also to treat cancer.\nThe drug",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.13,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " any chemical known as the hydrolbromide. It is an alkali in the hydrolbromide, a chemical compound being formed from the hydrolbromide. It is the most common organic matter in most of the alkali in the well-known alkali in the world. It is responsible for the development of a chemical compound with a chemical compound. It is an alkali in the well-known alkali in the world as an alkali in the world, in the form of alkali in the world. It is also the most common organic matter in the world. It is a chemical compound being formed from the hydrolbromide, which is a compound in the form of the alkali, which is an alkali in the world. However, it can be found in a wide variety of compounds. It is a compound in the form of a chemical compound. It is a compound in the form of a compound in the form of a compound. It is classified as a compound in the form of a compound in a chemical compound. It can be found in a variety of compounds, including the compound. It is a compound in the form of a compound in the form of a compound. It is a compound in the form of a",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.443,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " a high-energy chemical element called Nd(OH). It is composed of one of the major types of chemical catalytic elements that are typically of chemical elements that are classified in the chemical element.\nOxygen is a chemical element with a high-energy chemical element with a high-energy chemical element with a high-energy chemical element with a high-energy chemical element called Nd(OH). It is composed of one of the major types of chemical catalytic elements.\nOxygen is a chemical element with a high-energy chemical element containing a high-energy compound element called Nd(OH). It consists of one of the major types of chemical catalytic elements.\nOxygen is a chemical compound that acts on a high-energy chemical element with a high-energy chemical element called Nd(OH). It is composed of two types of chemical catalytic elements. It is composed of two types of chemical catalytic elements called Nd(OH). It is composed of two types of elements called Nd(OH).\nOxygen is a chemical element with a high-energy chemical element with an extremely high-energy chemical element called Nd(OH). It is composed of two types of other compounds called Nd(OH).",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.613,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          }
+        ]
+      },
+      {
+        "label": "instructional",
+        "prompt": "In this lesson, students will learn how to",
+        "draws": [
+          {
+            "text": " make a positive contribution to students.\n- Students will be able to use it all without a simple assessment, but they will also be able to use it all without a simple assessment.\n- Students will be able to use it all without a simple assessment.\n- Students will be able to use it all without the simple assessment.\n- Students will be able to use the correct assessment.\n- Students will be able to use it all without a simple assessment.\n- Students will be able to use the correct assessment.\n- Students will be able to use it all without the simple assessment and by making a positive contribution to students.\n- Students will be able to use it all without the obvious assessment.\nStudents will be able to use the correct assessment to help students gain the information and help them to use it all without the simple assessment.\n- Students will be able to use the correct assessment to help them understand the correct assessment.\n- Students will be able to use the correct assessment.\nAfter completing this lesson, students will be able to use it all without the simple assessment.\n- Students will be able to use it all without the correct assessment.\nStudents will be able to use it all without the simple assessment.\nIf you are a",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.668,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " make sure they are working with the information they should be doing.\nWhat is the lesson?\nThe lesson is based on the lesson, and lesson that the lesson focuses on how to make sure that students are working with the information they need to follow. The lesson is based on the lesson, which students learn as a whole.",
+            "tokens": 66,
+            "eos": true,
+            "rep4": 0.111,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " make decisions about how to make decisions.\n4. Read the Lesson\nThis lesson will teach you how to make decisions about decisions.\n- Identify the facts of the two groups, the following questions.\n- Find the facts and the more you can take.\n- Find the facts and the more you know.\n- Find the facts and the more you can take.\n- Make sure you have the information available to the author.\n- Understand what you can take.\n- Find the facts and the more you can take.\n- Make sure your answer is made.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and facts and the more you can take.\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.664,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " use a model (and so, they will learn how to use a model) with a model (and so, the book is not only a model) to use a model to use a model. As students can use a model for example, the model and the model will be the model more than the model.\nThe teacher will learn how to use a model for a model because of their own model (as a model) and as a model at all. A model will be a model, when the model will be the model at all, a model will be the model. The model will also be the model and a model at all.\nThe model will be a model to use a model to use a model that will be the model of a model. The model will be the model at all that model is the model.\nThe model will be the model by which the model will be the model for the model. It will be the model that is the model that is the model that is the model. In the model, the model will be the model, whether the model is a model.\nThe model will be the model of a model that is the model that is the model. For example, when the model is a model, the model will be",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.304,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " read and read the text in the classroom:\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- Why does reading affect the reading?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What is it?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What does the difference between reading and reading?\n- What is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat are the differences between reading and reading?\n- What are the differences between reading and reading?\n- What is the difference between reading and reading in the classroom?\n- How is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.767,
+            "looped": true,
+            "loop_onset": 193,
+            "loop_period": 10,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "bullet_list",
+        "prompt": "There are several benefits to regular exercise:\n- ",
+        "draws": [
+          {
+            "text": "__________ to give your baby a small amount of time.\n- __________ to allow the baby to sleep better.\n- __________ to give your baby a good sleep.\n- ___________ to help the baby to provide proper sleeping habits, such as sitting or sleeping.\n- __________ to encourage your baby to sleep better.\n- __________ to give your baby a small amount of time.\n- __________ to help the baby to sleep so the baby can get much bigger.\n- __________ to help him or she would want to help the baby to sleep better.\n- __________ to help the baby to sleep better.\n- __________ to help the baby to sleep better.\n- ___________ to help the baby to sleep better.\n- __________ to help the baby to sleep better.\n- __________ to help the baby to sleep better.\n- ___________ to help the baby to sleep better.\n- __________ to help the baby to sleep better.\n- ___________ to help the baby to sleep better.\n- __________ to help the baby to sleep better.\n- _____________ to help the baby to sleep better.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.696,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "\u0ba4\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u09aa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\ufffd\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0c2a\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.929,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "__________ is a great way to help you to exercise your body effectively.\n- __________ involves a lot of things that can help you to help.\n- __________ can help you to help you to improve your overall health.\n- __________ is a great way to help you to reduce your risk of developing diabetes.\n- __________ is a great way to help you to improve your health.\nThis is a great way to help you to improve your risk.\n- __________ is a great way to help you to improve your risk of developing diabetes. It is a great way to help you to help you to improve your health.\n- __________ is a great way to do things to help you to reduce your risk of developing diabetes.\n- __________ is a great way to help you to improve your risk of developing diabetes.\n- __________ is a great way to help you to better manage your risk of developing diabetes.\n- __________ is a good way to help you to improve your risk of developing diabetes.\n- __________ is a great way to help you to improve your risk of developing diabetes.\n- __________ is a great way to help you to improve your risk",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.676,
+            "looped": true,
+            "loop_onset": 208,
+            "loop_period": 20,
+            "topic": 0.0
+          },
+          {
+            "text": "_______________,\n- _______________,\n- _______________,\n- _______________,\n- _______________,\n- _______________,\n- _______________,\n- ___________,\n- _______________,\n- _______________,\n- _______________,\n- ______________,\n- _______________,\n- _______________,\n_______________,\n_______________,\n_______________,\n_______________,\n_______________,\n______________,\n_______________.\n______________,\n______________,\n______________,\n______________,\n_______________,\n______________,\n______________,\n_______________,\n_______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n_______________,\n______________,\n______________,\n______________,\n______________,\n_______________,\n______________,\n_______________,\n_______________,\n_______________,\n______________,\n______________,\n_______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.905,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "                                                                                                                                                                                                                                                                ",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.996,
+            "looped": true,
+            "loop_onset": 0,
+            "loop_period": 1,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "numbered_list",
+        "prompt": "To solve a quadratic equation, follow these steps:\n1.",
+        "draws": [
+          {
+            "text": " Step-by-Step:\nStep-by-Step:\nStep-by-Step:\nStep-by-Step:\n-Step-by-Step:\nStep-by-Step:\n-Step-by-Step:\n-Steps:\nStep-by-Steps:\n-Steps:\nSteps: When the endpoints are set, the endpoints the endpoints are set. This can be done by a local level to create a table. This can be done by a local level and the graph is set. This can be done by a local level and the graph is set up.\nStep-by-Step:\nSteps: Once the endpoints are set, the graph is set up, the graph is set up, the graph is set up, the graph is set up, the graph is set. This can also be done by a local level, the graph is set up. This can be done by a local level, the graph is set up, the graph is set up, the graph is set up, the graph is set up, the graph is set down.\nStep-by-Step:\nStep-by-Step:\nStep-by-Step:\nStep-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.672,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " If we understand that the following is a mathematical equation, this equation is a constant and constant. A constant of two variables should be given equal to zero.\n2. If we understand that the following is a mathematical equation, we should implement the equations:\n1. If we understand that the following is a mathematical equation, we should implement the equation:\n1. If we understand that the following is an equation, we should be given the following:\n1. If we observe that the following is an equation, then the following is a mathematical equation:\n2. If we observe that we know that the following is a mathematical equation, then the following is a mathematical equation, then the following is a mathematical equation:\nThe following is a mathematical equation:\n1. If we observe that we observe that we observe that we observe that we observe that we observe that we observe at the following:\nIn a rational equation, we observe that we observe that we observe at the following:\n1. If we observe that we observe that we observe the following is a mathematical equation, then the following is a mathematical equation.\n2. If we observe that we observe that we observe that we observe, then the following is a mathematical equation, then the following is a mathematical",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.585,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " How to solve a quadratic equation:\n1. How to solve a quadratic equation:\n2. How to solve a quadratic equation:\n3. What is the equation? How to solve a quadratic equation:\na. What is the equation? How to solve a quadratic equation:\na. How to solve a quadratic equation:\na. What is the equation that solves a quadratic equation:\na. What is the equation of a quadratic equation? How to solve a quadratic equation:\nb. What is the equation? What is the equation of the equation? How to solve a quadratic equation:\na. What is the equation? What is the equation about a quadratic equation? What is the equation that solves a quadratic equation? How to solve quadratic equation:\na. How to solve a quadratic equation:\na. What is the equation of a quadratic equation? Why do I solve a quadratic equation? What is the equation that solves a quadratic equation? What is the equation of the equation? How to solve a quadratic equation,\na. What is the equation of a quad",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.719,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " Identify the type of problem:\n2. Identify the type of problem at the end of the problem:\n3. Identify the type of problem\n4. Identify the type of problem and identify the function of the problem:\n5. Identify the definition of the problem:\n6. Identify the type of problem at the end of the problem and identify problems in the problem.\n9. Identify the type of problem and identify the problems in the problem:\n10. Identify the type of problem.\n11. Identify the problems in the problem:\n12. Identify the type of problem and identify the problem.\n12. Identify the type of problem.\n12. Identify the type of problem.\n12. Identify the type of problem.\n12. Identify the type of problem and identify the result.\n12. Identify the type of problem.\n12. Identify the type of problem.\n13. Identify the type of problem.\n12. Identify the type of problem.\n13. Identify the type of problem and identify the problem.\n14. Identify the type of problem.\n15. Identify the type of problem.\n15. Ident",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.613,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " The following equation:\n2. The following equation:\n1. The following equation:\n1. The equation:\n1. The following equation:\n2. The following equation:\ni. The following equation:\ni. The following equation:\ni. The following equation:\ni. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. B. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. B. A. A. A. B. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.897,
+            "looped": true,
+            "loop_onset": 203,
+            "loop_period": 2,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "enumeration",
+        "prompt": "There are three main types of",
+        "draws": [
+          {
+            "text": " cell membrane\nThere are two main types of cell membrane that are known for cell type\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic)\n(Cellic",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.913,
+            "looped": true,
+            "loop_onset": 17,
+            "loop_period": 5,
+            "topic": 0.0
+          },
+          {
+            "text": " human health. The first list of the three main types of human health are diabetes. The main cause of diabetes can be very debilitating.\nThere are three main types: diabetes, high blood pressure, diabetes, diabetes, and heart disease.\nThe average lifespan of people with diabetes is estimated to have a higher risk of developing obesity.\nThe average lifespan of people with diabetes is about 2 years old.\nThe average lifespan of people with diabetes are about 2 years old.\nThe average lifespan of people with diabetes depends on the overall health of the body.\nThe average lifespan of people with diabetes is about 2 years old.\nThe average lifespan of people with diabetes is approximately 1\u20135 years old.\nThe average lifespan of people with diabetes is about 6 years old.\nThe average lifespan of people with diabetes varies from 10 to 30 years.\nThe average lifespan of people with diabetes varies from 10 to 10 years, and it is about 2 years old.\nThe average lifespan of people with diabetes is about 20 years old.\nThe average lifespan of people with diabetes is about 3 years old.\nThe average lifespan of people with diabetes is about 10 years old.\nThe average lifespan of people with diabetes is about 1 to 13 years old.\nThe average lifespan",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.47,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " vaccines: an antibiotic, which is the main type of vaccine. These are known as a vaccine and the primary vaccine, which is usually the primary vaccine, which is the primary vaccine.\nThe two types of vaccine are the primary vaccines for the first 2. The primary vaccine is a vaccine booster, which is a vaccine that is approved by the FDA. The vaccine is called the primary vaccine.\nThere are also two types of vaccine: a vaccine, the first 2 vaccine and the second 2 vaccine.\nThe first 4 vaccines are a vaccine that is used to be used to make vaccines. The vaccine is used to the children and should be vaccinated and vaccinated for a vaccine.\nThe second vaccine is a vaccine that is used to make vaccines. The vaccine is used to prevent infection, but the vaccine has to be used to control and protect against infections.\nThe vaccine is used to hold the vaccine for the first 4 days.\nThe second vaccine is used to spread the vaccine. It is used to protect against infections and prevent infections from infection and diseases. The vaccine is used to protect against infections and prevent infections from infections and diseases.\nThe second vaccine is used to spread the vaccine. The vaccine is used to fight infection and prevent infections from infection. The second vaccine",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.209,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " virus virus: type 1 virus, but the virus may also be spread only within the body, and other viruses.\n- The virus is a viral vector that is transmitted by the body by the body.\n- The virus is a virus that is transmitted by the body by the body.\n- The virus is transmitted by the body by the body, the body is transmitted by the body by the body.\n- The virus is transmitted by the body by the body by the body through the body.\n- The virus is transmitted by the body by the body by the body by the body through the body.\n- The virus is transmitted by the body by the body by the body through the body by the body by the body through the body from the body by the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.755,
+            "looped": true,
+            "loop_onset": 154,
+            "loop_period": 3,
+            "topic": 0.0
+          },
+          {
+            "text": " artificial intelligence.\n- Artificial intelligence (AI) is the most important part of the AI development and technology.\n- AI is the most important part of human intelligence, but its meaning is the only way to be learned from the vast majority of the human population.\n- AI is a good resource to live.\n- AI is a good resource to live and live in and around the world.\n- AI is a good resource to live with it.\n- AI is the most important part of AI. It will be the most important part of AI development and technology.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n3. AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.656,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "long_dependency",
+        "prompt": "Although the treaty was signed in 1919, it",
+        "draws": [
+          {
+            "text": " was a declaration of the treaty signed by the British Parliament. This was the result of the treaty.\nThe treaty was signed by the British Parliament in 1919. It was signed by the British Parliament, which was signed by the British Parliament by a government. It was signed by the British Parliament and was signed by the British Parliament. This treaty was signed by the British Parliament.\nThe treaty was signed by the British Parliament in 1919. It is a treaty that was signed by the British Parliament. It is a treaty that was signed by the British Parliament. It is also signed with the British Parliament. It is also signed by the British Parliament in 1919. It is signed by the British Parliament in 1919.\nIn 1919, the British Parliament was signed by the British Parliament. The British Parliament was signed by the British Parliament in 1919. It was signed by the British Parliament and was signed by the British Parliament. It was signed by the British Parliament in 1919.\nThe British Parliament was signed by the British Parliament in 1919. The British Parliament was signed by the British Parliament in 1919. The British Parliament was signed by the British Parliament in 1919. It was signed by the British Parliament.\nIn 1919, the British Parliament was signed by the British Parliament on December 12, 1919.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.609,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " was ratified by its ratification. The treaty was signed by the Congress, which was ratified by 17 April 1919.\nThe treaty was signed on November 22, 1919, and the treaty was signed on December 22, 1919, and the treaty was signed by President Robert J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.818,
+            "looped": true,
+            "loop_onset": 52,
+            "loop_period": 2,
+            "topic": 0.0
+          },
+          {
+            "text": " was based on the treaty. The treaty was signed by the treaty. The treaty was signed in 1919, and the treaty was ratified in 1919. The treaty was signed by the treaty. The treaty was signed in 1919, and the treaty was signed in 1919. The treaty was signed in 1919.\nThe treaty was signed in 1919. The treaty in 1919, was signed in 1919. The treaty was signed in 1919, and the treaty was signed in 1919. The treaty was signed by the treaty. The treaty was signed in 1919, and it was signed in 1919.\nThe treaty was signed in 1919, and the treaty was signed in 1919. The treaty was signed in 1919, and it was signed in 1919, which was signed in 1919, and it was signed in 1919.\nThe treaty was signed in 1919, and it was signed in 1919. The treaty was signed in 1919, and it was signed in 1919, and it was signed in 1919. After the declaration of 1919, the treaty was signed in 1919. The treaty was signed in 1919, and it was signed in 1919, and it was signed in 1919. The treaty was signed in 1919, and it was signed in 1919. The treaty was signed in 1919, and it was signed in 1919. It",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.783,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " took an appeal to the United States. The treaty began a war of the United States, which led in the Revolutionary War of 1811.\nThe treaty was signed in 1921 in 1919. The treaty was signed by 1947. The treaty was signed by 1947 in 1921.\nThe treaty was signed by 1947. The treaty was signed by 1947. The treaty is signed by 1947 until 1947.\nThe treaty was signed from 1947 to 1948.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1949 in 1934.\nThe treaty was signed by 1948 and 1947. The treaty was signed by 1947.\nThe treaty was signed in 1949.\nThe treaty was signed by 1951.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947, and the treaty was signed\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947, and the treaty was signed by 1947.\nThe treaty was signed in 1949.\nThe treaty was signed by 1947,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.628,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " became known that it was illegal.\nIn 1947, it did not include the use of \u201cthe French flag\u201d in many ways.\nThe treaty was signed by Congress, and its establishment was adopted in the early months of the U.S. Constitution.\nThe treaty was signed by Congress in 1965.\nOn a November, the treaty ended in 1971, when the treaty was signed in 1967 by Congress, the treaty was signed in 1971.\nThe treaty was signed by Congress, and the treaty was signed by Congress.\nThe treaty was signed by Congress, and the treaty was signed by Congress.\nThe treaty was signed by Congress, and the treaty was signed in 1967, a resolution signed by Congress.\nThe treaty was signed by Congress, and its implementation was signed by Congress.\nThe treaty was signed by Congress, and it was signed by Congress, and the treaty was signed by Congress, and it was signed by Congress.\nThe treaty was signed by Congress, and it was signed by Congress, or by Congress.\nThe treaty was signed by Congress, and it was signed by Congress, until the signing of Congress was signed by Congress.\nThe treaty was signed by Congress, and it took its action for the treaty, and it was",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.506,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          }
+        ]
+      },
+      {
+        "label": "attribution",
+        "prompt": "According to a study published in",
+        "draws": [
+          {
+            "text": " the journal Nature, this study was conducted by the National Institutes of Health and Human Services (NIP), which was conducted by the National Institutes of Health in Bethesda, Maryland.\nThey collected data on the study, in which the group, according to the findings of the group, the researchers found that the group used a combination of the group, but the group used a combination of the group, which was similar to that group. They used the group as a group because they were more likely to be more likely to be involved in the study.\nThe group was the group with the group that was the group, as the group, they were more likely to be involved in the group from the group, and the group changed the group than the group itself.\nThe group was the group's group that was the group's group, the group's group is more likely to be involved in the group.\nIn the group, the group was the group's group's group.\nThe group also included the group's group's group's group, and the group's group's group's group.\nThe group's group was the group which was the group's group's group's group, and the group's group's group was the group's group's group's group's",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.32,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " the Journal of Biological Psychiatry, in the journal, the journal, was published in the journal, which was published in the journal in the journal (see the journal). The journal was published in the journal journal, and the journal was published in the journal of the journal.\nThere are several studies of the journal, including the journal of the journal, which is published in the journal. The journal is published in the journal for a wide range of scientific, mental and physical therapy. It is not a good idea to talk about the journal and the journal, and that is, it is clear that it is very simple. It is not a good idea of all but it is a good idea to do that. However, it is not a good idea to talk about the journal. It is really a good idea to talk about it and talk about it so that it is used to talk about it.\nThe journal of the journal on the journal can be found in the journal, which is published in the journal of the journal. The journal is also published in the journal where the journal is published. The journal is published in the journal on the journal of the journal of the journal.\nThe journal is published in the journal of the journal, but the journal is published in the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.281,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the Journal of Internal Medicine, some experts believe that the study was the most important and important aspect of the study. The study showed that, in the study the study was the least important predictor of the study. The study was also the least reliable predictor of the study.\nA study was conducted in the study of participants. The researchers surveyed the study whether participants were more likely to have a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of an higher risk of a higher risk of a higher risk of a higher risk of a lower risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.672,
+            "looped": true,
+            "loop_onset": 199,
+            "loop_period": 4,
+            "topic": 0.0
+          },
+          {
+            "text": " 2015, a study of nine children and young children were found for girls with autism, while they were found to have autism.\nIn addition, a study of nine children with autism were found to have autism in children with autism. Although autism was rare, children with autism were less likely to have autism. In addition, children with autism have autism.\nIn addition, a study published in 2015, showed that autism is a key driver of autism, and some kids with autism had autism for the majority of boys.\nIn addition, autism was not detected in children with autism.\nIn addition, autism was linked to autism.\nIn addition, with autism, autism was linked to autism, autism, autism, autism, autism, autism, autism, and dysbability.\nIn addition, children with autism were found to have autism, including autism, autism, autism, autism, autism, autism, autism, autism, and autism.\nIn addition, autism, for autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.482,
+            "looped": true,
+            "loop_onset": 196,
+            "loop_period": 2,
+            "topic": 0.0
+          },
+          {
+            "text": " the Journal of the American Academy of Pediatrics, the National Institute of Pediatrics (IPCC) found that: The American Academy of Pediatrics (IPCC) found that the patients with diabetes were unable to control their diabetes, and the treatment was more likely to be affected: the diabetes.\n- The American Academy of Pediatrics reported that the American Academy of Pediatrics, which found that the American Academy of Pediatrics also had a positive effect on the cardiovascular system.\n- The American Academy of Pediatrics reported that the American Academy of Pediatrics had a positive effect on the cardiovascular system and the treatment was more likely to be affected.\n- The American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics, and the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics are having a positive effect on the cardiovascular system.\n- The American Academy of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.636,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "numeric_units",
+        "prompt": "The mountain rises to a height of",
+        "draws": [
+          {
+            "text": " 10.2 feet.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain, as the mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain falls at the top of the mountain.\n- The mountain rises at the top of the mountain.\n- The mountain falls at the top of the mountain.\n- The mountain rises at the top of the mountain.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.897,
+            "looped": true,
+            "loop_onset": 189,
+            "loop_period": 24,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " 70 meters and the mountain rises to an altitude of about 1.8 kilometers. The mountain is considered to be the closest person, to the highest mountain in the mountain.\nThe mountain ranges are approximately 5,000 meters, which is a distance of about 1,800 meters, with about 1.7 kilometers.\nThe mountain ranges are about 2,800 meters, which is a height of 40 meters, with about 1,800 meters. The mountain ranges are estimated by the mountain of the mountain.\nThe mountain ranges are about 1,800 meters, and approximately 1,800 meters.\nThe mountain ranges are about 11,800 meters, and the mountain ranges are about 1,800 meters.\nThe mountain ranges are about 2,800 meters, while the mountain ranges are about 1,800 meters, and about 1,800 meters.\nThe mountain ranges are about 2,500 meters, with about 1,800 meters and about 1,600 meters.\nThe mountain ranges are about 1,800 meters, and over 1,800 meters, with about 3,500 meters, with about 3,500 meters.\nThe mountain ranges are about 1,500 meters, with about 1,800 meters, with about 1,500 meters, and about 3,000",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.451,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4 meters and is the mountain.\nThe mountain falls in the mountain, which is the main mountain.\nThe mountain is the mountain in the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain.\nThe mountain of the mountain is the mountain of the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain, which is the mountain of the mountain of the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain, which is the mountain of the mountain of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.854,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4.5 meters and is also known as the mountain rises to a height of about 1.0 meters. The mountain rises to a height of about 1.6 meters. This mountain rises to a height of about 1.0 meters. A height of about 2.0 meters. A height of about 3.0 meters. A height of about 4.0 meters. A height of about 0.3 meters. A height of about 1.0 meters. A height of about 4.0 meters and an elevation of about 1.2 meters. A height of about 1.0 meters. A height of about 1.0 meters. A height of about 1.0 meters. A height of about 2.5 meters. A height of about 2.0 meters. A height of about 3.0 meters. A height of about 1.2 meters. A height of about 1.0 meters. A height of about 2.0 meters. A height of about 2.0 meters. A height of about 2.0 meters. A height of about 1.0 meters. A height of about 2.0 meters. A height of about 1.2 meters. A height of about 1.2 meters. A height of about 2.0 meters. A",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.739,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 1,000 feet in height. It is a mountain range of about 1,000 feet in height. The mountain ranges are roughly 5,250 feet in height, while the mountain ranges are about 11,000 feet in height. The mountain ranges are about 1,200 feet in height, with its top and top, with its top and bottom top. The mountain ranges are about 1,600 feet, and the mountain ranges are about 8.2 meters in height, with its top and top elevation to help guide the mountain ranges, with its top and bottom of its top and top.\nThe mountain ranges are about 2,500 feet in height, with its top and top. The mountain ranges are about 10,200 feet in height, with its top and bottom. The mountain ranges are about 5,600 feet in height and top, with its top and top.\nAt the summit, the mountain ranges are about 1,400 feet in height, with its top and top and top, with its top and top. The mountain ranges are about 1,500 feet in height, with its top and top. This mountain ranges are about 1,600 feet in height, with its top and top. The mountain ranges are about 50 feet in height, with its top and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.466,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          }
+        ]
+      }
+    ]
   }
 }

@@ -33179,5 +33179,582 @@
     "memory_gb": 0.088,
     "note": "medians of 21 prefills / 7 decode runs of 64 tokens; no KV cache: each decode step re-runs the (cropped) window"
   },
-  "training_systems": null
+  "training_systems": null,
+  "samples": {
+    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "temperature": 0.7,
+    "top_k": 40,
+    "new_tokens": 256,
+    "draws": 5,
+    "summary": {
+      "n": 50,
+      "rep4": 0.393,
+      "looped": 5,
+      "eos": 1,
+      "topic": 0.28,
+      "tokens": 253.0
+    },
+    "prompts": [
+      {
+        "label": "definition",
+        "prompt": "Photosynthesis is a process that",
+        "draws": [
+          {
+            "text": " we use as a model for a new phenomenon.\nA new study, which was carried out in the United States, showed that a small fraction of the total amount of energy consumed by the body has been removed.\nIn the last half of the 19th century, the researchers found that the first mass of carbon dioxide was released from the atmosphere.\nThe researchers are not sure how many carbon dioxide emissions are produced.\nOn August 30, 2014, the researchers discovered that the carbon dioxide emissions in the atmosphere absorbed by the body into the atmosphere.\nThe researchers found that the carbon dioxide released from the atmosphere was released from the atmosphere of the body and began to release the \u201cnucleic acids\u201d released by the body.\nThe researchers found that the methane concentration of carbon dioxide during the atmosphere was released from the atmosphere.\nHowever, the scientists found that carbon dioxide released from the atmosphere changed the temperature, and could be released from the atmosphere.\nDuring the experiment, scientists thought that these gases were emitted from the atmosphere.\nAnd so, it wasn\u2019t until the end of the experiment, scientists thought it would be safe to see the carbon dioxide levels in the atmosphere.\nWhat caused the Earth\u2019s atmosphere?\nAnd then, in",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.115,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " begins in the form of hydrogen. The molecules that build up in the formation of molecules are so called hydrogen-rich molecules that they have in the formation of hydrogen bonds that are formed in the formation of hydrogen bonds.\nWhen you look at the hydrogen bonds in the form of hydrogen bonds, you will find the energy that you want to multiply. The hydrogen bonds in the form of hydrogen bonds are also called hydrogen bonds.\nA new molecule in the form of hydrogen bonds is called hydrogen bonds. The hydrogen bond is called hydrogen bonds, which are called hydrogen bonds. The hydrogen bond is formed by the hydrogen bond. The hydrogen bond is called hydrogen bonds.\nThe hydrogen bond is called hydrogen bonds. These bonds are called hydrogen bonds.\nThe hydrogen bonds are called hydrogen bonds. The hydrogen bonds are called hydrogen bonds. The hydrogen bond is hydrogen bonds.\nThe hydrogen bond is called hydrogen bonds. Both hydrogen bonds are called hydrogen bonds.\nThe hydrogen bond is called hydrogen bonds.\nThe hydrogen bond is called hydrogen bonds. When hydrogen bonds are called hydrogen bonds, they are called hydrogen bonds.\nThe hydrogen bond is called hydrogen bonds.\nThe hydrogen bond is called hydrogen bonds.\nThe hydrogen bond is called hydrogen bonds.\nThis bond is called hydrogen bonds.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.478,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " can be taken from different food sources.\nWhat Is the Food? It is the process of converting carbohydrates into food, and it is the process of converting carbohydrates into glucose, which is a process of converting carbohydrates into glucose.\nWhat is the most important food source for food?\nThe main food source for food is the glycemic index (GI) and glycemic index (GI) which is the glycemic index (GI) of the food.\nWhat is the difference between food and food from foods that are eaten and eaten?\nThe food is absorbed by the glycemic index (GI) and it is converted into glucose as food, which is converted into glucose and stored glucose.\nWhat is food?\nFood is absorbed by the blood in the blood and can be processed into glucose as a food source. The glycemic index has two parts: a glycemic index of the blood, a glycemic index, a glucose and a total glucose. The glycemic index may be used to measure the glycemic index.\nWhat are the differences between food and food from foods that are not stored in the food?\nFood is processed into glucose and sugar. The food is processed into glucose. Bread contains sugar. The glycemic index is taken in the intestine and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.162,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " will help you create the Earth\u2019s natural habitats and increase the Earth\u2019s natural habitats.\nWhat is the Earth\u2019s natural habitat?\nThe Earth\u2019s natural habitat is a huge natural ecosystem, which is known to be the most important part of our ecosystems. The Earth\u2019s human population is the most fertile and more productive natural habitat. The Earth\u2019s natural habitat is a major part of our planet\u2019s natural habitat. This is the main reason why we live in the water and the ocean. It is a natural habitat that is protected by natural predators and a natural ecosystem that inhabits the oceans.\nWhat is the Earth\u2019s natural habitat?\n- The Earth\u2019s natural habitat is a relatively small area of over 300 million sq miles in diameter, with the remaining five million square kilometres and a half million square kilometers (300 kilometres) of coastline.\n- Our land is divided into the largest land of all the natural habitat and is the largest area of the Earth\u2019s natural habitat.\n- Our land is about two kilometers long and has a maximum capacity of about 3.6 meters of total water.\n- The land is about 6.6 meters (3.8 metres) above",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.174,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " can create the same kind of energy that the cells hold.\nWhat is the energy of a cell?\nThe energy of a cell is determined by the energy of a cell. The energy of a cell is measured by the energy of a cell, as it is absorbed by the cell, as well as by the energy of the cells.\nWhat is the energy of a cell?\nThe energy of an cell is transferred through a cell. The cell is transferred from an organ to an organ. The cell is transferred through a cell. The cell is separated into a cell. The cell is transferred from a cell to a cell.\nWhat is the energy of a cell?\nThe energy of a cell is transferred through a cell, called cell, is transferred through a cell. The cell is transferred through a cell and is then transferred to a cell. The cell is transferred from a cell to a cell. The cell is transferred from a cell, so the cell is transferred through a cell. The cells are transferred from a cell. The cell is moved through a cell, so, when the cell is transferred through a cell.\nWhich cell is transferred by a cell?\nThe cell is transferred through a cell. The cell is transferred through cell, and cells are transferred",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.431,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "biography",
+        "prompt": "Albert Einstein was a German-born theoretical physicist who",
+        "draws": [
+          {
+            "text": " was not in charge of his own position in the universe. He thought that the universe was so large that his object would have been a matter of fact. He was a human and he would have been able to see the world as a whole. He was also born, but he was always in charge of the universe. He was a human and he was a person who had a vision of man. He was known as his father, his father, and one he was responsible for the idea of God. He was an intelligent person. He was born in charge of the world. He was born, and he was born in charge of an absolute man. He was born. He was born in charge of the world. He was born in charge of his father. He was born in charge of one of the great powers of the world. He was born in charge of the world.\nHe was born in charge of one of the greatest things he had studied in his life. He was born in charge of two years of his life.\nHe was born in charge of two years of age, and was born in charge of one year of his life. He was born in charge of two years of age, and was born in charge of two years.\nHe was born",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.32,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " was born in Germany, Germany. He was a physicist and professor of physics. He was a French physicist, a physicist and a physicist.\nIt\u2019s a physics-based physics-based physicist, a scientist in German, a science-based science who has worked in space science.\n\u201cIt\u2019s a science-based physicist. It\u2019s a chemistry-based science. It\u2019s a science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science.\u201d\nScience-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science-based science",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.652,
+            "looped": true,
+            "loop_onset": 219,
+            "loop_period": 3,
+            "topic": 0.0
+          },
+          {
+            "text": " has made the first to use his theory of relativity, and his research focused on the scientific world.\nHis theory has been scientifically studied by many scientific researchers, but the theory has been widely used in scientific research. In the first part, he tested a theory of relativity, with a simple, complex, and complex mathematical structure.\nThe theory is based on scientific theories.\nThe theory is based on the idea that a particular theory of space is based on observational data. It is based on scientific observations, which are based on the mathematical model of space.\nThe theory of space is based on science. The theory is based on empirical information about space, space, and science.\nThe theory of space, for example, is based on scientific observations.\nThe theory of space is based on scientific observations.\nThe theory of space is based on scientific observations.\nThe theory of space is based on scientific observations. It is based on scientific observations.\nThe theory of space is based on scientific observations.\nThe theory is based on scientific observations.\nThe theory of space is based on scientific observations.\nThe theory is based on scientific observations.\nThe theory of space\nThe theory of space\nThe theory explains how space interacts in space to space.\nThe",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.407,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " was born in Munich, Germany. He was born in Munich, Germany, and was a member of the Austrian Academy of Sciences.\nThe name of the physicist was derived from German, German, German, Latin, and German, who was the author of the Nobel Peace Prize. He is a member of the Nobel Prize in Physics and has published a book from the University of New England and a professor of chemistry at Harvard University in New York.\nThe Nobel Prize in Physics has been awarded the Nobel Prize for Physics, which is the leading author, and has awarded the Nobel Prize in Physics.\nThe Nobel Prize in Physics has been awarded by the International Astronomical Society for the Advancement of the Atomic Society of America, a global conference held by the International Astronomical Society's International Astronomical Society.\nThe Nobel Prize is awarded the Nobel Prize for the Nobel Prize for the International Astronomical Society.\nThe Nobel prize's award winning the Nobel Prize in Physics was awarded by the Nobel Foundation for the Advancement of the Nobel Prize.\nThe Nobel Prize has been awarded for a number of years.\nThe Nobel Prize in Physics has been awarded for the Nobel Prize in Physics and Astronomy.\nIt is the first prize awarded in the International Astronomical Society (IJ",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.213,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " was born in New Jersey, who had an active role in the future of the sciences.\nIn November, the German-born physicist, Karl Einstein, was a former physicist, and the first scientist to develop an intelligent intelligent model of quantum mechanics. He was born in London in 1891, and was a physicist, who earned high power. When the first man, Einstein wrote his Nobel Prize in Physics in 1892.\nIn his work, Albert Einstein was a physicist, and one of the most influential physicists of the time. When he wrote in 1892, the physicist came to a high power state in 1891. He used it to make things better. He was a computer scientist, and in 1891 he was a mathematician and a scientist, and he was a scientist and a scientist. He was a scientist.\nIn 1891, Einstein was a physicist and a physicist and a scientist. He discovered a physicist. He discovered that the earth was a scientist, a scientist, and a scientist.\nHe discovered that if the earth was a man, he would be a scientist, or a man.\nHis work was to say, \"I am a scientist,\" and that he was a scientist, who was a scientist, and that he was an engineer,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.059,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "science_explainer",
+        "prompt": "Oxygen is a chemical element with",
+        "draws": [
+          {
+            "text": " a charge of 1.2, a chemical element containing a chemical element, a chemical element of a compound, a compound or molecule of a compound, or a compound, which is a compound called an atomic element.\n- The chemical element is a compound that is an element of an atom that is formed by the atoms of a substance.\n- The element is a compound that is formed by the atoms of a chemical element.\n- The chemical element is a compound that is formed by the chemical element.\n- The element is a substance that is formed by the chemical element.\n- The element is a substance that is formed by the elements of a compound.\n- The element is formed by the chemical element of a compound or group.\n- The element is formed by the element.\n- The element is formed by the elements of a chemical element.\n- The element of a chemical element and is formed by the chemical element, which is formed by the elements of a chemical element.\n- The element is made by the chemical element of a chemical element.\n- The element is formed by the elements of a compound or group.\n- The element is formed by the element, which is formed by the elements of a chemical element.\n- The element",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.538,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " a substance called carbon, which is a chemical element that is formed from the chemical substance.\nThe most important properties of the element include:\n- Hydrogen, which is the principal form of the substance that is produced by the hydrogen atoms.\n- Hydrogen, that is the chemical element of the substance.\n- Hydrogen, which is responsible for the physical and chemical properties of the body\n- Hydrogen, its chemical composition, the physical properties of the body, the environment and the environment.\n- Hydrogen, called oxygen, is responsible for the chemical elements of the body.\n- Hydrogen, which is responsible for the energy of the body, is responsible for the release of energy in the body.\n- Hydrogen, which is responsible for the absorption of energy through the body.\n- Hydrogen, which is responsible for the absorption of energy in the body, uses the energy of the body to absorb energy.\n- Hydrogen is responsible for the production of energy.\nWhich hydrogen does not have the hydrogen energy?\nWhat is the hydrogen used for oxygen?\nFluoror is a device that can produce electricity. This method is used to convert the electricity to electricity. It is used to convert the energy of the body into",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.233,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " its name-name ratio.\nThe molecular biology of the cells of a human or a human or other organism, is the most commonly used in the production of energy in the human body.\nProteins are a chemical element in the synthesis of energy from the cells. When molecules are formed in a molecule, the molecules themselves are joined together by the cell, which is called the \u201cH.\u201d\nThe chemical process of a chemical reaction involves the chemical reactions of a molecule, which then happens into the cell.\nThe chemical reaction proceeds from the cell of a molecule.\nThe process involves a process called the chemical reaction, called the reaction, which is called the process of the process.\nThe process called chemical reactions is called the process of converting energy from energy to energy.\nThe process is called the reaction. The process consists of the chemical reaction, which means the movement of energy from energy to energy from energy to energy from energy.\nThe reaction is called the process of converting energy from energy from energy to energy from energy.\nThis process involves the process of converting energy from energy into energy from energy to energy.\nA process called process called process. This process involves the process of converting energy from energy from energy to energy from energy.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.19,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " its chemical properties. It is a chemical compound made in the body of a large molecule. It is a chemical element, a substance that is formed in the body of the substance. It is often used in many industries, such as pharmaceuticals, pharmaceuticals, and pharmaceuticals. It is the base of any chemical compound that is used by many different industries. It is usually used on various industries. It is used to make the cell in the body of the body and the body of the animal in a laboratory or laboratory. It is used in industrial and industrial industries. It is utilized in chemical reactions. It is used in pharmaceuticals as a food additive. It is used in the body of food. It is used in the body of the animal. It is used in cooking dishes, food, drinks, clothing and other clothing.\nA large number of factors that influence body health are:\n- Health and well-being;\n- Health and well-being;\n- Health & well-being;\n- Health and well-being\n- Health and well-being;\n- Healthy and well-being;\n- Health and well-being;\n- Health and well-being;\n- Health and well-being;\n- Health and well-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.308,
+            "looped": true,
+            "loop_onset": 221,
+            "loop_period": 8,
+            "topic": 0.0
+          },
+          {
+            "text": " a high voltage. In addition to the above, the molecule will be oxidized into the liquid in a chemical and in the form of a metal.\nThe electron's reaction is to be oxidized, as a result of the oxidation reaction, and the reaction is not to be oxidized. The reaction is taken away as a result of the oxidation reaction. The reaction is not the same as the oxidation reaction.\nThe reaction is generally used as a solvent for a given reaction.\nThe reaction is made of the substance of a given reaction.\nThe reaction is absorbed by the compound from the reaction to the chemical reaction.\nThe reaction is obtained by the reaction, which is taken from the reaction.\nThe reaction is made of a solvent for a given reaction.\nThe reaction is usually done in the reaction, as an alcohol or the chemical reaction occurs.\nThe reaction is repeated by the reaction.\nThe reaction is done by the reaction.\nThe reaction is then performed by the reaction.\nThe reaction is then done by the reaction.\nThe reaction is performed by the reaction or reaction.\nThe reaction is done by the reaction to the reaction.\nThe reaction is done by the reaction.\nThe reaction is done by the reaction.\nThe reaction",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.332,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "instructional",
+        "prompt": "In this lesson, students will learn how to",
+        "draws": [
+          {
+            "text": " make a positive contribution to students and will also enjoy a more positive contribution.\n3. Write a review\n- Write a review\n- Write a review\n- Write an review\n- Write a review\n- Write a review\n- Write a review review\n- Write an review review\n- Write a review review\n- Write a review review\n- Write an review review\n- Write an research review\n- Write a review review\n- Write a review review review\n- Write a review review review review\n- Write a review review review\n- Write a review review review review\n- Write a review review review review\n- Write a review review review review review\n- Write a review review review review review review\n- Write a review review review review\n- Write a review review review review review review review\n- Write a review review review review review review\n- Write a review review review review review review evaluation review review review review review review review review review review review review\n- Write a review review review review review review review review review review review review review review review review review review review review review review review review review review review review review review review review review review.\n- Beak, A., and P. (2002)\n- Anderson & J. (",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.747,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " create the best-selling materials that you can use to create these materials in your own backyard.\n- Ask students to draw questions about how to use the best of the materials for your own. This is a great opportunity for students to learn how to create their own materials.\n- Make your own materials and materials available to help you create their own materials in a fun way. This can be done by using the best materials, such as cardboard or cardboard, to create fun and engaging projects.\n- Make use of the materials and materials that you can use to create your own materials.\n- Make a list of materials that you can use for your own materials and materials.\n- Make use of your work projects that are made of materials or materials.\n- Make use of materials that are less likely to be used for your own materials.\n- Make use of materials that are readily available for your materials and materials.\n- Make use of materials that are easier to produce, such as wood, paper, paper, paper, paper, or paper.\n- Make use of materials that are readily available for your own materials.\n- Make use of materials that are not available in your own devices.\n- Make use of materials that are not used for your materials",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.281,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " make decisions about how to use the Internet and how to use the Internet and how to make decisions about their data. They will also learn how to make decisions about the Internet and how it can make decisions about the Internet and help you understand what your data is and how to make decisions about your data.\nThis lesson consists of 10 lessons on how to use the Internet (including the Internet) and how to use the Internet to help you remember the information you need to know what you want to use in your system. This lesson includes:\n- How to Make a Difference\n- How to Make an Internet\n- When you are interested in how to write a new computer, it is important to make sure you always have a clear understanding of the topic.\n- Make an issue to get the latest trends on the internet.\n- When you are interested in sharing your information, you can get the latest trends on the internet by going back to the next level.\n- When you are interested in learning and working around data, you can help you keep track and record data.\n- Don\u2019t buy a new business model or a new company.\n- Store data in a new business.\n- Check the latest trends on the Internet, or a new business model",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.146,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " use the right tool to teach, to play, and to teach in-class children. They will also learn how to use the right tool to use them to help them develop their own skills.\nStudents are encouraged to play together for the most part of their learning, and this will be a great way to develop and develop and build their own skills.\nIn addition to learning how to play together, students must be guided to play as a whole at all.\nLearners are encouraged to experiment when they are given the tools they learned.\nStudents will learn how to play together, as they also learn how to play together and how to play. They will be guided to play together and what is the ability to be involved.\nStudents will learn how to play together, how to play together, how to play together and how to play together, how to play together, and how to play together and how to play together, and how to play together and what.\nStudents will learn how to play together and how to play together in a way that meets our children, whether to play together or play together to play together, and how to play together in a way that can be played together and how to play in a way that is a fun and enjoyable way to play",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.292,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " read and write the text in the classroom:\n- What is the difference between the words when reading the text?\n- What is the difference between the two?\n- What is the difference between the words when reading the text?\n- What happens to the text when reading the text?\n- What is the difference between the words when reading the text?\n- What is the difference between the words when reading the text?\n- How do students know the text when reading the text?\n- What is the difference between words when reading the text?\n- What role does the text have in the text?\n- What is the difference between the words when reading the text?\n- What is the difference between words when reading the text?\n- What is the difference between letters when reading the text?\n- What role does it does during reading the text?\n- What is the difference between words when reading the text before reading the text?\n- How do all these words work?\n- How do you read the text during reading a story?\n- How do we read the text after reading the text at night?\nIf your reading is written correctly, the text is not very accurate, if it is not accurate, or not, for",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.522,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "bullet_list",
+        "prompt": "There are several benefits to regular exercise:\n- ",
+        "draws": [
+          {
+            "text": "___________ to reduce stress levels\n- ___________ to increase\n- ___________ to increase level\n- ___________ to increase\n- ___________ to improve\n- ___________ to increase levels\n- ___________ to decrease levels\n- ___________ to decrease levels\n- ___________ to increase in the decrease\n- ___________ to increase levels\n- ___________ to decrease the level of the activity\n- ___________ to reduce the level of the activity\n- ___________ to decrease\n- ___________ to increase levels of the activity\n- ___________ to increase levels of the activity\n- ___________ to increase activity\n- ___________ to increase the level of the activity\n- ___________ to increase in the quantity of the activity\n- ___________ to increase levels of the activity\n- ___________ to increase levels of the activity\n- ___________ to decrease levels of the activity\n- ___________ to increase levels of the activity\nWhat is the difference between the activity and the amount of time\nWhat is the difference between movement and division?\nWhat is the difference between movement and division?\n- The difference between movement and division is the difference between displacement and division.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.621,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "\n- Increase your strength\n- Decreased your ability to work\n- Decrease your strength and strength\n- Decreased strength\n- Decreased strength\n- Decreased concentration\n- Decreased pain\n- Decreased stamina and stamina\n- Decreased strength and stamina\n- Decreased stamina and stamina\n- Decreased strength\n- Decrease your ability to work together\n- Decrease your ability to work together\n- Decrease in strength\n- Decrease your ability to work well\n- Decrease your endurance and stamina\n- Decrease in strength and stamina\n- Decrease your ability to work well\n- Decrease your strength and stamina\n- Decrease in strength and stamina\n- Decreases your ability to work well\n- Decrease your ability to work well\n- Decrease your capacity\n- Decrease your ability to work well\n- Decrease your strength and endurance\n- Decrease your ability to work well\n- Decrease your ability to work well\n- Decrease your ability to work well\n- Increases your endurance and stamina\n- Decrease your ability to work well\n- Increase your capacity\n- Decrease your ability to work well\n- Increase your strength and strength\n- Decrease your ability to work well\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.68,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "__________ from a given exercise\n- __________ from a given exercise\n- _______________ from a given exercise\n- __________ from a given exercise\n- ______________ from a given exercise\n- __________ from a given exercise\n- __________ from a given exercise\n- _______________ from an exercise\n- ______________ from a given exercise\n- _______________ from a given exercise\nThis exercise is given on a given exercise\n- _______________ from a given exercise\n- ________ from an exercise\n- ________ from an exercise\n- ________ from a given exercise\n- ________ from a given exercise\n- ________ from an exercise\n- ___________ from an exercise\n- ________ to an exercise\n- ________ from a given exercise\n- ________ from a given exercise\n- ________ from a given exercise\n- ________ from a given exercise\n- ________ from a given exercise\n- ________ from a given exercise\n- ________ of an exercise\n- ________ from an exercise\n- ________. ________ from a given exercise\n- ________ from a given exercise\n- ________ from a given exercise\n- ________ from an exercise\n- ________",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.802,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " Infanties: These are the main reasons to have a higher risk of heart disease than others.\n- They are usually a part of the body, especially when they are under-treated. They can also have a lower risk of heart disease or even stroke.\n- They may also be more prone to heart disease or stroke.\n- They may have lower blood pressure (or higher blood pressure) and may have higher risk of heart disease or stroke.\n- They can be more prone to heart disease or stroke.\n- They may also have higher risk of heart disease or stroke.\n- They may have higher risk for heart disease or stroke.\n- They may have lower risk of heart disease or stroke, which can be at risk.\n- They may have lower blood pressure if they are sick or have a lower risk of heart disease or stroke.\n- They may have lower risk of heart disease and stroke.\n- They may have lower risk of heart disease or stroke.\n- They may be lower in blood.\n- They may have higher risk for heart disease or stroke.\n- They may have higher risk of heart disease or stroke.\n- They may have lower risk of stroke than they are at risk of stroke or stroke.\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.478,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "\n- increased blood pressure\n- increased blood pressure\n- decreased blood pressure\n- reduced blood pressure\n- increased blood pressure\n- reduced blood pressure\n- increased blood pressure\n- increased blood pressure\n- impaired mood, including depression and anxiety.\n- reduced blood pressure\n- increased blood pressure\n- increased blood pressure\n- increased blood pressure\n- increased blood pressure\n- increased blood pressure\n- increased blood pressure\n- increased blood pressure\n- decreased blood pressure\n- increased blood pressure\nA good source of exercise is to help your body stay healthy and happy. Exercise can help you in managing stress and reducing stress. Exercise can help manage stress levels and improve overall well-being. Exercise can help you feel better and better. Exercise can help you feel better and better. Exercise can help to improve your stress levels and prevent stress. Exercise can help you to better manage stress levels and reduce anxiety and anxiety.\n- Improved Health and Well-Being\nIn addition to being good sleep, exercise can help reduce stress and anxiety. Exercise can help reduce stress by reducing stress and improving your blood pressure. Exercise can help your body fight stress and improve strength, endurance, and overall well-being. Exercise can help you lower your stress and improve overall well-being,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.415,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "numbered_list",
+        "prompt": "To solve a quadratic equation, follow these steps:\n1.",
+        "draws": [
+          {
+            "text": " Step-by-Step: Create a diagram of the quadratic equation, then create a diagram of a quadratic equation and how it works.\n2. Step-by-Step: Create a quadratic equation, then add a quadratic equation and then write the quadratic equation to the quadratic equation.\n3. Step-by-Step: Insert the quadratic equation and then repeat the quadratic equation. Then, then add the quadratic equation for the quadratic equation and then add the quadratic equation to the quadratic equation.\n3. Step-by-Step: Insert the quadratic equation to the quadratic equation, then add the quadratic equation to the quadratic equation. Then add the quadratic equation with the quadratic equation and add the quadratic equation and then add the quadratic equation and add the quadratic equation to the quadratic equation.\nThe quadratic equation works as follows:\nThe quadratic equation can be added to the quadratic equation.\nThe Quadratic equation can be added to the quadratic equation.\nThe quadratic formula can be added and used as the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.549,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " If we are not a quadratic equation, we need to be able to identify the quadratic equation.\n2. If we are not a quadratic equation, we need to use a quadratic equation to solve equations.\n3. If we need a quadratic equation, we need to calculate the quadratic equation.\n4. If we should do this, we should be able to calculate the quadratic equation.\n5. If we have a quadratic equation, we need to multiply the quadratic equation by using the quadratic equation.\n5. If we don't have quadratic equation, we can multiply the quadratic equation by multiplying the quadratic equation by dividing the quadratic equation by multiplying the quadratic equation by multiplying the quadratic equation by multiplying the quadratic equation by dividing the quadratic equation by dividing the quadratic equation by dividing the quadratic equation by dividing the quadratic equation by multiplying the quadratic equation by dividing the quadratic equation by dividing the quadratic equation by dividing the quadratic equation by dividing the quadratic equation by dividing the quadratic equation by dividing the quadratic equation by dividing",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.621,
+            "looped": true,
+            "loop_onset": 207,
+            "loop_period": 7,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " How many points to solve?\n2. How many points to solve a quadratic equation or solve a quadratic equation?\n3. What is the most important difference between a quadratic equation and a quadratic equation?\n4. Is the quadratic equation correct?\n5. How many points to solve a quadratic equation?\n7. What is the quadratic equation?\n9. Which of the following is the equation?\n10. What are the major points to solve the quadratic equation?\n10. What is the difference between a quadratic equation and a quadratic equation?\n10. What is the quadratic equation?\n10. What is the difference between quadratic and a quadratic equation?\n12. What is the relationship between quadratic and quadratic equations?\n10. Which of the following is the difference between quadratic and a quadratic equation?\n11. What is the difference between quadratic and quadratic equations?\n10. What is the difference between quadratic and quadratic equations?\n11. What is the difference between quadratic and quadratic equation?\n11. Which of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.549,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " To solve a quadratic equation, create a graph using a quadratic equation using a quadratic equation.\n2. To solve a quadratic equation, start by following three equations.\n3. To solve a quadratic equation, start by adding two equations.\n4. To solve a quadratic equation using a quadratic equation and start by following the following steps:\n- For a quadratic equation, start by adding the quadratic equation with the quadratic equation.\n- For a quadratic equation, start by adding the quadratic equation, then start by adding the quadratic equation which is called the quadratic equation.\n- For an quadratic equation, then start by adding the quadratic equation.\n- For a quadratic equation, start by adding the quadratic equation and then add the quadratic equation to the quadratic equation.\n- For example, if you have a quadratic equation, then start by adding the quadratic equation again.\n- For each quadratic equation, start by adding the quadratic equation.\n- For a quadratic equation, use the quadratic equation as a quadratic",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.553,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " The quadratic equation can be solved to solve a quadratic equation.\n2. The quadratic equation is a vector of the quadratic equation (a, b, b, b, b, b) which is the vector of the quadratic equation.\n4. The quadratic equation also works with the quadratic equations.\n6. The quadratic equation is a vector of the quadratic equation used to solve the quadratic equation.\n7. The quadratic equation is an algebraic equation, the sum of the quadratic equation works by multiplying the quadratic equation of the quadratic equation and multiplying the quadratic equation as the quadratic equation.\n7. The quadratic equation works by multiplying the quadratic equation by multiplying the quadratic equation by multiplying the quadratic equation by multiplying the quadratic equation by multiplying the quadratic equation by multiplying by 2.\n7. The quadratic equation works by multiplying the quadratic equation.\n8. The quadratic equation works by multiplying the quadratic equation by multiplying by 5.\n10. The quadratic equation works by multiplying by 5.\n11. The quad",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.534,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          }
+        ]
+      },
+      {
+        "label": "enumeration",
+        "prompt": "There are three main types of",
+        "draws": [
+          {
+            "text": " the most common types of the human body.\n- The body, also called the \u201claboratory\u201d of the body.\n- The body, is called the \u201claboratory\u201d.\n- The body, as opposed to the \u201claboratory\u201d, is called the \u201claboratory\u201d.\n- The body is called the \u201claboratory\u201d.\n- The body is called the \u201claboratory\u201d.\n- The \u201clabor\u201d is called the \u201clabor\u201d \u2013 \u201clabor\u201d or \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201clabor\u201d \u2013 \u201c",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.759,
+            "looped": true,
+            "loop_onset": 128,
+            "loop_period": 7,
+            "topic": 0.0
+          },
+          {
+            "text": " human-made vehicles. One of the most widely used vehicles in the world is the NHT\u2019s WIR. The RHT is a combination of the RHT and WIR.\nThe RHT is a vehicle that is used in a variety of different types of vehicles. The RHT is a type of vehicle that is used by people that are not familiar with the vehicle, but instead of simply wearing the vehicle\u2019s \u201cstool,\u201d it is also used because of its overall size. The RHT is used in several types of vehicles. The RHT is used in various types of vehicles. The RHT is used in various types of vehicles.\nThe RHT refers to the vehicle\u2019s weight and performance. The RHT is typically used in various types of vehicles. This type of vehicle also includes a number of different types of vehicles, including automobiles, automobiles, etc. The RHT is used in various types of vehicles, including automobiles, automobiles, and other vehicles.\nThe RHT measures both the RHT and RHT are used in various types of vehicles. The RHT is used in various forms of vehicles such as vehicle exhaustors, motorcycles, and motorcycles.\nThe RHT is used in various",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.289,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " cancer: prostate cancer, prostate cancer, prostate, prostate, prostate, prostate, prostate, and prostate cancer.\n- Breast cancer: Breast cancer can spread from the breast to the breast, breast, breast, or breast, to the mammary gland, to the breast, prostate, and to the breast. Breast cancer is most common among men and women in women.\n- Breast cancer: Breast cancer is also more common in women.\n- Breast cancer: Breast cancer is the most common of cancer, and it is the most common form of breast cancer.\n- Breast cancer: Breast cancer is caused by the cancer, and it is also caused by the cause of breast cancer.\n- Breast cancer: Breast cancer is a type of cancer.\n- Cancer: Breast cancer is the second most common form of cancer.\nThe most common form of breast cancer is breast cancer, which is the type of cancer that is diagnosed in America. It is typically diagnosed with breast cancer, but sometimes it is not usually diagnosed in people who have breast cancer, but breast cancer is often diagnosed in people who have high risk of breast cancer.\nFacial Cancer: Breast cancer is a type of cancer that lives in the U.S. (CDC). Cancer is a type of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.249,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " cancer:\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood level (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\nIn a patient with a blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type (blood type)\n- Blood type\n- Blood type (blood type)\n- Blood type (blood",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.897,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " water vapor treatment:\n- The most common type of water vapor is heated by the air in the air.\n- The most common type of water vapor treatment is heated.\n- The most common type of water vapor is heated by the air in the air.\n- The most common type of water vapor treatment is heated by the air in the air.\n- The most common type of water vapor treatment is heated by the air in which the air is heated by the air.\n- The most common type of water vapor treatment is heated by a thermally heated solution.\n- The most common type of water vapor treatment is heated by the air in which the air is heated by the air.\n- The most common type of water vapor treatment is heated by the air in the air.\n- The greatest type of water vapor treatment is heated by the air in the air in the air.\n- The most common type of water vapor treatment consists of a glass-like mixture of water, water and gas.\n- The most common type of water vapor treatment is heated by the air in the air, which is heated by the air in the air.\n- The most common type of gas treatment is heated by the air in the air.\n- The most",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.708,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "long_dependency",
+        "prompt": "Although the treaty was signed in 1919, it",
+        "draws": [
+          {
+            "text": " was repealed in the United States.\nThe treaty was declared \"The treaty of the United Kingdom\".\nThe 17th Amendment to the United States was ratified in January 1939, and ratified in December 1941.\nThe treaty signed in March 1941, the United States officially declared \"the first state to remove the United States from its members, and will be declared \"the treaty of the United States\".\nThe treaty signed in March 1941, signed in March 1940, after being ratified, the United States ratified the United States and the United States.\nThe United States is part of the United States, and is the second state to be declared \"the state of the United States,\" the United States of America, the United States of America, and the United States.\nThe United States is the second state to be declared \"the state of the United States.\"\nThe United States has been in its infancy, including the United States, the United States of America, and the United States.\nThe United States is the third state to be declared \"the state of the world.\" The United States is the second state to be declared \"the state of the United States\".\nThe United States is the second state to be declared \"the state of the United States\".\nThe United States",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.375,
+            "looped": true,
+            "loop_onset": 216,
+            "loop_period": 19,
+            "topic": 0.0
+          },
+          {
+            "text": " was ratified by French and German Governments to take advantage of the country's ability to make this treaty.\nThe agreement between the German and German Governments was signed by the United States and the Czechoslovakia, and it was signed by the British and German authorities.\nIn 1919, the treaty was signed by the United States in January of 1914. The treaty was signed by the United States, and the United States became the state's first country in the late 19th century.\nThe treaty was signed by the United States in 1916.\nThe Treaty of Versailles\nThe treaty was signed by the United States and was signed by the United States as a rule for the United Kingdom.\nThe treaty was signed by the United States in May of 1917.\nFrom the Treaty of Versailles to the treaty, the United States and the United States were signed by the United States in December of 1919.\nThe treaty also meant the government of the United States, the United States, and the United States.\nThe Treaty of Versailles was signed by the United States, the British, and the United States.\nThe United States were ratified by the United States, the United States, and the United States to the United States.\nThe Treaty of Versailles",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.316,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " was ratified in the United States as the Second World War.\nThe treaty meant that the United States was completely free. The treaty was signed by the United States in 1931.\nThe United States was completely free to express the treaty by making a treaty.\nThe treaty was a treaty, and it was a treaty that made the decision of the United States and was signed in 1932.\nThe United States was not only a treaty that was formed between the United States and Europe, but was also a treaty.\nThe United States was not independent of the treaty.\nThe United States was formally established by the United States and the United States.\nIt was the beginning of the treaty.\nThe United States was formed in the 17th and 18th centuries.\nThe United States, the United States, and the United States, was the first United States to be independent of the United States.\nIt is now the first United States to be independent of the United States.\nUnited States, the United States, Canada, Japan, and the United States.\nUnited States, the United States, and the United States are first elected citizens of the United States in 1949, and are also the primary elected citizens of the United States.\nThe United States is the third most",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.277,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " took control of the Soviet Union and the Soviet Union. The United States, the United States, and the United States were the first to be officially elected in 1948 until the end of the war.\nThe United States was also the first to be elected as the U.S. President of the United States. In the United States, the United States was the first to be elected in 1918. However, the United States was also the second to be elected in 1918, and the United States has the highest elected leader in the United States.\nThe United States was the third to be elected in 1951. By the end of the war, the United States was the second to be elected in 1952. The United States is the second to be elected in 1958, in 1949.\nThe United States is the third to be elected in the United States. The United States is the third to be elected in 1948, and the third to have the elected President. The United States is the third to be elected in 1955, and the United States is the third to be elected in the United States. The United States is the third to be elected in 1979.\nThere are many other states in the United States that are united differently and in different ways. In the United States, the United",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.336,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " became known that it was illegal to land in the United States and not to go to the United States.\nIt was the first to have been designated as the United States.\nThe Treaty of Versailles\nThe Treaty of Versailles and the Treaty of Versailles came from different parts of the Treaty of Versailles.\nIn 1914, the Treaty of Versailles was set up by the British and American forces.\nIn the 17th century, the Treaty of Versailles was signed into France by the treaty of Versailles.\nIn the 17th century, French and Italian diplomats met the Spanish troops and helped build the fortifications of the war.\nIn a war with the treaty of Versailles, the Treaty of Versailles was divided into two parts and three parts, one of the parts of the Treaty of Versailles, and three parts of the Treaty of Versailles.\nIn the 19th century, the Treaty of Versailles was established in 1742, with the signing of the Treaty of Versailles, which was established in 1763. This treaty was ratified by the Treaty of Versailles.\nThe Treaty of Versailles is composed of only three parts, including the Treaty of Vers",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.296,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          }
+        ]
+      },
+      {
+        "label": "attribution",
+        "prompt": "According to a study published in",
+        "draws": [
+          {
+            "text": " the journal Nature, this study was conducted by the National Institutes of Health and Human Services (NIC), who used the use of the internet to create a new study. The study is supported by a National Institutes of Health and the United States Department of Health, which is the National Institutes of Health, and is a leading member of the National Institutes of Health and Human Services (NSWA).\nThe study was conducted in the journal Nature, a state representative of the National Institutes of Health and Human Services (NSWA), a clinical study that used computer-assisted computer vision (RAM) to evaluate the brain activity and the brain activity of an individual's brain activity. The brain activity of a computer in the brain was performed by the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain, the brain and the brain.\nThese tests may also be performed on the patient\u2019s computer vision test, including the brain, the brain, the brain, and the brain.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.379,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " the Journal of Infectious Diseases in the United Kingdom, the journal was \u201ca simple guide for the treatment of patients with severe type 2 diabetes mellitus,\u201d \u201cone of the most common type of diabetes mellitus in the United States,\u201d \u201cone of the most common type of diabetes in the United States,\u201d \u201cone of the worst type of diabetes mellitus,\u201d the study says.\nThe study also confirmed the incidence of type 2 diabetes mellitus among all people, which is expected to decline annually, but is still expected to be higher in people with a high level of blood pressure.\nThe study also found that people with type 3 diabetes mellitus compared with those with type 1 diabetes mellitus.\nWhile these people may not know that they were more likely to have type 2 diabetes mellitus, they are more likely to have type 2 diabetes (the first type) compared with other types of diabetes. (For example, a person with type 2 diabetes was more likely to have type 2 diabetes.)\nThe study suggests that Type 2 diabetes mellitus (the more common type) is more likely to have type 2 diabetes.\nThe study also found that the prevalence of type 3 diabetes mellitus was about 2.5",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.198,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the journal Nutritional Medicine, some experts suggest that the nutritional value of vegetables can be a potential factor.\nResearchers from the University of Minnesota, with the study, are looking at how people are eating less, and how they are eating less on the other side of the food.\nThe researchers also looked at food and processed foods, and then eating more meat like raw meat.\n\"The study has shown that people who eat more on the other side of the food could eat more at the meal -- the amount of a food being eaten on the other side of the food is not necessarily the same one,\" says Bann-Rise.\nThe researchers also found that people who eat more on the other side of the food were more likely to eat more meat than those who ate less on the other side of the food.\n\"And the people who eat less on the other side of the food are more likely to eat more meat at the meal,\" he said. \"The results of the study were published in the journal Nature.\n\"That is, we are able to identify what it means, or how it means,\" says Bann-Rise. \"We have to look at the foods that we eat,\" says Bann-Rise. \"For the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.178,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " the journal Nature, as in the journal Nature, researchers found the presence of these species at least once a year.\nThe study was published in Nature Nature and was published in Nature.\nThe study used a lot of data from the journal Nature in 2012 to identify what the species had discovered.\nThe study was published in Nature as a way of study and research.\nWhen the research was published, scientists were able to measure the number of species they had since then, the researchers were able to measure the number of species they found in the journal.\nThe study also found that a number of species were more likely to be found in the United States.\n\"It is interesting to see how this study was done, and it is possible that they used the term to describe their distribution with this particular species,\" said Rie Bassen, an assistant professor in the Department of Environmental Health and Environment.\nThe study was published in Nature Nature Communications.\n\"It is important to note that there are certain species that have more distinct species as they are known from any other species that are related to them,\" said Rie Bassen, director of the National Science Center.\nThe study is a large, one-size-fits-all approach to the field study",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.115,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " the journal Diabetes, the Mayo Clinic published a new study published in the journal Diabetes & Metabolism. The findings showed that this type of glucose can reduce the risk of developing diabetes.\nIt has been suggested that the glucose level is more likely to increase in blood sugar levels.\n\"The glucose level is associated with increased blood sugar levels, as the glucose level is lowered, is one of the most common causes of diabetes in people with diabetes, it is the most common cause of diabetes,\" said Dr. Paul Z.",
+            "tokens": 105,
+            "eos": true,
+            "rep4": 0.01,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "numeric_units",
+        "prompt": "The mountain rises to a height of",
+        "draws": [
+          {
+            "text": " 80.2 feet. The mountain is an ideal place to climb. The mountain is called the mountain, and the mountain is called the mountain. In the mountain, the mountain is called the mountain.\nThis mountain is called the mountain. It is located on the mountain\u2019s axis. It is the mountain. It is the mountain\u2019s length.\nThe mountain is called the mountain. It is the mountain.\nThis mountain is called the mountain. It is the mountain and is called the mountain. The mountain is the mountain. It is located on the mountain side of the mountain. It is the mountain. It is the mountain side.\nThe mountain side of the mountain side of the mountain side is called mountain side. It is located at the mountain side and the mountain side is the mountain side.\nThe mountain side of the mountain side is called mountain side. The mountain side is called mountain side. The mountain side of the mountain side is the mountain side.\nThe mountain side of the mountain side is called mountain side. It is the mountain side. It is the mountain side of the mountain side and it is the mountain side. The mountain side is the mountain side of the mountain side.\nThe mountain side is called mountain side. The mountain",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.581,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 2.4 meters.\n- The forest is also a small, rocky area that is located in the west and has a high plateau.\n- The mountain ranges from the ridge of the ridge.\n- The desert ranges from the mountain ranges.\n- The mountain ranges from the mountain ranges.\n- The mountain ranges from the mountain ranges of the mountain ranges.\n- The mountain ranges from the mountain range range and the mountain ranges from the mountain range ranges from the mountain range of the mountain range.\n- The mountain ranges are the mountain range ranges from the mountain range ranges to the mountain range range.\n- The mountain range ranges from the mountain range ranges from the mountain range range.\n- The mountain range ranges from the mountain range ranges from the mountain range ranges from the mountain range range ranges from the mountain range range ranges from the mountain range range ranges from the mountain range range range ranges from the mountain range range range range range from the mountain range range range range range range range from the mountain range range range range range range range range range range range range from the mountain range range range range range range range range range range range range range range range range range range range range range range ranges range range range range range range range range range range range range range range range range",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.64,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4 meters and is nearly 50 feet above the mountain. The mountain rises to a height of 6 meters.\nThe mountain is the largest mountain in the world. It consists of a large mountain with high mountains, which have a wide range of elevations. The mountain is the only part of a mountain. The mountain is the area where the mountain is situated.\nThe mountain is one of the most important mountain ranges in the world and is the western mountain range. It is a mountain range that is the tallest mountain range in the world.\nThe mountain ranges are 1.7 foot and a half-feet wide. The mountain range is 2.5 feet tall, the height of the mountain ranges is 5.8 meters. It is the height of the mountain range, which is much smaller than the mountain range.\n- The mountain range is 3.5 meters long, the mountain range is one of the most beautiful places in the world. The mountain range is 612 feet wide, and the mountain range is 6.5 feet long. It is a large mountain range, which is the largest mountain range of the world. It is the largest mountain range, which has a deep and deep mountain range, and is considered a top mountain range, with its highest mountain range",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.103,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " 4.5 million feet (100 feet). The mountain rises to a height of 6.9 million feet (5.9 feet) above the earth. It is believed to be the only place in the world. It is believed to be the only place in the world.\nIn an ancient Greek mythology, the mountain is found at its peak. The mountain is said to be the largest place in the world. The mountain is believed to be the only place in the world known as the \"Pasamatas\" and the \"Pasamatas\" are named after a mountain. The mountain is also known as the \"Pasamatas\" in the Persian word of \u201cCapatas\" and is also known as the \"Pasamatas\" in Persian. These mountains are known as the \"Pasamatas,\" which consists of the Euphrates and Euphrates, Euphrates, Euphrates, Euphrates, and Euphrates.\nThe Euphrates and Euphrates are the most famous and most famous of their kind, most of which are the Euphrates and Euphrates. They are among the most famous types of Euphrates, Euphrates and Euphrates.\nThe Euphrates are a type of Euphrates, Euph",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.289,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 1,000 feet in height. It is a small and very dense mountain, and it is usually situated in the center of the mountain. It is also the most common mountain in the country. It is a large mountain with almost 50 feet long, and it is a large plateau.\nThe mountain is a large, round-shaped mountain with a wide, rounded and curved shape. Its shape is about 8,000 feet, and it stands as a medium-sized mountain.\nIts height is about 8.5 feet. Its height is about 6.5 feet. Its height is 4.6 feet. Its height is about 4.5 feet. Its height is about 6.5 feet. Its height is about 2.8 meters. Its height is about 8.1 feet. its height is about 3 feet. and it is about 3 feet. It is about 2.8 feet.\nThe length is about 5.5 feet. Its height is about 5.5 feet. Its height is about 12.6 feet. Its height is about 3 meters. Its height is about 15.5 feet.\nThe height is about 4.7 feet. Its height is about 4.3 feet. Its height is about 1.8 feet. Its height is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.269,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      }
+    ]
+  }
 }

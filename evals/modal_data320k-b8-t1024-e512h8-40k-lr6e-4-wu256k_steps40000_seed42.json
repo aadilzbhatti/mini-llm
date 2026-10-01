@@ -58815,5 +58815,582 @@
     "train_tokens_per_sec": 34256.4,
     "peak_mem_gb": 4.854,
     "peak_mem_kind": "cuda max_memory_allocated"
+  },
+  "samples": {
+    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "temperature": 0.7,
+    "top_k": 40,
+    "new_tokens": 256,
+    "draws": 5,
+    "summary": {
+      "n": 50,
+      "rep4": 0.504,
+      "looped": 13,
+      "eos": 5,
+      "topic": 0.367,
+      "tokens": 246.0
+    },
+    "prompts": [
+      {
+        "label": "definition",
+        "prompt": "Photosynthesis is a process that",
+        "draws": [
+          {
+            "text": " we can explore with its advantages. It is the most important type of plant which comes with its benefits.\nSo, what is a plant that is essential for?\nThe plant that is used to grow plants is the main food source of the plant. Plants rely heavily on chemical fertilizers and nutrients to make food.\nSo, what is a plant that is used to grow plants?\nSo, what is a plant that is designed to grow plants?\nA plant that is used to grow plants is called the plant that is used to grow plants. Plants use their fertilizers and their nutrients to create food.\nWhat are the characteristics of plants?\nThe plant that is used to grow plants include:\n- Seeds: This is used to grow plants and plants to grow plants.\n- Plants: This is used when plants use a mixture of various nutrients and nutrients.\n- Plants: This is used when plants use an enzyme to make food.\nWhat are the characteristics of plants?\nThe characteristics of plants that are used to grow plants are:\n- They are used when plants are used to grow plants.\n- They are used when plants are used to grow plants.\n- They are used when plants are used to grow plants.\n- They",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.356,
+            "looped": true,
+            "loop_onset": 214,
+            "loop_period": 13,
+            "topic": 0.0
+          },
+          {
+            "text": " begins in an event that is not created as a result of the structure and composition of the plants.\n- The production of photosynthesis in the atmosphere is a process that takes place over time, from the air to the atmosphere.\n- The temperature of photosynthesis is a process where the photosynthesis is the process that takes place in the photosynthesis.\nBy being able to create a solar system, the photosynthesis process is a very process. It takes from the photosynthesizing cells that have the desired effect on the growth rate of photosynthesis.\n- The photosynthesis process is basically the process of photosynthesis.\n- The photosynthesis process is a process which takes place around a certain amount of time, so it is essential to have the capacity to process photosynthesis in the body and to make sure that the photosynthesis process is the process of photosynthesis.\n- The photosynthesis process is an attempt to produce a desired effect, or to create a desired effect.\n- The photosynthesizing cells are not easily accessible to the environment, so the photosynthesis process is the process of photosynthesis.\n- The photosynthesis process is a process that takes place between the photosynthesis and the photosynthetic growth rate.",
+            "tokens": 250,
+            "eos": true,
+            "rep4": 0.206,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " is characterized by an energy-efficient, renewable energy source that provides various advantages.\nThe conversion of energy from the primary and secondary sources of energy into the primary and secondary sources of energy into the primary and secondary sources of energy are the main sources of energy.\nThe primary sources of energy are energy and energy. As the primary sources of energy are the primary sources of energy, the primary sources of energy are energy and energy.\nNatural sources of energy are energy. These sources are renewable sources of energy, such as coal and oil. These sources are essential for electricity production.\nEnergy is also very important for the secondary sources of energy. These sources of energy are energy and energy, which are mainly used to produce energy.\nEnergy is also important for the secondary sources of energy that are energy efficient.\nEnergy is also important for the secondary sources of energy. It is important to note that the primary sources of energy are energy source and energy.\nEnergy is used to generate energy. It is used to generate energy by generating electricity from the primary source to energy.\nEnergy is used to generate electricity. This allows the secondary sources of energy to generate electricity.\nEnergy is a renewable energy supply. It is used to generate electricity from the primary source in the primary and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.304,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " will help you create the most efficient and efficient way to reduce your carbon footprint.\nIf you wish to reuse the right type of biomass, then you could start by using the same method to make the most efficient and efficient living.\nIf you want to reuse the right type of biomass, then you can use the right type of biomass.\nIf you want to reuse the right type, then you can use the right type of biomass that will be the best choice. You can use the right type of biomass or other methods, but you can also use the right type of biomass for the type of biomass you want.\nIf you want to reuse the right type of biomass you want to reuse the right type of biomass you want to reuse the right type of biomass.\nIf you want to reuse the right type of biomass, then you can use the right kind of biomass.\nThe right type of biomass you want to reuse the right type of biomass you want to choose from. If you want to reuse the right type of biomass, then you can use the right type of biomass that will be the best choice.\nIf you want to reuse the right type of biomass, you can reuse your biomass.\nIf you want to reuse the right type of biomass you want to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.545,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " is carried out in a similar manner.\n- Photosynthesis is a process that is carried out in a variety of ways.\n- Photosynthesis is the process of heat and nutrients that are then transferred to the Earth.\n- Photosynthesis is the process of producing heat and nutrients that are then transferred from the earth to the Earth.\n- Photosynthesis involves an organism which is made into living organisms. Photosynthesis is the process of storing everything from sunlight and nutrients to water.\n- Photosynthesis is the process of producing heat and nutrients that are then separated into the water and nutrients.\n- Photosynthesis is an process of creating heat and nutrients to produce heat and nutrients that are then transferred from the earth to the earth. Photosynthesis is the process of storing energy to produce heat and nutrients that are then stored in the earth to store energy. Photosynthesis is the process of creating heat and nutrients that are then converted into heat.\n- Photosynthesis is the process of storing things and nutrients that are then transferred into the heat and nutrients that are transferred into the earth. Photosynthesis is the process of storing things and converting it to heat. Photosynthesis is the process of storing everything from food, energy and nutrients that are then transferred into heat, the processes and processes of producing",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.395,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          }
+        ]
+      },
+      {
+        "label": "biography",
+        "prompt": "Albert Einstein was a German-born theoretical physicist who",
+        "draws": [
+          {
+            "text": " was a German physicist who is known as the founder of the Nobel Prize in Physics and the first Einstein Prize in Physics in the U.S.",
+            "tokens": 29,
+            "eos": true,
+            "rep4": 0.0,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " was born in Germany and had a family who was an associate professor of education at the University of Cambridge, who was also a professor of education at the University of Cambridge, who was a member of the University of Cambridge.\n- Albert Einstein was a Germanman who believed that Einstein made a breakthrough in his theory of relativity. Einstein was a physicist who believed that Einstein was a physicist who believed that his theory was not related to Einstein's theory of relativity.\n- Albert Einstein was a physicist who believed that Einstein has a brain, such as the brain, that was believed to have a brain to use the brain for use in order to produce a brain. He was a physicist who believed that Einstein's theory of relativity was a theory of relativity.\n- Albert Einstein was an American physicist who believed that Einstein's theories were the study of Einstein's theory of relativity.\n- Albert Einstein was a physicist who believed that Einstein was a physicist who believed that Einstein was a physicist who believed that Einstein was a physicist.\n- Albert Einstein was a physicist who believed that Einstein was a physicist who believed that Einstein was a physicist because he believed that Einstein was a physicist who believed that Einstein was a physicist who believed that he was a physicist who believed that Einstein was a physicist who believed that Einstein",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.447,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " believed the universe was an ancient, and he was a professor of physics at the University of Edinburgh.\nHis theory has been confirmed by the American scientific physicist, who was the first to be the first to be a science professor.\nThe theory is a theory that has a definite shape. The theory, which was known as the Albert Einsteinian, was the first to study the theory of relativity. Einstein had a telescope that was a magnet, and the Einsteinian was a physicist, who was fascinated by the theory of relativity.\nThe theory is a theory that has a true shape. Einstein\u2019s theory is not the only theory of relativity but it has a different structure. Einstein\u2019s theory, for example, is a theory about relativity. Einstein\u2019s theory of relativity is not a theory.\nThe theory is a theory of relativity. Einstein made some claims about the theory of relativity. Einstein has a theory of relativity, but it has a theory that has a theory of relativity. Einstein\u2019s theory is not true. Einstein\u2019s theory is a theory of relativity, and it has a theory of relativity. Einstein uses the theory of relativity to determine the theory of relativity.\nThe theory is a theory of relativity to explain the theory of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.261,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " became the first physicist to understand the quantum theory in which the universe is expanding and expanding, as it does today, the universe is expanding and so has a few new inventions that have been made in the past.\nWhat is the universe?\nThe universe is expanding and expanding. Astronomers are currently being able to build a universe in a way that is much more than a millionths and a half billion years old. The universe is expanding.\nThe universe is expanding and expanding. Astronomers are working to harness the power of gravity and energy, and so on.\nHow do cosmic systems work?\nBecause of the quantum nature of the universe, there is an understanding of how the universe works. The universe is expanding and expanding, so it is expanding, and so on.\nWhat is the universe?\nThe universe is expanding and expanding. As a result, it is expanding and expanding. But it is expanding and expanding.\nWhat is the universe?\nThe universe is expanding and expanding, but it is expanding. It is expanding and expanding. It can be a big challenge, but it does not take time to build.\nWhat is the universe?\nSince it is expanding, there is an understanding of the universe\u2019s physical space. It is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.237,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " became the first to know Einstein.\nIn 1891, Einstein was born in Germany and graduated from New York University in 1883. The term Einstein was coined as a \"father of the father of a computer.\" Einstein was born in 1892.\nWhile Einstein lived in a small city, it was a German-born physicist who was born in 1886. However, Einstein was born in 1802.\nIn 1872, Einstein was born in the city of Munich, where he had a son, who was a child. Einstein was born in 1901. In 1896, Einstein was born in a small family in 1891. He was a son of a doctor. Einstein was born in 1901.\nIn 1889, Albert Einstein was born in 1895. He was born in New York, which was a German-born teacher.\nIn 1896, Einstein was born in New York City, and a French-born father of a family from New York City, where he was born in 1818.\nIn 1902, Albert Einstein was born in New York City and was born in New York City, New York City, and was born in New York City, and was born in New York City.\nThe first Einstein born in New York City, Berkeley, was born in New",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.206,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          }
+        ]
+      },
+      {
+        "label": "science_explainer",
+        "prompt": "Oxygen is a chemical element with",
+        "draws": [
+          {
+            "text": " a chemical element. The name for a chemical element is a chemical element, which produces an element, which produces an element in its properties.\nIn the name of the chemical element, the chemical element is a process that produces an element. The chemical element is a chemical element, which produces a chemical element, which produces an element.\nChemicals are the chemical element that produces an element in its properties.\nChemicals are the chemical element, which is a chemical element and is in its properties.\nChemicals are the catalysts that produce an element.\nChemicals are the chemical elements that produce an element.\nChemicals are the chemical elements that produce an element which is an element which is an element.\nTypes of chemical elements, the chemical element, and the chemical elements, the chemical element, the chemical elements, the chemical elements, the chemical element, the chemical elements, the chemical element, the chemical elements, the chemical elements, the chemical elements, the chemical element, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical element, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.617,
+            "looped": true,
+            "loop_onset": 183,
+            "loop_period": 36,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " a substance called carbon, and is a chemical element.\nA substance called carbon is a chemical compound that contains a substance called carbon. Carbon is a chemical element with a complex chemical compound called carbon.\nA substance called carbon is a chemical element with a chemical compound that contains an element in an atom.\nIt is a compound that has a chemical element in a physical form. Carbon is a chemical element with a chemical formula and a group of molecules called carbon.\nThe chemical compound is a chemical element with a chemical compound that forms carbon atoms.\nA substance is a chemical compound with a chemical compound that is a chemical compound.\nA substance called carbon is a chemical compound.\nA substance called carbon is a chemical compound in the form of a chemical compound.\nA substance called carbon is an organic compound with a chemical compound that has a chemical compound called carbon.\nCovalent compounds are compounds that have a chemical compound called carbon.\nA substance called carbon is a chemical compound that is a chemical compound.\nCovalent compounds are a chemical compound that is a chemical element with a compound that is a chemical substance.\nA substance called carbon is a compound called carbon.\nCovalent compounds are substances that can be used for chemical reactions.\nA",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.423,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " a few elements, but not a molecule or molecule. In some of the elements, a molecule is a substance that is not reactive to carbon.\n2. When you think of a molecule, you are trying to find a molecule in your cell. This means that the action of a molecule is to select one molecule from the molecule.\n3. When you think of a molecule to work by a molecule, you can do it by simply selecting the one you want to make sure you have the right molecule.\n4. When you think of a molecule, you can do it by combining it into your cell.\n5. When you think of a molecule, you can do it by using a molecule.\n6. When you think of a molecule, you can do it by using a molecule, you can do it by combining it into your cell by using a molecule, a molecule, or a molecule, you can do it by doing it by using a molecule.\n6. When you think of an atom, you can do it by adding it to your cell by adding it to its original form.\n7. When you think of a molecule, you can do it by using a molecule.\n7. When you think of a molecule, you can use it",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.372,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " a variety of different types. It is found in the plant-based products of different types, including:\n- Biomass: It is known for its ability to conduct chemical conversion with various other types of chemicals.\n- Biomass: It is highly resistant to various chemicals and the use of different types of chemicals to meet the needs of various types of chemicals.\n- Biomass: It is highly resistant to environmental chemicals, such as UVB and CO2, which are toxic to many types of chemicals.\n- Biomass: It is a highly resistant to chemical reactions that are known to be active in the body.\n- Biomass: It is highly resistant to environmental chemicals, such as:\n- Biomass: It plays a vital role in the environment and reduces environmental toxins.\n- Biomass: It is highly resistant to environmental chemicals, such as pesticides and pesticides.\n- Biomass: It is resistant to environmental chemicals, such as methane, nitrogen, and ozone.\n- Biomass: It is highly resistant to environmental chemicals and is resistant to environmental toxins.\n- Biomass: It has a wide range of chemical applications, including chemicals, such as nitrogen oxides and UVB and H",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.352,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " a short-lived polymer that is formed by a polymer with a long-acting polymer, which is a polymer and a polymer that is formed by an electron. The polymer is a polymer with an electron, a polymer that is involved in the synthesis and distribution of the polymer. The polymer is either a polymer or a polymer, or a polymer that is formed by an electron. The polymer is formed by a polymer that is formed by a polymer that is formed by a polymer or by an electron. A polymer is formed by a polymer that is formed by a polymer that is formed by an electron, a polymer that is formed by an electron. The polymer is formed by a polymer that is formed by an electron, and by a polymer, a polymer that is formed by an electron that is formed by an electron, the polymer is formed by a polymer that is formed by an electron that is formed by an electron. The polymer can be formed by an electron, or by a polymer that is formed by an electron and a polymer that is formed by a polymer that is formed by an electron. The polymer is formed by a polymer that is formed by an electron, a polymer that is formed by an electron. The polymer is formed by an electron that is formed by a polymer that is formed",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.605,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "instructional",
+        "prompt": "In this lesson, students will learn how to",
+        "draws": [
+          {
+            "text": " make a positive impact on students' success.\nAt the end of the lesson, students will learn to identify the impact that they have. The lesson will be based on the findings of the following:\n- Create a new school environment that is safe for students and their families.\n- Use a range of activities that are enjoyable to engage students in class activities and have the opportunity to engage with their students.\n- Consider taking a positive role in class activities, such as reading, writing, or writing as a way of expressing a gratitude or understanding about a topic.\n- If the lesson is written by the students, it will be interesting to choose to create a positive impact on the students.\n- Discuss the importance of positive and negative feedback for students to support their students' success.\n- Ask students to use a range of activities, such as using a specific activity.\n- Ask students to use a variety of activities, such as activities, activities, or activities.\n- Explain the importance of positive and positive feedback for students.\nBy using the lesson, students can be more easily accessed than traditional activities.\nOne of the key benefits of positive and negative feedback for students is the ability to make positive changes during class activities.\nAnother benefit of positive and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.079,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " make sure they are working on a task. Students will also learn about the concepts and ideas that they might like to build on their own work.\n- They will teach how to express their own work, but will also be able to learn how to code in their own right-of-world.\n- They will also teach how to code in their own works.\n- They will teach how to code in their own work.\n- They will teach how to code in their own works.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math.\n- They will teach math and science.\n- They will teach",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.692,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " make decisions about their own lives and how to make decisions about their own lives. There is no single answer that brings to mind that every individual is unique.\nThe second lesson will focus on the lesson, which is easy to understand, and also what you can learn from it. This lesson provides a way to develop new thinking skills and knowledge in life.\nThis lesson will focus on the lesson, which will focus on the lesson, and also the lesson for the lessons.\nEach lesson focuses on the lesson, and also includes a lesson plan.\nThis lesson will focus on the lesson, and also includes a lesson plan and lesson plan.\nThis lesson will focus on the lesson, and also includes a lesson plan.\nThis lesson will focus on the lesson, and also includes a lesson plan and lesson plan.\nThis lesson will focus on the lesson, and also includes a lesson plan.\nThis lesson will focus on the lesson plan, lesson plan, and also includes a lesson plan and lesson plan.\nThis lesson will focus on the lesson plan and lesson plan.\nThis lesson will focus on the lesson plan, and will focus on the lesson plan.\nThis lesson will focus on the lesson plan lesson plan, and will focus on the lesson plan.\nThis",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.549,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " use a variety of different teaching methods to apply the same basic teaching methods in a way that is necessary for learning.\nHere is a list of ways to use a variety of teaching methods in a classroom setting.\n1. Use a clear picture of the lesson using a picture of the lesson\n2. Use one example of the lesson while the students are learning how to use a picture of their own learning while the students are learning how to use the picture.\n3. Use the pictures to show the lesson;\n4. Use a list of a picture to show the lesson.\nThis activity also includes the lesson and a lesson plan.\n5. Use a picture for the lesson\n6. Use a picture to show the lesson and a lesson plan.\nThis activity includes activities like interactive lessons, lesson plans, and video games for the lesson.\n6. Use the video games to help students understand the lesson.\nThis activity includes activities like activities like lesson plans, games, and activities with the lesson plan.\nThis activity includes activities like lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, and lesson plans.\nThis activity includes activities like activities",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.273,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " read and write the text in the text.\nThe students will learn how to write the text and write the text in the text. The students will learn the text in the text as well as in the text.\nThe students will learn how to write the text in the text.\nThe students will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nThe students will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nThe students will learn how to write a text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in a text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.826,
+            "looped": true,
+            "loop_onset": 214,
+            "loop_period": 13,
+            "topic": 0.6666666666666666
+          }
+        ]
+      },
+      {
+        "label": "bullet_list",
+        "prompt": "There are several benefits to regular exercise:\n- ",
+        "draws": [
+          {
+            "text": "___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ___________ to ",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.984,
+            "looped": true,
+            "loop_onset": 0,
+            "loop_period": 4,
+            "topic": 0.0
+          },
+          {
+            "text": "\u0c04\u0cea\u0c4d\u0cd9\u0c4d\u0cea\u0c4d\u09aa\u0c4d\u0cf1\u0ce4\u0c4d\u0c4d\u0c4d\u0cc7\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c5d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.866,
+            "looped": true,
+            "loop_onset": 80,
+            "loop_period": 3,
+            "topic": 0.0
+          },
+          {
+            "text": "__________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ _______________ __________ __________ __________ _______________ __________ __________ __________ __________ __________ __________ ___________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ ________",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.957,
+            "looped": true,
+            "loop_onset": 170,
+            "loop_period": 3,
+            "topic": 0.0
+          },
+          {
+            "text": "_________tteacher.edu/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man_d_man/b-man/b_man/b_man_man_man_man/b_man/b_man/b_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.909,
+            "looped": true,
+            "loop_onset": 151,
+            "loop_period": 2,
+            "topic": 0.0
+          },
+          {
+            "text": "                                                                                                                                                                                                                                                                ",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.996,
+            "looped": true,
+            "loop_onset": 0,
+            "loop_period": 1,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "numbered_list",
+        "prompt": "To solve a quadratic equation, follow these steps:\n1.",
+        "draws": [
+          {
+            "text": " Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide To Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.945,
+            "looped": true,
+            "loop_onset": 174,
+            "loop_period": 29,
+            "topic": 0.0
+          },
+          {
+            "text": " If we are not sure where to start\n1. If we are to solve a quadratic equation, you can get the following equation:\n1. If we can solve a quadratic equation, then we can solve another equation:\n2. If we can solve a quadratic equation, then we can solve another equation:\n3. If we are to solve a quadratic equation, then we can solve a quadratic equation with the following equation:\n4. If we have solved the quadratic equation, then we can solve the quadratic equation in the equation, then the next equation.\n5. If we can solve a quadratic equation, then we can solve a quadratic equation.\n6. We can solve a quadratic equation with an example of a quadratic equation.\n7. When we can solve a quadratic equation, we can solve a quadratic equation with a square root of the quadratic equation.\n8. If we can solve a quadratic equation, then we can solve a quadratic equation, then we can solve a quadratic equation with a square root of the quadratic equation.",
+            "tokens": 247,
+            "eos": true,
+            "rep4": 0.533,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " Create a quadratic equation\n2. Create a quadratic equation\n3. Integrate the quadratic equation\n3. Decide the quadratic equation\n4. Integrate the quadratic equation\n5. Create a quadratic equation\n5. Create a quadratic equation\n5. Creating a quadratic equation\n3. Create a quadratic equation\n5. Create a quadratic equation\n6. Create a quadratic equation\n7. Create a quadratic equation\n5. Create a quadratic equation\n11. Create a quadratic equation\n12. Create a quadratic equation\n5. Create a quadratic equation\n5. Create a quadratic equation\n6. Summatic equation\n6. Get a quadratic equation\n7. Create a quadratic equation\n8. Create a quadratic equation\n5. Create a quadratic equation\n6. Create an quadratic equation\n7. Create a quadratic equation\n8. Divide a quadratic equation\n9. Create a quadratic equation\n8. Create a quadratic equation\n8. Create a quadratic equation\n8. Create a quad",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.696,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " Identify the type of triangle in the square root of the triangle and\n2. Identify the type of triangle in the square root of the triangle, and\n3. Identify the three quadratic equations.\n4. Define the quadratic equation in two words.\n5. Identify the quadratic equation in the square root of the triangle and\n5. Identify the quadratic equation in the square root of the triangle and\n5. Identify the quadratic equation in the square root.\n6. Sum the quadratic equation in the squares root of the square root of the square root of the triangle root of the square root.\n7. Identify the quadratic equation in the square root of the square root of the square root of the triangle root of the triangle root of the square root of the triangle root.\n9. Identify the quadratic equation in the square root of the square root of the square root.\nIdentify the quadratic equation in the square root of the square root of the square root of the triangle root of the triangle root of the square root of the square root of the square root of the square root of the square root.\n10. Identify the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.644,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " The first step\nThe first step is to solve a quadratic equation. The second step is to solve a quadratic equation. The third step is to solve the quadratic equation.",
+            "tokens": 40,
+            "eos": true,
+            "rep4": 0.297,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          }
+        ]
+      },
+      {
+        "label": "enumeration",
+        "prompt": "There are three main types of",
+        "draws": [
+          {
+            "text": " the most\n- 1-3-2-3-4-4-4\n- 2-3-4-4-6-6-2-4\n- 2-3-4-3-5-4-4-4-4-6-4-4-5-5-3-4-8-5-4-5\n- 5-4-4-5-4-5-5-7-7-8-6-6-4-5-8-5-9-7-8-6-6-7-7-7-7-7-6-8-7-7-8-8-7-7-7-7-7-8-9-8-1-8-7--10-7-4-8-9--7-9-8-6-8-7--1-4--6-8--6-8--6-1-6-6-8--8-8-9--8-7-9--9-6--2--8--8-8-8--8-8--9--8-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.522,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " human health. The first is the treatment of a patient, which can be administered to individuals with a higher risk of developing complications. The second type of treatment is the treatment of a patient and the second type of treatment that can be carried out in the hospital. These are the treatment of a patient\u2019s body and the treatment of a patient by the patient. The doctor can administer a blood test to determine the underlying cause of a patient\u2019s disease. The treatment of a patient is usually given to the patient\u2019s body. The patient can also administer drugs to the patient through a blood test and then administer the drug to the patient using a blood test.\nA blood test is usually taken to the person\u2019s body, and the patient is usually given intravenously. The medicine is usually taken after several hours. After the treatment is complete, the patient becomes a permanent nurse. The patient is then placed to the patient to the patient\u2019s body. The patient is then placed to the patient.\nA blood test is administered to the doctor and the patient is then sent to the patient, to the patient with the same procedure. The patient is then placed to the patient to the patient\u2019s body. The person is then placed to the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.198,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " cancer:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases, or the number of cases of cancer:\n\u2013 the number of cases:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases per the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.917,
+            "looped": true,
+            "loop_onset": 90,
+            "loop_period": 7,
+            "topic": 0.0
+          },
+          {
+            "text": " bacteria:\n- Cucophila: A type of bacterial infection\n- Infection: A type of bacterial infection\n- Infection: A type of bacteria\n- Infection: A type of bacterial infection\n- Infection: A type of bacterial infection\n- Infection: A type of bacteria\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Copper Polyphenols||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\nFor more information, see the Health Canada page.\n|Health Canada page. You will receive PDF\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.735,
+            "looped": true,
+            "loop_onset": 206,
+            "loop_period": 25,
+            "topic": 0.0
+          },
+          {
+            "text": " protein that are found in the body.\n- Protein-rich Protein The body contains all the amino acids in the enzyme. The proteins in the protein are secreted by the muscle cells.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acids.\n- Protein-rich Protein The body contains all the amino acids in the amino acid and a chemical element.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acid, with all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acid in the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acids.\n- Protein-rich Protein The body contains all the amino acids in the amino acids.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.755,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "long_dependency",
+        "prompt": "Although the treaty was signed in 1919, it",
+        "draws": [
+          {
+            "text": " was decided that the treaty was signed by the British Parliament. This was the result of the treaty.\nThe treaty was signed by the Parliament of France and was held in October 1922, the treaty was signed by the British government. The Treaty was signed by the British Parliament. The treaty was signed, the treaty was signed by the British Parliament. The treaty was signed by the Parliament.\nIt was signed by the British Parliament. The treaty was signed by the British Parliament. The treaty was signed by the Parliament, and the agreement was signed by Parliament.\nThe treaty was signed by Parliament, and is signed by Parliament. The treaty was signed by Parliament and signed by Parliament. The treaty was signed by the British Parliament.\nThe treaty was signed by Parliament in October 1922. The treaty was signed by Parliament.\nThe treaty was signed by Parliament. The treaty was signed by Parliament in January 1922, the treaty was signed by Parliament. The treaty was signed by Parliament and signed by Parliament. The treaty was signed by Parliament before Parliament.\nThe treaty was signed by Parliament, and has signed by Parliament and approved by Parliament. The agreement was signed by Parliament, and signed by Parliament. The treaty was signed by Parliament and signed by Parliament. The treaty was signed by Parliament and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.585,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " was ratified by the German government, and the British government was officially recognized in the Treaty of Versailles.\nThe Treaty was officially signed by the German government to regulate the country's exports of goods, services, and services. The Treaty was signed on June 23, 1919, and the Treaty of Versailles signed an agreement was signed by the Dutch government.\nAfter the treaty, the Treaty was signed on August 9, 1923, with the Treaty of Versailles, which took place in the country from which the Treaty was signed in August 1918.\nIn May, the Treaty of Versailles was signed on the border between Germany and France, and France. After the war, the Treaty was signed in June 1939, but in January 1939, the Treaty was signed on August 9, and the treaty was signed on July 10, 1919. It was signed by the Dutch in December 1941, and it was signed on August 9, 1928.\nThe Treaty was signed on August 8, 1924.\nOn August 8, 1924, the Treaty was officially signed on July 6, and the Treaty was signed on August 9, 1923.\nThe Treaty was signed on July 5, 1924, and the Treaty was signed on September 8, 1924. The treaty was signed,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.198,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " was decided that the treaty was signed on April 12, 1939. The treaty was signed in 1918 and was signed on April 12, 1941. It was signed on April 2, 1942. This treaty was signed on April 5, 1942 by the United States Navy.\nThe treaty was signed on May 2, 1941, in the agreement between the United States Navy and the Canadian National Guard.\nThe treaty was officially signed on April 6, 1944. It was signed on April 6, 1941, after that treaty was signed on April 7, 1941.\nThe treaty was signed in 1919. The treaty was signed on April 8, 1941, and the treaty was signed on April 12, 1941.\nThe treaty was signed on August 5, 1944. The treaty was signed on April 7, 1941. It was signed on May 12, 1944.\nThe treaty was signed on April 14, and the treaty was signed on April 13, 1944.\nThe treaty was signed on April 7, 1944.\nIt was signed on April 8, 1946.\nThe treaty was signed on April 7, 1941, but it was signed on April 8, 1942.\nThe treaty was signed on April 6, 1944. The treaty was signed on April 7, 1945.\nThe treaty was signed",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.415,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " took control over this vast area of the country. The government was the supreme court of the United States in the 1950s and was elected to be the United States House of Representatives in the mid-1990s.\nThe government of the United States was called the \"U.S.\" It was an organization of civil rights. The constitution was not a simple step, but it was a federal right to take control of the country. In 1955, it was a federal right to make a federal right to the United States from the United States to the United States.\nThe United States has ratified the United States Constitution of the United States and has ratified the United States Constitution of the United States and has ratified the United States Constitution of the United States. The United States Constitution of the United States has ratified the United States Constitution of the United States, which has a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, an constitution, a constitution, a constitution, a constitution, a constitution, an constitution, a constitution",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.458,
+            "looped": true,
+            "loop_onset": 222,
+            "loop_period": 15,
+            "topic": 0.0
+          },
+          {
+            "text": " became known as \u201ca.\u201d and that it did not include the United States Constitution.\nThe Treaty of the United States was signed by the United States Constitution, which was signed by the United States Congress. However, the Treaty was the most important and most important treaty came from the Treaty of the United States. Although the Treaty was signed, the United States Congress adopted the United States as the United States Constitution and the United States as the United States.\nThe Treaty of the United States was ratified by the United States Constitution and ratified by the United States Constitution. The agreement on the United States and ratified the United States Constitution, provided the United States Constitution and ratified the United States Constitution.\nThe Treaty of the United States was ratified by the United States Constitution and ratified the United States Constitution. The United States was ratified by the United States Constitution and ratified the United States Constitution, which was ratified in the United States. The Treaty of the United States was ratified on October 4, 2014. The United States Constitution was ratified by the United States Constitution, with more than 2% of the U.S. Constitution. This was ratified by the United States Constitution as the United States Constitution.\nThe Treaty of the United States took place in the United States, with over 1",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.387,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          }
+        ]
+      },
+      {
+        "label": "attribution",
+        "prompt": "According to a study published in",
+        "draws": [
+          {
+            "text": " the journal Nature Medicine, this paper describes a case of a disease that can be caused by a number of factors. These include:\n- Genetics, genetics, and environmental factors affecting the immune system.\n- Genetics, Genetics, and environmental factors that affect the immune system.\n- Genetics, Genetics, and environmental factors:\n- Genetic makeup, such as genetics, genetic factor, and health.\n- Genetic factors, such as genetic factors, such as genetic factors, or genetic factors.\n- Genetic factors, such as age, gender, gender, or environmental factors.\n- Genetic factors, such as genetics, genetics, and environmental factors, such as genetic factors, such as genetic factors, such as cancer, reproductive health, or genetic factors.\n- Genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetics, such as genetic factor, and environmental factors.\nThese research findings highlight the importance of genetics and environmental factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.522,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " the Journal of Chemistry in the Journal of Chemistry, the journal, was published in the journal Circular Chemistry. The journal is also written in the journal\u2019s journal \u201cL.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.p.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.834,
+            "looped": true,
+            "loop_onset": 217,
+            "loop_period": 2,
+            "topic": 0.0
+          },
+          {
+            "text": " the journal of the International Journal of the American Medical Journal published in the journal Circumv.\nThe journal is published in the journal, published in the journal Psychological and Health Perspectives.\nThe journal was published in the journal Physical and Health Perspectives.\nDrinking about the journal\u2019s physical health and health, researchers at the University of Cambridge School of Medicine and Technology.\nDrinking about the study, Drinking about the journal, Drinking about the journal, Drinking about how the journal works for you.\nProfessor Beveridge, a neuroscientist from the University of Oxford and University of Pittsburgh, told the journal that the journal was a neuroscientist from the University of Michigan, and told the journal that journal was a neuroscientific substance that was \u201cthe most important part of the brain.\u201d\nHe said the journal is no longer a physical therapist, Drinking about the journal, but he also provided a brain-like representation of the central nervous system that controls the brain and spinal cord.\n\u201cIt was a biological function and that was a neuroscientist from the University of Michigan,\u201d Drinking said.\n\u201cThis research, which was published in the journal, Drinking.\nDrinking about the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.182,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " its journal Nature in the journal Nature and Technology, researchers found that the compound was linked to an increased number of studies over the past 50 years, and researchers found that this compound could be linked to a number of studies across the world.\nThe researchers looked at the number of studies for other molecules in the cell. These include a number of experimental compounds that can be linked to a number of studies.\n\u201cThis study is known to allow the protein to be used to the cells for the development of new proteins,\u201d explains Dr. Michael A. McDonald.\nA new study published in Nature Neuroscience has led to a new study that finds that the compound is linked to a number of studies in the body.\n\u201cWe believe that a number of studies are important in determining how this particular compound will interact with the cells in the cell,\u201d says Dr. McDonald.\n\u201cThis is a great way to improve our brain health by helping us increase our capacity to use these cells,\u201d explains Dr. McDonald.\n\u201cWe are also a great source of research on how cells respond to changes in the brain are involved in the way we think about cell processes,\u201d says Dr. McDonald.\nThe study also found that the cells in",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.103,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the journal Diabetes Research, we have analyzed the data to determine the quality of the patient\u2019s blood glucose levels.\nThe researchers found that the fasting glucose levels were linked to a higher risk of heart disease, stroke, and heart attack. The researchers also found that fasting glucose levels were linked to the glucose level in people with diabetes.\nThe study also found that fasting glucose is linked to a higher risk of heart disease as well as stroke, a condition that can cause a variety of symptoms, including heart attack, heart attack, stroke, and heart attack.\n\u201cThe study is also looking at a more recent study that demonstrates the importance of controlling the glucose levels in the body.\u201d\nThe studies found that fasting glucose levels were linked to a higher risk of heart disease, stroke, and stroke. The researchers found that fasting glucose levels were linked to a higher risk of heart disease, stroke, heart disease and stroke.\nThe researchers found that fasting glucose levels increased in people with diabetes, according to a study published in the journal Diabetes Research.\nThe study also found that fasting glucose levels in people with diabetes increased in people with diabetes.\nIn the study, the researchers discovered that fasting glucose levels were linked to an increased risk of heart disease, stroke and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.277,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          }
+        ]
+      },
+      {
+        "label": "numeric_units",
+        "prompt": "The mountain rises to a height of",
+        "draws": [
+          {
+            "text": " 10.2 feet.\nThe most beautiful mountains of the world is the Caspian Valley of Kinsha.\nThe mountain ranges are the top mountain ranges.\nThe mountain ranges are also known as the mountain ranges.\nThe mountain range is of the mountain range.\nThe mountain ranges are the top mountain range.\nThe mountain ranges are the mountain range.\nThe mountain ranges are mountain ranges.\nThe mountain range is the mountain range.\nThe mountain ranges are the mountain range.\nThe mountain ranges are the low mountain range.\nThe mountain ranges are the mountain ranges.\nThe mountain ranges are the mountain range.\nThe mountain ranges are all the mountain ranges.\nThe mountain ranges include the mountain range.\nThe mountain ranges are the mountain range.\nThe mountain ranges are the mountain range.\nThe mountain ranges are the mountain ranges.\nThe mountain ranges are the mountain ranges.\nThe mountain ranges are the mountain range range.\nThe mountain ranges are the mountain range.\nThe mountain ranges are the mountain ranges.",
+            "tokens": 212,
+            "eos": true,
+            "rep4": 0.641,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 2 meters. The mountain ranges are known as the Great Valley.\nThe mountain is situated on the mountain range and has a population of 4.3 million people.\nIn other words, the mountain range is very large, with a population of about 4.2 million. It is in this mountain range.\nThe mountain ranges are famous for their majestic mountain ranges.\nThe mountain ranges are large, with the highest mountain range.\nThe mountain ranges are very small, with the highest mountain range.\nThe mountain ranges are about 1.5 miles long and are the highest mountain ranges.\nThe mountain ranges are the highest mountain range.\nThe mountain ranges are the largest mountain range.\nThe mountain ranges are the highest mountain ranges, with about 2.6 million people, the highest mountain range.\nThe mountain range is the highest mountain range.\nThe mountain ranges are the highest mountain ranges.\nThe mountain ranges are high mountain ranges.\nThe mountain ranges are the highest mountain ranges.\nThe mountain ranges are the highest mountain range.\nThe mountain ranges are the highest mountain ranges.\nThe mountain range range is a mountain range.\nThe mountain ranges are high mountain range mountains.\nThe mountain ranges are the highest mountain range.\nThe mountain ranges are",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.462,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4 meters.\nThe mountain has a unique mountain range. The mountain ranges are small and small, with a slightly larger plateau, with a lower elevation of 0.5 meters. The mountain ranges are high, with a slightly larger plateau, with a slightly smaller plateau. The mountain ranges are low and lower, with an elevation of 0.5 meters.\nThe mountain ranges are high and high, with a higher peak. The mountain ranges are high, with a higher peak. The mountain ranges are high, with high and high peaks.\nThe mountain ranges are high, with a slightly smaller plateau. The mountain ranges are high, with high peaks and low peaks. The mountain range averages 1.5 meters. The mountain ranges are high, with a higher peak.\nThe mountain ranges are high, with a slightly smaller plateau, with high peaks. These peaks are high, with a lower peak. The mountain ranges are low, with a higher peak on the lower peak.\nThe mountain range is high, with a higher peak in the lower peak. The mountain ranges are high, with a higher peak, with a high peak, with a slightly smaller peak.\nThe mountain range is low, with a lesser peak. The mountain ranges are low, with a lower peak",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.47,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4 feet. This is one of the most common in the United States.\nHow Do We Eat a Wild West?\nThe largest deer species in the world are the African American Red deer and the African Red deer.\nHow Do You Eat a Wild West?\nThe African Red deer is a small and small- to medium sized animal. They are small to medium sized animals, and can be used to eat other species. They are often found in the South African Red Deer, but in the North and North American Red Deer, they can be used to eat wild animal.\nHow Do You Eat a Wild West?\nThe African Red deer have a small number of different species, including white-tailed deer, black-tailed deer, and black-tailed deer.\nWhich is the most common African Red Deer?\nThe African Red deer is a small, larger deer, and can be either used to eat a wild or to eat a wild or to eat a wild or to eat a wild or to eat a wild or to eat a wild or to eat a wild or to eat a wild.\nHow Do You Eat a Wild West?\nThe African Red Deer is the second most common African Red Deer.\nHow Do You Eat a Wild West?\nThe",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.32,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " 1.5 meters in height. The mountain peaks are much larger than the mountain ranges. The mountain ranges are large. The mountain ranges are large.\nThe mountain ranges are smaller. The mountain ranges are low. The mountain ranges are large. The mountain ranges are larger. The mountain range is larger. The mountain ranges are larger and have very large. The mountain ranges are smaller.\nThe mountain ranges are large. These are large. They are large. The mountain ranges are smaller. The mountain ranges are large. The mountain ranges are high. The mountain ranges are small. The mountain range is larger. The mountains are larger. The mountain ranges are small.\nThe mountain ranges are high. The mountain ranges are small. The mountain ranges are small. The mountain ranges are large. The mountain range is larger. The mountain ranges are larger. The mountain ranges are large. The mountain ranges are larger. There are more. The mountain ranges are small. The mountain ranges are large. The mountain range is large. The mountain ranges are small. The mountain ranges are smaller. The mountain ranges are larger. The mountain ranges are more. The mountain range range is larger. The mountain ranges are larger. The mountain range is larger. The mountain ranges are larger. The mountain ranges",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.648,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      }
+    ]
   }
 }

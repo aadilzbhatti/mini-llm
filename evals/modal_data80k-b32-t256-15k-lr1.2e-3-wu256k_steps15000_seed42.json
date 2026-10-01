@@ -41969,5 +41969,582 @@
     "memory_gb": 0.104,
     "note": "medians of 21 prefills / 7 decode runs of 64 tokens; no KV cache: each decode step re-runs the (cropped) window"
   },
-  "training_systems": null
+  "training_systems": null,
+  "samples": {
+    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "temperature": 0.7,
+    "top_k": 40,
+    "new_tokens": 256,
+    "draws": 5,
+    "summary": {
+      "n": 50,
+      "rep4": 0.4,
+      "looped": 8,
+      "eos": 2,
+      "topic": 0.277,
+      "tokens": 251.5
+    },
+    "prompts": [
+      {
+        "label": "definition",
+        "prompt": "Photosynthesis is a process that",
+        "draws": [
+          {
+            "text": " converts into hormones into hormones and proteins, which are composed of proteins.\nThe main source of vitamin A is called: \u201cThe liver has a certain chemical relationship. When it comes to proteins, proteins and fats are then absorbed into the bloodstream, it is then transferred to the cells.\nIn addition to the role of vitamin A, the body is on the basis of a vitamin D in the skin.\nIn the process of Vitamin A, it is important to understand the mechanisms of the body and their functions.\nDuring the introduction, the body is responsible for the development of vitamin A. It is important to understand the causes of vitamin A and its function.\nIn this article , we will discuss the steps of developing vitamin B12 into the body, and the role of vitamin A and its function.\nThe study, which is a key ingredient in vitamin A and is associated with vitamin C, vitamin B, vitamin B.\nIn this article, we will explore the role of vitamin A.\nTo examine the role of vitamin A, see the key vitamin A and vitamin B and vitamin B.\nTo understand the role of vitamin A is the key to supplementation of Vitamin B12. It is important to note the function of vitamin A, vitamin D, vitamin",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.099,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " is carried into a mixture of various molecules that can be made up of various atoms. It is a process that can be used to describe the molecule's components. When the molecules are placed in a solid form, they can be made up of material.\nWhat is a compound?\nWhat is a compound?\nThe compound is a substance that is formed by the chemical molecules that are released as a solvent. It is a substance that acts as a chemical or radioactive material. It is responsible for the synthesis of molecules that are absorbed by the reaction of the substances.\nWhich is the chemical chemical?\nWhat is chemical reactions?\nThe substance is called chemical reaction. It is a substance that acts as a chemical reaction, and it is responsible for the reaction.\nWhat is the reaction of chemical reactions?\nThe reaction of chemical reactions is chemical reactions, which are called chemical reactions.\nWhat is the reaction of chemical reactions?\nWhat is substance reactions on an atom?\nWhich is the reaction of chemical reactions?\nWhat is chemical reactions?\nWhat is chemical reactions?\nWhat is the reaction of chemical reactions?\nWhat is the reaction of chemical reactions?\nWhat are the reactions of chemical reactions?\nWhat are the reactions of compounds?\nHow are chemical",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.292,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " combines various methods of living organisms like carbon dioxide and carbon dioxide, which are all the most important aspects of life.\n- Nucleotide: The most commonly used compound, is the two types of chemical, which are the same as the two types of chemical, which are specific.\n- The second most used for metals is the one that is the most commonly used form of chemical.\n- The fourth used compound is the most commonly used compound in other parts of the body.\n- The second used compound is the most commonly used compound in the body.\n- The third used compound is the most commonly used compound in the body.\n- The second used compound is the most commonly used compound in the body.\n- The second used compound is the most used compound in the body.\n- The second used compound is the first used compound in the body and the second used compound.\n- The third used compound is the type of compound.\n- The third used compound is a synthetic compound.\n- The third used compound is the second used compound in the body.\n- The second used compound is the main type of compound used in the body.\n- The second used compound is the most used compound in the body.\n- The third used compound",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.474,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " will help you create the nutrients we consume.\nWe have a number of plants we store and store plants, and we also feed them, each plant from the soil and produce the nutrients they produce.\nWe are happy to have a food we eat.",
+            "tokens": 51,
+            "eos": true,
+            "rep4": 0.0,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " is designed to be used in agriculture.\n- Environmental factors\n- Environmental factors such as the use of pesticides\n- Environmental factors such as water water and sanitation\n- Environmental factors such as water, air and water, drinking water, water, and water\n- Environmental factors such as water, water and water that have been used to reduce the likelihood of developing an impact of water or water problem.\n- Environmental factors such as water conditions\n- Environmental factors such as water, water, water, sewage water, water and water\n- Environmental factors such as water and water, water, water, fire and water\n- Environmental factors such as water, water, water, and water planning\n- Water management\n- Water management efforts\n- Water management is important.\n- Water management practices are:\n- Water management\n- Water management practices\n- Water management practices\n- Water management\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.561,
+            "looped": true,
+            "loop_onset": 179,
+            "loop_period": 5,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "biography",
+        "prompt": "Albert Einstein was a German-born theoretical physicist who",
+        "draws": [
+          {
+            "text": " was not in his position. The physicist, then, \u201cThe Universe of Life's Life\u201d and \u201cThe Universe of Life\u201d and \u201cThe Universe of Life\u201d and \u201cThe Universe of Life\u201d (Sart).\nThe Universe of Life\u2019s Universe (Dohr) is the universe of life. He says that it could be true to the universe of life.\n\u201cThe universe of life is one of the universe of the universe. He says that the universe of life is that of things called in the universe, the universe, our universe, their Universe, our universe, our universe, our universe, the universe, our universe, Earth, the universe, our Universe, our Universe, our universe, our universe, our Universe, our Universe, our Universe, our Universe and our Universe.\nThe universe is a sphere of life. It orbits Earth, our universe, our universe, our universe, our universe, our universe, our universe, our universe, our universe, our universe. our universe, our universe, our universe, our Universe, our universe, our universe, our world and our universe. our universe, our universe, our universe, our universe, our universe. our universe, our",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.466,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " was born in Germany, but he was not a teacher. His father was a physicist, a mathematician, mathematician, and mathematician.\nHis son, mathematician, mathematician, mathematician, mathematician, mathematician, physicist, physicist, mathematician, mathematician.\nHis father was a scientist, mathematician, mathematician, mathematician and mathematician.\nHis father is a physicist, physicist, physicist, mathematician, mathematician, mathematician.\nHis father is a mathematician, mathematician, mathematician, mathematician and mathematician.\nA mathematician, mathematician, mathematic, mathematician, mathematician, mathematician and mathematician.\nHis father is a mathematician, mathematician and mathematician.\nThe mathematician is a mathematician or mathematician.\nOne of the most famous mathematician is the mathematician, mathematician and mathematician.\nA mathematician and mathematician.\nA mathematician, mathematician, mathematician, mathematician, mathematician and mathematician.\nA mathematician, mathematician. mathematician and mathematician.\nAnalog is a mathematician and mathematician.\nA mathematician, mathematician, mathematician.\nA mathematician and mathematician, mathematician, mathematician.\nA mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, and mathematician.\nA mathematician has a large number, and mathematician.\nA mathematician, mathematician, mathematician, mathematician, mathematician.\nA mathematician and mathematician of a",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.581,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " used the \u201cnew and old people\u201d to say \u201cthe war,\u201d and \u201cthe war.\u201d He was also a political leader, and was in a world and was opposed to the \u201cwar,\u201d in which a man had a \u201cstrong,\u201d and had a human position in which he had the power to power the people to power the right and to power it to power the masses. He was a man who was, for whom he had done, and his son, was not to power the enemy, but He was not so happy to do his own life.\nIn the story of the war, the old man had a great relationship with power for him, and that he would not only be able to make his way, and not for him. He would not be able to give him the good power of the people. He would have to have to be able to make his house to do a good job. He would have to be able to have an object. He would have to be able to offer a good life for his people to believe that he would have been able to bring something or not to be able to understand his own life.\nThis is the real reason you can ask me, as",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.063,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " became the first physicist, and also from the University of Munich. The two years later, the Royal Astronomical Society, he discovered a few of the most prominent theories of the evolution of the universe. The discovery of Einstein's theory led to the discovery of the universe, and has been studied with the scientific understanding of the universe, and we have also been able to see how the universe is. The discovery of the universe is based on the concept of evolution. The theory of evolution, and the theory of evolution has been theorized by the Greek, and the theory of evolution is the theory of evolution. Since the theory of evolution, the theory of evolution is a form of evolution and evolution. The theory of evolution and evolution is the subject of evolution. The theory of evolution and evolution is of evolution, evolution and evolution.\nIn the evolution of evolution, evolution is a technique of evolution and evolution. The theory of evolution and evolution, and evolution is one of the most important discoveries of evolution. As the evolution of evolution, evolution and evolution, evolution and evolution can be described, how evolution and evolution can be understood. Evolution, evolution and evolution are thought to be a human evolution.\nThrough the evolution and evolution of evolution, the evolution of evolution and evolution, evolution and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.202,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " was the first of the first German-language physicist in the Soviet Union.\nIn his book, he became a German-language physicist, Professor of Physics, University of Massachusetts, and the University of American Studies in America.\nHis research was an invaluable tool for the use of science in the world.\nIn a paper published in the journal Nature, he published the National Institute of Physics, a series of German-language physicist and astronomer physicist, and an inventor and physicist.\nIn his book, he published a series of the first Russian-language physicist in the world, and his inventions and inventions.\nHe published a paper published in the journal Nature, coined the scientific journal of the Russian-language chemist, and found it in a very early years of science.\nHe published a series of German-language articles on the research of the German-language journal.\nHe published the journal Nature in the early years of physics, and he published the journal Nature in the journal Nature.\nHe used the research paper to study the chemistry of the brain and the brain.\nHis research is based on the scientific and scientific and scientific evidence of the brain.\nHe also worked in his research journal Nature, a graduate.\nHe wrote a book to journal the latest news",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.103,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "science_explainer",
+        "prompt": "Oxygen is a chemical element with",
+        "draws": [
+          {
+            "text": " a charge of an oxidizer, a chemical substance containing a chemical substance called a chemical solvent. In the case of a chemical molecule, it is a chemical compound that is produced by a charge of hydrogen-based solution: the chemical substance that is used in industrial or industrial applications as an energy source. The chemical compound for a chemical reaction is usually used in the form of a chemical substance.\n- In the process of solvent reaction, a chemical molecule must charge.\n- The molecule in which the enzyme is converted to a compound by a molecule.\n- The chemical compound is a molecule that is extracted from the liquid.\n- The solution is produced by a molecule called a reaction agent.\n- The reaction agent is called a reaction agent.\n- The reaction agent is then called a reaction agent.\n- The reaction agent is of a reaction agent called a reaction agent.\n- The reaction agent is called a reaction agent.\n- The reaction agent is called a reaction agent and is called a reaction agent.\n- The reaction agent is used in the reaction agent.\n- The reaction agent is used in a reaction agent.\n- The reaction agent is used in the reaction agent, used in the reaction agent as a reaction agent.\n- The reaction agent",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.316,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " a substance called carbon, and that is used in DNA.\nThe number of cells is determined by the specific properties of the tissue. The amount of cell elements with the number of molecules is 0.12. This is achieved by combining the structure of the cell.\nThe body has the capacity of the two cells, and the cells are not involved. Some of these cells are then separated into two cells, which are then transferred to the body. All cells are also of a group of cells and cells. The cells are formed in the cells.\nThe cells are formed by the blood cell. The cells are divided into two parts. They are formed in the cell structure. The cells are formed in each cell.\nThe cells are divided into two parts:\n- The cells are divided into three parts:\n- The cells are formed in the cell\n- The cells are divided into two parts:\n- The cells are divided into three parts:\n- The cells are divided into two parts:\nWhich cells are divided into two parts:\n- The cells are divided into two parts:\n- The cells are divided into two parts:\n- The cells are divided into two parts:\n- The cells are divided into two parts:\n- The cells in",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.383,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " ion-linked ions. The two molecules can be converted into two atoms: (i) + + + + + + + + + + + + + + + + + + \u2212 + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.909,
+            "looped": true,
+            "loop_onset": 37,
+            "loop_period": 1,
+            "topic": 0.0
+          },
+          {
+            "text": " the material being extracted from a compound or compound. The reaction is the source of the substance is produced by the element of the substance. The substance is then translated into the substance that is called the substance in the substance. The substance will be the substance in the substance of the substance.\nThe substance is derived from the substance that is contained in the substance of the substance, which is responsible for the substance, for the substance and the substance used to regulate the substance and the substance is derived from the substance. The substance is derived from the substance, and the substance must be stored as a substance. The substance is also used as a substance. The substance is used in this substance to be used to describe substance in order to be treated, and therefore the substance is used in the substance, and that substance is used in the substance.\nA substance is used in an active substance in the substance. A substance is used in the form of a substance, as a substance. The substance is applied in the substance such as a substance, from the substance to the substance. The substance is then used in the substance is used in the substance.\nThe substance is used in the substance. The substance is used in the substance, wherein the substance is used in the form of the substance",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.289,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " a number of molecules with a number of particles, and it will be useful as a result of the number of particles in the cell. The two of these two particles can be found in a number of molecules. The particles of atoms are the most important element of the material. The atoms are the two molecules of atoms, but the electrons are the two electrons that are the two electrons in one atom. The electrons are the two electrons, which are the three electrons. The electrons are the two atoms that are the two electrons. The electrons are the two atoms of atoms and the four electrons are the two electrons. The electrons are the two electrons. Both atoms are the two electrons, and the two electrons are the four electrons atoms. The electron is the one atoms. The most important element of electrons is the atom, which is the five electrons. The electron is the two electrons. The electrons are the two electrons. The atoms are the two atoms, and the atoms are the two electrons. The electrons are the two electrons. The electrons are the three electrons. The electrons all of the energies are the one atom that is the two electrons. The electrons are the two electrons: the electrons, the electrons, and the electrons are the three atoms. The electrons are the five atoms,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.292,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "instructional",
+        "prompt": "In this lesson, students will learn how to",
+        "draws": [
+          {
+            "text": " make a good contribution to students.\n- Students will be able to use it all through a simple project, but they will also want to be able to learn to improve their teaching.\n- Students will start to use the Math Skills to learn math lessons. Teachers will learn new concepts to build their own curriculum. Students will learn math skills that will improve their understanding skills.\n- Students will learn math skills and maths skills.\n- Students will learn math skills and learn math skills.\n- Students will learn to solve math problems and also learn about math.\n- Students will learn math problems and math problems.\n- Students will learn to study math problems and solve problems and solve problems.\n- Students will learn to learn about math problems and solve problems and solve problems problems and solve problems and problems.\n- Students will learn how to solve problems and solve problems and problems problems.\n- Students will learn to solve problems and problems problems and problem problems and problems and problems\n- Students will learn about math problems and problem problems and problems.\n- Students will learn to solve problems and problems problems problems and problems\n- Students will learn in mathematics concepts and problem solving problems and problems and solve problems problems and problems problems.\n- Students will learn to learn how they",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.368,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " create the lesson, as well as to build a lesson plan.\nStudents will be able to create the lesson plan, as well as learn from one that lesson plan. Students will learn from the lesson plan and will use the lesson plan and how to build a lesson plan.\nStudents will write through the lesson plan, from the lesson plan and the lesson plan to create a lesson plan plan.\nStudents will start to build a lesson plan plan and create a lesson plan and plan.\nStudents will learn the lesson plan and create a lesson plan plan and plan plan. This lesson plan plan will help students develop a lesson plan plan and plan plan for learning about the lesson plan.\nStudents will use the lesson plan and plan plans and plans plan plan.\nStudents will learn the lesson plan for planning plan plan plan, plan plans, and plan plan plan plans plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan. lesson plan plan plan plan plan plan plan plan plan plan plan plans plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.466,
+            "looped": true,
+            "loop_onset": 208,
+            "loop_period": 1,
+            "topic": 1.0
+          },
+          {
+            "text": " make classroom decisions more efficient and engaging.\n- They will help students and teachers to create a future of learning.\n- They will also help to create a project that is a powerful tool for the classroom.\n- They will also help students develop a career in their own learning skills.\n- They will develop new skills that will help students develop their skills and skills that will assist them in achieving a successful and productive life.\n- They will also be empowered to work in a variety of ways.\n- This will help students develop skills that will increase their learning skills and improve their learning process.\n- They will also promote a new experience.\n- It will help students develop skills skills and provide a foundation for a student.\n- It will help to improve their learning skills and develop skills that can lead to better learning.\n- It will also help students develop skills that will help them develop skills skills and skill.\n- They will also help them develop skills and skill development skills.\n- This will help students develop skills that help them develop skills and skills that will help them develop skills and skills.\n- Students will improve their understanding skills and skills.\n- They will also make it easier to develop skills and skills in a variety of ways.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.261,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " use a lesson plan to teach, improve, and share skills, in a lesson plan.\nStudents will also learn the book plan to improve their writing skills to help them develop their learning skills skills. Students will also learn how to improve their writing skills and to practice them in various ways.\nStudents will learn how to use a lesson plan to encourage their writing skills and practice in a fun and fun way.\nStudents will learn how to use the lesson plan to teach and develop their learning skills.\nStudents will learn how to use the skills they learn during the lesson plan.\nStudents will learn how to use the lesson plan to get the first step for the lesson plan.\nStudents will learn how to use the lesson plan.\nStudents will learn how to use the lesson plan and then use the lesson plan or practice.\nStudents will learn how to use the lesson plan and prepare for the lesson plan and step further.\nStudents will learn how to use the lesson plan and develop their lesson plan and develop ideas.\nStudents will learn how to use the lesson plan and start to use the lesson plan.\nStudents will learn about the lesson plan and work to learn how to use the lesson plan and the lesson plan and apply the lesson plan and the lesson plan and the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.407,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " read and write a lesson plan.\nWrite the final paper:\n1. Write the lesson plan\n2. Write the lesson plan to brainstorm a lesson plan by creating a lesson plan.\n2. Write the lesson plan for the lesson plan on the lesson plan\n2. Write the lesson plan for the lesson plan to prepare a lesson plan for the lesson plan.\n4. Write the lesson plan for a lesson plan for the lesson plan to explore the lesson plan and prepare the lesson plan for the lesson plan.\n4. Test the lesson plan for lesson plan\n2. Write the lesson plan for lesson plan 2. Write the lesson plan for lesson plan and outline the lesson plan for lesson plan plan.\n4. Write the lesson plan plan for lesson plan and practice. Help your lesson plan plan for lesson plan and practice lesson guide plan and plan by step.\n5. Write the lesson plan for the lesson plan and lesson plan for the lesson plan.\n3. Write the lesson plan plan for lesson plan and plan plan to create a lesson plan that will take to the lesson plan for lesson plan and plan plan to prepare for lesson plan and plan plan for lesson plan.\n4. Write the lesson plan for lesson plan and plan plan plans for lesson plan for",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.455,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "bullet_list",
+        "prompt": "There are several benefits to regular exercise:\n- ",
+        "draws": [
+          {
+            "text": "\n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n/ - \n/ - \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- - \n- - \n- - \n- - \n -\n- \n- \n\" to\n- \n- - \nt \"\n\" to\n\" to\n\" to\n\" to \"\n\" to \"\n\" as to \"\n\" to \"\n\" to \"\n\" to \"\n\" to \"\n\" to \"\n\" to \"\n\" to \"\n\" to\n\" to \"\n\" to \"\n\" to \"\n\" to \"\n\" to \"\n\" in the \"\n\" to \"",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.842,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "\n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n\u00b7 \n- \n- \n- \n- \n- g\n- \n- \na- \n- o\n- \n- \n- \n- \n- \n- \n- \n- \n- \n(- \n- \n- \n- \n- \n\n- \n- \n- \n- \n- \n-\n- - \n-\n- - \n-\n- - \n-\n-\n-\n-\n- (\n\" -\n-\n\" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.822,
+            "looped": true,
+            "loop_onset": 195,
+            "loop_period": 1,
+            "topic": 0.0
+          },
+          {
+            "text": "________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.976,
+            "looped": true,
+            "loop_onset": 0,
+            "loop_period": 6,
+            "topic": 0.0
+          },
+          {
+            "text": "ills can be used to help maintain a healthier weight.\n- ills can be used to boost your body weight, and also help with building muscle tissues.\n- ills can also be used to improve the body\u2019s weight, or even increase the body\u2019s overall calorie intake.\n- ills can also be used to improve the immune system\u2019s performance and improve overall physical function.\n- ills can have a range of metabolic issues and the surrounding tissues that are affecting the body.\n- ills can be used to relieve the need for heart health disorders.\n- ills should be performed with a range of nutrients and nutrients.\n- ills can be used to improve blood circulation.\n- ills can also be used to improve blood flow and strengthen the body\u2019s overall function.\n- ills can be used to increase blood pressure and improve blood flow.\n- ills can also improve blood flow and improve the body functions.\n- ills can also be used to reduce the circulation in the body.\n- ills can be used to relieve the feeling of heart problems.\n- ills can be used to relieve the symptoms of heart disease.\n- ills also are used to maintain",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.336,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " ____________________: What are the benefits of exercise?\n- ____________________: What are the benefits of exercise and exercise?\n- ____________________: What are the main effects of Exercise?\n- ____________________: What are the symptoms of exercise?\n- ____________________: What are the benefits of exercise?\n- ____________________: What is good exercise?\n- ____________________: What are the effects of exercise in exercise and exercise?\n- ____________________: What effect is good exercise?\n- ____________: What are the causes of exercise?\n- ____________: What are the symptoms of exercise?\n- ____________________: What is good eating as it is bad to eat?\n- ____________: What is good eating habits?\n- ____________________: What is good exercise?\n- ____________: What are the causes of exercise?\n- ____________: What is the symptoms of exercise?\n- ____________: What are the symptoms of exercise?\n- ____________: What are the symptoms of exercise?\n- ____________: What are good habits?\n- ____________: What are the symptoms of exercise?\n- ____________: What is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.711,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "numbered_list",
+        "prompt": "To solve a quadratic equation, follow these steps:\n1.",
+        "draws": [
+          {
+            "text": " A quadratic system, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis and x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-axis, x-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.949,
+            "looped": true,
+            "loop_onset": 82,
+            "loop_period": 4,
+            "topic": 0.0
+          },
+          {
+            "text": " If we understand that the quadratic equation, we will start using the quadratic equation.\nc. The quadratic equation can be a quadratic equation, and this is called a quadratic equation.\n1. The quadratic equation will begin using the quadratic equation.\n2. If we plan to make a quadratic equation, we will start adding an quadratic equation.\nTherefore, in a quadratic equation, you can calculate the quadratic equation.\nThis is the quadratic equation for the quadratic equation.\nThe quadratic equation can be divided into two quadratic equations, the quadratic equation. The quadratic value is the quadratic equation.\nThe quadratic formula is the quadratic equation. The quadratic equation is the quadratic equation.\nThe quadratic equation is the quadratic equation. It is the quadratic equation.\nThe quadratic equation and quadratic equation are the quadratic equation.\nThe quadratic equation is the quadratic equation. The quadratic equation is the quadratic equation.\nThe quadratic equation is a quadratic equation",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.514,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " How to make a quadratic equation:\n1. Explain this:\n2. Explain the quadratic equations:\n3. Describe the quadratic equations:\n(1) Explain the quadratic equations:\n(2) Determine the quadratic equations:\n(1) Analyse how to get a quadratic equations:\n(2) Calculate the quadratic equation:\n(1) Determine the quadratic equation:\n(1) Determine the quadratic equations:\n(1) Calculate the quadratic equation:\n(1) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(2) Calculate the quadratic equation:\n(2) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(1) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(5) Calculate the quadratic equation:\n(6) Calculate the quadratic equations:\n(",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.711,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " Identify the type of a quadratic equation with the following:\n1. Identify the quadratic equation from the quadratic equation, and\n3. Determine the quadratic equations and explain the quadratic equation.\n1. Describe the quadratic equations and make the quadratic equation.\n3. Identify the quadratic equation in the quadratic equation.\n3. Calculate the quadratic equation in quadratic equation by adding the quadratic equation.\n3. Calculate the quadratic equation in quadratic equation in quadratic equation.\n4. Calculate the quadratic equation to calculate the quadratic formula.\n3. Identify the quadratic equation and solve the quadratic equation by multiplying the quadratic equation.\n3. Calculate the quadratic equation in quadratic equation. Calculate the quadratic equation. Calculate the quadrometric equation, and calculate the quadratic equation. Calculate the quadratic equation. Calculate the quadratic equation into quadratic equation in quadratic equation. Calculate the quadratic equation by multiplying the quadratic equation. Calculate the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.569,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " The quadratic equation can be divided into two subratic quadratic equation:\n1. Determine the quadratic equation of\n2. The quadratic equation is divided in the quadratic equation. This is divided into two subratic equations.\n2. For quadratic equations, multiply by division. Equally, the quadratic equations must be divided in two subratic equations.\n3. The quadratic equation is divided into three quadratic quadratic equations. The quadratic equations of the quadratic equation.\n6. At quadratic calculus you should multiply one, the quadratic equation and the quadratic equations is divided into two quadratic quadratic equations.\nHere are three quadratic equations in quadratic equations:\n3. Calculate the quadratic numerals in quadratic equations.\nThis involves multiplying fractions and dividing the quadratic quadratic.\n3. If you are multiplying with multiplying fractions, you will have.\nThe quadratic quadratic equation is divided into three quadratic quadratic quadratic quadratic quadratic quadratic quadratic quadratic quadratic",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.356,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          }
+        ]
+      },
+      {
+        "label": "enumeration",
+        "prompt": "There are three main types of",
+        "draws": [
+          {
+            "text": " the history\n- 1) The United Kingdom\n- The United Kingdom\n- The United Kingdom\n- The United Kingdom of the Republic\n- The United Kingdom\n- The United Kingdom of the United Kingdom\n- The United Kingdom of the United Kingdom of the United Kingdom\n- The United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom\n- The World of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom\n- The United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom\n- The United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United Kingdom of the United",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.901,
+            "looped": true,
+            "loop_onset": 127,
+            "loop_period": 4,
+            "topic": 0.0
+          },
+          {
+            "text": " asbestos, one or more of the most common asbestos asbestos, and the asbestos is the most common asbestos found in the United States. The asbestos is usually caused by asbestos, with a high fluid pressure known as asbestos, or a higher degree of asbestos.\nAn asbestos stone is a commonly used asbestos asbestos as the asbestos is asbestos. asbestos is usually the asbestos that is typically used in the country, from the asbestos industries. asbestos is often used in the medical industry. asbestos is typically used in hospitals or hospitals or hospitals. asbestos is generally used in hospitals or medical centers, hospitals, hospitals or hospitals. asbestos is commonly used in hospitals, hospitals, and medical facilities. asbestos is usually used to work in hospitals or hospitals, often medical facilities, hospitals, and hospitals. asbestos exposure to asbestos is typically used in hospitals or medical facilities. asbestos can also be used to take up to several hours, depending on the state and county. asbestos exposure to asbestos in the United States is a legal or legal, and typically due to asbestos exposure. asbestos exposure to asbestos exposure to asbestos, such as asbestos exposure to asbestos, asbestos exposure to asbestos in the United States. asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.209,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " plant, an individual\u2019s health and also the body of the body. These include the animal\u2019s diet, the body, and the body. The body should take a certain amount of time and drink each day. The body's diet includes the body's food, blood, and the body's diet.\nThe body contains a protein that is in the body's diets, the body's diet, the body's diet, the body's diet, the body's diet and nutrition, the body's diet, the body's diet, the body's diet and body. This type of diet includes foods, the body's diet, and the body's diet, the body's diet, the metabolism of the body's diet, the body's diet, the body's nutrition, the body's diet, and the body's diet.\nThe body's diet is a protein that is rich in vitamin D, which is essential for the body's diet, the body's diet, the body's diet, the body's diet, the body's diet, the body's diet, the body's diet, the body, the body's body, the body's diet, the body's diet and metabolism.\nThe body's diet is a process of metabolism and nutrients that",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.455,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " diabetes, or type 1 diabetes, but the most common type of diabetes is diabetes.\nHow is insulin production treated for diabetes?\nDiabetes causes diabetes like the thyroid gland (the pancap) and the pancap is a type of diabetes that is most common among children in the United States.\nWhat is diabetes?\nType 2 diabetes is a type of diabetes that affects on the body. In these types of diabetes it is used to treat diabetes, which is usually caused by the formation of diabetes, which is most commonly found in the body.\nHow is insulin production?\nType 2 diabetes is the condition caused by insulin, which is an insulin in the pancap usually occurs on the body\u2019s pancap.\nWhat is diabetes?\nType 5 diabetes is the type of diabetes in the pancap. It\u2019s important to note that insulin is actually the most common type of diabetes that is the most common type of diabetes. Type 5 diabetes is also known as the diabetes of children and it is called the insulin.\nWhich is diabetes?\nThere\u2019s the type of diabetes is insulin and insulin in the pancap and blood vessels of the pancap and its blood vessels. The insulin in the pancap and its side effects are:",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.134,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " metal that are used to be used to treat them.\n- When applied in a material, the ingredients are processed, which is often very high in the metal.\n- When applied in the metal, the powder must be applied carefully to ensure the desired quantity.\n- When used in the mixture, the powder is used to remove the substance from the powder.\n- If the solvent is used in the manufacturing process, the product must be used in the process of cutting into the structure.\n- If used in the production process, the substance is used to break the product of the product.\n- The powder is used to reduce the product by the fermentation process of the product.\n- When applied in the process of cutting the product, the product is used in the process of cutting the product.\n- The product should be used in the process of cutting the product.\n- The products should be used in the manufacturing process of cutting manufacturing.\n- When applied in the process of cutting the product, the product must be used in the process of cutting.\n- The product should be used in the process of cutting the product and then it is used in the manufacturing process of cutting the product and to ensure that the product is used.\n- The product should",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.324,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "long_dependency",
+        "prompt": "Although the treaty was signed in 1919, it",
+        "draws": [
+          {
+            "text": " was a critical attempt to eradicate the land from the land. This was the result of the treaty.\nThe treaty was signed by the Treaty of Versions and the Treaty of Versions. However, the trade-places had been restored by a government. The treaty was that the treaty was divided into two states, including the Treaty of Versions and the Treaty of Versions. The treaty was declared by the treaty. The treaty was signed by the treaty. The treaty was signed by the treaty. In the way that the treaty was ratified by the treaty was signed.\n|Country||The treaty is under the treaty.|\n|The treaty is signed by the treaty.|\n|The treaty is signed by the agreement of the treaty on which it is ratified by the treaty.|\n|This document is not provided by the treaty.||The treaty is signed by the treaty.|\n|An important document is submitted by the treaty.|\n|This document is submitted by the treaty.|\n|A provisional document|\n|A second document is submitted for the treaty.|\n|An important document with the treaty|\n|A third document is submitted by the treaty.|\n|A third document\n|A third document is submitted by the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.352,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " was declared that its agreement was signed to the British in the beginning of the Treaty, but it became a mistake. It was not officially accepted by the Constitution, but the government was not officially recognized.\nThe agreement was adopted by the British Empire, which is, however, was the result of the Second Continental Wars of 1812. The Constitution was adopted by the United States in 1714.\nThe Second Continental Wars of 1812, in the late 1715, was adopted as the only one and the second, in the second, in the first half, in the second half, in the second half, in the second half, in the second half, in the fourth half; in the second half, in the second half, in the third half, in the second half, in the second half, in the second half, in the third half, in the second half, in the second half, in the second half, in the fourth half, in the third half, in the third half, in the fourth half, in the fifth half, in the second half the third half; in the second half, in the second half, in the second half, in the sixth half, in the second half, in the fourth half, in the third half,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.47,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " was the first-ever-in-law of the British and British-born of the United States.\nThe treaty was ratified in the U.S. in July 1915, and then, after the treaty became clear, the treaty was signed in May 1940. This treaty was signed in December 1945 and was amended in the agreement between the treaty, the treaty was ratified in September.\n2. The treaty was ratified in November 1991. If the treaty was ratified in December 1992, was ratified in April 2002, the treaty was signed in July 2011, as the ratification of the treaty was amended in November 2003.\n3. The treaty was ratified in November 2013. The treaty was ratified in July 2000 which was declared in October 2000. The treaty was ratified on September 27 of the treaty was amended in December and the treaty was ratified in October of the treaty.\n3. The treaty was ratified by the treaty it was ratified in December 2005. The treaty was amended in December 2006 after the treaty was ratified in December 2001. The treaty was ratified in January 2004. The treaty was amended by the treaty. The treaty was ratified in October 2005. This treaty is in December 2006. The treaty was ratified in January 1993.\n2. The treaty was amended in September 2005.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.213,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " took an appeal to the British and the British. The treaty was the first-aid period before the treaty was in 1776 which was taken by the British and British Army. The treaty was signed by the Spanish Parliament in 1786. The treaty was called the treaty. The treaty was declared by the treaty between the British and British army and the British forces. The treaty was made by the treaty was issued by the British (now the treaty). The treaty was ratified by the treaty was declared and the treaty was ratified by the treaty. The treaty was ratified by the treaty. The treaty was ratified by the treaty of the treaty. The treaty was ratified by the treaty was removed. The treaty was ratified by the treaty. The treaty was signed by the treaty, in the Treaty of the treaty, the treaty was declared.\nThe treaty was signed by the treaty was ratified by the treaty. The treaty was signed by the treaty. The treaty was amended by the treaty and the treaty was ratified by the treaty. The treaty was ratified by the treaty, followed by the treaty. The treaty was declared by the treaty. The treaty was ratified by the treaty. The treaty was signed by the treaty. The treaty was signed by the treaty, and there was a treaty of the treaty.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.451,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " became known as \u201ca place to be \u2018bumping\u2019 in the battle.\u201d\nThe treaty has been signed in the form of the treaty, which has been signed in December 2014.\nThe treaty was ratified in 1774, then it was ratified in 1866 by the British government. This treaty was a treaty, and it was ratified in 1774.\nA letter in the treaty was ratified in 1777, which was signed in 1666, with the agreement of the treaty.\nA letter in the treaty, was submitted in 1777.\nAn agreement made by the treaty was ratified in June 2005.\nA letter in the treaty has been ratified in 1688.\nThe treaty is ratified in 1477, and the treaty itself is ratified in 1894.\nThe treaty was ratified in 1577.\nA letter of the treaty is ratified in 1868.\nAn agreement provided by the treaty and the treaty is ratified in 1676.\nThe treaty was ratified in 1777, or \ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.304,
+            "looped": true,
+            "loop_onset": 209,
+            "loop_period": 1,
+            "topic": 0.5
+          }
+        ]
+      },
+      {
+        "label": "attribution",
+        "prompt": "According to a study published in",
+        "draws": [
+          {
+            "text": " the Journal of Medicine. The study was conducted in the journal Clinical Nutrition and Medical Research Letters.\nA study from the University of California, is funded by the Centers for Disease Research and Medical Sciences.\n\u201cThe findings are not published in the journal,\u201d said Dr. David O\u2019Brien, a senior researcher and researcher, and director of the Center for Disease Research and Clinical Nutrition.\n\u201cWe now have it to be a big step in the global population. We are here to be as follows: https://www.youtube.com/watch?c\n\u201cThis is a study that focuses on the effects of high-risk individuals. It may be a challenge to identify certain or different factors, such as social, physical, and emotional, physical, and mental,\u201d said Dr. David K.\n\u201cThis is a study of the study on the effects of high-risk individuals. We are not the only ones in the United States. We are not responsible for the rise of the study, and we are not the only ones in the United States and that some of these conditions have occurred.\u201d\nThe study is not well-documented. I\u2019m not a professor, but I am not sure, that",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.099,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the Journal of Chemistry.\nThe research is focused on the process of preparing a healthy lifestyle for a balanced lifestyle. The research is carried to determine the level of nutrition and also the extent of the body. The research is also focused on the overall health and wellness of the body.\nThe research is conducted to examine food and nutrition, nutrition and nutrition, nutrition, nutrition and nutrition. The researchers also found that a high-quality diet is a healthy, balanced diet, and diet.\nThe study has shown that food and nutrition are important for the development of health and wellness. The study is conducted at the University of Maryland and is funded by the National Academy of Sciences at University of Maryland.\nThe study includes three different types of food and nutrition, including the following:\n- Nutrition, diet, exercise, whole body, and food are essential for the development of food and nutrition.\n- Diabetes, weight, and diet\n- Nutrition, diet, and nutrition\n- Nutrition, diet,\n- Nutrition, nutrition, health, and nutrition.\n- Nutrition, nutrition, and nutrition.\n- Nutrition, diet, and nutrition, including the following:\n- Diabetes, nutrition, and nutrition.\n- Nutrition, and health, and nutrition.\n- Nutrition,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.206,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the Journal of Physiology and Clinical Medicine (ODS), which is based on the use of the body\u2019s brain, which is also considered to be the most prevalent form of \u201creastral\u201d.\nIn addition to the study, the researchers found that the effects of heart disease are largely unknown. The researchers found that the body can develop more broadly in the brain, which is also known as the \u201cmolar\u201d and \u201cmolar\u201d.\nThe results of the researchers studied in the journal show that the blood cells are more likely to be able to work properly, which is a type of disease that is present.\n\u201cThe researchers found that the cells undergo a large amount of blood cells,\u201d said Dr. Jeffrey Tollings. \u201cIn addition to the researchers found that people with a type of disease have been diagnosed with a type of disease than the treatment of the disease,\u201d Dr. Brendan, director of the study.\n\u201cThere is also a lot of information about liver cancer, and it\u2019s very important to know how many of these cancer cells are in the future.\u201d\nThe researchers found that the body\u2019s immune system is responsible for causing damage to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.075,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " 2015 that a more recent study published in the Journal of Neurology and Psychiatry reported his findings on the condition, which was published in the journal Scientific and Drug Reports.\nThe study also found that the findings were not found in the journal Nature Genetics in Neurology.\n\"The study also found that the study was not related to an issue, but the findings are not necessarily a source of evidence.\n\"We were also interested in the study, and some of the studies had been published in the journal Nature Genetics.\n\"We found that this study was in fact, the findings showed that the study was more likely to be in a more accurate way. For example, when we were in the study, the researchers obtained information about the findings of a study, we found that these findings were only not related to the results.\n\"This study also found that participants who were at risk of a disease in the face of an illness, and the risk factors involved, have been associated with one another.\n\"We found that more people were not involved in the study,\" said Dr. King, who is the first of a study to determine whether the person was diagnosed with a disease.\"",
+            "tokens": 238,
+            "eos": true,
+            "rep4": 0.055,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the Journal of the American Heart Association, and for the first time a study was conducted in the United States, where their findings are published in a study published in the journal.\n\u201cIt\u2019s not really good for the American Heart Association,\u201d he said. \u201cIt\u2019s not a good idea, but nothing.\u201d\n\u201cIt is not a bad idea. That\u2019s what happened in the brain, so people don\u2019t always know what they\u2019re doing.\u201d\n\u201cWe think that all those who do have bad emotions and a good life.\u201d\n\u201cIt\u2019s a good idea in how the brain is and what\u2019s happening.\u201d\n\u201cIt\u2019s really a good idea to the brain,\u201d said M.D., the University of Washington researchers, the National Cancer Institute and the American Heart Association. \u201cThey\u2019re helping to help the brain better understand that there\u2019s a good chance to be patient,\u201d he said. \u201cWe have a lot of questions and what it means to be a good idea.\u201d\nThe researchers are now working on the test to discover the test and the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.126,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "numeric_units",
+        "prompt": "The mountain rises to a height of",
+        "draws": [
+          {
+            "text": " a distance between the south and the north in the south. It is the most important part of the world\u2019s history.\nThe city is a mountain, an altitude of about 7.5 km\u00b2. It is the largest country that is located of the mountain\u2019s north and south.\nThe mountains are very high and are generally covered by a mountain, or the northern area.\nThe city is a city, a region located on the west edge of the mountains. It is a city, the city, and the city is a city located in the north and south.\nThe city\u2019s city is a city, a city, a city, a city, a city, a city, a city, a city, a city, a city and a city. The city has a city.\nThe city\u2019s city is a city, a city, a city, a city, a city, and a city, a city. The city\u2019s city is a city with a city, a city, or city.\nThe city\u2019s city has a city of a city, a city, a city, and a city, a city, a city, a city, a city, a city, city and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.399,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " a mountain and a mountain. The mountain is a mountain that lies between the mountain and the mountain.\nThe mountain has a mountain to the north-hilly mountain. The island has a narrow coastline and a mountain in the west. The mountain is a dense mountains. The mountain is a desert. The mountain is the sky to a mountain, a mountain, a mountain. The mountain consists of the mountain, the mountain and the mountain, as the mountain is very rich.\nThe Arctic is a mountain that attracts the mountain and is a mountain that is rich and a mountain. The mountain is a mountain that comes to the mountains, a mountain and a mountain that receives the mountain. In the rain of the mountain, the mountain is a mountain that is a mountain that connects the mountain, the mountain, the mountain and the mountain.\nThe mountain is a mountain that is an elevation of a mountain. It is a mountain, the mountain, the valley and the sea, the mountain. The mountain is a mountain and a mountain and a mountain.\nThe mountain is the mountain, the mountain, the mountain and the mountain. The mountain is the mountain, the mountain, the mountain, the mountains, the mountain, the mountain and the sea. The mountain is a mountain and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.352,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4 meters and so that it will be less to a height of 9 meters in diameter. The average area of the mountain is about 1,000 feet.\nThe total area of the mountain is about 1,600 feet. The average range of about 1,200 feet is about 3,500 feet. The average elevation of the mountain is about 1,500 feet of the mountain, a height of about 1,500 feet.\nThe total area of the mountain is about 8,700 feet. The average distance of the mountain is about 4,000 feet.\nThe average distance of the mountain is about 1,000 feet. The average distance of the mountain is about 1,000 feet.\nThe average distance of the mountain is about 1,200 feet.\nThe average distance of the mountain is about 1,300 feet.\nThe average distance of the mountain is about 2,300 feet.\nThe average distance of the mountain is about 2 degrees.\nThe average distance of the mountain is about 4,900 feet. The average distance of the mountain is about 1,200 feet. The average distance of the mountain, is about 1,000 feet.\nThe median distance of the mountain is about 1,500 feet. The average depth of the mountain is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.534,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4 feet. This is one of the main rivers in which the body is located on the lower sides of the equator. In all the streams of the lake, the river is not a watery atmosphere. The rivers are mostly rivers, rivers and rivers, rivers and lakes, and rivers.\nWhat are the benefits of living?\nThe river is more difficult to reach than the river, which is a good place for water, and is in the water.\nHow many rivers are in the river and rivers?\nThe rivers and lakes of the valley are very small and there are plenty of rivers and rivers.\nHow much water is in the lake, so that water is flowing, and we can be happy to get the water to go.\nHow many rivers are in the river?\nThe river is also very small, it\u2019s a very narrow, and it\u2019s the fish.\nWhat are the ponds that have been formed by rivers?\nThe river is located in the lake, which is located on the side of the lake and is located on the bottom.\nWhere are the rivers in the river?\nThe rivers in the river are the rivers in the river, which is the river.\nWho will be part of the river",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.115,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " 1,000 feet in a quarter.\nThe mountain begins to climb. The mountain is in the lower part of the mountain, and the mountain is in the middle of the mountain. The mountain is from the west to the mountain.\nThe mountain is the height of the mountain by the sea. The mountain is the sun-shifting mountain and the mountain is the same as the mountain. The mountain is the mountain.\nThe sky is the most famous part of the mountain. The mountain is the mountain.\nYou can also see a mountain where the mountain is the mountain.\nThe distance between the mountain and the mountain\nThe mountain is the distance between the mountain and the mountain.\nThe length of the mountain is the distance between the mountain and the mountain you can see.\nThe distance between the mountain and the mountain is a mountain. The distance between the mountain and the mountain is the distance between the mountain and the mountain.\nThe distance between the mountain and the mountain is the distance between the lake and the mountain.\nThe distance between the mountain and the mountain is the distance between the mountain and the mountain, the sea and the mountain. This distance between the distance between the sea and the distance between the mountain and the mountain is the distance between the mountain",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.439,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      }
+    ]
+  }
 }

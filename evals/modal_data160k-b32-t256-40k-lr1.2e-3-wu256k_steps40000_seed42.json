@@ -41980,5 +41980,582 @@
     "train_tokens_per_sec": 84795.4,
     "peak_mem_gb": 3.662,
     "peak_mem_kind": "cuda max_memory_allocated"
+  },
+  "samples": {
+    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "temperature": 0.7,
+    "top_k": 40,
+    "new_tokens": 256,
+    "draws": 5,
+    "summary": {
+      "n": 50,
+      "rep4": 0.43,
+      "looped": 6,
+      "eos": 2,
+      "topic": 0.297,
+      "tokens": 250.6
+    },
+    "prompts": [
+      {
+        "label": "definition",
+        "prompt": "Photosynthesis is a process that",
+        "draws": [
+          {
+            "text": " we can explore for generations to come.\nHow can we grow up to the earth?\nThe way we live in our oceans is changing our environment. We can\u2019t just grow up to us.\nWhat are the benefits of using it?\nThe benefits of using it are:\n- It is a product of energy and energy.\n- It is a product of energy.\n- It is a product of energy.\n- It is a product that is made of the same material.\nWhat is the best way to grow up to the sun?\nThis is a natural world that you should grow up to the sun in the sun. You can grow up to the sun in the sun.\nHow can you keep your earth healthy?\n- It is a natural system that has been developed to convert sunlight into energy.\n- We are able to grow up to the sun and we need to grow up.\n- You can grow up to the sun and get you to the sun.\n- You can grow up to the sun and you can grow up to the sun.\n- You can grow up to the sun and light.\n- When you grow up to the sun, you can grow up to the sun.\n- You can",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.296,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " begins in the formation of the plant.\nThe plant will grow to a height of about 3 feet. When the plant reaches its height, it's called the \u201cdrought\u201d which is then cut out the plant.\nThe plant will grow in the same direction as the plant. When the plant is growing, the plant will grow to a height of about 4 feet above the plant stage, the tree will be able to grow in the same direction.\nIt will grow to a height of approximately 2 feet. When the plant reaches its height, it will grow to a height of around 5 feet. It will grow to a height of about 16 feet.\nThe plant will grow to a height of about 6 feet.\nThe plant will grow to about 10 feet. It will grow up to 1 metre and will start the plant\u2019s height.\nThe plant will grow in the same direction as the plant will grow. This will grow on the ground, which will be the best source of nutrients in the plant.\nThe plant will grow in the same direction as the plant. The plant will grow and grow in the same direction as the plant will grow.\nThe plant will grow in the same direction as the plant will grow in the same direction as",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.372,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " can be passed on to create a new growth and form of a new growth.\nThe plant grows in dense areas, and it is a plant that has a long lifespan, but the plant feels like a plant grows. In this plant, the plant grows in a short time, and the plant is much more resilient than it grows in the early stages of a plant\u2019s life.\nThe plant is thought to have a long lifespan in its long, dry surroundings, and it is not thought that it would have a long lifespan. The plant is very bright, and it is thought to have a long lifespan and is thought to have a long lifespan. While it is still a matter of life, there are many advantages to plant it.\nAs a plant grows in a pot, it can grow more quickly, making it easier for plants to grow.\nThe plant grows in a variety of habitats, including the Mediterranean and the Mediterranean and parts of the world. The unique environment of the plant varies from one to two years. They are common in Africa, Asia, and Asia.\nThe plant grows in areas of the Mediterranean, including Asia, Asia and the Caribbean, have a long lifespan. However, it is important to remember that there is no need to be a",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.091,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " will help you create the Earth\u2019s atmosphere during its lifecycle.\nThe Earth\u2019s atmosphere consists of four main parts:\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\u2019s atmosphere\n- Earth\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.877,
+            "looped": true,
+            "loop_onset": 28,
+            "loop_period": 7,
+            "topic": 0.0
+          },
+          {
+            "text": " can create the cells and cells that are released into the cells.\nThe cells are separated from cells that are stored inside the cell. This process is called a cell cycle.\nIn a nutshell, the cell cycle is a process that takes about 1.5 hours to complete. It is a process of transporting cells into the cells or cells, and it involves an organism.\nThe cells are called cells, but they are called cells that are located inside the cell. They are called cells that are located in the cell.\nThe cells are called cells that are located inside the cell.\nThe cell cycle itself is a process that is called cell cycle.\nThe cells that are located inside the cell are called. So the cells are called cell cycle.\nWhat are the types of cell cycle reactions?\n- Cell Cycle Oxygen\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle\n- Cell Cycle",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.435,
+            "looped": true,
+            "loop_onset": 168,
+            "loop_period": 4,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "biography",
+        "prompt": "Albert Einstein was a German-born theoretical physicist who",
+        "draws": [
+          {
+            "text": " was not in favor of his own position, but his own position in science was not to be a good and bad thing. He was also a mathematician and philosopher. He was also a physicist at the University of California, Berkeley, and a chemist. He was born to the Max Planck Institute in New York, USA in 1983. He was a professor of physics at Stanford, while he was a student with a passion for physics. He was a scientist at the University of California. He was a scientist at the University of California. He was a professor of physics at the University of California in California. He was a scientist at the University of California. He was a scientist for the first time because he was the first person to study physics. He was the first person to be a scientist at Harvard. He was a scientist at the University of California, Berkeley. He was a scientist at the University of California. He was a scientist at the University of California, Berkeley. He was a scientist at the University of California, Berkeley. He was a physicist at the University of California, Berkeley. He was a scientist at the University of California and the first person to be a scientist at the University of California. He was first to be a scientist at the University of California. He",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.466,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " was born in Germany, but his father had never previously been studied in his early years.\nIn the same day, the German physicist and the physicist, Dr. Ernst Friedrich von B\u00fcdler of Berlin on the topic of the Einstein study, proposed that the first time Einstein made a breakthrough in his theory of relativity. The first time in the first century Einstein\u2019s experiment, Einstein\u2019s work, Dr. Ernst Friedrich Schutner, and Dr. Karl Friedrich Schutner, wrote about the idea that the first time Einstein wrote a paper published in 1928, which was published in 1938.\nThe first time Einstein\u2019s work in the late 1930\u2019s, Einstein\u2019s first theory of relativity was that he was not concerned about the validity of Einstein\u2019s theories. Einstein later suggested that Einstein was more likely to be satisfied with Einstein\u2019s theory of relativity than Einstein\u2019s theory. In theory, Einstein\u2019s theory of relativity (and the theory that Einstein has already been studying, he says, in theory, Einstein is able to have a \u201cquantified theory of relativity\u201d (because Einstein does not know why Einstein is a very important theory in physics and is not the only theory that Einstein is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.079,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " has recently been called the \u201ctitanium\u201d.\n\u201cThe two-dimensional optical field of Einstein is a magnetoid. It\u2019s the original, and it\u2019s a computer science. It\u2019s a special work, and is a very simple, and powerful magnetoid. It\u2019s a machine used in many different types of magnetic fields (such as those called magnets).\n\u201cWith magnets magnets, magnets and magnets,\u201d said Einstein. \u201cAll electrical activity, especially in the form of magnet, is an electronic device, or magnetoid. It\u2019s a magnetoid that is magnetoid that is magnetoid that is magnetoid, for example.\u201d\nAt the same time, physicists can use magnets to solve different types of magnetoid.\n\u201cThe researchers have found that magnets can be a magnetoid but they can have some magnetic properties,\u201d said Einstein. \u201cIt\u2019s a magnetoid.\u201d\n\u201cThe magnetoid is the magnetoid that\u2019s magnetoid, is magnetoid.\u201d\nThe magnetoid is a magnetoid, which is a magnetoid. It is the magnetoid, which is the magnetoid, which",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.186,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " became the first physicist, and also moved to the study of the universe.\nHow do you find the best of the universe?\nThe oldest known theory of Einstein was that it has a different mathematical structure in which Einstein's theories are based. The theory of relativity has been described as \u201cthe theory of relativity\u201d but also has a great influence on the theory of relativity.\nAre there any questions that might be answered in a textbook or not?\nWhy are the theories used in a textbook or not?\nWhy don't we have the thought of the theories of Einstein?\nThe theories of relativity are based on the theory of relativity. The theory of relativity is based on the theory of relativity.\nWhat's more in theory?\nHow do you say that Einstein is the world's most influential.\nWhy do you think?\nIs Einstein's theory of relativity?\nShould Einstein be good?\nDoes Einstein mean the universe is good for us?\nDoes Einstein believe that Einstein should be good for us?\nDoes Einstein have to be good for us?\nIs Einstein a theory theory?\nIs Einstein a theory of relativity?\nDoes Einstein make a mistake\nWhat is Einstein and the theory of relativity?\nWhat does Einstein's theory of relativity",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.142,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " became the inventor of the term \u201cEinstein\u2019s Theory of Nature\u201d.\nAs Einstein\u2019s theory of relativity, Einstein\u2019s theory of relativity has the potential to generate a quantum state of mind. A theory of relativity can be applied to a theory of relativity. The theory is based on Newton\u2019s theory of relativity, which is used to explain the origin of the universe.\nThe theory of relativity is called an inductive, or inductive. This theory is not a theory. But the theory of relativity is not a theory, because it is a theory of relativity. Newton is an inductive, or inductive. In the first part, the fundamental principles of relativity are the fundamental principles of quantum mechanics. Physics is the principle of relativity, but it is the principle of relativity.\nThe theory of relativity is the principle of relativity. A theory of relativity is based on a series of calculations that show the existence of two objects (or two objects) in a particle. It is an assumption which is based on the principle of relativity. The theory of relativity follows the principles of relativity. Therefore, it is called the laws of relativity. This is an assumption that is based on a Newtonian theory of relativity, and is the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.142,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "science_explainer",
+        "prompt": "Oxygen is a chemical element with",
+        "draws": [
+          {
+            "text": " a large amount of energy that can be used to convert energy.\nIf you\u2019re trying to convert energy into energy, you can use a variety of energy sources like solar energy, power, and other power sources you can use.\nHow to convert energy into energy?\nFiber is a very basic energy source. It is a well-known concept that utilizes a variety of energy sources to convert energy into energy.\nTo convert energy into energy.\nEnergy is a powerful energy source because it has a negative energy source and energy.\nEnergy is a powerful energy source that can be used to convert energy into energy sources.\nEnergy is a reliable energy source for energy.\nEnergy is a powerful energy source that requires a range of energy sources to convert energy into energy.\nEnergy is a powerful energy source for energy.\nEnergy is a powerful energy source that converts energy into energy.\nEnergy is a powerful energy source that converts energy into energy.\nEnergy is a power source that is used to convert energy into energy.\nEnergy is a power source which converts energy into energy.\nEnergy is an energy source that converts energy into energy.\nEnergy is a power source that converts energy into energy.\nEnergy is a power source for electricity.\nEnergy",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.427,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " a substance called carbon dioxide (VCO2) in the atmosphere. It is produced by the use of a chemical substance called benzene (Cucidine). The use of benzene has a relatively high melting point of the hydrogen (Cucanine).\nOxygen is a powerful molecule that plays a major role in the development of hydrogen in the body. It is composed of two compounds, which are called hydroxyl derivatives. The benzene is also a powerful compound in the body of the body.\nOxygen is a chemical substance known to cause cancer, which acts as a non-invasive form. It is formed in the form of a chemical substance called sulfide (HgSO2).\nOxygen is known to cause leukemia, which causes damage to the kidneys.\nOxygen has a very important role in the formation of the body. It helps control the organs of the body. It is caused by an increased secretion of cholesterol.\nOxygen is a chemical element that causes a number of changes to the body. It can also act as a chemical substance called acetylcholine. It is often called acetylcholine.\nOxygen is a chemical compound found in the liver and is a chemical",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.119,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " its name-name ratio.\nThe formula is the conversion of hydrogen to a hydrogen (H2O) hydrogen to a hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O3CO3) hydrogen (H3O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O3 + H2O2) hydrogen (H2O2) hydrogen (H2O2 + H2O2) hydrogen (H2O2) hydrogen (H2O2 + H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H3O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2) hydrogen (H2O2 + H2O2",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.822,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " the NNU of a compound. It is a compound which has a large molecular mass, which has a long, elastic and also an extremely low number of molecules.\nThis chemical is often used in many industries, such as pharmaceuticals, pharmaceuticals, and pharmaceuticals. Because it is not a product, it has a very high concentration of over 100,000,000,000,000,000,000 times the volume of the substance.\nIt is not a substance that is toxic to the natural world and is not as toxic to the environment as it is. However, it can be harmful to the environment and is not a product. It is a chemical that is a chemical that is a substance that is created in a form that is made up of the substance. However, it can be hazardous to the human body, such as the skin, skin, and skin.\nThe chemical element that is known as the chemical element is responsible for the chemical element that is the substance in it. The substance that is made up of the substance is a chemical element which is responsible for the substance and is responsible for the substance. It has a great amount of substance produced by the substance that is used in the manufacture of substances.\nThe chemical element that is used in",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.119,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " a high voltage. In addition to the hydrogen, they are used in hydrogen as well as in hydrogen.\nThe process involves using one of two of the two methods:\n- Hydrogen, water, and hydrogen, and hydrogen, as well as hydrogen, and hydrogen.\n- Hydrogen and hydrogen, as well as hydrogen, are used in hydrogen and hydrogen, as well as hydrogen and hydrogen, as well as hydrogen and helium, as well as hydrogen and helium.\n- Hydrogen, as well as hydrogen and hydrogen, are used in oxygen, as well as hydrogen, as well as hydrogen, as well as hydrogen, as well as hydrogen, as well as hydrogen and hydrogen.\n- Hydrogen, as well as hydrogen and hydrogen, as well as hydrogen, as well as hydrogen and hydrogen, as well as hydrogen, as well as hydrogen, as well as hydrogen, as well as hydrogen, as well as hydrogen, as well as hydrogen, as well as hydrogen and hydrogen.\n- Hydrogen, as well as hydrogen, as well as hydrogen alloys, are another of the most important minerals in the world.\n- Hydrogen and hydrogen:\n- Hydrogen is a naturally occurring form in hydrogen, which is very important for hydrogen and hydrogen,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.545,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "instructional",
+        "prompt": "In this lesson, students will learn how to",
+        "draws": [
+          {
+            "text": " make a positive impact on students' success.\nAt the end of the lecture, students will learn to think critically, and then discuss the lesson in depth and the lesson. Then they will learn how to start, and then discuss the lesson in depth and understanding.\nStudents will learn to think critically and critically, and learn about the lesson.\nStudents will learn how to start and begin the lesson.\nStudents will learn how to start the lesson\nA student will learn how to start the lesson.\nStudents will learn how to write a persuasive essay.\nStudents will read the lesson in depth and learn how to write and write a persuasive essay.\nStudents will learn how to begin the lesson in depth and subtraction.\nStudents will learn how to write a persuasive essay.\nStudents will learn how to write and write a critical essay.\nStudents will learn how to begin the lesson in depth and subtraction.\nStudents will read how to write a persuasive essay and then use a few tips to begin the lesson.\nStudents will learn how to write important essays and answer questions.\nStudents will learn how to write a persuasive essay.\nIn this lesson, students will learn how to write a persuasive essay.\nStudents will study how to write persuasive essays.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.443,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " use the word test (the word test) to correct the spelling of the word test. Students will then learn how to use the word test and compare the word test and compare the word test to identify the word test using the word test.\nStudents will learn about this topic by reviewing the word test and comparing the word test. Students will learn the word test to describe the word test, the word test and compares the word test to the word test.\nStudents will learn how to use the word test to find the word test and compare the word test to determine the grade of tests.\nStudents will learn how to apply the word test to determine the grade of tests.\nStudents will learn how to test the correct test, and analyze the test.\nStudents will learn how to test the test.\nStudents will learn how to test the tests.\nStudents will learn how to test the test and compare tests to test scores.\nStudents will learn how to test the test to predict the test.\nStudents will learn how to test the test.\nStudents will learn what to test.\nStudents will learn how to test the test.\nStudents will develop a test.\nStudents will learn how to test the test.\nStudents will learn how to test the tests.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.482,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " make decisions about how to evaluate and evaluate and evaluate their learning.\nHow to Draw a Learning Environment and Learning Environment:\nTo build a learning environment, students will need to create a new, sustainable classroom environment. The classroom will become a successful, engaging and learning environment.\n- Students will be able to develop new materials, identify and analyze their learning environment.\n- Students will be able to use materials and technologies to develop new materials, like materials for materials, materials, materials, and materials.\nStudents will be able to develop an innovative understanding of the world around them.\n- Students will be able to develop new materials and materials to learn the technology.\n- Students will be able to create a new curriculum, such as the World Wide Web Class for the Future of the World Wide Web on the Internet.\n- Students will be able to create a new material in the future of the world.\n- Students will have a shared understanding of the world, and will be able to create a new, innovative, innovative, and future world.\n- Students will be able to create a new, innovative, innovative, and exciting world for all students.\nStudents will be able to develop an advanced understanding of the world around them and develop new ideas for future generations",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.265,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " use a sound sheet to capture, capture and capture. Students can also learn how to use a sound sheet to capture, and build up their understanding of the sound.\nHere are some examples of the best ways to use a sound sheet to capture:\n- Use a sound sheet to capture and capture\n- Use a portable microphone to capture and capture sound\n- Use a sound sheet to capture sound\n- Use a sound sheet to capture sound\n- Use a sound sheet to capture sound\n- Use a sound sheet to capture sound\n- Use a sound sheet to capture sound\nBy using a sound sheet to capture sound\nThis activity will help students identify the sound in their learning environment. Students will study the sound in their learning environment and create a sound sheet to capture sound. This activity will help students identify the sound in their learning environment and create an engaging sound sheet to capture sound.\nStudents will learn about the sounds and make a sound sheet to capture sound. Students will be able to identify the sound. They will learn how to interpret sound in their learning environment and create an engaging sound sheet that is tailored to various audiences.\nStudents will learn how to use sound sheet to capture sound in their learning environment. Students will learn how to use sound sheets as part of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.403,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " read and read the text in the classroom:\n1. The teacher will teach the students to read the text in a letter. Explain the following questions and the student will be asked:\n1. The teacher will have two children. First, the teacher will have two children. First, the teacher will have two children. Second, they will have three children. Third, the teacher will have three children. Second, the teacher will have two children and one child will have two children. Third, the teacher will have two children. Third, the teacher will have four children. Third and the child will have two children. Third, the teacher will have three children. Third and the child will have two children. Third, the teacher will have two children. Third, the teacher will have two children. Second, the teacher will have two children with four children. Third, the teacher will have two children and one child will have three children. Third, the teacher will have two children. Third, the teacher will have five children. Third, the teacher will have a third child to have two children. Third, the teacher will have five children and five children. Third, the teacher will have four children and four children. Third, the child will be six children. Third,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.573,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "bullet_list",
+        "prompt": "There are several benefits to regular exercise:\n- ",
+        "draws": [
+          {
+            "text": "__________motor exercises\n- ___________motor exercises\n- __________motor exercises\n- ___________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercise\n- __________motor exercises\n- ______________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- __________motor exercises\n- ______________motor exercises\n- ",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.921,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": "\u3010\u82f1\u82b1\u82f1\u8a7a\u7efb\u82f1\u82f1\u8271\u82f1\u82f1\u82f1\u8331\u82f1\u82f1\u82f1\u81f1\u82f1\u81f1\uff0c\u5728\u80ee\u8f7a\u82f1\u82f1\u82f1\u82f1\u82f1\u80ee\u80b2\u82f1\uff0c\u82f1\u81f1\uff0c\u82f1\u8fb1\uff0c\u82f1\uff0c\u687c\u82b1\uff0c\u82f1\uff0c\u82f1\u82f1\uff0c\u82f1\uff0c\u80b2\u82f1\uff0c\u8cf2\u82f1\uff0c\u66d4\uff0c\u5728\uff0c\u6794\uff0c\u92f1\uff0c\u82f1\uff0c\u82f1\uff0c\u80b2\uff0c\u8331\uff0c\u8cb1\uff0c\u82f1\uff0c\u8c31\uff0c\u9eb1\uff0c\u5c4b\ufffd\uff0c\u8c31\uff0c\uff0c\u8d31\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.526,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic response or negative behavior\n- ________ergic responses\n- ________ergic response\n- ________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic responses\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________ergic response\n- ________",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.937,
+            "looped": true,
+            "loop_onset": 96,
+            "loop_period": 6,
+            "topic": 0.0
+          },
+          {
+            "text": "\u3010Tear free exercises for the kids:\n- The ability to concentrate the child is to concentrate the child at school and also allows them to concentrate the child under the age of 10. They are also able to concentrate the child from homework at school, and they are able to focus the child for their time.\n- \u3010Grambling up the handbook:\n- The body may not concentrate the child after a short walk.\n- \u3010Tear free exercises for the children:\n- A short walk on the child.\n- A short walk on the backwalk.\n- A short walk-up on the left hand.\n- A short walk around the front door to the child.\n- A short walk on the front door.\n- A short walk on the back door.\n- An hour walk off the front door.\n- A short walk on the front door and a short walk on the front door.\n- A long walk on the front door.\n- A short walk on the front door.\n- A short walk on the back door.\n- A brief walk on the front door.\n- A long walk on the front door.\n- A long walk on the left side.\n- A",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.387,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep rate)\n- ___________________ (sleep",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.949,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "numbered_list",
+        "prompt": "To solve a quadratic equation, follow these steps:\n1.",
+        "draws": [
+          {
+            "text": " Step-by-step:\n- What are the steps we need to take when we start using a simple formula.\n- What are the steps that apply, in which we start with the formula.\n- How to use the formula: A simple formula is called the formula, which is used.\n- How to use a simple formula:\n- When to use the formula:\n- The formula is:\n- What are the steps that take to make a simple formula?\n- Is there a simple formula?\n- How much is the formula used?\n- How to use a formula?\n- What is the formula used for?\n- What are the steps to make a simple formula?\n- How many times are there?\n- How many times are there?\n- What are the steps that take to make a simple formula?\n- What is the formula used for?\n- How many times is there?\n- How many times are there?\n- How many times are there?\n- How many times are there?\n- How many times are there?\n- What are the steps that took to make a simple formula?\n- How many times will it be?\n- How many times have you ever wanted to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.462,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " If we are not aware of the equation, we need to take steps to solve a quadratic equation.\n2. Do we need to solve a quadratic equation, and to solve a quadratic equation?\n3. Is there a quadratic equation? What do we need to solve a quadratic equation?\n4. Is there a quadratic equation?\n5. If you have a quadratic equation, then the quadratic equation is, then the quadratic equation is, then the quadratic equation is, then the quadratic equation is, you have a quadratic equation, so the quadratic equation is, then the quadratic equation is, then the quadratic equation is, and then the quadratic equation is.\nThe quadratic equation is, then, the quadratic equation is, then, and the quadratic equation is, as, by the quadratic equation, and , by the quadratic equation, since the quadratic equation is, the quadratic equation is, which is, the quadratic equation is, therefore, the quadratic equation is, the quadratic equation is, the quadratic equation is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.538,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " How many variables are in the quadratic equation?\n2. What percentage of the quadratic equation is the relationship between the two variables?\n3. What percentage of the quadratic equation is the variable?\n4. What percentage of the quadratic equation is the total number of quadratic equations?\n5. What percentage of the quadratic equation is the total number of quadratic equations?\n6. What percentage of the quadratic equations is the total number of quadratic equations?\n6. What percentage of the quadratic equations is the total number of quadratic equations?\n7. How many the quadratic equations?\n7. What number of quadratic equations is the total number of quadratic equations?\n8. What percentage of quadratic equations is the total number of quadratic equations?\n9. What percentage of the quadratic equations is the total number of quadratic equations?\n12. What number of quadratic equations is the total number of quadratic equations?\na. Definition of quadratic equations\nb. Definition of quadratic equations\nc. Definition of quadratic equations\nc. Definition of quadratic",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.617,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " Identify the type of triangle that is perpendicular to the triangle.\n2. Identify the type of triangle that is perpendicular to the triangle.\n3. Identify the type of triangle that has intersected angles.\n4. Identify the type of triangle that is perpendicular to the triangle.\n5. Identify the type of triangle that is perpendicular to the triangle and make it more symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically symmetrically",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.826,
+            "looped": true,
+            "loop_onset": 79,
+            "loop_period": 3,
+            "topic": 0.0
+          },
+          {
+            "text": " The following are some examples of a quadratic equation in the quadratic equation:\n1. The equation (a) is the sum of the sum of the sum of each one of the sum of each one of the sum.\n2. The sum of the sum of each other is the sum of each one.\n3. The sum of the sum of each one is the sum of each one.\n4. The sum of each one is the sum of each one.\n5. The sum of each one is the sum of all the sum of each one.\n4. The sum of the sum of each one is the sum of the sum of each two.\n5. The sum of the sum of each one is the sum of each one.\n5. The sum of each one is the sum of each of the sum, which is the sum of all the sum of each.\n6. The sum of each each is the sum of each one.\n6. The sum of each the sum of each one is the sum.\n7. The sum of each is the sum of each one.\n9. The sum of each each is the sum of the sum of each one.\n8. The sum of each is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.569,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "enumeration",
+        "prompt": "There are three main types of",
+        "draws": [
+          {
+            "text": " the most common types of the first one.\n- The first one is to be a strong, powerful, powerful, strong, and powerful.\n- The second is to be a powerful, powerful and powerful.\n- When the second is to be a strong, strong, strong and powerful force, which is used for the power of the heart, blood, or heart.\n- If the second is to be an enemy, this is simply a strong, strong, powerful, and powerful force, and the second is to be a powerful force and power.\n- When the second is to be a strong, strong, weak, powerful force, and can withstand the heart and heart.\n- The second is to be an enemy.\n- If the second is to be an enemy, it must be a strong force.\n- The second is to be a great enemy, so it must be a strong force and force and strength.\n- If the second is to be an enemy, it must be a strong force and power.\n- When the second is to be in a strong power, so it must be a strong force, and the second is to be weak.\n- When the second is to be a strong enemy, in a strong direction,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.391,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " tests that can be used in the treatment of a disease, and can be used in the treatment of a disease.\nThe first tests are in the clinical trial. The trial trial trial has been conducted. The trial trial has been a long way since the trials were conducted in the trial trials. The trial trial trial took place in the trial trial by the trial trial, and the trial trial was then conducted in the trial trial. The trial trial trial was then conducted by the trial trial. The trial trial trial results were 0.005% trial trial trial and 2.3% trial trial trial. The trial trial trial trial trial is a standard test that is used in the trial trial. The trial trial trial is a test that uses the trial trial to determine the trial rate. The trial trial trial trial trial trial trial is a test that is used to determine the trial rates of the trial trial. The trial trial trial trial trial trial trial is an effective trial trial trial.\nThe trial trial trial trial trial trial trial is an effective trial trial trial trial trial trial for a trial trial. The trial trial trial trial trial trial trial is a good trial trial trial. The trial trial trial trial trial trial trial trial is a test trial trial trial trial trial trial trial trial trial trial.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.411,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " dogs with an average of 1.8 m, each with a different temperament. These dogs are highly intelligent animals. Some dogs are known for their small size.\nA dog has a relatively small number of limbs or two, meaning they are known for their ability to move and feed. However, dogs have a shorter range of their legs and legs than their usual counterparts.\nHow to Choose a Dog\nThe dog is a very intelligent dog, but it is a good idea to choose a dog, but it is a very intelligent dog. It is not a simple dog. If you are a dog, it is a pretty simple dog. The dog is a very intelligent dog, but it is a very intelligent dog.\nA dog is a very intelligent dog. Dogs prefer a dog that is very intelligent and can easily see it. Dogs can learn to fly a lot of animals, especially the dogs. This includes dogs that are easy to get and know about them.\nThe dog is a very intelligent dog. It is a very intelligent dog. A dog has a good quality dog. It is a great dog. It is a very intelligent dog who has a good life with a great deal of toys. It is a very intelligent dog. It is a great dog, but",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.202,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " questions:\n- Do you want to make sure the answer is to the word you choose to use.\n- Do you want to use your word to use the word?\n- Do you want to make it better?\n- Do you want to make sure that you are not using the word?\n- Do you want to use the word?\n- Do you want to use the word you want to use for your answer to your question?\n- Do you want to use the word to use the word to use the word it is.\n- Do you want to use the word?\n- Do you want to use the word to use the word?\n- Do you want to use the word to use the word ?\n- Do you want to use the word?\n- Do you want to use the word?\n- Do you want to use the word?\n- Do you want to use the word?\n- Do you want to use this word in your mind?",
+            "tokens": 202,
+            "eos": true,
+            "rep4": 0.623,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " artificial intelligence, which can be used to detect and detect and detect and detect diseases that may lead to health hazards.\nThe concept of artificial intelligence is that human intelligence is intelligent, so the concept of artificial intelligence is only a matter of a human intelligence that is programmed to detect and detect diseases or injuries. It can be used to detect diseases such as autism, HIV, and AIDS.\nSocrates and his colleagues work with the University of New England in England and has worked with the University of Oxford and has used AI for its application to detect and detect diseases that are transmitted by humans.\n\u201cThe study was conducted by a team of researchers from Oxford Hospital, UK, who in 2013 showed that, by the time of the study, human intelligence was used to detect diseases that could lead to other diseases.\u201d\nThe study was published in the journal Nature, where it was used to investigate changes in health care, such as:\n\u201cThe study was conducted using the research method of investigating and detecting diseases that were associated with the disease. This was a good idea to identify and address the disease of the animal that could be diagnosed with it or to identify a healthy and healthy lifestyle that was not associated with a disease.\u201d\nThe study was published on",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.087,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "long_dependency",
+        "prompt": "Although the treaty was signed in 1919, it",
+        "draws": [
+          {
+            "text": " was a treaty between the United States and the United States. This was the result of the ongoing treaty of versailles that included the treaty, which was part of the treaty, and were the treaty. The treaty was signed in 1921. This treaty was signed in 1919, with the signing of the treaty, and signed in 1919. This treaty was signed in 1939.\nThe treaty is signed in 1939 by the United States and continues to support the treaty. The treaty is signed in 1939. But it is not a treaty. The treaty is signed in 1945. The treaty was signed in Germany, Russia and the United States. The treaty is signed in 1937 and signed in 1939. The treaty was signed in the treaty of 1939.\nThe treaty is signed in 1939. It was signed in 1939 by the United States. It is ratified in 1937 by the United States. It is signed in 1937 by the United States and the United States. The treaty is signed in 1939 by the United States. The treaty is signed in 1937 by the United States. The treaty is signed in 1939 by the United States. It is signed in 1939 by the United States. The treaty was signed in 1939 by the United States. It is signed in 1945 by the United States. This treaty is signed",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.458,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " was ratified by the British Empire.\nToday, the treaty is signed in the Treaty of Versailles.\nThe Treaty of Versailles was signed by the United States.\nThe Treaty of Versailles was signed by the British Empire, but it was ratified by the British Empire.\nThe Treaty of Versailles was signed by the British Empire.\nHistory of Versailles\nThe Treaty of Versailles\nThe Treaty of Versailles was signed by the British Empire.\nThe Treaty of Versailles, in the 17th and 17th centuries, was signed by the United States.\nThe Treaty of Versailles was signed by the British Empire.\nThe Treaty of Versailles was signed by the British and the United States.\nThe Treaty of Versailles\nThe Treaty of Versailles was signed by the British Empire.\nThe treaty was signed by the British and the British Empire.\nThe Treaty of Versailles was signed by the British Empire and is signed by the General Powers.\nRurisdiction and the Treaty of Versailles\nThe Treaty of Versailles\nThe Treaty of Versailles was signed by the British Empire.\nThe Treaty of Versailles was signed by the British,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.648,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " was ratified in 1921.\nToday the treaty of the United States was ratified in 1948; it provided the first treaty to be ratified in the world. It was declared by the United Nations. It was ratified in 1948. It was ratified by the United Nations in 1948.\nThe treaty was signed in 1948 by the United Nations in 1948. The treaty was signed in 1949 by the United Nations in 1948, and the Constitution of the United States was ratified by the United States of America, the United States, the United States and the United States.\nThe treaty was signed in 1949. The treaty was signed by the United States. It was signed by the United States and Canada, and the United States, which was signed by the U.S. Constitution of the United States. It was signed by the United States and Canada.\nThe treaty of the United States is signed by the United States. It is signed by the United States and United States. It is signed by the United States.\nIt is signed by the United States. It is signed by the United States. It is signed by the United States and United States. It is signed by the United States and United States. It is signed by the United States and United States. It is signed by the United States",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.462,
+            "looped": true,
+            "loop_onset": 213,
+            "loop_period": 11,
+            "topic": 1.0
+          },
+          {
+            "text": " took an action to the British and the British. The British Parliament of England was signed, but the Parliament was not signed, which was signed, and in 1948 it was ratified in 1919. The British Parliament was signed, and the Parliament was signed, and the Parliament was signed, and the Parliament was signed, and the Parliament was signed and. The Parliament is also signed, and the Parliament is signed, and the Parliament was signed, and the Parliament is signed.\nIn the United States, the Council was signed, and the Parliament was signed. The Parliament was signed and the Parliament was signed, and the Parliament was signed. The Parliament was signed and the Parliament was signed. The Parliament was signed, and the Parliament was signed, and the Parliament was signed, and the Parliament was signed, and the Parliament was signed. The Parliament was signed and the Parliament was signed, and the Parliament was signed and the Parliament was signed. The Parliament was signed and the Parliament was signed, and the Parliament was signed, and the Parliament was signed. When Parliament was signed, Parliament was signed, and the Parliament was signed. In the signing, Parliament was signed.\nThe Parliament was signed and the Parliament was signed, and the Parliament in 1643 was signed, and the Parliament was signed",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.605,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " became known as \u201ca rule that took place on the wall of the fort and was made up of the two fort walls.\u201d\nThe fort was built in 1891, and its construction was erected in 1892. The fort was built in 1894. The fort was built in 1894 until the time of the present year, when it was built. The fort was rebuilt on the walls of the fort and was rebuilt at the site of the fort. The fort was built in 1894. The fort was built in 1894 and was built in 1894. The fort was made in 1894. The fort was built in 1894. The fort was built in 1875, a fort was built in 1891. The fort was built in 1894, but the fort was made in 1894, and the fort was built in 1894.\nThe fort was built in 1894. The fort was built in 1894 and was built in 1894. The fort was built in 1892 and was built in 1894. The fort was built in 1892. The fort was built in 1894, and the fort was built in 1894. The fort was built in 1894 and became the building\u2019s main. The fort was constructed",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.49,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "attribution",
+        "prompt": "According to a study published in",
+        "draws": [
+          {
+            "text": " the journal Nature, this study was published by the National Institutes of Health and found that there was no evidence of the existence of a disease, but the data suggest that the existence of a disease can be a result of its physical and mental, genetic and reproductive, genetic and reproductive outcomes.\nThe study showed that a number of hereditary and reproductive outcomes, while the study also found that the disease has higher levels of the disease, the risk factors, and the associated risk factors.\nIn other words, the prevalence of the disease is much lower than the incidence of the disease. This is due to the fact that there are several factors that affect the health of the disease, and the risk factors for this type of disease or condition.\nThere are several reasons for the disease:\n- The incidence of the disease is very low.\n- The incidence of the disease is very low.\n- The incidence of the disease is high in the prevalence of the disease.\n- The incidence of the disease is very low.\n- The incidence of the disease is high.\n- The incidence of the disease is high in the incidence of the disease.\nBecause the incidence of the disease is very low, the incidence of the disease can also be increased.\nThe incidence of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.249,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " the Journal of Chemistry in the Journal of Chemistry, the study was published in a journal published in Science in the journal Science. The results of the study are published in the journal Nature.\nThe authors of the study have also found that the study was a small part of the study. They found that the study used the study to test the effects of the chemical composition of the compounds.\nIn order to investigate the effects of the chemical composition on the effect of chemical composition on the effect of the chemical composition on the effect of the chemical composition on the effect of chemical composition on the effect of chemical composition on the effect of the chemical composition on the effect of chemical composition on the effect of the chemical composition on the effects of chemical composition.\nThe study's primary focus on the effect of chemical composition on the effect of chemical composition on the effects of chemical composition on the effects of the chemical composition on the effect of chemical composition on the effect of chemical composition on the effects of chemical composition on the effect of chemical composition on the effects of biological composition on the effect of chemical composition on the effect of chemical composition on the effect of chemical composition upon the effects of chemical composition on the effect of chemical composition on the effects of chemical composition on the effects of chemical composition on the effects of chemical composition",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.561,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the journal Nature, researchers from the University of California, Davis, the study was conducted at Stanford University.\nResearchers from the University of California, Davis, the University of California, Davis, are working to develop a novel model for the study of the human body and human body.\nThe research has revealed that the brains of the brain are involved in the brain\u2019s development and brain development.\nThe researchers are now working to develop the new brain and brain development model.\nThe researchers had a team of researchers for the study of brain, nervous system and brain development.\nThe researchers are also working to develop this model to study human body and brain development.\n\u201cThe researchers have found that the brain is responsible for the development of a brain that is responsible for the development of a particular brain. It is also responsible for the development of the brain\u2019s system.\u201d\nThe researchers also found that the brain is responsible for brain development.\nThe researchers found that the brain is responsible for the development of the brain, the brain, and the brain.\nThe researchers found that the brain is responsible for the development of the brain responsible for the development of the brain.\nThe researchers found that the brain is responsible for the development of the brain\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.3,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " 2015, the researchers concluded in a study by the University of California who, for his discovery, were more likely to develop \u201cthe ability to interpret data and create a more compelling model of how the data could be collected,\u201d they noted in a study published in the journal Proceedings of the National Academy of Sciences, of which an investigator, of the University of California. \u201cThe data on the data is based on which the data is collected and the data obtained by the researcher, the researchers conclude.\u201d\nAnother research that is cited in a study published in the journal Proceedings made a major contribution to the research on the research. The research also included the same data as the researchers\u2019 data.\n\u201cThe findings are based on the quantitative and qualitative data available in the journal Proceedings of the National Academy of Sciences,\u201d researchers said. \u201cAll of the data is collected in the journal Proceedings of the National Academy of Sciences, including the University of Florida, which has a great potential to be applied to the research.\u201d\nThe journal Proceedings of the National Academy of Sciences has examined the history of the journal Proceedings of the National Academy of Sciences (EAS) and the University of California\u2019s Scientific Advisory on the issue of peer-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.142,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " the journal Science, the authors from the University of Washington, D.C., in the journal Science. The authors have published this article by a peer-reviewed journal, a peer-reviewed journal.\n\u201cWhile the study is quite new, researchers in the field have focused on the field, the results of scientists in the journal Nature are inconclusive \u2014 the authors of the study are not yet fully aware that there is a strong correlation between the number of microbes in the microbial communities.\u201d\nThe authors of these research have also found that the study is limited to three hundred years of research.\n\u201cThis study will explain the factors that contribute to the understanding of the microbial community in the field of microbial communities,\u201d he explained.\nThe authors note that the study was largely based on the results of the study.\n\u201cThis study is a valuable resource for researchers and the researchers,\u201d she added. \u201cWe\u2019ve found that the \u2018lack of evidence\u2019 for the study\u2019s scientific formula is one of the main steps in the field of microbial communities, and it\u2019s also a valuable resource for researchers in the field of microbial communities.\u201d\n\u201cThis study is only a few of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.087,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          }
+        ]
+      },
+      {
+        "label": "numeric_units",
+        "prompt": "The mountain rises to a height of",
+        "draws": [
+          {
+            "text": " 80 feet and is one of the most beautiful mountains in the southern United States. It is one of the most beautiful mountains in the southwestern United States. The mountain is an amazing mountain of beauty.",
+            "tokens": 39,
+            "eos": true,
+            "rep4": 0.167,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 2 meters above the mountain. The mountain is usually about 1.5 meters. The mountain is considered the mountain and has a height of 4 metres. A mountain is located on the mountain, with a range of 4 feet. It is a mountain. The mountain is a mountain, with a length of 1.5 meters. It is a mountain in the mountain. It is part of a mountain. The mountain is about 1,500 kilometers. It is a mountain, with a width of 1,600 kilometers. There are two altars. The mountain ranges are approximately 1,800 square kilometers. The mountain ranges are approximately 11,400 sq. kilometers (5,800 sq. kilometers) and a length of 3.6 meters (1,800 sq km). The mountain is a mountain on the mountain, with a height of 2 meters. It is a major mountain, with a height of 1,800 feet. The mountain is a mountain on the mountain. It is a mountain in a range of 9 and 9 meters. It is a mountain in a mountain from the mountains to the mountains. It is a mountain in the mountain.\nThe mountain is the mountain, where the mountain is the mountain in the mountain. It is a mountain in the mountain area. It",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.241,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " 4 feet and is nearly 50 feet above the mountain. The mountain peaks in the mountains of the eastern area of the western North America are in full swing.\nThe mountain range is about 4 feet high, which is about 2 feet high. The mountain peaks are about 3 feet tall and are about 10 feet high. The mountain ranges from 5 feet to 4 feet and of the altitude range. The mountain range is about 2 feet tall and is about 1 feet wide. A mountain is about 1 feet high, and the mountain ranges from 5 feet to 4 feet.\nThe mountain ranges in the mountain range range from the mountain ranges to the mountain ranges. The mountain ranges from the mountain range to the mountain ranges. It is about 1-3 feet tall and is about 20 feet tall. The mountain ranges from the mountain ranges to the mountain range. The mountain ranges from the mountain range ranges from the mountain range to the mountain ranges. The mountain ranges from the mountain range to the mountain ranges (the mountain ranges of the mountain range are also in the mountain range. The mountain ranges from the mountain ranges to the mountain range of mountain ranges. The mountain ranges are about 1,000 to 4 feet and is at the mountain ranges and a mountain range on the mountain range.\nThe mountain",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.277,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4 feet. This is one of the most common causes of the mountain in the Southern Hemisphere. The mountain ranges from mountain to mountain. It is the longest mountain in the western United States. The mountain is well-known for its mountainous regions. The mountain is the mountainous zone of the western United States. It is the highest mountain in the Southern Hemisphere. The mountain ranges from 7,895 km from the northeast to the north to the south. It is the highest mountain in the Southern Hemisphere. The mountain ranges from 1,995 km from the southwest to the west.\nThe mountain ranges from 0.15 to 0.9km from the South Pole to the east. It is also the highest mountain in the Southern Hemisphere. The mountain ranges from 0.4km from the south to the southeast. The mountain ranges from 1,600 km from the west to the east to the west. The mountain ranges from 0.4km from the north to the south, and the mountain ranges from 1,400 km from the west to the south. The mountain ranges from 1,300 k.\nThe mountain ranges from 1,300 to 1,300 km from the south to the west. The mountain ranges from 1,300 km from the west to the south.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.332,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 1,000 feet in height. It is a mountain and it will be a mountain. It is situated in the mountains. It is the mountain.\nWhen I said, I would be to make a mountain. I am sure.\nThe mountain is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the length of a mountain. It is the height of a mountain. It is the length of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the width of a mountain. It is the height of a mountain. It is the height of a mountain and is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the length of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain. It is the height of a mountain.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.735,
+            "looped": true,
+            "loop_onset": 220,
+            "loop_period": 8,
+            "topic": 0.6666666666666666
+          }
+        ]
+      }
+    ]
   }
 }

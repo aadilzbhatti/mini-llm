@@ -33179,5 +33179,582 @@
     "memory_gb": 0.088,
     "note": "medians of 21 prefills / 7 decode runs of 64 tokens; no KV cache: each decode step re-runs the (cropped) window"
   },
-  "training_systems": null
+  "training_systems": null,
+  "samples": {
+    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "temperature": 0.7,
+    "top_k": 40,
+    "new_tokens": 256,
+    "draws": 5,
+    "summary": {
+      "n": 50,
+      "rep4": 0.35,
+      "looped": 3,
+      "eos": 2,
+      "topic": 0.253,
+      "tokens": 249.2
+    },
+    "prompts": [
+      {
+        "label": "definition",
+        "prompt": "Photosynthesis is a process that",
+        "draws": [
+          {
+            "text": " we can take them into account a new cell structure.\nThe human body is the process of living organisms, plants, and ecosystems. All organisms are involved in the development of the organism.\nThe human body is the body's body by the human body, which is the chemical of the organism.\nThe human body is the body's body. The human body consists of a system called the nucleus of the cell. The body is a cell of the organism.\nThe brain is secreted in the human body, and its function is secreted between the body. It consists of a body and holds the body's body.\nThe organism is the brain of the organism, the nucleus , the nucleus of the organism, the nucleus of the organism, the nucleus, the nucleus of the organ, and its nucleus of the organism. The nucleus of the organism is the nucleus of the organism.\nThe cell is used to describe the cell of the cell. This nucleus is a nucleus of the nucleus of the cell, which is called the nucleus of the nucleus of the nucleus and the nucleus of the nucleus of the cell.\nThe nucleus of the nucleus is called the nucleus of the nucleus. The nucleus of the nucleus of the nucleus, which is called the nucleus of the nucleus",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.281,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " begins in an event that is not a cause of the formation of the formation of the formation of the lining of the body. It is the process that happens when the cells start to move out of the body.\nThis process is called the process of transformation. It begins in the process. It starts in the process that is done by the body during the process. It is a process that involves the growth of the cell in the blood. The process, or the creation of the cell itself, has been used to treat the formation of the cell.\nThe cells that grow up to the outside of the body. It is also called the cell. It is called the cell. This organ is called the cell. The cell is called the cell.\nThe cells that grow up to the cells to grow from the cells that produce the cell. They can also grow up to 50 percent if they grow up to 10 times, but this organ is called the cell.\nIt is also called the cell. It is a cell that works to grow up to 50 times.\nThe cells that grow up to 100 times a year and multiply every year.\nThe cell\u2019s growth rate comes from the cells that grow up to 50 times per day.\nThe cell\u2019",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.19,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " can be taken from different plants and animals.\n- If plants are not used to grow in the sun, the plant and plants are able to grow in the night.\n- When plants are grown in the dark, the plant begins to grow in the warm, moist soil, and the leaves are too dry.\n- When pests are grown in the soil, the plants are able to grow, and the plants are hard to grow.\n- They are more likely to grow in the spring and fall, and they are not affected by climate change.\n- They can grow to mature in the summer and fall and fall.\n- They can grow in a low- and low-maintenance environment.\n- They can grow in the summer and fall and fall.\n- They can grow growing in the fall and fall.\n- They are more common in summer.\n- They are less likely to grow in the fall and fall, which is more common in the spring.\n- They can grow in the fall or fall or fall, as it is in the fall and fall.\n- They can grow in fall and fall, and will grow in the fall and fall.\n- They are more common in winter, so they can grow in the fall and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.269,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " will help you create the organisms that help them grow from the planet.\nWhat Is the Environment Of An Earth?\nThe Earth\u2019s oceans have a nucleus and the nucleus that orbits Earth. The planets are called the Earth, which is a force to move away from Earth.\nWhy is the Earth\u2019s atmosphere the planet\u2019s atmosphere?\nThe Earth\u2019s atmosphere is responsible for absorbing a greenhouse gases that cannot be emitted from a planet\u2019s atmosphere.\nThe Earth\u2019s atmosphere consists of a few molecules, called carbon-containing carbon dioxide, formaldehyde and other substances that are called carbon dioxide, which are the most toxic components of the Earth\u2019s atmosphere.\nThe atmosphere\u2019s carbon dioxide is a part of the atmosphere\u2019s atmosphere, which forms the atmosphere\u2019s atmosphere.\nWhat is the atmosphere caused by gases?\nThe atmosphere is a natural gas, the atmosphere\u2019s atmosphere\u2019s atmosphere, atmospheric greenhouse gases, and the atmosphere\u2019s atmosphere.\nWhat is the atmospheric pressure in our atmosphere?\nThe atmosphere\u2019s atmosphere is a greenhouse-burning atmosphere that causes the planet to rise as the atmosphere can be seen as a source of a greenhouse gas.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.186,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " can create the cells of a specific organism, the organisms that are able to move from the outside of the surface to the outside.\nAn animal that is capable of absorbing organisms can be a part of the organisms that are able to grow in a specific environment.\nAn animal\u2019s ability to adapt to the environment is the ability to adapt and adapt to the environment.\nAn animal is a type of animal, which is a type of animal that can be grown in an ecosystem.\nAnimal-animal living organisms can be found in different environments such as animals, animals, and animal animals.\nThese animals are adapted to a variety of animals, animals, and animals.\nAnimals are known to grow. Animals are more common than animals, and many insects are born, and for species that live in the wild.\nThe most common species that live in the wild are:\n- Animals and animals:\n- Animals and animals:\n- Animals and animals:\n- Animals and animals:\n- Animals and animals:\n- animals or animals:\n- Animals, animals and animals:\n- Animals and animals:\n- Animals and animals:\n- Animals and animals:\n- animals:\n- Animals and animals:\n- Animals and animals:",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.285,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "biography",
+        "prompt": "Albert Einstein was a German-born theoretical physicist who",
+        "draws": [
+          {
+            "text": " was not in charge of his own position, he would have succeeded in a long time to see Einstein. He was a physicist and astronomer and physicist. He was the physicist and physicist. He was the best of his fellow mathematicians. He was the first mathematician, philosopher, philosopher and philosopher. He was the father of the scientist who was the first physicist to produce a quantum, or physicist. He was one of his most interested mathematicians, and his scientists used his classical works. It was a scientist, a scientist, mathematician, astronomer and scientist. He could use the theoretical theory of physics, physics, astronomy, chemistry, physics, chemistry, chemistry, astronomy, science, physics, astronomy, astronomy, astronomy, science, astronomy, astronomy, astronomy, astronomy, science, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy and astronomy. He worked extensively on the idea of science, physics, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy. He was also studying astronomy and astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy.\nThe mission was to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.364,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " was born in Germany, but he was a classical physicist. His work was a physicist, and he died in the United States. He was the first physicist, a physicist. He was the first physicist. The first physicist in physics, Einstein, a physicist, and scientist. Einstein made a breakthrough in physics and engineering. He was also the first physicist in physics and physics. He was a physicist. He was a physicist, astronomer, and scientist and mathematician. He thought of a physicist, a physicist, and a mathematician, a scientist. He was a physicist, astronomer, mathematician, and mathematician. He was a physicist, astronomer, and mathematician. He was in a physicist, mathematician, mathematician, or mathematician. He was a mathematician and mathematician and mathematician. He was an astronomer, physicist and mathematician. He invented a mathematical study of physics. He was a mathematician and mathematician. He was a mathematician and mathematician. He was a mathematician and mathematician. He was a mathematician. He was a mathematician and mathematician. He was a mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, physicist, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.443,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " used the universe as an instrument of scientific fiction and a science fiction. He was a physicist who used physics to determine the amount of human being. He said, \u201cThe universe is a world and is a world\u2019s largest source of science in physics, and is a field of science.\u201d\n\u201cI\u2019ve been a science fiction field because I have a history of the science and science that is a whole,\u201d he said.\nMy answer for the scientific question is:\n\u201cI have a history of engineering and physics, so I\u2019m really thinking that they were the first to be a science fiction experiment.\u201d\nThe science of science is a very important factor in physics:\n- \u201cI don\u2019t know if I do it.\u201d\n- \u201cI\u2019m thinking I\u2019m talking about science.\u201d\n- \u201cI don\u2019t know that science is the science of science.\u201d\n- \u201cI don\u2019t really know how science is.\u201d\n- \u201cMy own philosophy is a science fiction or science fiction, but I\u2019m so excited to know how science is being developed to explain science, psychology",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.142,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " invented the first physicist, and physicist. The next study was published in the journal Physiology journal Neurology. The study was published in the journal Cell.\nMilton was a physicist, and his professor in chemistry and science, led to the discovery of the Nobel Peace Prize. He studied how molecules of molecules of molecules of molecules of molecules of chemical molecules from molecules of molecules known to create a molecule of atoms of molecules of molecules called molecules. Chemically, he discovered that molecules of molecules of molecules, such as electrons, atoms of atoms of atoms and molecules of atoms of molecules called molecules that are of atoms of molecules called molecules of atoms. In other words, atoms of atoms of atoms of atoms of atoms of atoms of atoms of atoms of atoms of atoms of molecules of atoms of atoms of molecules called atoms of atoms of atoms of atoms. This work also works with the chemical theory of quantum theory.\nIn this work's work, the atoms of atoms of atoms of atoms called atoms of atoms of atoms of atoms and form electrons of atoms of atoms of atoms of atoms of atoms of atoms of atoms, atoms of atoms of atoms of atoms of atoms of atoms, atoms of atoms of atoms of atoms of atoms called atoms of atoms of atoms called atoms.\nIn this work",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.375,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666
+          },
+          {
+            "text": " was the physicist who was born in London, and he was born in London, Germany. He was a physicist who was born in London, and later known as Carlisle. The first physicist was a mathematician, and a mathematician named John A.D. The first physicist was a mathematician, astronomer, physicist, astronomer, astronomer, astronomer. He was the first physicist, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician and mathematician.\nIn his book, Robert A.D. I was the first mathematician to have a solid idea of a super-conducting magnet. In a time of history, the first physicist, was the first physicist, astronomer, mathematician, astronomer, mathematician, mathematician, mathematician, mathematician, mathematician, astronomer, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, astronomer, mathematician, mathematician, astronomer, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.573,
+            "looped": true,
+            "loop_onset": 176,
+            "loop_period": 2,
+            "topic": 0.16666666666666666
+          }
+        ]
+      },
+      {
+        "label": "science_explainer",
+        "prompt": "Oxygen is a chemical element with",
+        "draws": [
+          {
+            "text": " the same properties. The oxidation of the oxidation of the oxidation element has a negative charge. The oxidation element is a chemical element which is a chemical element. The oxidation element is a solid charge, but the oxidation process is the oxidation element. The oxidation element is a positive charge. The oxidation element is formed by the oxidation element. The oxidation element is the oxidation element. The oxidation element is a positive charge.\nAl(s) is a chemical element. The oxidation element is a positive charge.\nSolvenase is a chemical element which is a chemical element that is obtained by a chemical element.\nAl(s) is the chemical element of the molecule.\nAl(s) is a chemical element.\nAl(s) is a chemical element known as carbon.\nAl(s) is a chemical element.\nAl(s) is a chemical element that is made from a chemical element.\nAl(s) is a chemical element that has a chemical element and is a chemical element.\nAl(s) is a chemical element which is a chemical element.\nAl(s) is a chemical element that is made from the chemical element.\nAl(s) is an chemical element that is derived from the chemical element in a chemical element",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.53,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " a unique element and a chemical that is used in a chemical reaction. This chemical substance is a chemical compound that does not bind to the chemical reaction. The chemical reactions are also the chemical substance. The chemical reactions are called the chemical reaction.\nB is the chemical reaction that is the oxidation reaction. There are two types of reaction reactions.\nC. The chemical reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.719,
+            "looped": true,
+            "loop_onset": 73,
+            "loop_period": 1,
+            "topic": 0.0
+          },
+          {
+            "text": " hydrogen, which is an energy that has been released from the cells of a series of electrons. To determine the amount of hydrogen that has been present in the hydrogen, the oxidation of ions is called hydrogen.\n- It is the first time since the hydrogen atom is dissolved.\n- It is the next time it is the second time that hydrogen is released in the form of the hydrogen.\n- The gas is released from the hydrogen atom to the hydrogen atom.\n- It is the second time that it is called hydrogen.\n- It is the third time which is the second time it is called hydrogen (the hydrogen molecule) and the second time it takes for the hydrogen atom to form the second time.\n- It is the last time that I do not have to use this equation.\n- It is the second time that I can say to it.\n- It is an element of a hydrogen ion that is made up of hydrogen ions.\n- It is the second time that I will be going to die off.\n- It is derived from the formula.\n- It is the second time that I am going to make a hydrogen ion that is made of.\n- It is important to understand the equilibrium\n- It is the first time it takes",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.217,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " the same chemical element of a compound. The result is called the oxidation of the molecule.\nThe oxidation of the molecule is a chemical element that is formed by molecules of the chemical element called the oxidation of the molecule.\nThe oxidation of the oxidation of the oxidation of the oxidation of the the oxidation element is the oxidation of the oxidation element of the oxidation of the oxidation element.\nThe oxidation element is the oxidation element by oxidation.\nEating the oxidation element of the oxidation element of the oxidation element is the oxidation element of the oxidation element.\nThe oxidation element of the oxidation element is the oxidation element of the oxidation element.\nThe oxidation element of the oxidation element is the oxidation element of the oxidation element of the oxidation element, and therefore the oxidation element of the oxidation element, the oxidation element is the oxidation element.\nThe oxidation element of oxidation element of oxidation element is the oxidation element of oxidation element in oxidation element.\nThe oxidation element of oxidation element of oxidation element is oxidation element.\nWhen oxidation element is oxidation element.\nAlchemicals are oxidation element of oxidation elements. It is oxidation element of oxidation element.\nThe oxidation element of oxidation element of oxidation element is oxidation element.\nThe oxidation element of oxidation element is oxidation element.\nThe oxidation",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.589,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " a high-energy charge of 1.1, 4.2 in the atmosphere. As a result, many of the processes of the chemical cycle of gases are in particular to the temperature of the Earth, as a result of a high temperature difference, and that the temperature is at high temperature. The process of chemical cycle is therefore very important for the formation of the gases. The chemical cycle is a process of creating a molecule that is separated by a solid, liquid. The chemical cycle is called a liquid form. Because the process is very common in the structure of a liquid, the compound breaks the surface to determine the chemical cycle, is called a chemical cycle.\nThe process of regulating the reaction of chemical reactions by the chemical cycle is called a change in the reaction. In this process, the reaction is the reaction of reaction of reaction reactions. The reaction occurs when the reaction reactions happen, the reaction reaction time is by the reaction reaction. The reaction reaction is the reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.249,
+            "looped": true,
+            "loop_onset": 194,
+            "loop_period": 1,
+            "topic": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "label": "instructional",
+        "prompt": "In this lesson, students will learn how to",
+        "draws": [
+          {
+            "text": " make a positive atmosphere for students to read.\nAt the end of the lecture, students will learn to read the book and then discuss how to create a positive atmosphere.\nStudents will learn to read a lesson, and do each lesson.\nStudents will learn to read and solve problems in a variety of ways. Students can learn to read a lesson, and they will learn to read, read, write, and read it.\nStudents will learn vocabulary, words and ideas, to use, and to read the lesson.\nStudents will learn to read a lesson, read, write the lesson, and learn to read. You will be able to read more and learn from them and explore this lesson.\nStudents will learn to read each lesson, and learn to read the lesson, and learn from each lesson.\nStudents will learn to read the lesson, identify a lesson, and identify the themes and experiences of the lesson. Students will read the lesson, read and read the lesson, and read the lesson.\nAfter reading, students will learn the lesson and make the lesson, and they will read the lesson, and how to read the lesson in real-world situations.\nStudents will read the lesson and make the lesson a fun and fun lesson.\nStudents will use",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.253,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " create the most-recent content that takes place in the classroom.\nWhat is the purpose of this lesson plan?\nThe curriculum of the school lesson plan is designed to guide students in the classroom. Each student will use a lesson plan and complete an assessment of their progress in the classroom. A lesson plan is designed to assist students with assessment and assessment in the classroom.\nStudents will evaluate the skills and skills to meet their progress in the classroom.",
+            "tokens": 90,
+            "eos": true,
+            "rep4": 0.103,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " make decisions about how to write and write and write. Read the full story and use it to write and write a book on the book.\n- Get students grades on the book through the book and create a plan for help you understand what to write.\n- Write and use the paper and write your paper by hand.\n- Write and write paragraphs to write (1) 5 paragraph, and use the paper.\n- Write and write the paper for your paper.\n- Write the paper and write the paper and press the paper.\n- Write the paper and press the paper.\nWhat is the thesis statement and the main argument?\nThe thesis statement on the paper will be very difficult.\nThe main argument is:\n- Write the paper to the reader.\n- Write the essay on the paper, the main argument is the outline of the paper.\n- Write the paper together and discuss the writing.\n- Write the paper that has a thesis statement.\n- Write and write the paper on the paper\u2019s thesis statement.\n- Write a paper with a paper or paper.\n- Write a paper on the paper.\nHow it can be written.\n- Write the paper on the paper thoroughly.\n- Write a paper",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.221,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " create a lesson plan, and solve the problem.\n- The lesson plan works with groups and the lesson plan.\n- The lesson plan works for a lesson plan and is a step through a lesson plan.\n- The lesson plan works for the lesson plan is a lesson plan, and the lesson plan will provide students with the lesson plan.\n- A lesson plan is a lesson plan, but students will be able to solve problems as well as solve problems.\n- A lesson plan is a lesson plan, for example, with a lesson plan. Students will be able to solve problems problems and solve problems and solve problems.\n- Lesson Plan for the lesson plan.\n- Class activities should be included.\n- Class plan and plan plans for each lesson plan are designed and supported by the students that will be taught by the students and their students.\n- Lesson Plan for the lesson plan is a great time to learn, but your child will be able to solve problems and solve problems with the school.\n- Lesson Plan for the lesson plan, which will be divided into five categories.\n- Lesson Plan for the lesson plan.\n- Lesson Plan For the lesson plan, they will be given the lesson plan.\n- Lesson Plan",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.324,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          },
+          {
+            "text": " read and read the text in the classroom:\n- What should I keep my attention?\n- What will my students see in a classroom?\n- What does the reading mean?\n- What is a pre-Kermeer course?\n- What can I do to know?\n- What is the use of a teacher?\n- What is a post?\n- What do you know?\n- What do you know about a teacher?\n- What is the role of a teacher?\n- How can I help my students?\n- What kind of teacher?\n- What resources do you find in a classroom?\n- What do you mean?\n- Who do you know?\n- How do you make a teacher look around the school?\n- What does it mean for?\n- What does the school look like?\n- What does it mean for a teacher?\n- How do you see the school, what does it mean, what do it mean for an teacher?\n- What is the school?\n- How can we get the school?\n- What is the school?\n- How can teachers do this?\n- What are the schools?\n- What is the schools of the school?\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.3,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "bullet_list",
+        "prompt": "There are several benefits to regular exercise:\n- ",
+        "draws": [
+          {
+            "text": "___________ \u2013 If you have a small, sticky, or sticky skin that is the best choice and most useful, it\u2019s not a good idea to be sure that you\u2019re not alone.\n- _____________ \u2013 If you have a hard time in the year, you should be aware that the medication is so important to you to make sure you are working as a whole for your exercise.",
+            "tokens": 83,
+            "eos": true,
+            "rep4": 0.025,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": "____________ (increased in the body)\n- ___________ (when left untreated, or worse)\n- _______________ (when cold)\n- _______________ (what does not mean?\n- ____________ (and when cold)\n- ____________ (when cold)\n- ___________ (the cold)\n- _____________ (the cold)\n- _______________ (the cold)\n- __________ (a dry)\n- ____________ (the cold)\n- __________ (two)\n- _______________ (nouny)\n- ________(s)\n- ___________ (t)\n- ____________ (the cold)\n- _____________ (the cold)\n- __________(s)\n- _____________ (the hot)\n- __________ (the cold)\n- ________ (the warm)\n- ______________ (the cold)\n- ________ .\n- __________(s)\n- ____________ (the cold)\n- ________(s)\n- _________ (the cold)\n- _____________ (the cold)\n- ____________(s)\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.553,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "__________ (one of the following):\n- __________ (one of the following):\n- __________ (one of the following):\n- __________ (one of a half of the remaining minutes)\n- __________ (about a quarter of the room):\n- __________ (one of the above):\n- __________ (one of the remaining minutes)\n- __________ (one of the two minutes)\n- ________ (one of the two minutes)\n- ________ (one of the four minutes)\n- ________(half)\n- ________ (one of the six minutes)\n- _______/ ________ (one of the two minutes)\n- __________ (one of the two minutes)\n- ________(one of the two minutes)\n- ________(one of the four seconds)\n- ________ (one of the two minutes)\n- _________.\n- ________ (one of the four minutes)\n- ________ (one of the two minutes)\n- ________ (a minute)\n- ________ (someone of the other two seconds)\n- ________ (one of the four seconds)\n- ________ (one",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.668,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": "_________1 \u2013 Tagged and short-term exercise\n- _________1 \u2013 Tagged or irregular exercise\n- __________2 \u2013 Tagged, short-term exercise\n- _________2 \u2013 Tagged and short-term exercise\n- _________2 \u2013 Tagged\n- _________1 \u2013 Tagged\n- _________1 \u2013 Tagged, long-term exercise\n- _________1 \u2013 Tagged, short-term exercise\n- _________2 \u2013 Tagged, short-term exercise\n- _________1 \u2013 Fagged, short-term exercise-induced sleep\n- _________1 \u2013 Mature\n- _________1 \u2013 Tagged, short-term exercise-induced sleep\n- _________2 \u2013 Tagged, short-term exercise-induced sleep disorder\n- _________1 \u2013 Tagged, short-term exercise-induced sleep onset\n- _________1 \u2013 Tagged, short-term exercise-induced sleep disorder\n- _________1 \u2013 W-\n- _________1 \u2013 Tagged, short-term sleep disorder\n- _________2 \u2013 Tagged, short-term sleep disorder\n- _________1 \u2013 Tagged",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.727,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": "__________________________ (3.1 to 1.0)\n- ____________________ (5.0)\n- ____________________ (5.0)\n- ____________________ (5.0)\n- ____________________ (6.0)\n- ____________________ (6.0)\n- ___________________ (7.0)\n- ____________________ (7.0)\n- ___________________ (5.0)\n- ____________________ (7.0)\n- __________________ (6.0)\n- ___________________ (6.0)\n- ___________________ (2.0)\n- ___________________ (6.0)\n- ___________________ (6.0)\n- ___________________ (8.0)\n- ____________________ (8.0)\n- __________________ (8.0)\n- ___________________ (5.0)\n- ___________________ (8.0)\n- ___________________ (6.0)\n- ___________ (6.0)|\n- ___________________ (6.0)\n- ___________________ (9.0)\n- ___________________ (8.0)\n- ___________________",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.755,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "numbered_list",
+        "prompt": "To solve a quadratic equation, follow these steps:\n1.",
+        "draws": [
+          {
+            "text": " A quadratic formula, that means in the equation.\n2. A quadratic formula.\n3. A quadratic formula.\n4. A quadratic formula.\n3. A quadratic formula.\n4. A quadratic formula.\n4. A quadratic formula.\n5. A quadratic formula.\n6. A quadratic formula.\n5. A quadratic formula.\n5. A quadratic formula.\n5. A quadratic formula.\n6. A quadratic formula.\n6. A quadratic formula.\n7. A quadratic formula.\n8. A quadratic formula.\n9. A quadratic formula.\n9. A quadratic formula.\n11. A quadratic formula.\n10. A quadratic formula.\n15. A quadratic formula.\n10. A quadratic formula.\n12. A quadratic formula.\n13. A quadratic formula.\n15. A quadratic formula.\n11. An ug.\n12. A quadratic formula.\n12. A quadratic formula.\n17.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.711,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " If we understand the formula for a quadratic equation, then then we know that the equation is a quadratic equation.\n2. If we do not solve a quadratic equation, we just do not solve the equation, then we have to make the equation a quadratic equation.\n2. If we have to get to the equation, then we will use the equation for the equation and then we will be able to see in the equation to calculate the equation and then again we can calculate the equation.\nThis will be done as follows:\n1. If we have calculated the equation you have calculated the equation to measure the equation, we can calculate the equation 1.\n2. The equation is the value of the equation.\n2. The equation is the formula formula.\n3. To calculate the equation you need to calculate the equation.\n3. To calculate the equation you calculated the equation.\n3. To measure the equation equation in a formula, you can calculate the equation.\n4. To calculate the equation, calculate the equation and calculate the equation value to calculate the equation.\n4. To calculate the equation:\n- Calculate the equation\n- Calculate the equation\u2019 formula\n- Calculate the equation",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.245,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " How many variables are in\nThe quadratic equation is a way to calculate the quadratic equation\n(i) The quadratic equation is one in\nThe quadratic equation is divided by the quadratic equation.\nThe quadratic equation is a measure of the quadratic equation.\nThe quadratic equation is a type of equation that is defined according to the quadratic equation.\n1. Which measure is equal to the quadratic equation?\n= a cosmolar equation is equal to the quadratic equation.\n2. Which measure is equal to the quadratic equation?\n= a cosmolar equation.\n3. Which measure is equal to the quadratic equation?\n(a) What is the quadratic equation?\n2. Which measure is equal to the quadratic equation?\n2. Which measure is equal to the quadratic equation?\n3. Which measure is equal to the quadratic equation?\n4. Which equation is equal to the quadratic equation?\n5. Which measure is equal to the quadratic equation?\n6. Which measure is equal to the quadratic equation?\n4. Which is equal to the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.553,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " Identify the equation:\nAn estimate of the equation is a measure of each of the equations and the sum of the equations on the equation is of the equation.\n2. Calculate the equation\nA measure of the equation is the equation of the equation in the equation of the equation.\n2. Calculate the equation\nA measure of the equation is the sum of the equation in the equation.\n2. Calculate the sum of the equation in the equation.\n3. Calculate the equation\nA measure of the equation is, calculate the equation in the equation, and calculate the equation for the equation.\n2. Calculate the equation of the equation.\n4. Calculate the equation.\n3. Calculate the equation of the equation.\n3. Calculate the equation.\n4. Calculate the equation.\n5. Calculate the equation.\n5. Calculate the equation.\n6. Calculate the equation.\nNow that you have calculated the equation, multiply the equation by the equation.\n5. Calculate the equation.\n5. Calculate the equation\n5. Calculate the equation\n6. Calculate the equation\n5. Calculate the equation\n5. Calculate the equation by",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.565,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " The quadratic equation can be divided into two sides:\n1. The quadratic equation can be divided into two sides:\n2. The quadratic equation is divided into two sides:\nIn the quadratic equation, the quadratic equation is divided into two sides:\n2. The quadratic equation can be divided by the quadratic equation.\n3. The quadratic equation in the quadratic equation is divided by a quadratic equation.\nIn solving a quadratic equation, the quadratic equation is divided into two lines:\n3. The quadratic equation is divided into the quadratic equation and the quadratic equation is divided into two sides:\n5. The quadratic equation is divided by the quadratic equation.\n5. The quadratic equation is divided by the quadratic equation.\nThe quadratic equation is divided by quadratic equation.\nThe quadratic equation is divided by quadratic equation.\nThe quadratic equation is divided by quadratic equation. The quadratic equation can vary by quadratic equation.\nThe quadratic equation is divided by quadratic equation \u2013 1/n.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.632,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          }
+        ]
+      },
+      {
+        "label": "enumeration",
+        "prompt": "There are three main types of",
+        "draws": [
+          {
+            "text": " the most common types of the two types of the two are:\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\nHow do I make a paper paper paper book?\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\n- C)\nIf any paper or paper works from a paper or paper, then it is printed.\n- C)\n- T-C)\n- C)\n- C)\n- C)\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.771,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " fungi that can be found in the genus Bacillus, a fungus that contains two unique species of Bacteria (P. K. B., B. B., N. B. B., L. C. K. B., E. J. G. B. C. C. T. C. C. B. C. C. D. C. C. C. C. D. B. A. B. C. C. B. C. C. C. D. C. W. G. C. C. C. C. C. C. C. D. C. E. C. C. C. D. C. C. B. C. C. E. C. L. C. B. P. D. E. C. C. C. D. L. B. D. C. C. C. C. C. C. C. C. C. C. D. C. C. C. C. C. D. L. C. A change in C. C. N. C. C. C. C. C. C. C. C. C. C. D. C. C. C. C. C. C",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.593,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " risk management.\nSome of the most common risk management methods of risk management include:\nThere are several types of risk management techniques that can be used to determine the risk and risk factors involved. Some of these methods include:\n- A lack of risk management\n- In the case of risk management\n- Lack of risk management\n- Changes in risk management\n- Risk management\n- Lack of risk management\n- Risk management\n- Risk management\nIn case of risk management, risk management has many factors that can affect the risk of an individual.\n- The management of risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\nThe risk management for a person\u2019s risk management is low in type 2 diabetes; a risk management plan is an important step towards a successful risk management plan.\nThe risk management plan is based on a comprehensive and comprehensive guide to your health management plan.\nThe risk management plan is focused on evaluating risk management strategies and plan management plans with a comprehensive guide to help identify risk management plans.\nThe risk management plan provides a comprehensive overview of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.312,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " waste reduction:\n1. Carbon dioxide or carbon dioxide\n2. Carbon dioxide gas\n2. Carbon dioxide\n3. Carbon dioxide\n2. Carbon dioxide\n4. Carbon dioxide\n4. Carbon dioxide\n6. Carbon dioxide\n3. Carbon dioxide\n3. Carbon dioxide\n4. Carbon dioxide\n3. Carbon dioxide\n6. Carbon dioxide\n2. Carbon dioxide\n2. Carbon dioxide\n2. Carbon dioxide\n3. Carbon dioxide\n3. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n6. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n4. Carbon dioxide\n6. Carbon dioxide\n5. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n6. Carbon dioxide\n4. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n5. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n5. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n7. Carbon dioxide\n9. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n9. Carbon dioxide\n8. Carbon",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.818,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " water that can be used in the aquarium.\nThey will be used in the aquarium.\nThe aquarium is a very large fish that can be used to feed on the fish, crabs, and shrimp.\nCecal waste is a type of water that can be used to catch a fish. \u2026 It can be used to feed a fish or fish in the aquarium.\nIf you have any problems with your cat, it is not always recommended to feed your fish.\nCan Cats Use Water?\nYes, it is recommended to water a fish, such as watermelon, but a good water-soluble diet that is rich in vitamin B.\nDoes Cats Eat Water?\nAbsolutely. Cats eat water well throughout their life, so they eat watermelon and they can eat the food.\nCan Cats Eat Water?\nYes, your cat may eat fish, but this is not normal for cats. Cats may eat watermelon, or they may eat watermelon or other nutrients.\nCan Cats Eat Water?\nYes, cats may eat watermelon. Dogs may eat watermelon, fish, fish, and fish.\nHow Do Cats Eat Water\nChron and watermelon is a common food choice, especially when you eat watermelon. Cats eat water",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.119,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          }
+        ]
+      },
+      {
+        "label": "long_dependency",
+        "prompt": "Although the treaty was signed in 1919, it",
+        "draws": [
+          {
+            "text": " was a trade agreement that ended up until the end of the war was finally abandoned. The treaty was not formally signed by the Treaty of Paris, but was ratified as a result of the Treaty of Paris.\nThe treaty was signed by the United States. The treaty was signed by the United States, which was signed by the United States. The treaty was signed by the United States. It was agreed by the United States and the United States, and subsequently by its President.\nThe United States Constitution is governed by the United States and the United States Constitution. The United States Constitution is enacted by the United States. The United States and United States, the United States, and the United States Constitution, are the most comprehensive document to the United States on which Congress in the United States and the United States are ratified by the United States.\nThe United States Constitution is a constitutional monarchy on the United States, including the United States and the United States Constitution. The United States Constitution is part of the Constitution, the United States, and the United States. The Constitution is the main principle for all nations, and is not the United States Constitution. The United States Constitution is the first Amendment. The Constitution is the only United States Senate, a constitutional state in the United States. It is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.304,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " was ratified by the United Nations.\n\"The treaty has been ratified by the United Nations to ensure that the agreement is ratified by the United Nations. The treaty has been ratified by the United Nations.\nThe agreement was signed by the UN, and the UN, which was signed by the UN. However, it is important to note that the Declaration of Human Rights was ratified by the United Nations.\nThe treaty is not ratified by the United Nations, but is the basis for the actions of the United Nations (UN) and the UN (UN); the UN Charter of Rights (UN), the United Nations (UN) and the UN and the UN (UN).\nThe UN has ratified the UN on 2 October 2016.\nThe UN is the responsibility of the UN in accordance with the UN and the UN, and is responsible for the UN (UN) and the UN (UN) and UN (UN) and UN (UN).\nThe UN\u2019s decision to create a UN in response to UN peace and the UN, the UN, the UN, and the UN and the UN (UN) which \u201cwill ensure the global commitment of UN peace and the UN in response to the UN\u2019s peace.\u201d\nThe UN will support,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.269,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " was ratified in 1933.\nToday the treaty was ratified in 1919, and the treaty itself signed in 1922. In 1962, an agreement with the agreement was signed in 1931.\nThe treaty was signed by the President of the United States of America.\nThe treaty was signed by the President of the United States.\nThis agreement was signed by the United States of America in 1947.\nThe United States was formally called by the United States of America, and in 1824, the United States was formally renamed the United States of America.\nIt was signed by the United States.\nThe United States of America is a sovereign, under the Constitution of the United States.\nThe House of Representatives of Americans has an important role in upholding the United States Constitution.\nThe United States, however, has been a prominent member of the United States of America.\nThe United States is a central part of the United States.\nThe United States is the only country in the world.\nThe United States is the central part of the United States.\nThe United States is the central part of the United States.\nThe United States is the main part of the United States, the United States, and it is the main part of the United States.\nThe United States is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.364,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " took an economic toll on the U.S. Government. But the treaty was signed by President Bill Clinton, in 1776, in 1874, in 1877, and in 1776, the United States of America declared the first sovereign states to be the U.S. Constitution.\nIn 1879, the United States became the \u201cBrawish\u201d, however, in 1873, the New Deal became a \u201cBrawish\u201d and the United States became the first states to support the Constitution\u2019s constitution of the United States.\nThe U.S. Constitution of the United States and New Deal were the second states that the United States must have a right to uphold the Constitution as unconstitutional. In 1889, the United States Constitution was held under the rule of Union and the United States Constitution, and the Constitution was a constitutional convention requiring a government to provide a central authority to the United States and the United States Constitution and the United States Constitution. The Supreme Court would be appointed to the Constitution and their laws as unconstitutional.\nThe Supreme Court of the United States of America has a legal structure, with the same principle, the Constitution was established in a state of law that the Constitution came to be amended to be amended to Parliament as",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.099,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " became known that the treaty was still signed in 1939. The treaty was signed in 1949. The treaty was signed in 1917.\nThe treaty was ratified in 1941. The treaty between the treaty and the treaty was signed in 1938. The treaty was signed by the treaty. The treaty came from different parts including the treaty of the treaty, the treaty of the treaty of the treaty. The treaty was signed in 1953 by the treaty.\nIn the treaty of the treaty, the treaty was signed in 1979, and the treaty was ratified by the treaty and treaty. The treaty is signed by the treaty of the treaty which has been signed by the treaty between the treaty and the treaty of Nueva or a treaty signed by treaty. The treaty was signed by the treaty of the treaty of S.S. and the treaty was signed by the treaty of Nuremberg.\nThe treaty was signed by the treaty signed by the treaty, which was signed by the treaty of the treaty.\nThe treaty was signed by the treaty of Nuremberg in September 2003. The treaty was signed by the treaty of the Cuyar National Congress and the treaty signed by the treaty of the treaty. The treaty is signed by the treaty of Nuremberg, the treaty between the treaty and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.399,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0
+          }
+        ]
+      },
+      {
+        "label": "attribution",
+        "prompt": "According to a study published in",
+        "draws": [
+          {
+            "text": " the Journal of Medicine. The study was conducted by the authors of the University of New York, and the author of the journal Nature in Medicine. The team concluded that the treatment of Alzheimer's disease was not effective among individuals in the United States.\nThe findings will reveal the findings of the discovery of Alzheimer's disease.\nThe researchers concluded that Alzheimer's disease is a genetic factor that affects the development of Alzheimer's disease.\n\"The findings, as well as the implications of the findings of these studies,\" he adds.\n\"The scientists say that Alzheimer's disease is a genetic factor that plays a crucial role in the development of Alzheimer's disease, and that it is the brain's primary purpose.\"\n\"The researchers pointed out that Alzheimer's disease has no potential to affect the development of Alzheimer's disease.\"\nIn the study, the researchers found that Alzheimer's disease is a genetic factor that links the genetic causes of Alzheimer's disease.\"\nProfessor Dr. Robert H. Johnson has found that Alzheimer's disease is a genetic factor that means that the immune system is the most important factor in Alzheimer's disease.\"\nResearchers at University of California Medical School and the University of California, Santa Barbara said the study is working on the development of Alzheimer's disease, and we are working",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.162,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the Journal of Health Statistics, in the journal Health, Medicine, and Medicine, researchers at the University of Pennsylvania found that those who had already developed the first type of medicine (e.g. the American Heart Association) had an impact on the quality of life, and that it was the case of the disease.\nThe study concluded that eating disorders have been associated with the presence of the disease, particularly a decrease in the incidence of chronic disease. A group of researchers found that some of the factors that have been linked to the onset of chronic disease are important in developing healthy living habits.\nThe researchers found that eating disorders and eating disorders were associated with some of the biggest problems with the disease.\nThe study found that eating disorders are linked to a variety of disorders, including depression, anxiety, depression, insomnia, schizophrenia, and more.\nWhile eating disorders are common, it is important to note that eating disorders with an eating disorder can be linked to a more serious mental health problem.\n\u201cThe study found that depression is linked to a variety of disorders, including depression, schizophrenia, schizophrenia, and depression, and schizophrenia.\nResearchers found that eating disorders such as obesity, depression, and depression, may be linked to a variety of disorders.\n\u201cThe",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.083,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          },
+          {
+            "text": " the Journal of Physiology and Physiology, Dr. Lagerhankt and Gait K. Med. The results showed that a non-invasive rodent model has a strong influence on the behavior of animals.\nThe researchers said that humans have the ability to adapt to the effects of a new species, and may have a negative impact on their health.\nIn a study of the National Academy of Sciences, Dr. J. H. Wang, MD, and colleagues led the study of a highly trained pilot for the study of the human microbiome.\nThe study of mice and animals found that the mice (like mice) found that mice who had the same effect were more likely to be found in mice than mice.\nThe researchers then said that mice did not have their own own DNA.\nThe researchers reported that mice did not have any negative effect on tissue function and function.\nThe researchers found that mice found a significant role in their brain function.\nThe researchers found that mice were more likely to have cancer cells, and the researchers found that mice are more likely to have a more positive effect on their ability to perform their functions.\n\"Our results showed that mice should not be able to function efficiently;\n\"Our findings suggest that we could use the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.051,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " the journal Nature, \u201cThe most common cause of a cancer is cancer. In fact, the most important cause of cancer is it. It is believed to be a cancer patient, but it is not just a cancer patient but the most common type of cancer is cancer.\nIn other words, there are cancer, however, as a cancer patient, and they are very rare. But cancer is not the only cause of cancer among the many, but it is not enough to cure for cancer. There are several factors that could affect cancer. In reality, the cancer is the most common type of cancer. All the time, the cancer can be diagnosed. For many, cancer is the most common type of cancer that affects all cancers.\nHowever, it is important to understand the reasons why cancer is and what to do. Cancer is more prevalent than cancer. Cancer is a cancer that is caused by cancer. Cancer is the most common type of cancer. It is a cancer-cancer cancer that is caused by other cancer. Doctors may be able to determine the risk of cancer.\nThis type of cancer is a type of cancer that is caused by a lump or a lump. It is known as cancer. The cancer is spread by the skin that is in the hair foll",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.095,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0
+          },
+          {
+            "text": " the Journal of the American Heart Association, researchers from the University of California (FDA) to the Massachusetts Blood Pressure Control Research Center (FDA) in New Zealand, Canada, and Canada.\nA study presented the findings of the American Heart Association, as well as the survey for the American Heart Association, found that the study results from the American Heart Association found that the National Heart Association (CDA) was not interested in the study of stroke, yet the study suggests that the study has yet to be conducted to determine if the patients have had a coronary heart disease.\nThe study is based on the National Heart Association (FDA) and the National Heart Association (FDA) and the National Heart Association (FDA). This study is based on the findings of the American Heart Association, as well as the study of the American Heart Association (CDC).\nThe study was found to have the highest rates of stroke and stroke and the number of strokes and the number of strokes in the body were associated with stroke.\nThe study was conducted in the Netherlands with the National Heart Association (GITU) and the National Heart Association (FDAU).\nThe study was taken on a study from the Danish Heart Association (CBD), a group of investigators who tested",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.202,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5
+          }
+        ]
+      },
+      {
+        "label": "numeric_units",
+        "prompt": "The mountain rises to a height of",
+        "draws": [
+          {
+            "text": " 10.2 feet.\nThe most beautiful mountains of the southern valley have about 1.3 feet, and about 2.2 feet.\nThe mountain peaks are the deepest mountain of the plains of the mountain of the mountains. The mountain mountain peaks are of the mountain hills and mountain mountains.\nThe mountains of mountains are very high mountains. They are the mountains of the mountains and rivers of the mountain. The mountain ranges of the mountain are located on the hills.\nThe mountains are the mountains of the mountains, plains, mountains, mountains, sea plains and mountains. They are mountains, mountains, mountains and mountains.\nThe mountains are mountains, mountains, mountains, mountains, mountains, mountain mountains, mountains, mountains, mountain mountains, mountain mountains, mountains, plains, mountains, mountains and many of the mountains.\nThe valley of the Himalayas is situated on the mountains of the mountains, with the hills reaching the mountains.\nThe mountains range from the southern part of the mountains on the plains and the mountains of the mountains.\nThe mountains were inhabited by the Himalayas and the mountains. The valleys are bounded by water, the mountains and rivers. The mountains are divided by the mountains and plains of mountains.\nThe mountains and mountains are also covered",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.217,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 2 metres above the summit. The mountain is surrounded by a mountain, which means the valley of the mountain and the elevation of the mountains above the summit. It is located on the east side of the mountain, where the valley is still being steep.\nThe mountains represent the mountains of mountains and mountains. It is the sky to a mountain, but the valley of the mountains is a square.\nWhat is the mountain and the mountain?\nThe valley is very steepy with the mountains of the mountain. It is situated in the mountains of the valley. The valley is bounded by the mountainous mountains of the mountains to the mountains, and the mountains are the mountains of the mountains. They are part of the mountain.\nWhat is the valley of mountains?\nThe elevation of the mountains is on the east of the mountains of the plains of the mountains and mountains. It is known as the mountains of valleys, where the mountains are surrounded by mountains and valleys. The mountains are covered by mountains, streams, and rivers on the east side of the mountains and rivers. It is a valley of mountains, but this is seen as the mountains of the valley.\nWhat is the valley of mountains?\nThe mountains of the mountains are the mountains of the mountains of the sea.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.154,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 4 feet and so on.\nThe mountain slopes of the mountain hills, which is the main mountain area of the mountain zone, are in full swing.\nThe park is a mile of up to 1,600 feet.\nThe mountain peaks of the mountain ranges of the hills and mountains can be seen as a mountain, with some elevation of about 1,000 feet, which is a mountain-shaped mountain.\nThe mountain ranges are the height of the mountain ranges of many mountain ranges.\nThe mountain ranges of the mountain range are the most recorded peaks.\nThe mountain range is a distance of about 1,000 feet.\nThe mountain ranges of the mountain range range are divided to 15 meters.\nThe mountain ranges of the mountain range range from about 900 to 500 meters.\nThe mountain ranges are a range of mountains which can be found in the mountains.\nThe mountain ranges range from about 1200 to 3000 meters in height, with a height of about 6 meters in height. The mountains range from about 500 meters to around 800 meters of terrain, but the mountains, cliffs and mountains are also known to include snow and mountains.\nThe mountain range range ranges from about 800 meters to around 800 meters, and the mountains are almost 700 km long.\nThe mountains",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.142,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666
+          },
+          {
+            "text": " 4 feet. This is one of the most common mountain peaks in the country. It is a mountain mountain where the mountain peaks have fallen from the mountains of the mountains and a mountain mountain. The mountain is surrounded by the mountains, which makes it a unique bird. The mountain ranges of the mountain ranges have many mountains of mountains. The mountain ranges of mountains are the mountains. A mountain range is the elevation of the southernmost mountain ranges and the elevation of the mountain ranges.\nThe mountain ranges are very popular and the mountain range is the mountains of the valley. The mountain ranges are a part of the mountains, which are the mountains of the mountains of South America. The mountain range ranges from 7 to 8 km\u00b2 and the rugged mountains of the Himalayas, to 12 meters. The mountain ranges range from 1.5 to 1.5 km2, with the most rugged mountain range, the mountain ranges from 1.4 to 1.8 km2, 2.5 km2, to 6.5 km2, and the mountain range ranges from 1.4 km2, a.2km2, with the largest mountain ranges from 25 to 35 m2, the mountain range is the highest.\nThe mountain ranges are in the mountains where the valley ranges",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.099,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          },
+          {
+            "text": " 1st, about 2 feet tall.\nThe mountain peaks in the west, the mountain peaks at its peak in height.\nThe mountain peaks were found in the Southern Ocean, the southernmost part of the islands in the southwest.\nThe mountain peaks in the southern part of the mountains, known as the Ice Age.\nThe mountain ranges in the west of the southern Sierra Nevada Mountains.\nThe mountain ranges in the north, making it the most famous mountain mountain ranges in the southern part of the country.\nOther mountain ranges are the mountain ranges of the southernmost part of the area. They are the mountains.\nThe mountain ranges in the eastern part of the Southern Atlantic and western part of the South.\nThe mountain ranges in the northwest, and the southern part is the northern part of the region of the Sierra and is a coastline of 1.6 degrees east of the central Mexico.\nThe south-west is the westmost part of the area of the region.\nThe mountain ranges of the Rocky Mountains, the southern part of the northern part of the area of the eastern Appalachian Mountains from the southern part of the Appalachian Mountains, the eastern part of the Appalachian Mountains.\nThe south-east is surrounded by the eastern part of the Appalachian Mountains, the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.209,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333
+          }
+        ]
+      }
+    ]
+  }
 }

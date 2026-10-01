@@ -485,7 +485,13 @@ def _other_gpu_jobs() -> bool:
             pid = int(subprocess.run(["ps", "-o", "ppid=", "-p", str(pid)], capture_output=True, text=True).stdout.strip() or 1)
         except (OSError, ValueError):
             break
-    return any(int(x) not in mine for x in out)
+    others = [int(x) for x in out if int(x) not in mine]
+    try:  # launchers like caffeinate aren't always ancestors, but share our process group
+        group = os.getpgrp()
+        others = [x for x in others if os.getpgid(x) != group]
+    except OSError:
+        pass
+    return bool(others)
 
 
 def refresh(out: Path, reference: str | None, bench: bool = True, device=None) -> None:
@@ -500,9 +506,10 @@ def refresh(out: Path, reference: str | None, bench: bool = True, device=None) -
             b = benchmark([r["checkpoint"] for r in results], device)
             (out / "inference.json").write_text(json.dumps(b, indent=2))
             (out / "inference.md").write_text(render(b))
+            print("[eval] refreshed inference.md", flush=True)
     (out / "summary.md").write_text(summary_table(results, reference, load_bench(out)))
     (out / "samples.md").write_text(render_comparison(results))
-    print(f"[eval] refreshed summary.md, samples.md{', inference.md' if bench else ''} for {len(results)} models", flush=True)
+    print(f"[eval] refreshed summary.md, samples.md for {len(results)} models", flush=True)
 
 
 def main(argv: list[str] | None = None) -> None:

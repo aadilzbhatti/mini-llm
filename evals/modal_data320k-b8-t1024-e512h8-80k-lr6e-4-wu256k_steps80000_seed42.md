@@ -1,5 +1,6 @@
-# Evals: modal_data320k-b8-t1024-e512h8-80k-lr6e-4-wu256k_steps80000_seed42
+# Evals: data320k · d512-L4 · 38.9M · T1024 · 80K steps
 
+- checkpoint: modal_data320k-b8-t1024-e512h8-80k-lr6e-4-wu256k_steps80000_seed42
 - config: {'vocab_size': 50257, 'block_size': 1024, 'n_embd': 512, 'n_head': 8, 'n_layer': 4, 'dropout': 0.0}
 - params: 38,910,545
 - step: 80000
@@ -80,6 +81,27 @@ Forced choice among 10 single-token words (chance 10%), 400 trials per distance,
 - prefill, full context: 120.45 ms
 - decode: 6.2 tokens/s (medians of 21 prefills / 7 decode runs of 64 tokens; no KV cache: each decode step re-runs the (cropped) window)
 - memory: 0.399 GB
+
+## Generation samples
+
+10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw. The samples themselves: this run's Samples button, or evals/samples.md next to every other model.
+
+| rep4 | looping | topic held | stopped at EOS |
+|---|---|---|---|
+| 0.550 | 17/50 | 32% | 3/50 |
+
+| prompt | rep4 | looping |
+|---|---|---|
+| definition | 0.67 | 4/5 |
+| biography | 0.29 | 0/5 |
+| science_explainer | 0.72 | 3/5 |
+| instructional | 0.60 | 2/5 |
+| bullet_list | 0.58 | 2/5 |
+| numbered_list | 0.70 | 2/5 |
+| enumeration | 0.76 | 2/5 |
+| long_dependency | 0.33 | 0/5 |
+| attribution | 0.27 | 0/5 |
+| numeric_units | 0.59 | 2/5 |
 
 ## Training systems (recorded by the run)
 
