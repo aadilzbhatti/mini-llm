@@ -140,13 +140,11 @@ def test_generate_with_different_block_size(model: ModelCustomTransformer):
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     model = model.to(device)  # the fixture builds on CPU; the data goes to MPS when available
     tokens = encode(text, tokenizer).unsqueeze(0).to(device)
-    print(tokens.shape)
     # train the model on this data for a few steps
     x, y = make_batch(tokens.squeeze(0), batch_size=4, block_size=BLOCK_SIZE, device=device)
-    print(x.shape, y.shape)
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
     model.train()
-    for _ in range(4000):
+    for _ in range(1000):
         optimizer.zero_grad()
         _, loss = model(x, y)
         loss.backward()
@@ -155,8 +153,6 @@ def test_generate_with_different_block_size(model: ModelCustomTransformer):
     test_seq = "The lighthouse keeper watched the ships"
     tokenizer = get_tokenizer()
     tokens = encode(test_seq, tokenizer).unsqueeze(0).to(device)
-    print(tokens)
     out = model.generate(tokens, max_new_tokens=10, block_size=BLOCK_SIZE)
-    print(out)
     decoded = tokenizer.decode(out[0])
     print(decoded)
