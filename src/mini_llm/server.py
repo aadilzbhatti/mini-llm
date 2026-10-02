@@ -693,7 +693,7 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         """Summary, guide, cross-model reports, and one row per model report (for sorting on the page)."""
         d = repo / "evals"
         text = lambda n: (d / f"{n}.md").read_text() if (d / f"{n}.md").exists() else None
-        shared = [n for n in ("samples", "inference") if (d / f"{n}.md").exists()]
+        shared = [n for n in ("samples", "inference", "kv_reference") if (d / f"{n}.md").exists()]
         rows = []
         for md in (sorted(d.glob("*.md")) if d.exists() else []):
             if md.stem in ("summary", "GUIDE", *shared) or md.stem.startswith("sweep"):

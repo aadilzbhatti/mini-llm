@@ -101,7 +101,24 @@ def test_generate_samples_reuses_existing_draws(monkeypatch):
     calls = []
     monkeypatch.setattr(samples, "complete", lambda *a, **k: calls.append(a[4]) or {
         "text": " new", "tokens": 1, "eos": True, **samples.score(a[4], " new", a[1])})
-    out = samples.generate_samples(None, get_tokenizer(), 128, "cpu", previous=prev)
+    from types import SimpleNamespace
+    toggles = []
+    stub = SimpleNamespace(set_use_cache=toggles.append)  # complete() is patched, so no real model is needed
+    out = samples.generate_samples(stub, get_tokenizer(), 128, "cpu", previous=prev)
+    assert toggles == [True, False]  # the cache is on only while generating
     assert calls == [samples.GEN_PROMPTS[-1][1]] * samples.DRAWS  # only the missing prompt is generated
     assert out["summary"]["n"] == len(samples.GEN_PROMPTS) * samples.DRAWS
     assert out["prompts"][0]["draws"][0]["text"] == " the same text again" and "distinct2" in out["prompts"][0]["draws"][0]
+
+
+def test_kv_reference_and_cached_bench(tmp_path):
+    from mini_llm import bench
+    ck, _ = tiny(tmp_path, 128)
+    b = bench.kv_reference([str(ck)], device="cpu", contexts=(128,), rounds=1)
+    m = b["models"]["t128"]
+    assert set(m["by_context"]) == {"128", "past_window"}
+    assert m["by_context"]["128"]["cache_bytes_used"] == 128 * m["cache_bytes_per_token"] == m["cache_bytes_allocated"]
+    assert m["by_context"]["128"]["decode_cached_tok_s"]["n"] == 1 and "prefill_ms" in m["by_context"]["128"]
+    assert "past the window" in bench.render_kv_reference(b)
+    res = bench.benchmark([str(ck)], device="cpu", rounds=1, prefills_per_round=1)
+    assert res["models"]["t128"]["decode_cached_tok_s"]["n"] == 1 and "KV cache" in bench.render(res)

@@ -732,6 +732,7 @@ function evalsCard() {
     <div class="row">${EVALS.summary ? `<button class="pri" onclick="openDoc('Evals summary', EVALS.summary)">Summary table</button>` : ''}
       ${EVALS.shared.includes('samples') ? `<button onclick="showEval('samples')">Samples side by side</button>` : ''}
       ${EVALS.shared.includes('inference') ? `<button onclick="showEval('inference')">Inference benchmark</button>` : ''}
+      ${EVALS.shared.includes('kv_reference') ? `<button onclick="showEval('kv_reference')">KV cache reference</button>` : ''}
       ${EVALS.guide ? doc('How to read the evals', 'guide') : ''}</div>
     <div class="row" style="margin:12px 0 6px"><span class="mut">Model reports, sorted by</span>
       ${Object.entries(EVAL_SORTS).map(([k, [name]]) => `<button class="${k === EVAL_SORT ? 'on' : ''}" style="padding:4px 10px; font-size:13px" onclick="sortEvals('${k}')">${name}</button>`).join('')}</div>
