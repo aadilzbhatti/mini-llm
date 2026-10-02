@@ -4,7 +4,7 @@
         -> deterministic subset (seeded shuffle, streamed)
         -> bucket each row into train or val by a content hash
         -> extract text field
-        -> tokenize
+        -> tokenize (in batches, as the stream is scanned)
         -> fixed train tokens / fixed val tokens
         -> save locally (.pt files)
 
@@ -39,8 +39,9 @@ import argparse
 import hashlib
 import os
 import sys
+from collections.abc import Iterable, Iterator
 from pathlib import Path
-from typing import cast
+from typing import Literal, cast
 
 import torch
 from datasets import load_dataset
@@ -55,6 +56,7 @@ DEFAULT_TEXT_FIELD = "text"
 DEFAULT_OUT_DIR = Path("data")
 DEFAULT_VAL_EXAMPLES = 200
 DEFAULT_VAL_POOL_FRACTION = 0.1
+TOKENIZE_BATCH = 1000
 
 
 def _val_pool_score(text: str) -> float:
@@ -68,6 +70,41 @@ def _val_pool_score(text: str) -> float:
     return int.from_bytes(digest[:8], "big") / 2**64
 
 
+def iter_split(
+    dataset: str = DEFAULT_DATASET,
+    config: str = DEFAULT_CONFIG,
+    split: str = DEFAULT_SPLIT,
+    text_field: str = DEFAULT_TEXT_FIELD,
+    num_examples: int = 2000,
+    val_examples: int = DEFAULT_VAL_EXAMPLES,
+    val_pool_fraction: float = DEFAULT_VAL_POOL_FRACTION,
+    seed: int = 0,
+) -> Iterator[tuple[Literal["train", "val"], dict[str, object]]]:
+    """Stream `dataset`, yielding (side, row) as each row is claimed by train or val.
+
+    Scans until both quotas are filled (or the stream runs out). See the
+    module docstring for why this makes both sides independently growable
+    without cross-contamination. Yielding rather than collecting keeps
+    memory flat however many rows are asked for.
+    """
+    ds = load_dataset(dataset, config, split=split, streaming=True)
+    ds = ds.shuffle(seed=seed, buffer_size=10_000)
+
+    n_train = n_val = 0
+    for row in ds:
+        text = cast(str, row[text_field])
+        if _val_pool_score(text) < val_pool_fraction:
+            if n_val < val_examples:
+                n_val += 1
+                yield "val", row
+        elif n_train < num_examples:
+            n_train += 1
+            yield "train", row
+
+        if n_train >= num_examples and n_val >= val_examples:
+            return
+
+
 def load_subset(
     dataset: str = DEFAULT_DATASET,
     config: str = DEFAULT_CONFIG,
@@ -78,28 +115,13 @@ def load_subset(
     val_pool_fraction: float = DEFAULT_VAL_POOL_FRACTION,
     seed: int = 0,
 ) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
-    """Stream `dataset` and bucket rows into (train_rows, val_rows) by content hash.
-
-    Scans until both quotas are filled (or the stream runs out). See the
-    module docstring for why this makes both sides independently growable
-    without cross-contamination.
-    """
-    ds = load_dataset(dataset, config, split=split, streaming=True)
-    ds = ds.shuffle(seed=seed, buffer_size=10_000)
-
+    """Collect `iter_split` into (train_rows, val_rows). Holds every row in memory."""
     train_rows: list[dict[str, object]] = []
     val_rows: list[dict[str, object]] = []
-    for row in ds:
-        text = cast(str, row[text_field])
-        if _val_pool_score(text) < val_pool_fraction:
-            if len(val_rows) < val_examples:
-                val_rows.append(row)
-        elif len(train_rows) < num_examples:
-            train_rows.append(row)
-
-        if len(train_rows) >= num_examples and len(val_rows) >= val_examples:
-            break
-
+    for side, row in iter_split(
+        dataset, config, split, text_field, num_examples, val_examples, val_pool_fraction, seed
+    ):
+        (train_rows if side == "train" else val_rows).append(row)
     return train_rows, val_rows
 
 
@@ -108,15 +130,67 @@ def extract_text(rows: list[dict[str, object]], text_field: str = DEFAULT_TEXT_F
     return [cast(str, row[text_field]) for row in rows]
 
 
-def tokenize_texts(texts: list[str], tokenizer: PreTrainedTokenizerBase) -> torch.Tensor:
+class TokenStream:
+    """Accumulates an EOS-separated token stream without holding Python ints.
+
+    Texts are buffered and tokenized `batch_size` at a time (the fast
+    tokenizer batches in Rust), and each batch is packed into an int32
+    chunk -- 4 bytes/token, versus ~36 for a Python `list[int]`. `tensor()`
+    copies the chunks into one preallocated int64 tensor, releasing each
+    chunk as it goes, so peak memory is ~1.5x the final tensor rather than
+    several times it.
+
+    Tokenizing a batch gives exactly what per-text `tokenizer.encode` would:
+    neither adds special tokens for GPT-2, and neither truncates.
+    """
+
+    def __init__(self, tokenizer: PreTrainedTokenizerBase, batch_size: int = TOKENIZE_BATCH):
+        self.tokenizer = tokenizer
+        self.eos = tokenizer.eos_token_id
+        self.batch_size = batch_size
+        self.pending: list[str] = []
+        self.chunks: list[torch.Tensor] = []
+        self.num_docs = 0
+        self.num_tokens = 0
+
+    def add(self, text: str) -> None:
+        self.pending.append(text)
+        if len(self.pending) >= self.batch_size:
+            self.flush()
+
+    def flush(self) -> None:
+        if not self.pending:
+            return
+        flat: list[int] = []
+        for ids in self.tokenizer(self.pending, add_special_tokens=False)["input_ids"]:
+            flat.extend(ids)
+            if self.eos is not None:
+                flat.append(self.eos)
+        chunk = torch.tensor(flat, dtype=torch.int32)
+        self.chunks.append(chunk)
+        self.num_docs += len(self.pending)
+        self.num_tokens += len(chunk)
+        self.pending.clear()
+
+    def tensor(self) -> torch.Tensor:
+        """Return the whole stream as one 1-D int64 tensor, consuming the chunks."""
+        self.flush()
+        out = torch.empty(self.num_tokens, dtype=torch.long)
+        pos = 0
+        self.chunks.reverse()
+        while self.chunks:
+            chunk = self.chunks.pop()
+            out[pos : pos + len(chunk)] = chunk
+            pos += len(chunk)
+        return out
+
+
+def tokenize_texts(texts: Iterable[str], tokenizer: PreTrainedTokenizerBase) -> torch.Tensor:
     """Concatenate all texts into one 1-D EOS-separated token stream."""
-    eos = tokenizer.eos_token_id
-    ids: list[int] = []
+    stream = TokenStream(tokenizer)
     for text in texts:
-        ids.extend(tokenizer.encode(text))
-        if eos is not None:
-            ids.append(eos)
-    return torch.tensor(ids, dtype=torch.long)
+        stream.add(text)
+    return stream.tensor()
 
 
 def save_tokens(tokens: torch.Tensor, path: str | Path) -> None:
@@ -137,24 +211,35 @@ def prepare(
     seed: int = 0,
     out_dir: str | Path = DEFAULT_OUT_DIR,
     tokenizer_name: str = "gpt2",
+    progress_every: int = 20_000,
 ) -> tuple[Path, Path]:
     """Run the full pipeline and write train/val token tensors to `out_dir`.
 
-    Returns (train_path, val_path).
+    Rows are tokenized as the stream is scanned, so raw text is never all
+    held at once. Returns (train_path, val_path).
     """
     tokenizer = get_tokenizer(tokenizer_name)
-    train_rows, val_rows = load_subset(
+    streams = {"train": TokenStream(tokenizer), "val": TokenStream(tokenizer)}
+    seen = {"train": 0, "val": 0}
+    for side, row in iter_split(
         dataset, config, split, text_field, num_examples, val_examples, val_pool_fraction, seed
-    )
-    train_tokens = tokenize_texts(extract_text(train_rows, text_field), tokenizer)
-    val_tokens = tokenize_texts(extract_text(val_rows, text_field), tokenizer)
+    ):
+        streams[side].add(cast(str, row[text_field]))
+        seen[side] += 1
+        if progress_every and side == "train" and seen["train"] % progress_every == 0:
+            print(
+                f"train {seen['train']:,}/{num_examples:,} docs, "
+                f"{streams['train'].num_tokens:,} tokens so far",
+                flush=True,
+            )
 
     out_dir = Path(out_dir)
-    train_path = out_dir / "train.pt"
-    val_path = out_dir / "val.pt"
-    save_tokens(train_tokens, train_path)
-    save_tokens(val_tokens, val_path)
-    return train_path, val_path
+    paths = {"train": out_dir / "train.pt", "val": out_dir / "val.pt"}
+    for side in ("val", "train"):
+        tokens = streams.pop(side).tensor()
+        save_tokens(tokens, paths[side])
+        del tokens
+    return paths["train"], paths["val"]
 
 
 def build_parser() -> argparse.ArgumentParser:

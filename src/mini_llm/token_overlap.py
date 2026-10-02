@@ -34,22 +34,35 @@ import torch
 EOS_TOKEN_ID = 50256
 
 
-def split_documents(tokens: torch.Tensor) -> list[torch.Tensor]:
-    """Split a 1-D EOS-separated token stream into documents, EOS dropped.
+def _load(path: str | Path) -> torch.Tensor:
+    """Memory-mapped load: pages come in as they're read, so a multi-GB train
+    file doesn't have to fit in RAM alongside everything else."""
+    return torch.load(path, map_location="cpu", weights_only=True, mmap=True).reshape(-1)
+
+
+def document_spans(tokens: torch.Tensor) -> list[tuple[int, int]]:
+    """(start, end) of each document in a 1-D EOS-separated stream, EOS excluded.
 
     Mirrors `prepare_dataset.tokenize_texts`, which appends EOS after each
     document, so document N is the tokens between separator N-1 and N.
+    Empty runs (back-to-back separators) are skipped.
     """
-    flat = tokens.reshape(-1)
-    cuts = (flat == EOS_TOKEN_ID).nonzero(as_tuple=True)[0].tolist()
-    docs: list[torch.Tensor] = []
+    cuts = (tokens == EOS_TOKEN_ID).nonzero(as_tuple=True)[0].tolist()
+    if not cuts or cuts[-1] != len(tokens) - 1:
+        cuts.append(len(tokens))
+    spans: list[tuple[int, int]] = []
     start = 0
-    for cut in cuts + ([len(flat)] if (len(cuts) == 0 or cuts[-1] != len(flat) - 1) else []):
-        doc = flat[start:cut]
-        if len(doc) > 0:
-            docs.append(doc)
+    for cut in cuts:
+        if cut > start:
+            spans.append((start, cut))
         start = cut + 1
-    return docs
+    return spans
+
+
+def split_documents(tokens: torch.Tensor) -> list[torch.Tensor]:
+    """Split a 1-D EOS-separated token stream into documents (views), EOS dropped."""
+    flat = tokens.reshape(-1)
+    return [flat[s:e] for s, e in document_spans(flat)]
 
 
 def doc_hash(doc: torch.Tensor) -> str:
@@ -57,10 +70,17 @@ def doc_hash(doc: torch.Tensor) -> str:
     return hashlib.sha256(doc.to(torch.int32).contiguous().numpy().tobytes()).hexdigest()
 
 
-def hashed_docs(path: str | Path) -> tuple[list[torch.Tensor], list[str]]:
-    tokens = torch.load(path, map_location="cpu", weights_only=True)
-    docs = split_documents(tokens)
-    return docs, [doc_hash(d) for d in docs]
+def _span_hashes(tokens: torch.Tensor, spans: list[tuple[int, int]]) -> list[str]:
+    """`doc_hash` for every span, with one int32 conversion for the whole file
+    instead of one per document."""
+    buf = memoryview(tokens.to(torch.int32).contiguous().numpy()).cast("B")
+    return [hashlib.sha256(buf[4 * s : 4 * e]).hexdigest() for s, e in spans]
+
+
+def file_hashes(path: str | Path) -> set[str]:
+    """Hashes of every document in a token file, without keeping the documents."""
+    tokens = _load(path)
+    return set(_span_hashes(tokens, document_spans(tokens)))
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -82,24 +102,27 @@ def main(argv: list[str] | None = None) -> None:
     )
     args = p.parse_args(argv)
 
-    docs, hashes = hashed_docs(args.tokens)
-    n_tokens = sum(len(d) for d in docs)
-    print(f"{args.tokens}: {len(docs)} docs, {n_tokens:,} tokens (excluding separators)")
+    tokens = _load(args.tokens)
+    spans = document_spans(tokens)
+    hashes = _span_hashes(tokens, spans)
+    hash_set = set(hashes)
+    n_tokens = sum(e - s for s, e in spans)
+    print(f"{args.tokens}: {len(spans)} docs, {n_tokens:,} tokens (excluding separators)")
 
     excluded: set[str] = set()
     for path in args.exclude:
-        _, other = hashed_docs(path)
-        shared = set(hashes) & set(other)
-        excluded |= set(other)
-        pct = 100 * len(shared) / len(docs) if docs else 0.0
+        other = file_hashes(path)
+        shared = hash_set & other
+        excluded |= shared
+        pct = 100 * len(shared) / len(spans) if spans else 0.0
         print(f"  overlap with {path}: {len(shared)} docs ({pct:.1f}% of {Path(args.tokens).parent.name}/{Path(args.tokens).name})")
 
-    keep = [d for d, h in zip(docs, hashes) if h not in excluded]
-    removed = len(docs) - len(keep)
+    keep = [span for span, h in zip(spans, hashes) if h not in excluded]
+    removed = len(spans) - len(keep)
     if args.max_docs is not None and len(keep) > args.max_docs:
         print(f"  capping {len(keep)} clean docs to --max-docs {args.max_docs}")
         keep = keep[: args.max_docs]
-    kept_tokens = sum(len(d) for d in keep)
+    kept_tokens = sum(e - s for s, e in keep)
     print(f"  clean: {len(keep)} docs, {kept_tokens:,} tokens (removed {removed})")
 
     if args.out is None:
@@ -109,11 +132,12 @@ def main(argv: list[str] | None = None) -> None:
 
     # Re-emit in the same shape prepare_dataset writes: documents joined by
     # a single EOS separator after each one.
-    pieces: list[torch.Tensor] = []
-    for doc in keep:
-        pieces.append(doc)
-        pieces.append(torch.tensor([EOS_TOKEN_ID], dtype=torch.long))
-    out_tokens = torch.cat(pieces).to(torch.long)
+    out_tokens = torch.empty(kept_tokens + len(keep), dtype=torch.long)
+    pos = 0
+    for s, e in keep:
+        out_tokens[pos : pos + e - s] = tokens[s:e]
+        out_tokens[pos + e - s] = EOS_TOKEN_ID
+        pos += e - s + 1
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(out_tokens, out_path)

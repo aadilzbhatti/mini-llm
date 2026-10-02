@@ -59,3 +59,30 @@ def test_growing_val_examples_only_extends_val():
     # and the new val rows were never part of train
     new_rows = set(_texts(val_big)) - set(_texts(val_small))
     assert new_rows.isdisjoint(_texts(train_big))
+
+
+def test_token_stream_matches_per_text_encode():
+    """Batched, chunked tokenization must give byte-identical files to the old
+    per-text `encode` + EOS loop -- otherwise growing a dataset would break the
+    prefix property against files built before."""
+    import torch
+
+    from mini_llm.data import get_tokenizer
+    from mini_llm.prepare_dataset import TokenStream
+
+    tok = get_tokenizer("gpt2")
+    texts = [f"doc {i}: héllo wörld\n\n  spaces  and <|endoftext|> marker {i * 7}" for i in range(25)]
+    texts.append("")
+    expected: list[int] = []
+    for text in texts:
+        expected.extend(tok.encode(text))
+        expected.append(tok.eos_token_id)
+
+    stream = TokenStream(tok, batch_size=4)  # forces several chunks + a partial one
+    for text in texts:
+        stream.add(text)
+    out = stream.tensor()
+
+    assert out.dtype == torch.long
+    assert out.tolist() == expected
+    assert stream.num_docs == len(texts)

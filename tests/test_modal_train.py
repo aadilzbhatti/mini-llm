@@ -14,9 +14,9 @@ modal_train = pytest.importorskip("mini_llm.remote.modal_train")
 def test_config_to_argv_accepts_runner_jobs():
     job = json.loads(Path("runner/example-job.json").read_text())
     argv = modal_train.config_to_argv(job)
-    assert argv[:2] == ["--save", "--plot-loss"]  # remote defaults
+    assert argv[:3] == ["--save", "--plot-loss", "--tokens-in-ram"]  # remote defaults
     assert argv[argv.index("--n-embd") + 1] == "192"
-    assert modal_train.config_to_argv({"save": False, "bf16": True, "name": "x"}) == ["--plot-loss", "--bf16"]
+    assert modal_train.config_to_argv({"save": False, "bf16": True, "name": "x"}) == ["--plot-loss", "--tokens-in-ram", "--bf16"]
 
 
 def test_parse_gpus():
@@ -39,4 +39,4 @@ def test_resolve_args_maps_data_paths(tmp_path, monkeypatch):
 
 def test_sample_report_is_never_run_on_modal():
     argv = modal_train.config_to_argv({"steps": 10, "sample-report": True, "sample-report-tokens": 64})
-    assert argv == ["--save", "--plot-loss", "--steps", "10"]
+    assert argv == ["--save", "--plot-loss", "--tokens-in-ram", "--steps", "10"]

@@ -49,7 +49,10 @@ RUNS_VOLUME, RUNS_MOUNT = "wiki-llm-runs", "/runs"
 DATA_VOLUME, DATA_MOUNT = "wiki-llm-data", "/data"
 BUNDLED_DATA = "/opt/mini-llm/data"  # data/tiny.txt, baked into the image
 PATH_FLAGS = {"--tokens", "--val-tokens", "--text", "--resume"}
-DEFAULT_ARGS = {"save": True, "plot-loss": True}  # a remote run is useless without its outputs
+# A remote run is useless without its outputs. Tokens are read into RAM up
+# front: the data volume is network-backed, so memory-mapping it would turn
+# every cold crop into a remote read, and containers have RAM to spare.
+DEFAULT_ARGS = {"save": True, "plot-loss": True, "tokens-in-ram": True}
 # Not run on Modal: generating the sample report there holds the GPUs (billed) for
 # minutes of uncached inference. The flag stays in the config as a request, and the
 # Mac's auto-eval writes the report after import (mini_llm.auto_eval).

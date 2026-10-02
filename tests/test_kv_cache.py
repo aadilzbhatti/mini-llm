@@ -99,6 +99,47 @@ def test_cached_multistep_logits_match_full_forward(models, prompt: str):
 
 @torch.no_grad()
 @pytest.mark.parametrize("prompt", PROMPTS)
+def test_cached_logits_match_full_forward_through_window_overflow(models, prompt: str):
+    """Teacher-force a continuation well past a 16-token window, following the
+    cache policy of model._generate (feed one token while the cache has room;
+    once it holds block_size tokens, clear and refill from the last block_size
+    tokens). At every step, including the refill steps, the cached logits must
+    equal the uncached semantics: plain(history[:, -block_size:])."""
+    plain, cached = models
+    block_size = 16
+    tokenizer = get_tokenizer()
+    history = encode(prompt, tokenizer).unsqueeze(0)
+    continuation = encode(
+        " the cat in the hat sat on the mat while the dog watched the rain fall slowly" * 3, tokenizer
+    )
+    assert history.size(1) + len(continuation) > 3 * block_size
+
+    cached.clear_cache()
+    refills = 0
+    step_input = history[:, -block_size:]  # prefill
+    for i in range(len(continuation) + 1):
+        step_logits, _ = cached(step_input)
+        full_logits, _ = plain(history[:, -block_size:])
+        diff = (step_logits[:, -1] - full_logits[:, -1]).abs().max()
+        assert torch.allclose(
+            step_logits[:, -1], full_logits[:, -1], atol=1e-4, rtol=1e-4
+        ), f"step {i} (history len {history.size(1)}): max logit error = {diff.item():.3e}"
+        assert cached.cache_len() <= block_size
+        if i == len(continuation):
+            break
+        history = torch.cat([history, continuation[i].view(1, 1)], dim=1)
+        if 0 < cached.cache_len() < block_size:
+            step_input = history[:, -1:]
+        else:
+            cached.clear_cache()
+            step_input = history[:, -block_size:]
+            refills += 1
+    assert refills >= 2, "continuation never exercised the refill path"
+    cached.clear_cache()
+
+
+@torch.no_grad()
+@pytest.mark.parametrize("prompt", PROMPTS)
 def test_prefill_with_and_without_cache_gives_same_logits(models, prompt: str):
     """Prefill the prompt with and without the cache: the logits must match."""
     plain, cached = models
@@ -108,6 +149,9 @@ def test_prefill_with_and_without_cache_gives_same_logits(models, prompt: str):
     logits_cached, _ = cached(idx)
     logits_plain, _ = plain(idx)
     assert torch.allclose(logits_cached, logits_plain, atol=1e-4, rtol=1e-4)
+    assert cached.cache_len() == idx.size(1)
+    cached.clear_cache()
+    assert cached.cache_len() == 0
 
 @torch.no_grad()
 @pytest.mark.parametrize("block_size", [1024, 32], ids=["full-window", "window-overflow"])

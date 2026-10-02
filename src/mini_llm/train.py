@@ -451,6 +451,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Path to pre-tokenized validation tokens (.pt). Enables val loss logging.",
     )
+    p.add_argument(
+        "--tokens-in-ram",
+        action="store_true",
+        help="Read --tokens/--val-tokens fully into RAM instead of memory-mapping them. "
+        "Use when they live on network storage (Modal sets it by default).",
+    )
     # model
     p.add_argument("--block-size", type=int, default=64)
     p.add_argument("--n-embd", type=int, default=128)
@@ -679,8 +685,9 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     autocast = (lambda: torch.autocast("cuda", dtype=torch.bfloat16)) if use_bf16 else contextlib.nullcontext
 
     tokenizer = get_tokenizer()
-    tokens = load_tokens(args.tokens) if args.tokens else encode(load_text(args.text), tokenizer)
-    val_tokens = load_tokens(args.val_tokens) if args.val_tokens else None
+    mmap = not args.tokens_in_ram
+    tokens = load_tokens(args.tokens, mmap=mmap) if args.tokens else encode(load_text(args.text), tokenizer)
+    val_tokens = load_tokens(args.val_tokens, mmap=mmap) if args.val_tokens else None
     if val_tokens is not None and tokens.numel() == val_tokens.numel() and torch.equal(tokens, val_tokens):
         # Training on the val set makes every val loss a memorization score
         # (it has happened: a run passed val.pt as --tokens and "scored" 0.35).

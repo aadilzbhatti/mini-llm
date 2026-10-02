@@ -56,13 +56,21 @@ def decode(ids: torch.Tensor, tokenizer: PreTrainedTokenizerBase) -> str:
     return text
 
 
-def load_tokens(path: str | Path) -> torch.Tensor:
+def load_tokens(path: str | Path, mmap: bool = True) -> torch.Tensor:
     """Load a pre-tokenized 1-D token tensor from disk.
 
     Agnostic to whatever dataset or text produced it — this just reads
     tensors written by `torch.save`, e.g. by `mini_llm.prepare_dataset`.
+
+    By default the file is memory-mapped: the OS pages tokens in as random
+    crops touch them and can drop them again under memory pressure, so a
+    multi-GB train file needn't fit in RAM, and DDP ranks on one machine
+    share one copy via the page cache. Everything downstream only slices
+    and stacks short crops, so nothing ever forces the whole file in.
+    Pass mmap=False to read it all up front instead -- better when the file
+    sits on network storage, where each cold page would be a remote read.
     """
-    tokens = torch.load(Path(path), weights_only=True)
+    tokens = torch.load(Path(path), weights_only=True, mmap=mmap)
     assert isinstance(tokens, torch.Tensor)
     return tokens
 
