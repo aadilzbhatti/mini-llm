@@ -255,13 +255,115 @@ def build_optimizer(model: torch.nn.Module, args: argparse.Namespace) -> torch.o
     representational reason and empirically hurts small transformers; this is
     the standard nanoGPT/GPT-3 split.
     """
-    decay_params = [p for p in model.parameters() if p.requires_grad and p.dim() >= 2]
-    no_decay_params = [p for p in model.parameters() if p.requires_grad and p.dim() < 2]
-    optim_groups = [
-        {"params": decay_params, "weight_decay": args.weight_decay},
-        {"params": no_decay_params, "weight_decay": 0.0},
-    ]
-    return AdamW(optim_groups, lr=args.lr)
+    soap_params, decay_params, no_decay_params = [], [], []
+    for n, p in model.named_parameters():
+        if not p.requires_grad:
+            continue
+        if "blocks." in n and p.dim() == 2:
+            soap_params.append(p)
+        elif p.dim() >= 2:
+            decay_params.append(p)
+        else:
+            no_decay_params.append(p)
+    optim_groups = []
+    if soap_params:
+        optim_groups.append({"params": soap_params, "weight_decay": args.weight_decay, "soap": True,
+                             "betas": (0.95, 0.95), "precondition_frequency": 10})
+    if decay_params:
+        optim_groups.append({"params": decay_params, "weight_decay": args.weight_decay})
+    if no_decay_params:
+        optim_groups.append({"params": no_decay_params, "weight_decay": 0.0})
+    return SOAPAdamW(optim_groups, lr=args.lr)
+
+
+class SOAPAdamW(torch.optim.Optimizer):
+    """c31: SOAP (Adam in Shampoo's eigenbasis) for groups with soap=True, plain AdamW otherwise."""
+
+    def __init__(self, params, lr: float):
+        defaults = dict(lr=lr, betas=(0.9, 0.999), eps=1e-8, weight_decay=0.0, soap=False, precondition_frequency=10)
+        super().__init__(params, defaults)
+
+    @staticmethod
+    def _eig_basis(m: torch.Tensor) -> torch.Tensor:
+        eye = torch.eye(m.shape[0], device=m.device, dtype=m.dtype)
+        try:
+            _, V = torch.linalg.eigh(m + 1e-30 * eye)
+        except Exception:
+            _, V = torch.linalg.eigh(m.double() + 1e-30 * eye.double())
+            V = V.to(m.dtype)
+        return torch.flip(V, [1])
+
+    @torch.no_grad()
+    def step(self, closure=None):
+        loss = None
+        if closure is not None:
+            with torch.enable_grad():
+                loss = closure()
+        for group in self.param_groups:
+            lr, wd, eps = group["lr"], group["weight_decay"], group["eps"]
+            b1, b2 = group["betas"]
+            for p in group["params"]:
+                if p.grad is None:
+                    continue
+                g = p.grad
+                st = self.state[p]
+                if group["soap"]:
+                    sb = b2
+                    if "step" not in st:
+                        st["step"] = 0
+                        st["exp_avg"] = torch.zeros_like(p)
+                        st["exp_avg_sq"] = torch.zeros_like(p)
+                        GL = torch.zeros(p.shape[0], p.shape[0], device=p.device, dtype=p.dtype)
+                        GR = torch.zeros(p.shape[1], p.shape[1], device=p.device, dtype=p.dtype)
+                        GL.lerp_(g @ g.T, 1 - sb)
+                        GR.lerp_(g.T @ g, 1 - sb)
+                        st["GG"] = [GL, GR]
+                        st["Q"] = [self._eig_basis(GL), self._eig_basis(GR)]
+                        continue  # first step only builds the preconditioner (as in official SOAP)
+                    st["step"] += 1
+                    t = st["step"]
+                    QL, QR = st["Q"]
+                    gp = QL.T @ g @ QR
+                    exp_avg, exp_avg_sq = st["exp_avg"], st["exp_avg_sq"]
+                    exp_avg.mul_(b1).add_(g, alpha=1 - b1)
+                    exp_avg_sq.mul_(b2).add_(gp.square(), alpha=1 - b2)
+                    denom = exp_avg_sq.sqrt().add_(eps)
+                    ep = QL.T @ exp_avg @ QR
+                    upd = QL @ (ep / denom) @ QR.T
+                    step_size = lr * math.sqrt(1 - b2 ** t) / (1 - b1 ** t)
+                    p.add_(upd, alpha=-step_size)
+                    if wd > 0:
+                        p.add_(p, alpha=-lr * wd)
+                    GL, GR = st["GG"]
+                    GL.lerp_(g @ g.T, 1 - sb)
+                    GR.lerp_(g.T @ g, 1 - sb)
+                    if t % group["precondition_frequency"] == 0:
+                        eas = st["exp_avg_sq"]
+                        newQ = []
+                        for i, (m, o) in enumerate(zip(st["GG"], st["Q"])):
+                            est = torch.diag(o.T @ m @ o)
+                            idx = torch.argsort(est, descending=True)
+                            eas = eas.index_select(i, idx)
+                            o = o[:, idx]
+                            qn, _ = torch.linalg.qr(m @ o)
+                            newQ.append(qn)
+                        st["exp_avg_sq"] = eas
+                        st["Q"] = newQ
+                else:
+                    if "step" not in st:
+                        st["step"] = 0
+                        st["exp_avg"] = torch.zeros_like(p)
+                        st["exp_avg_sq"] = torch.zeros_like(p)
+                    st["step"] += 1
+                    t = st["step"]
+                    if wd > 0:
+                        p.mul_(1 - lr * wd)
+                    m, v = st["exp_avg"], st["exp_avg_sq"]
+                    m.lerp_(g, 1 - b1)
+                    v.mul_(b2).addcmul_(g, g, value=1 - b2)
+                    denom = (v / (1 - b2 ** t)).sqrt_().add_(eps)
+                    p.addcdiv_(m, denom, value=-lr / (1 - b1 ** t))
+        return loss
 
 
 def before_optimizer_step(model: torch.nn.Module, optimizer: torch.optim.Optimizer, step: int) -> None:

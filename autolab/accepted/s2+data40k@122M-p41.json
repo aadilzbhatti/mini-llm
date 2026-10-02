@@ -1,0 +1,51 @@
+{
+  "program": "p41",
+  "session": "s2+data40k@122M",
+  "hparams": {
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 6,
+    "dropout": 0.0,
+    "batch_size": 16,
+    "lr": 0.003,
+    "min_lr": 2e-06,
+    "warmup_steps": 400,
+    "weight_decay": 0.1,
+    "block_size": 512
+  },
+  "scores": {
+    "params": 17793873,
+    "screen_loss": 4.871458,
+    "full_losses": [
+      4.076048,
+      4.075469,
+      4.07732
+    ],
+    "tokens_per_sec": 34091.0,
+    "neg_params": -17793873,
+    "full_mean": 4.076279,
+    "n_seeds": 3,
+    "full_std": 0.0009468743316830673,
+    "neg_full_val_loss": -4.076279,
+    "metrics": {
+      "context_benefit_nats": 0.5484914779663086,
+      "train_wall_s": 3617.3233333333333,
+      "long_range_score": 0.7736625514403292,
+      "peak_inference_mem_bytes": 271656681.472,
+      "decode_tokens_per_s": 53.300000000000004,
+      "peak_train_mem_bytes": 7986491686.912,
+      "effective_context": 448,
+      "train_tokens_per_sec": 38465.26666666667,
+      "decode_ms_per_token": 18.76603096513805,
+      "fwd_flops_per_token": 36898466,
+      "params": 17793873,
+      "prefill_ms": 19.009999999999998,
+      "context": 512,
+      "short_context_loss": 4.278458668420365,
+      "n_runs": 3
+    }
+  },
+  "rationale": "Applies card c31 (SOAP) to p33. Only build_optimizer changes; architecture, hparams, cosine schedule and 1.0 clipping stay the same.\n\nSOAP params: every 2-D matrix inside `blocks.*` (per-head q/k/v, attention proj, MLP up/down). Betas (0.95, 0.95), shampoo_beta = beta2, preconditioner refreshed every 10 steps with full two-sided rotation, weight decay 0.1 applied decoupled after the update, as in the official code.\n\nAdam params: everything else (tied embedding/head, position table, 3-D Canon convs, LayerNorms, biases) keeps the same Adam rule, hand-written in the same class: betas (0.9, 0.999), eps 1e-8, same decay/no-decay split.\n\nBuild: one `torch.optim.Optimizer` subclass with a per-group `soap` flag, so `param_groups`, `zero_grad` and `state_dict` work normally and the loop's LR writes reach every group. SOAP follows nikhilvyas/SOAP:\n- Step 1 only accumulates GG\u1d40 and G\u1d40G, then uses `eigh` to get bases Q sorted by descending eigenvalue.\n- Later steps project the gradient (QL\u1d40 G QR) and keep Adam's second moment in that basis. The first moment stays in the original space and is projected. The ratio is projected back; step size is lr\u00b7\u221a(1\u2212\u03b22\u1d57)/(1\u2212\u03b21\u1d57).\n- Every 10 steps Q is refreshed by one power-iteration step plus QR, after re-sorting by estimated eigenvalues and permuting exp_avg_sq to match.\n\nWhy: Adam is diagonal, so it ignores row/column correlations in weight matrices. Shampoo's Kronecker-factored preconditioner captures them, and running Adam in its eigenbasis gives a better-conditioned update while keeping per-coordinate adaptivity, so the 3e-3 LR should roughly carry over.\n\nCost: matrices are at most 1024 per side, so the largest job is a 1024\u00b2 eigendecomposition or QR every 10 steps plus small matmuls. Added time is moderate against a large wall-clock margin.",
+  "parent": "p33",
+  "created_by": "claude-opus-5-5"
+}
