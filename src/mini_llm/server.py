@@ -207,6 +207,23 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
 
     app = FastAPI(title="mini-llm control", version="1")
 
+    from fastapi.exception_handlers import http_exception_handler, request_validation_exception_handler
+    from fastapi.exceptions import RequestValidationError
+    from starlette.exceptions import HTTPException as StarletteHTTPException
+
+    # uvicorn's access log has the status code but not why: log the reason for every rejected
+    # request, so an error seen on the phone can be found here.
+    @app.exception_handler(StarletteHTTPException)
+    async def log_http_error(request: Request, exc: StarletteHTTPException):
+        if 400 <= exc.status_code < 500 and exc.status_code != 404:
+            print(f"[api] {request.method} {request.url.path} -> {exc.status_code}: {exc.detail}", file=sys.stderr, flush=True)
+        return await http_exception_handler(request, exc)
+
+    @app.exception_handler(RequestValidationError)
+    async def log_validation_error(request: Request, exc: RequestValidationError):
+        print(f"[api] {request.method} {request.url.path} -> 422 (request body): {exc.errors()}", file=sys.stderr, flush=True)
+        return await request_validation_exception_handler(request, exc)
+
     def auth(request: Request) -> None:
         if token and request.headers.get("authorization") != f"Bearer {token}":
             raise HTTPException(401, "missing or wrong bearer token")
