@@ -246,6 +246,15 @@ class ModelCustomTransformer(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
 
+    def set_use_cache(self, on: bool) -> None:
+        """Turn the KV cache on or off for every head (cleared either way). With it on, every eval-mode
+        forward appends to the cache, so turn it off again before scoring losses."""
+        self.use_cache = on
+        for block in self.blocks:
+            for head in block.sa.heads:
+                head.use_cache = on
+                head.cache_len = 0
+
     def cache_len(self) -> int:
         # every head in every layer holds the same number of positions
         return self.blocks[0].sa.heads[0].cache_len if self.use_cache else 0

@@ -68,6 +68,21 @@ def _decode_tok_s(model, prompt, block_size: int, device, n: int = DECODE_TOKENS
     return n / (time.perf_counter() - t)
 
 
+@torch.no_grad()
+def _decode_cached_tok_s(model, prompt, block_size: int, device, n: int = DECODE_TOKENS) -> float:
+    """Same work as _decode_tok_s, generated the way the evals and the server do: with the KV cache."""
+    from mini_llm.report import generate_until_eos
+    model.set_use_cache(True)
+    try:
+        _sync(device)
+        t = time.perf_counter()
+        generate_until_eos(model, prompt, n, block_size, greedy=True, eos_token_id=None)
+        _sync(device)
+        return n / (time.perf_counter() - t)
+    finally:
+        model.set_use_cache(False)
+
+
 def benchmark(checkpoints: list[str], device=None, rounds: int = 7, prefills_per_round: int = 5) -> dict:
     device = torch.device(device) if device else select_device()
     models = {}
@@ -82,7 +97,8 @@ def benchmark(checkpoints: list[str], device=None, rounds: int = 7, prefills_per
         for _ in range(3):
             m["model"](m["full"]); m["model"](m["short"])
         _decode_tok_s(m["model"], m["prompt"], m["T"], device)
-    samples = {k: {"prefill_full_ms": [], "prefill_128_ms": [], "decode_tok_s": []} for k in models}
+        _decode_cached_tok_s(m["model"], m["prompt"], m["T"], device)
+    samples = {k: {"prefill_full_ms": [], "prefill_128_ms": [], "decode_tok_s": [], "decode_cached_tok_s": []} for k in models}
     names = list(models)
     for r in range(rounds):
         for k in names[r % len(names):] + names[: r % len(names)]:  # rotate the order each round
@@ -90,12 +106,13 @@ def benchmark(checkpoints: list[str], device=None, rounds: int = 7, prefills_per
             sm["prefill_full_ms"] += [_prefill_ms(m["model"], m["full"], device) for _ in range(prefills_per_round)]
             sm["prefill_128_ms"] += [_prefill_ms(m["model"], m["short"], device) for _ in range(prefills_per_round)]
             sm["decode_tok_s"].append(_decode_tok_s(m["model"], m["prompt"], m["T"], device))
+            sm["decode_cached_tok_s"].append(_decode_cached_tok_s(m["model"], m["prompt"], m["T"], device))
     return {
         "device": str(device), "host": platform.node(), "torch": torch.__version__,
         "at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "protocol": f"{rounds} interleaved rounds (order rotated), {prefills_per_round} prefills per model per round, "
                     f"decode {DECODE_TOKENS} greedy tokens from a (block_size - {DECODE_TOKENS})-token prompt, "
-                    "no KV cache, synchronized timing, warmed up",
+                    "without and with the KV cache, synchronized timing, warmed up",
         "models": {k: {"block_size": models[k]["T"], **{m: _stats(v) for m, v in samples[k].items()}} for k in names},
     }
 
@@ -105,10 +122,13 @@ def render(b: dict) -> str:
              f"- at: {b['at']}", f"- protocol: {b['protocol']}", "",
              "Median (p10–p90). prefill@128 is the same work for every model, so similar values there mean the "
              "comparison is clean.", "",
-             "| model | ctx | prefill@ctx ms | prefill@128 ms | decode tok/s (uncached, full context) |", "|---|---|---|---|---|"]
+             "| model | ctx | prefill@ctx ms | prefill@128 ms | decode tok/s, no cache | decode tok/s, KV cache |",
+             "|---|---|---|---|---|---|"]
     f = lambda s: f"{s['median']:.2f} ({s['p10']:.2f}–{s['p90']:.2f})"
     for k, m in sorted(b["models"].items(), key=lambda kv: kv[1]["block_size"]):
-        lines.append(f"| {k} | {m['block_size']} | {f(m['prefill_full_ms'])} | {f(m['prefill_128_ms'])} | {f(m['decode_tok_s'])} |")
+        cached = f(m["decode_cached_tok_s"]) if "decode_cached_tok_s" in m else "–"
+        lines.append(f"| {k} | {m['block_size']} | {f(m['prefill_full_ms'])} | {f(m['prefill_128_ms'])} | "
+                     f"{f(m['decode_tok_s'])} | {cached} |")
     return "\n".join(lines) + "\n"
 
 

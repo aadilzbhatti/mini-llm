@@ -155,6 +155,14 @@ def complete(model, tokenizer, block_size: int, device, prompt: str, seed: int,
 def generate_samples(model, tokenizer, block_size: int, device, draws: int = DRAWS, previous: dict | None = None) -> dict:
     """The samples section of a model's eval. Draws already in `previous` (same prompt, seed and
     decoding) are reused, so growing the prompt set only generates what's new; every draw is re-scored."""
+    model.set_use_cache(True)  # same tokens as uncached (verified on all frozen samples), several times faster
+    try:
+        return _generate_samples(model, tokenizer, block_size, device, draws, previous)
+    finally:
+        model.set_use_cache(False)  # the other evals score losses: they need a stateless forward
+
+
+def _generate_samples(model, tokenizer, block_size: int, device, draws: int, previous: dict | None) -> dict:
     old = {}
     if previous and (previous.get("temperature"), previous.get("top_k"), previous.get("new_tokens")) == (TEMPERATURE, TOP_K, NEW_TOKENS):
         old = {(p["prompt"], j): d for p in previous.get("prompts", []) for j, d in enumerate(p["draws"])}
@@ -325,6 +333,7 @@ def main(argv: list[str] | None = None) -> None:
     args = p.parse_args(argv)
     device = torch.device(args.device) if args.device else select_device()
     model, cfg, _ = load_model(args.checkpoint, device)
+    model.set_use_cache(True)
     tok, by_label = get_tokenizer(), dict(GEN_PROMPTS)
     settings = {("greedy" if t == 0 else f"T={t}, k={k}"): (t, k) for t, k in SWEEP}
     lines = [f"# Decoding sweep: {Path(args.checkpoint).stem}", "",

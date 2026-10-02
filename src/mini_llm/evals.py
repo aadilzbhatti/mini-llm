@@ -419,7 +419,7 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
     name = lambda r: Path(r["checkpoint"]).stem
     bench = (bench or {}).get("models", {})
     head = ["model", "ctx", "val@ctx", "rep4 median", "loops", "topic held"] + [f"L(c={c})" for c in ctxs] + cbs + [f"ret@{d}" for d in dists] + \
-           ["train tok/s", "train peak GB", "prefill@ctx ms", "decode tok/s"]
+           ["train tok/s", "train peak GB", "prefill@ctx ms", "decode tok/s", "decode tok/s (KV cache)"]
     lines = ["# Evals summary", "",
              "One row per checkpoint. **L(c)**: loss on the same 8,000 target tokens given exactly c tokens of "
              "history (compare models at equal c; this is the fair context comparison, not val@ctx). "
@@ -444,10 +444,11 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
         cells += [f"{ts['train_tokens_per_sec']:,.0f}" if ts.get("train_tokens_per_sec") else "–",
                   f"{ts['peak_mem_gb']:.2f}" if ts.get("peak_mem_gb") else "–"]
         if bm:
-            pf, dc = bm["prefill_full_ms"], bm["decode_tok_s"]
-            cells += [f"{pf['median']:.1f} ({pf['p10']:.1f}–{pf['p90']:.1f})", f"{dc['median']:.1f} ({dc['p10']:.1f}–{dc['p90']:.1f})"]
+            pf, dc, dk = bm["prefill_full_ms"], bm["decode_tok_s"], bm.get("decode_cached_tok_s")
+            cells += [f"{pf['median']:.1f} ({pf['p10']:.1f}–{pf['p90']:.1f})", f"{dc['median']:.1f} ({dc['p10']:.1f}–{dc['p90']:.1f})",
+                      f"{dk['median']:.1f} ({dk['p10']:.1f}–{dk['p90']:.1f})" if dk else "–"]
         else:
-            cells += [f"{r['inference']['prefill_ms_full_context']}*", f"{r['inference']['decode_tokens_per_sec']}*"]
+            cells += [f"{r['inference']['prefill_ms_full_context']}*", f"{r['inference']['decode_tokens_per_sec']}*", "–"]
         lines.append("| " + " | ".join(cells) + " |")
     if any(not bench.get(name(r)) for r in results):
         lines += ["", "\\* from the model's own eval run, not the controlled benchmark: don't compare across rows."]
