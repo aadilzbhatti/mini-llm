@@ -564,6 +564,7 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             return model_cache[key]
         ck = torch.load(path, map_location="cpu", weights_only=False)
         cfg = ModelConfig(**ck["config"])
+        cfg.use_cache = True
         model = build_model(cfg)
         model.load_state_dict(ck["model_state_dict"])
         model.to(device).eval()
@@ -676,7 +677,9 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         ids = prompt_ids(prompt, tokenizer)
         with gen_lock, torch.no_grad():
             model, cfg = load_for_inference(path, device)
+            model.clear_cache()
             logits, _ = model(ids[-cfg.block_size:].unsqueeze(0).to(device))
+            model.clear_cache()
         z = logits[0, -1].float().cpu()
         top = torch.topk(z, 200)
         return {

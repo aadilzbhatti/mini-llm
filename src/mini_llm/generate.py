@@ -64,6 +64,7 @@ def main(argv: list[str] | None = None) -> None:
     if args.checkpoint:
         ckpt = torch.load(args.checkpoint, map_location=device)
         cfg = ModelConfig(**ckpt["config"])
+        cfg.use_cache = True
         print(f"Config: {cfg.to_dict()}")
         model = build_model(cfg).to(device)
         model.load_state_dict(ckpt["model_state_dict"])
@@ -75,6 +76,7 @@ def main(argv: list[str] | None = None) -> None:
             n_head=args.n_head,
             n_layer=args.n_layer,
             dropout=args.dropout,
+            use_cache=True,
         )
         print(f"Config: {cfg.to_dict()}")
         model = build_model(cfg).to(device)

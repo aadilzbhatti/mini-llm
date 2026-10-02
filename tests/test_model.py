@@ -37,6 +37,12 @@ def model(cfg: ModelConfig) -> ModelCustomTransformer:
 
 
 @pytest.fixture
+def model_with_cache(cfg: ModelConfig) -> ModelCustomTransformer:
+    """A model with caching enabled for testing."""
+    cfg.use_cache = True
+    return build_model(cfg)
+
+@pytest.fixture
 def tokens() -> torch.Tensor:
     """A deterministic 1-D stream of ids, standing in for tokenized text."""
     g = torch.Generator().manual_seed(0)
@@ -133,27 +139,41 @@ def test_weight_tying_appears_once_in_named_parameters(model: ModelCustomTransfo
     assert matches == ["token_embedding_table.weight"]
 
 
-def test_inference(model: ModelCustomTransformer):
+def test_inference_with_cache(model: ModelCustomTransformer, model_with_cache: ModelCustomTransformer):
+    def train_model(model: ModelCustomTransformer, tokens: torch.Tensor, device: torch.device) -> None:
+        """Train the model on the given tokens for a few steps."""
+        model = model.to(device)
+        generator = torch.Generator().manual_seed(42)
+        x, y = make_batch(tokens.squeeze(0), batch_size=4, block_size=BLOCK_SIZE, device=device, generator=generator)
+        optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
+        model.train()
+        for _ in range(500):
+            optimizer.zero_grad()
+            _, loss = model(x, y)
+            loss.backward()
+            optimizer.step()
+    
+    def inference(model: ModelCustomTransformer, tokens: torch.Tensor, device: torch.device) -> str | list[str]:
+        """Run inference on the model and return the decoded output."""
+        model = model.to(device)
+        model.eval()
+        with torch.no_grad():
+            out = model.generate(tokens, max_new_tokens=10, block_size=BLOCK_SIZE)
+        decoded = tokenizer.decode(out[0])
+        return decoded
+    
     # load data/tiny.txt, encode, and train a small model on it
     text = load_text("data/tiny.txt")
     tokenizer = get_tokenizer()
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-    model = model.to(device)  # the fixture builds on CPU; the data goes to MPS when available
+    model_with_cache = model_with_cache.to(device)  # the fixture builds on CPU; the data goes to MPS when available
     tokens = encode(text, tokenizer).unsqueeze(0).to(device)
     # train the model on this data for a few steps
-    generator = torch.Generator().manual_seed(42)
-    x, y = make_batch(tokens.squeeze(0), batch_size=4, block_size=BLOCK_SIZE, device=device, generator=generator)
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
-    model.train()
-    for _ in range(1000):
-        optimizer.zero_grad()
-        _, loss = model(x, y)
-        loss.backward()
-        optimizer.step()
+    train_model(model_with_cache, tokens, device)
 
     test_seq = "The lighthouse keeper watched the ships"
     tokenizer = get_tokenizer()
     tokens = encode(test_seq, tokenizer).unsqueeze(0).to(device)
-    out = model.generate(tokens, max_new_tokens=10, block_size=BLOCK_SIZE)
-    decoded = tokenizer.decode(out[0])
-    print(decoded)
+    inference_output = inference(model_with_cache, tokens, device)
+    print(f"Inference output: {inference_output}")
+    print(model_with_cache.cache_len())

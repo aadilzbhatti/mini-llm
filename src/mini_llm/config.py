@@ -17,6 +17,7 @@ class ModelConfig:
     n_head: int = 4
     n_layer: int = 2
     dropout: float = 0.0
+    use_cache: bool = False
 
     def to_dict(self) -> dict[str, int | float]:
         return asdict(self)
@@ -35,4 +36,5 @@ def build_model(cfg: ModelConfig) -> ModelCustomTransformer:
         cfg.n_layer,
         cfg.block_size,
         cfg.dropout,
+        cfg.use_cache
     )

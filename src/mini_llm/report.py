@@ -181,12 +181,25 @@ def generate_until_eos(
     model starting a NEW document from nothing. Continuing past it and then
     judging whether the model held the prompt's subject measures the wrong
     thing entirely. The EOS token itself is not appended to the output.
+
+    With a KV-cached model (use_cache=True) only the newest token is fed once
+    the cache holds the context; when the cache fills the window it is
+    cleared and the cropped window re-run, so the output is unchanged.
     """
     was_training = model.training
     model.eval()
+    use_cache = getattr(model, "use_cache", False)
+    if use_cache:
+        model.clear_cache()
     try:
         for _ in range(max_new_tokens):
-            logits, _ = model(idx[:, -block_size:])
+            if use_cache and 0 < model.cache_len() < block_size:
+                idx_cond = idx[:, -1:]
+            else:
+                if use_cache:
+                    model.clear_cache()
+                idx_cond = idx[:, -block_size:]
+            logits, _ = model(idx_cond)
             logits = logits[:, -1, :]
             if temperature is not None:
                 logits = logits / temperature
@@ -203,6 +216,8 @@ def generate_until_eos(
             idx = torch.cat((idx, nxt), dim=1)
         return idx, False
     finally:
+        if use_cache:
+            model.clear_cache()
         model.train(was_training)
 
 

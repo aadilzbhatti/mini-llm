@@ -23,19 +23,17 @@ class Head(nn.Module):
 
     tril: torch.Tensor
 
-    def __init__(self, n_embd: int, head_size: int, block_size: int, dropout: float):
+    def __init__(self, n_embd: int, head_size: int, block_size: int, dropout: float, use_cache: bool = False):
         super().__init__()
-        # FIX (#1): the per-head LayerNorm that used to live here is gone.
-        # Block.forward already normalizes with ln1 before calling the
-        # attention sublayer, so every head was re-normalizing an
-        # already-normalized input -- and with its own parameters, so an
-        # n_head=4 model carried 4 redundant LayerNorms per block. Pre-norm
-        # means one norm per sublayer, shared by all heads.
         self.key = nn.Linear(n_embd, head_size, bias=False)
         self.query = nn.Linear(n_embd, head_size, bias=False)
         self.value = nn.Linear(n_embd, head_size, bias=False)
         self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))
         self.dropout = nn.Dropout(dropout)
+
+        self.use_cache = use_cache
+        self.register_buffer('cached_keys', None, persistent=False)
+        self.register_buffer('cached_values', None, persistent=False)
 
         # Initialize linear layers
         self.init_weights()
@@ -45,39 +43,50 @@ class Head(nn.Module):
         nn.init.xavier_normal_(self.query.weight)
         nn.init.xavier_normal_(self.value.weight)
 
-    # FIX (#2): the `mask` parameter is gone. It was threaded through Block ->
-    # MultiHeadAttention -> Head and then never applied (the masked_fill that
-    # would have used it was commented out), so it read as if padding were
-    # being handled when it wasn't. Batches here are fixed-length crops with
-    # no padding, so the causal tril below is the only mask needed. If padded
-    # batches come back later, add a key-padding mask then -- deliberately,
-    # and with a test.
     def forward(self, x: torch.Tensor):
         B, T, C = x.shape  # pyright: ignore[reportUnusedVariable]
-        k = self.key(x)
+        k_new = self.key(x)
+        v_new = self.value(x)
         q = self.query(x)
+
+        if self.use_cache and not self.training:
+            if self.cached_keys is None or self.cached_values is None:
+                self.cached_keys = k_new
+                self.cached_values = v_new
+            else:
+                self.cached_keys = torch.cat([self.cached_keys, k_new], dim=1)
+                self.cached_values = torch.cat([self.cached_values, v_new], dim=1)
+
+            k = self.cached_keys
+            v = self.cached_values
+        else:
+            k = k_new
+            v = v_new
+
+        T_total = k.shape[1] # k.shape != q.shape if we are using the cache
         wei = q @ k.transpose(-2, -1) / torch.sqrt(torch.tensor(k.shape[-1], dtype=torch.float32, device=k.device))
-        # wei = q @ k.transpose(-2, -1)  / torch.sqrt(torch.tensor(C, dtype=torch.float32) + 1e-6)
-        wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
+        wei = wei.masked_fill(self.tril[T_total-T:T_total, :T_total] == 0, float('-inf'))
 
         wei = F.softmax(wei, dim=-1)
-        # wei = wei * self.tril[:T, :T]
         wei = self.dropout(wei)
         # Log wei values 
         if self.training:
             self.attention_values = wei.detach()
             
-        v = self.value(x)
         out = wei @ v
 
         return out
 
+    def clear_cache(self):
+        self.cached_keys = None
+        self.cached_values = None
+
 class MultiHeadAttention(nn.Module):
     """ multiple heads of self-attention in parallel """
 
-    def __init__(self, n_embd: int, num_heads: int, head_size: int, block_size: int, dropout: float):
+    def __init__(self, n_embd: int, num_heads: int, head_size: int, block_size: int, dropout: float, use_cache: bool = False):
         super().__init__()
-        self.heads = nn.ModuleList([Head(n_embd, head_size, block_size, dropout) for _ in range(num_heads)])
+        self.heads = nn.ModuleList([Head(n_embd, head_size, block_size, dropout, use_cache) for _ in range(num_heads)])
         self.proj = nn.Linear(head_size * num_heads, n_embd)
         self.dropout = nn.Dropout(dropout)
 
@@ -91,6 +100,11 @@ class MultiHeadAttention(nn.Module):
         out = torch.cat([h(x) for h in self.heads], dim=-1)
         out = self.dropout(self.proj(out))
         return out
+
+    def clear_cache(self):
+        for m in self.modules():
+            if isinstance(m, Head):
+                m.clear_cache()
 
 class FeedForward(nn.Module):
     """ a simple linear layer followed by a non-linearity """
@@ -116,36 +130,38 @@ class FeedForward(nn.Module):
 class Block(nn.Module):
     """ Transformer block: communication followed by computation """
 
-    def __init__(self, n_embd: int, n_head: int, block_size: int, dropout: float):
+    def __init__(self, n_embd: int, n_head: int, block_size: int, dropout: float, use_cache: bool = False):
         # n_embd: embedding dimension, n_head: the number of heads we'd like
         super().__init__()
         head_size = n_embd // n_head
-        self.sa = MultiHeadAttention(n_embd, n_head, head_size, block_size, dropout)
+        self.sa = MultiHeadAttention(n_embd, n_head, head_size, block_size, dropout, use_cache)
         self.ffwd = FeedForward(n_embd, dropout)
         self.ln1 = nn.LayerNorm(n_embd)
         self.ln2 = nn.LayerNorm(n_embd)
 
     def forward(self, x: torch.Tensor):
-        # FIX (#2): mask parameter dropped. ln1/ln2 stay exactly where they
-        # were: this is the only LayerNorm on the attention path now that the
-        # per-head one is gone (#1).
         x = x + self.sa(self.ln1(x))
         x = x + self.ffwd(self.ln2(x))
         return x
 
+    def clear_cache(self):
+        self.sa.clear_cache()
+
 class ModelCustomTransformer(nn.Module):
-    def __init__(self, vocab_size: int, n_embd: int, n_head: int, n_layer: int, block_size: int, dropout: float = 0.2):
+    def __init__(self, vocab_size: int, n_embd: int, n_head: int, n_layer: int, block_size: int, dropout: float = 0.2, use_cache: bool = False):
         super().__init__()
+        self.use_cache = use_cache
+
         self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
         self.position_embedding_table = nn.Embedding(block_size, n_embd)
-        self.blocks = nn.ModuleList([Block(n_embd, n_head, block_size, dropout) for _ in range(n_layer)])
+        self.blocks = nn.ModuleList([Block(n_embd, n_head, block_size, dropout, self.use_cache) for _ in range(n_layer)])
         self.ln_f = nn.LayerNorm(n_embd)  # final layer norm
         self.lm_head = nn.Linear(n_embd, vocab_size)
         self.dropout = nn.Dropout(dropout)
 
         self.init_weights()
 
-        self.lm_head.weight = self.token_embedding_table.weight  # weight tying
+        self.lm_head.weight = self.token_embedding_table.weight  # weight tying 
 
 
     def init_weights(self):
@@ -165,7 +181,8 @@ class ModelCustomTransformer(nn.Module):
 
         # idx and targets are both (B, T) tensor of integers
         tok_emb = self.token_embedding_table(idx)  # (B,T,C), or (batch_size, block_size, n_embd)
-        pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device))  # (T,C)
+        offset = self.cache_len() if self.use_cache and not self.training else 0
+        pos_emb = self.position_embedding_table(torch.arange(offset, offset + T, device=idx.device))  # (T,C)
 
         # Log embedding values and gradients
         if self.training:
@@ -183,11 +200,6 @@ class ModelCustomTransformer(nn.Module):
         x = self.ln_f(x)  # (B, T, C)
         logits = self.lm_head(x)  # (B, T, vocab_size)
 
-        # NOTE (bootstrap): a loop that normalized each Head's stored attention
-        # matrix and wrote it to TensorBoard as an image used to run here on
-        # every forward pass. Removed with the rest of the TensorBoard
-        # infrastructure. See BOOTSTRAP_NOTES.md.
-
         if targets is None:
             loss = None
         else:
@@ -200,6 +212,7 @@ class ModelCustomTransformer(nn.Module):
     def generate(self, idx: torch.Tensor, max_new_tokens: int, block_size: int, greedy: bool = False) -> torch.Tensor:
         was_training = self.training
         self.eval()
+        self.clear_cache()  # Clear cache before generation
         try:
             return self._generate(idx, max_new_tokens, block_size, greedy)
         finally:
@@ -207,8 +220,12 @@ class ModelCustomTransformer(nn.Module):
 
     def _generate(self, idx: torch.Tensor, max_new_tokens: int, block_size: int, greedy: bool) -> torch.Tensor:
         for _ in range(max_new_tokens):
-            # crop idx to the last block_size tokens
-            idx_cond = idx[:, -block_size:]
+            if self.use_cache and 0 < self.cache_len() < block_size:
+                idx_cond = idx[:, -1:]
+            else:
+                self.clear_cache()  # Clear cache if we are not using it or if it's full
+                # crop idx to the last block_size tokens
+                idx_cond = idx[:, -block_size:]
             logits, _ = self(idx_cond)
             # focus only on the last time step
             logits = logits[:, -1, :] # becomes (B, C)
@@ -223,3 +240,24 @@ class ModelCustomTransformer(nn.Module):
             # append sampled index to the running sequence
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx
+
+    def cache_len(self) -> int:
+        any_head = None
+        for m in self.modules():
+            if isinstance(m, Block):
+                any_head = m.sa.heads[0]
+                break
+        if any_head is None:
+            return 0
+
+        if not getattr(any_head, 'use_cache', False) or any_head.cached_keys is None:
+            return 0
+        if isinstance(any_head, Head):
+            return int(any_head.cached_keys.shape[1])
+        return 0
+
+    def clear_cache(self):
+        if self.use_cache:
+            for m in self.modules():
+                if isinstance(m, Block):
+                    m.clear_cache()
