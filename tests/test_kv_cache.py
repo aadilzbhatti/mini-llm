@@ -60,31 +60,54 @@ def models() -> tuple[ModelCustomTransformer, ModelCustomTransformer]:
     return out[0], out[1]
 
 
-def time_generate(model: ModelCustomTransformer, idx: torch.Tensor, max_new_tokens: int, block_size: int) -> tuple[torch.Tensor, float]:
+def time_generate(model: ModelCustomTransformer, idx: torch.Tensor, max_new_tokens: int, block_size: int, greedy: bool=False) -> tuple[torch.Tensor, float]:
     t0 = time.perf_counter()
     torch.manual_seed(0)
-    out = model.generate(idx, max_new_tokens=max_new_tokens, block_size=block_size, greedy=False)
+    out = model.generate(idx, max_new_tokens=max_new_tokens, block_size=block_size, greedy=greedy)
     return out, time.perf_counter() - t0
 
 
 @torch.no_grad()
 @pytest.mark.parametrize("prompt", PROMPTS)
-def test_cached_step_logits_match_full_forward(models, prompt: str):
-    """Prefill the prompt, then feed one token through the cache: its logits
-    must match running the whole sequence through the uncached model."""
+def test_cached_multistep_logits_match_full_forward(models, prompt: str):
     plain, cached = models
     tokenizer = get_tokenizer()
     idx = encode(prompt, tokenizer).unsqueeze(0)
-    next_tok = torch.tensor([[tokenizer.encode(" the")[0]]])
-
+    prompt_len = idx.size(1)
     cached.clear_cache()
-    cached(idx)  # prefill
-    step_logits, _ = cached(next_tok)
+    cached(idx) # prefill
+    assert cached.cache_len() == prompt_len
+
+    continuation = encode(" the cat in the hat", tokenizer)
+    for i, token in enumerate(continuation):
+        next_tok = token.view(1, 1)
+        step_logits, _ = cached(next_tok)
+        full_idx = torch.cat([idx, next_tok], dim=1)
+        full_logits, _ = plain(full_idx)
+        diff = (step_logits[:, -1] - full_logits[:, -1]).abs().max()
+        assert torch.allclose(
+            step_logits[:, -1],
+            full_logits[:, -1],
+            atol=1e-4,
+            rtol=1e-4,
+        ), f"step {i}: max logit error = {diff.item():.3e}"
+        assert cached.cache_len() == prompt_len + i + 1
+        idx = full_idx
     cached.clear_cache()
+    assert cached.cache_len() == 0
+    
 
-    full_logits, _ = plain(torch.cat([idx, next_tok], dim=1))
-    assert torch.allclose(step_logits[:, -1], full_logits[:, -1], atol=1e-4, rtol=1e-4)
-
+@torch.no_grad()
+@pytest.mark.parametrize("prompt", PROMPTS)
+def test_prefill_with_and_without_cache_gives_same_logits(models, prompt: str):
+    """Prefill the prompt with and without the cache: the logits must match."""
+    plain, cached = models
+    tokenizer = get_tokenizer()
+    idx = encode(prompt, tokenizer).unsqueeze(0)
+    cached.clear_cache()
+    logits_cached, _ = cached(idx)
+    logits_plain, _ = plain(idx)
+    assert torch.allclose(logits_cached, logits_plain, atol=1e-4, rtol=1e-4)
 
 @torch.no_grad()
 @pytest.mark.parametrize("block_size", [1024, 32], ids=["full-window", "window-overflow"])
@@ -98,8 +121,8 @@ def test_cached_greedy_generation_matches_uncached(models, block_size: int):
     total_plain = total_cached = 0.0
     for prompt in PROMPTS:
         idx = encode(prompt, tokenizer).unsqueeze(0)
-        out_plain, t_plain = time_generate(plain, idx, max_new_tokens, block_size)
-        out_cached, t_cached = time_generate(cached, idx, max_new_tokens, block_size)
+        out_plain, t_plain = time_generate(plain, idx, max_new_tokens, block_size, greedy=True)
+        out_cached, t_cached = time_generate(cached, idx, max_new_tokens, block_size, greedy=True)
         total_plain += t_plain
         total_cached += t_cached
 
