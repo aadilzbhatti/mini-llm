@@ -2,51 +2,40 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Label</key>
-    <string>com.aadil.mini-llm-control</string>
-
-    <!-- Control API + phone page on localhost only; Tailscale Serve publishes it to your tailnet. -->
-    <key>ProgramArguments</key>
-    <array>
-        <string>/opt/homebrew/bin/uv</string>
-        <string>run</string>
-        <string>--project</string>
-        <string>/Users/aadil/dev/wiki-llm</string>
-        <string>mini-llm-control</string>
-        <string>--repo</string>
-        <string>/Users/aadil/dev/wiki-llm</string>
-        <string>--host</string>
-        <string>127.0.0.1</string>
-        <string>--port</string>
-        <string>8765</string>
-    </array>
-
-    <key>WorkingDirectory</key>
-    <string>/Users/aadil/dev/wiki-llm</string>
-
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PATH</key>
-        <string>/Users/aadil/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
-        <!-- The link the phone page's "TensorBoard" button opens. Replace with your Mac's tailnet name. -->
-        <key>MINI_LLM_TENSORBOARD_URL</key>
-        <string>https://YOUR-MAC.YOUR-TAILNET.ts.net:8443/</string>
-        <!-- Optional second factor on top of Tailscale. Uncomment and pick a long random string.
-        <key>MINI_LLM_TOKEN</key>
-        <string>change-me</string>
-        -->
-    </dict>
-
-    <key>RunAtLoad</key>
-    <true/>
-    <key>KeepAlive</key>
-    <true/>
-    <key>ProcessType</key>
-    <string>Background</string>
-
-    <key>StandardOutPath</key>
-    <string>/Users/aadil/dev/wiki-llm/runner/control.log</string>
-    <key>StandardErrorPath</key>
-    <string>/Users/aadil/dev/wiki-llm/runner/control.log</string>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>MINI_LLM_TENSORBOARD_URL</key>
+		<string>https://YOUR-MAC.YOUR-TAILNET.ts.net:8443/</string>
+		<key>PATH</key>
+		<string>/Users/aadil/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+	</dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>Label</key>
+	<string>com.aadil.mini-llm-control</string>
+	<key>ProcessType</key>
+	<string>Standard</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/homebrew/bin/uv</string>
+		<string>run</string>
+		<string>--project</string>
+		<string>/Users/aadil/dev/wiki-llm</string>
+		<string>mini-llm-control</string>
+		<string>--repo</string>
+		<string>/Users/aadil/dev/wiki-llm</string>
+		<string>--host</string>
+		<string>127.0.0.1</string>
+		<string>--port</string>
+		<string>8765</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/aadil/dev/wiki-llm/runner/control.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/aadil/dev/wiki-llm/runner/control.log</string>
+	<key>WorkingDirectory</key>
+	<string>/Users/aadil/dev/wiki-llm</string>
 </dict>
 </plist>
