@@ -244,9 +244,21 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
 
     # --- pages ---------------------------------------------------------------
 
+    def ui_version() -> str:
+        return str(int((STATIC / "index.html").stat().st_mtime))
+
+    # A phone can keep the page open for days while the server and API change under it. Every
+    # API response carries the page's version; the page reloads itself when it changes.
+    @app.middleware("http")
+    async def stamp_ui_version(request: Request, call_next):
+        response = await call_next(request)
+        if request.url.path.startswith("/api/"):
+            response.headers["X-UI-Version"] = ui_version()
+        return response
+
     @app.get("/", include_in_schema=False)
     def index() -> FileResponse:
-        return FileResponse(STATIC / "index.html")
+        return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-cache"})
 
     # --- meta ----------------------------------------------------------------
 

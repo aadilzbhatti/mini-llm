@@ -147,3 +147,11 @@ def test_meta_form_schema(repo):
     assert fields["tokens"]["type"] == "path" and "data/d1/train.pt" in fields["tokens"]["choices"]
     assert fields["lr"]["min"] > 0 and fields["save"]["type"] == "bool"
     assert {f["flag"] for f in form["prepare-data"]} >= {"out-dir", "dataset", "num-examples"}
+
+
+def test_api_responses_carry_the_page_version(repo):  # noqa: F811
+    from fastapi.testclient import TestClient
+    from mini_llm.server import STATIC, create_app
+    c = TestClient(create_app(repo=repo, uv="uv"))
+    assert c.get("/api/meta").headers["x-ui-version"] == str(int((STATIC / "index.html").stat().st_mtime))
+    assert c.get("/").headers["cache-control"] == "no-cache"

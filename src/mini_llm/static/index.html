@@ -188,10 +188,14 @@ const $ = s => document.querySelector(s);
 let META = null, RUNS = [], timer = null;
 
 function tok() { try { return localStorage.getItem('mini-llm-token') || ''; } catch { return ''; } }
+let UI_VERSION = null;
 async function api(path, opts = {}) {
   const headers = { 'content-type': 'application/json' };
   if (tok()) headers.authorization = 'Bearer ' + tok();
   const r = await fetch(path, { ...opts, headers });
+  const ver = r.headers.get('x-ui-version');  // the server has a newer page than this one: load it
+  if (ver && UI_VERSION && ver !== UI_VERSION) { location.reload(); return new Promise(() => {}); }
+  if (ver) UI_VERSION = ver;
   if (r.status === 401) {
     const t = prompt('API token');
     if (t) { try { localStorage.setItem('mini-llm-token', t); } catch {} return api(path, opts); }
