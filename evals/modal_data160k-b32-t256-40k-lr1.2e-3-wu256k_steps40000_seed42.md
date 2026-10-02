@@ -74,24 +74,34 @@ Forced choice among 10 single-token words (chance 10%), 400 trials per distance,
 
 ## Generation samples
 
-10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw. The samples themselves: this run's Samples button, or evals/samples.md next to every other model.
+20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw. The samples themselves: this run's Samples button, or evals/samples.md next to every other model.
 
-| rep4 | looping | topic held | stopped at EOS |
+| rep4 median / p90 | loops (95% CI) | first loop at | distinct-2 / -4 | topic held | topic span | EOS |
+|---|---|---|---|---|---|---|
+| 0.324 / 0.651 | 7/100 (3%–14%) | token 180 | 0.452 / 0.644 | 30% | 232 tokens | 5/100 |
+
+| prompt | rep4 median | loops | topic span (median) |
 |---|---|---|---|
-| 0.430 | 6/50 | 30% | 2/50 |
-
-| prompt | rep4 | looping |
-|---|---|---|
-| definition | 0.41 | 2/5 |
-| biography | 0.20 | 0/5 |
-| science_explainer | 0.41 | 0/5 |
-| instructional | 0.43 | 0/5 |
-| bullet_list | 0.74 | 1/5 |
-| numbered_list | 0.60 | 1/5 |
-| enumeration | 0.34 | 0/5 |
-| long_dependency | 0.53 | 1/5 |
-| attribution | 0.27 | 0/5 |
-| numeric_units | 0.35 | 1/5 |
+| definition | 0.37 | 1/5 | 0 |
+| biography | 0.14 | 0/5 | 250 |
+| science_explainer | 0.43 | 0/5 | 111 |
+| instructional | 0.44 | 0/5 | 247 |
+| bullet_list | 0.92 | 1/5 | 0 |
+| numbered_list | 0.57 | 1/5 | 23 |
+| enumeration | 0.39 | 0/5 | 0 |
+| long_dependency | 0.49 | 1/5 | 252 |
+| attribution | 0.25 | 0/5 | 128 |
+| numeric_units | 0.28 | 1/5 | 253 |
+| agreement_gap | 0.27 | 0/5 | 252 |
+| history | 0.31 | 0/5 | 251 |
+| anatomy | 0.26 | 0/5 | 231 |
+| geography | 0.47 | 0/5 | 254 |
+| math_definition | 0.41 | 1/5 | 133 |
+| environment | 0.10 | 0/5 | 160 |
+| recipe | 0.27 | 1/5 | 253 |
+| literature | 0.17 | 0/5 | 244 |
+| technology | 0.12 | 0/5 | 180 |
+| economics | 0.35 | 0/5 | 246 |
 
 ## Training systems (recorded by the run)
 

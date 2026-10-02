@@ -58817,18 +58817,29 @@
     "peak_mem_kind": "cuda max_memory_allocated"
   },
   "samples": {
-    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "protocol": "20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
     "temperature": 0.7,
     "top_k": 40,
     "new_tokens": 256,
     "draws": 5,
     "summary": {
-      "n": 50,
-      "rep4": 0.55,
-      "looped": 17,
-      "eos": 3,
-      "topic": 0.32,
-      "tokens": 252.1
+      "n": 100,
+      "rep4": 0.496,
+      "rep4_p90": 0.795,
+      "rep4_mean": 0.471,
+      "distinct2": 0.381,
+      "distinct4": 0.529,
+      "looped": 26,
+      "loop_rate": 0.26,
+      "loop_ci95": [
+        0.184,
+        0.354
+      ],
+      "loop_onset_median": 156.5,
+      "topic": 0.307,
+      "topic_span_median": 204.0,
+      "eos": 7,
+      "tokens": 246.62
     },
     "prompts": [
       {
@@ -58840,50 +58851,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.478,
+            "distinct2": 0.392,
+            "distinct4": 0.522,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " begins in the photovoltaic cells that produce electricity. Photosynthesis is the process of converting the energy from the light to sunlight. Photosynthesis is the process of converting the energy into energy which is then converted to the light. Photosynthesis is the process of converting the energy into energy. Photosynthesis is the process of converting the light into energy. Photosynthesis is the process of converting the light into energy. Photosynthesis is the process of converting the light into energy which is then converted to light. Photosynthesis is the process of converting the light into energy. Photosynthesis is the process of converting the light into energy which is then converted into energy. Photosynthesis is the process of converting the light into energy which is then converted to light which is then converted to light which is then converted into light to light which is then converted to light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into light which is then converted into",
             "tokens": 256,
             "eos": false,
             "rep4": 0.759,
+            "distinct2": 0.161,
+            "distinct4": 0.241,
             "looped": true,
             "loop_onset": 166,
             "loop_period": 6,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 131
           },
           {
             "text": " occurs after the conversion of food to carbon dioxide. The process is called conversion.\nThe conversion of food to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide is an important step.\nCarbon dioxide is a major energy source for carbon dioxide and water to carbon dioxide. It is a vital part of carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide.\nCarbon dioxide is a major energy source for carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to carbon dioxide and water to",
             "tokens": 256,
             "eos": false,
             "rep4": 0.794,
+            "distinct2": 0.161,
+            "distinct4": 0.206,
             "looped": true,
             "loop_onset": 101,
             "loop_period": 5,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " takes a short time to produce an electron, which is a process whereby a photon splits into a small molecule, and then creates a single molecule. Thus, the electron will convert the electron to a small molecule and generate a small molecule, which is a molecule.\nThe electron is a molecule that interacts with the electrons of a molecule, which is a molecule that is a molecule. The electron will then be generated as an energy source and that is then the energy source. The energy source can be produced by the electron, and the energy source can be used to create a new molecule.\nThe electron is a molecule that can be used to create a molecule, which is a molecule that is a molecule that is a molecule. The electron is a molecule that is a molecule that is a molecule that is a molecule that is a molecule whose molecules are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are molecules that are",
             "tokens": 256,
             "eos": false,
             "rep4": 0.518,
+            "distinct2": 0.345,
+            "distinct4": 0.482,
             "looped": true,
             "loop_onset": 168,
             "loop_period": 3,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 16
           },
           {
             "text": " is carried out in a continuous stream of oxygen. It is then converted to a single chemical element of ATP, which is then converted to ATP.\nThe ATP is then converted to ATP\nThe ATP is converted to ATP\nThe ATP is then converted to ATP\nThe ATP is then converted to ATP\nIt is converted to ATP\nThe ATP in ATP is converted to ATP\nThe ATP is then converted to ATP\nThe ATP is converted to ATP\nThe ATP is then converted to ATP\nThe ATP is converted into ATP\nThe ATP is converted to ATP\nThe ATP is then converted to ATP\nThe ATP is converted to ATP\nThe ATP is then converted to ATP\nThe ATP is then converted to ATP. ATP is converted to ATP\nThe ATP is then converted to ATP\nThe ATP is then converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP\nThe ATP is converted to ATP",
             "tokens": 256,
             "eos": false,
             "rep4": 0.794,
+            "distinct2": 0.149,
+            "distinct4": 0.206,
             "looped": true,
             "loop_onset": 162,
             "loop_period": 7,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -58896,50 +58922,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.273,
+            "distinct2": 0.514,
+            "distinct4": 0.727,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 250
           },
           {
             "text": " was born on November 22, 1913, on April 7, 1913, in the German Academy of Sciences, and was a Russian physicist and physicist who was born on December 1, 1917, in the German Academy of Sciences. Einstein\u2019s theory of relativity was based on the theory of relativity.\nDuring the 1920s, Einstein was a physicist who was a cosmologist who was a physicist. Einstein was not a physicist but a theoretical physicist and a physicist who was a physicist and was a major scientist.\nIn 1920, Einstein was the leading scientist and was a member of the Nobel Committee of the Soviet Union. Einstein was a member of the National Science Foundation and was a member of the scientific community whose scientific contributions were largely based on scientific research.\nAfter the 1930s, the Soviet Union was considered a pioneer in physics and was a major figure. In 1920, Einstein was a member of the National Science Foundation.\nFollowing the successful completion of the first scientific journal in 1930, to be awarded the Nobel Prize in economics, Einstein was awarded the Nobel Prize in economics and was awarded the Nobel Prize in economics and was awarded the Nobel Prize in economics and was awarded the Nobel Prize in economics and is a major figure in the field of science.\nDuring the 1920s,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.194,
+            "distinct2": 0.573,
+            "distinct4": 0.806,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 208
           },
           {
             "text": " studied the universe and the universe. Einstein first was a German mathematician and physicist whose name was Isaac Newton. Einstein was a German mathematician who studied cosmology and physics.\nThe theory of relativity was based on a series of theories and theories, which were based on a series of observations, such as the discovery of Einstein\u2019s law, the discovery of the universe and the discovery of the universe. Einstein\u2019s theory also influenced many other aspects of the universe and the universe, such as its history, philosophy, and the philosophy of the universe.\nWhat is the theory of relativity?\nThe theory of relativity is the study of the way that it was used to explain the ideas of the universe and the ways that it was used to explain the universe. Einstein\u2019s theory was a theory of relativity, which was first proposed by Einstein and then later wrote by Einstein in his famous book The Physical Theory of relativity.\nWhat is the theory of relativity?\nThe theory of relativity is based on a series of observations, such as the discovery of the origin of the universe.\nWhy is the theory of relativity important?\nThe theory of relativity is based on the theory of relativity, which is based on the theory of the laws of classical physics.\nWhat is",
             "tokens": 256,
             "eos": false,
             "rep4": 0.253,
+            "distinct2": 0.518,
+            "distinct4": 0.747,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 252
           },
           {
             "text": " became the first Einstein. Einstein did not consider Einstein's theory of relativity until the age of Einstein.\nIn his book, Einstein, the author of the book The Origin of Quantum Mechanics, discusses the contributions of Einstein and the theories of relativity.\nOne of the key contributions of Einstein\u2019s theory was the development of a theory that was not only about the nature of the universe but also about the study of objects and phenomena. Albert Einstein was not a physicist but one of the most important contributions of Einstein\u2019s theories was the development of a theory that led to the development of a theory of relativity.\nThe theory of relativity was a major development of a theory that was not only about the nature of the universe but also about the nature of the universe. Einstein's theory is clear and clear, but there is no evidence that Einstein\u2019s theory is a theory that is not only about the nature of the universe but also about the nature of the universe.\nAnother key contribution of Einstein\u2019s theory is the development of a theory that has a positive impact on how the universe is made. Einstein\u2019s theory is a fundamental point of view that is not only about the nature of the universe but also about the nature of the universe.\nThe theory",
             "tokens": 256,
             "eos": false,
             "rep4": 0.289,
+            "distinct2": 0.529,
+            "distinct4": 0.711,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 256
           },
           {
             "text": " became the first Einstein to be born in the 1930s. Einstein was born in Germany on August 10, 1945 and was a German-born physicist. Einstein was a German-born physicist.\nAlbert Einstein is an Einstein-Hematorean physicist and physicist. He was a physicist and scientist. The physicist is a physicist.\nAlbert Einstein is the first Einstein-Hematore physicist of the time. Einstein was a German-born physicist. He was a physicist and physicist.\nAlbert Einstein is the most famous Einstein-Hematore physicist and physicist. He was a German-born physicist.\nAlbert Einstein is the second person to be the Einstein of the universe.\nAlbert Einstein is a member of the German-born physicist. He is a German-born physicist.\nAlbert Einstein was born in Germany on August 9, 1946. He was a German-born and a German-born physicist.\nAlbert Einstein is the son of the German-born physicist. He was a German-born physicist.\nAlbert Einstein is one of the first Einstein-Hematore physicists to be born in Germany.\nAlbert Einstein is the son of the German-born physicist. He was a physicist.\nAlbert Einstein is the father of the German-born",
             "tokens": 256,
             "eos": false,
             "rep4": 0.443,
+            "distinct2": 0.345,
+            "distinct4": 0.557,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.8333333333333334
+            "topic": 0.8333333333333334,
+            "topic_span": 256
           }
         ]
       },
@@ -58951,51 +58992,66 @@
             "text": " a charge of an atomization.\nI would think that the IKEC and IKEC can be used as a substrate for IKEC to dissolve carbon dioxide and methane.\nHowever, the IKEC could be used as a substrate for IKEC to dissolve hydrogen in a solution of hydrogen peroxide.\nIKEC is a substrate that is suitable for the use of hydrogen peroxide.\nThe IKEC can be used as a substrate for IKEC and it is used as a substrate for catalytic reactions.\nIt is used as a substrate for catalytic reactions.\nThe IKEC can be used as a substrate for catalytic reactions.\nThe IKEC can be used as a substrate for catalytic reactions.\nHowever, the IKEC can be used as a substrate for catalytic reactions in a catalytic reaction.\nIt is used as a substrate for catalytic reactions in catalytic reactions.\nThe IKEC can be used as a substrate for catalytic reactions in catalytic reactions.\nThe IKEC can be used as a substrate for catalytic reactions in catalytic reactions.\nThe IKEC can be used as a substrate for catalytic reactions in catalytic reactions in catalytic reactions",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.605,
+            "rep4": 0.607,
+            "distinct2": 0.287,
+            "distinct4": 0.393,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " a chemical element and a chemical element. The chemical element comprises the chemical element of a reaction, which is the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element of the chemical element",
             "tokens": 256,
             "eos": false,
             "rep4": 0.905,
+            "distinct2": 0.071,
+            "distinct4": 0.095,
             "looped": true,
             "loop_onset": 21,
             "loop_period": 4,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 256
           },
           {
             "text": " its name-presumably in the sense of the molecule.\nAs a result, a number of other compounds that have been developed are:\n- Zinc Oxide, a type of naturally occurring compound\n- Zinc Oxide, a type of naturally occurring compound\n- Zinc Oxide, a form of the compound\n- Zinc Oxide, a type of compound\n- Zinc Oxide, a type of compound\n- Zinc Oxide, a form of the compound\n- Zinc Oxide, a form of the compound\n- Zinc Oxide, a form of a compound\n- Zinc Oxide, a form of the compound\n- Zinc Oxide, a type of compound\n- Zinc Oxide, a form of this compound\n- Zinc Oxide, a form of this compound\n- Zinc Oxide, an alkali compound\n- Zinc Oxide, a form of this compound\n- Zinc Oxide, a form of this compound\n- Zinc Oxide, a form of this compound",
             "tokens": 218,
             "eos": true,
             "rep4": 0.702,
+            "distinct2": 0.24,
+            "distinct4": 0.298,
             "looped": true,
             "loop_onset": 181,
             "loop_period": 12,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " the addition of the DNA. The number of DNA in the genome is inversely related to the number of proteins in the genome.\n1. The number of molecules in the genome is divided by the number of proteins in the genome of the genome.\n2. The number of proteins in the genome is inversely related to the number of proteins in the genome of the genome.\nThe number of proteins in the genome of the genome of the genome is divided by the number of proteins in the genome of the genome of the genome.\nThe number of proteins in the genome of the genome is different compared to the number of proteins in the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of the genome of",
             "tokens": 256,
             "eos": false,
             "rep4": 0.775,
+            "distinct2": 0.149,
+            "distinct4": 0.225,
             "looped": true,
             "loop_onset": 127,
             "loop_period": 3,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " a high voltage. In addition to the above, the main difference in the electrical resistance of the material is the positive and negative ions. The two of the two ions are the negative ions. The positive ions are the positive ions. The negative ions are the positive ions. If the positive ions are positive, the negative ions are the negative ions.\nThe positive ions are used as the basis for the measurement of the positive charge and the number of ions used. The negative ions are the neutral ions. The positive ions are the negative ions. The negative ions are the negative ions, the negative ions are the negative ions.\nThe positive charge is the positive ions. The negative ions are the negative ions. The negative ions are the negative ions.\nThe positive ions are the negative ions. The negative ions are the positive ions. The negative ions are the positive ions.\nThe negative ions are the positive ions. The negative ions are the positive ions.\nThe negative ions are the positive ions. The negative ions are the negative ions.\nThe negative ions are the negative ions. The negative ions are the negative ions. The negative ions are the negative ions.\nThe positive ions are the negative ions. The negative ions are the positive ions. The negative ions are the negative",
             "tokens": 256,
             "eos": false,
             "rep4": 0.609,
+            "distinct2": 0.255,
+            "distinct4": 0.391,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59008,50 +59064,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.451,
+            "distinct2": 0.396,
+            "distinct4": 0.549,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 256
           },
           {
             "text": " create a 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 4D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D",
             "tokens": 256,
             "eos": false,
             "rep4": 0.968,
+            "distinct2": 0.024,
+            "distinct4": 0.032,
             "looped": true,
             "loop_onset": 27,
             "loop_period": 2,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " make decisions about how to write a good essay. They will write a thesis that is not just an abstract, but as a result of the process of writing.\nA good thesis is a structure that can be used to help you understand what a good thesis is and how it is written.\nA good thesis should include a thesis statement that is not only interesting but also informative. The thesis statement is a short paragraph, sentence that will be used as a way to keep your reader interested.\nA good thesis is a structure that has a strong thesis. The main purpose of a good thesis is to provide a way to make sense of the main topic of your work.\nA good thesis is very important as a good thesis, and it is important that you are prepared to analyze and analyze the main topic of your work.\nA good thesis is a structure that should be used in order to analyze your work and to make use of it.\nA good thesis is a structure that should be used in order to make use of it. The thesis statement is a structure that should be used in order to make use of it.\nA good thesis is a structure that should be used in order to make use of it. This structure should be used in order to make use of",
             "tokens": 256,
             "eos": false,
             "rep4": 0.312,
+            "distinct2": 0.525,
+            "distinct4": 0.688,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " use a variety of different types of methods to help them solve problems in a different way.\n- Students in the class may have to explain their use of different methods and how they use different methods.\n- Students will learn how to use the different methods and how to use different methods in a different way.\n- Students will learn how to use different methods in different ways in a different way.\n- Students will learn how to use different methods at different points in a different way to solve problems.\n- Students will learn how to use different methods in different ways.\n- Students will learn how to use different methods in an easy way.\n- Students will learn ways to use different methods and how to use different methods.\n- Students will learn how to use different methods and how to use different methods in different ways.\n- Students will learn how to use different methods in different ways to solve problems in different ways.\n- Students will learn how to use different methods in different ways.\n- Students will learn how to use different methods in different ways.\n- Students will learn how to use different methods in different ways.\n- Students will learn how to use different methods in different ways.\n- Students will learn how to use different methods in different ways",
             "tokens": 256,
             "eos": false,
             "rep4": 0.64,
+            "distinct2": 0.239,
+            "distinct4": 0.36,
             "looped": true,
             "loop_onset": 183,
             "loop_period": 14,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 248
           },
           {
             "text": " read and write the text in the text:\n1. Students will learn how to read and write the text in the text.\n2. Students will learn how to read and write the text in the text.\n3. Students will read the texts in the text.\n4. Students will read the text in the text.\n5. Students will read and write the text in the text.\n6. Students will read the text in the text.\n7. Students will read the text in the text.\n8. Students will read and write the text in the text.\n9. Students will read and write the text in the text.\n10. Students will read and write the text in the text.\n11. Students will read and write the text in the text.\n12. Students will read the text in the text.\n13. Students will read and write the text in the text.\n14. Students will read and write the text in the text.\n15. Students will read and write the text in the text.\n16. Students will read and write the text in the text.\n17. Students will read and write the text in the text.\n18. Students will read and write the text in the text",
             "tokens": 256,
             "eos": false,
             "rep4": 0.617,
+            "distinct2": 0.22,
+            "distinct4": 0.383,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 247
           }
         ]
       },
@@ -59063,51 +59134,66 @@
             "text": "Increased blood pressure: Low blood pressure can lead to a number of health problems, including cancer, diabetes and other types of cancer.\n- Increased risk of heart disease: High blood pressure can lead to heart disease, heart disease, and other cardiovascular issues.\n- Increased risk of heart disease: High blood pressure can lead to heart disease, stroke, and other cardiovascular problems.\n- Increased risk of heart disease: High blood pressure can lead to heart disease, stroke, and other cardiovascular problems.\n- Lifestyle changes: High blood pressure can also impact heart health, as it can raise cholesterol levels.\n- Increased risk of heart disease: High blood pressure can lead to heart disease, which can be a sign of heart disease.\nWhat is the best time to exercise?\nThe best time to exercise is to exercise. You can always follow the recommended exercise schedule, if you are still not exercising. However, if you are not exercising regularly, it is best to exercise every day. You can also use a small amount of exercise to improve your overall health.\n- Lifestyle changes: High blood pressure can lead to a number of health issues, including obesity, heart disease, and cardiovascular problems.\n- Lifestyle changes: High",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.356,
+            "rep4": 0.341,
+            "distinct2": 0.512,
+            "distinct4": 0.659,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 208
           },
           {
             "text": " Increased blood sugar\n-  Decreased heart rate\n- Increased insulin resistance\n- Increased insulin resistance\nWhat do you need to do with energy and nutrition?\nThe most important thing is to stay healthy. If you are exercising regularly, you\u2019ll need to stay active. However, for the most part, you should do some stretching of your muscles.\n-  Increased muscle mass\n-  Decreased muscle mass\n-  Increased insulin resistance\n- Muscle mass\n-  Decreased body weight\n-  Decreased weight\n- Low sugar diet\n- No eating enough\n- Stress fractures\n- Increased fatigue\n- Low weight\nWhat can you do to help with exercise?\nIf you are taking some exercise for a while, you might be wondering if you should exercise again for a while.\nIn addition to this, some exercise can also help you to feel more tired.\nHowever, exercise can also be a beneficial part of improving your energy levels.\nIf you are having difficulty with exercise, then, take a few steps to improve the way you feel.\nWhat are the benefits of exercise?\nThe benefits of exercise include:\n- Increased energy\n- Improved muscle strength\n- Improved heart health\n- Improved muscle flexibility\n-",
             "tokens": 256,
             "eos": false,
             "rep4": 0.067,
+            "distinct2": 0.706,
+            "distinct4": 0.933,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 233
           },
           {
             "text": "__________ and __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the primary points of the diet.\n- __________ is the main point of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main points of the diet.\n- __________ are the main",
             "tokens": 256,
             "eos": false,
             "rep4": 0.893,
+            "distinct2": 0.082,
+            "distinct4": 0.107,
             "looped": true,
             "loop_onset": 114,
             "loop_period": 13,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " Increased physical activity\n- Weight loss\n- Weight gain\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n- Weight loss\n",
             "tokens": 256,
             "eos": false,
             "rep4": 0.957,
+            "distinct2": 0.035,
+            "distinct4": 0.043,
             "looped": true,
             "loop_onset": 11,
             "loop_period": 4,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " The body uses energy to generate energy, which is not only energy but also other energy.\n-  The ability to use a power-generating motor to generate enough power during exercise can help to reduce energy levels.\n-  The ability to use a power-generating motor to generate enough energy during exercise can help to reduce energy levels.\n-  In addition, the ability to use a power-generating motor can help to reduce energy and improve energy levels.\n-  The ability to use a power-generating motor to generate enough energy during exercise can help to reduce energy in addition to the need for energy.\n-  The ability to use a power-generating motor to generate enough energy during exercise can help to reduce energy intensity.\n-  The ability to use a power-generating motor to generate enough energy during exercise can provide a more energy-efficient energy output for the body.\n-  The ability to use a power-generating motor can help to reduce energy intensity and improve energy levels.\n-  The ability to produce more energy during exercise can help to reduce energy intensity and improve energy intensity.\n-  The ability to use a power-generating motor to generate enough energy during exercise can help to reduce energy",
             "tokens": 256,
             "eos": false,
             "rep4": 0.609,
+            "distinct2": 0.302,
+            "distinct4": 0.391,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 251
           }
         ]
       },
@@ -59120,50 +59206,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.538,
+            "distinct2": 0.275,
+            "distinct4": 0.462,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 248
           },
           {
             "text": " If we understand that the equation is negative, then we will use the formula E2. If the formula E2 is negative, then the formula E1 = E2 is negative, then the formula E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 = E2 =",
             "tokens": 256,
             "eos": false,
             "rep4": 0.866,
+            "distinct2": 0.098,
+            "distinct4": 0.134,
             "looped": true,
             "loop_onset": 40,
             "loop_period": 3,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 6
           },
           {
             "text": " Determine the equation,\nThe formula is used to solve a quadratic equation.\n2. Calculate the equation,\nThe formula is the product of the equation.\n3. Calculate the equation,\nThe equation is using the calculator to calculate the equation.\n4. Calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation.\nThe calculator is used to calculate the equation,\nThe calculator is used to solve the equation,\nThe calculator is used to solve a quadratic equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation,\nThe calculator is used to calculate the equation",
             "tokens": 256,
             "eos": false,
             "rep4": 0.755,
+            "distinct2": 0.165,
+            "distinct4": 0.245,
             "looped": true,
             "loop_onset": 125,
             "loop_period": 10,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 256
           },
           {
             "text": " Identify the equation in which you want to solve a problem.\n2. Identify the equation in which you want to solve the quadratic equation.\n3. Identify the equation in which you want to solve the quadratic equation.\n4. Identify the equation in which you want to solve a quadratic equation.\n5. Identify the equation in which you want to solve the quadratic equation.\n6. Find the equation in which you want to solve the quadratic equation.\n7. Find the equation in which you want to solve the quadratic equation in which you want to solve the quadratic equation.\n8. Identify the equation in which you want to solve quadratic equation.\n9. Write the equation in which you want to solve the quadratic equation in which you want to solve quadratic equation in which you want to solve the quadratic equation.\n10. Write the equation in which you want to solve quadratic equation in which you want to solve the quadratic equation.\n11. Write the equation in which you want to solve the quadratic equation in which you want to solve the quadratic equation.\n12. Write the equation",
             "tokens": 256,
             "eos": false,
             "rep4": 0.704,
+            "distinct2": 0.188,
+            "distinct4": 0.296,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 256
           },
           {
             "text": " The first step is to divide the equation into two sides by the same solution.\n2. The third step is to divide the equation into three sides by the same solution.\n3. The third step is to divide the third step.\n4. The second step is to divide the other two sides by the same solution.\n5. The third step is to divide the two sides by the same solution.\n6. The third step is to divide the two sides by the same solution.\n7. The third step is to divide the other two sides by the same solution.\n8. The fourth step is to divide the two sides by two sides by the same solution.\n9. The third step is to divide the two sides by the same solution.\n10. The third step is to divide the two sides by the same solution.\n11. The third step is to divide the two sides by two sides by two sides by two sides by two sides by two sides by two sides.\n12. The third step is to divide the two sides by two sides by three sides by two sides by two sides.\n12. The third step is to divide the two sides by two sides by two sides by two sides.\n13. The fourth step",
             "tokens": 256,
             "eos": false,
             "rep4": 0.625,
+            "distinct2": 0.224,
+            "distinct4": 0.375,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 27
           }
         ]
       },
@@ -59176,50 +59277,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.514,
+            "distinct2": 0.306,
+            "distinct4": 0.486,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 245
           },
           {
             "text": " human-made and artificial intelligence: the human-created, artificial intelligence/computer-generated intelligence. They are an artificial intelligence (AI) computer-based intelligence machine. They are machine intelligence, machine learning, machine learning, machine intelligence, machine learning, machine learning, machine learning. Their intelligence is the most intelligent machine.\nThey can be the most intelligent machine, and they are not machines. They can be a human-like machine. They are machine intelligence, machine learning, machine learning, machine learning, machine learning, machine learning, machine learning, machine learning. They are machine learning, machine learning, machine learning, machine learning. They are machine learning, machine learning, machine learning, machine learning, machine learning, machine learning, machine learning, machine learning. They can be the fastest-growing consumer of the market.\nThe human-created intelligence machine is the fastest-growing consumer of the market. They are the fastest-growing consumer of the market. They are the fastest-growing consumer of the market. They are the fastest-growing consumer of the market. They are the fastest-growing consumer of the market. They are the fastest-growing consumer of the market. They are the fastest-growing consumer of the market. They are the fastest-growing",
             "tokens": 256,
             "eos": false,
             "rep4": 0.581,
+            "distinct2": 0.29,
+            "distinct4": 0.419,
             "looped": true,
             "loop_onset": 175,
             "loop_period": 11,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " computer technology. The first is the computer software software software software software software software software software software software software software software software software software software software software hardware software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software Software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software Software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software software",
             "tokens": 256,
             "eos": false,
             "rep4": 0.933,
+            "distinct2": 0.051,
+            "distinct4": 0.067,
             "looped": true,
             "loop_onset": 132,
             "loop_period": 1,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " computer science: computer science and the most basic computer science and the most basic computer science.\nThe basic computer science and computer science are the basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the least basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the major and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science and the most basic computer science",
             "tokens": 256,
             "eos": false,
             "rep4": 0.881,
+            "distinct2": 0.078,
+            "distinct4": 0.119,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " artificial intelligence:\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Machine learning (ML)\n- Artificial intelligence (AI)\n- Artificial Intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Machine learning (ML)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Machine learning (ML)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Chatbots (AI)\n- AI (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- AI (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Artificial intelligence (AI)\n- Machine",
             "tokens": 256,
             "eos": false,
             "rep4": 0.881,
+            "distinct2": 0.086,
+            "distinct4": 0.119,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59232,50 +59348,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.344,
+            "distinct2": 0.435,
+            "distinct4": 0.656,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " was ratified in 1920 and was signed in 1921.\nThe treaty, which was signed in 1921, was ratified in 1921, was signed in 1920. The treaty was signed in 1923 and was signed in 1921. The treaty is signed in 1921, and was signed in 1921. It has been ratified in 1923, since it was ratified in 1923.\nIt was signed in 1921, and is ratified in 1925. It is not signed in 1923. It is not signed in any way or in any way or in any way or in any way.\nThe treaty is signed in 1923, and is not signed in 1923, and is not signed in any way or in any way or by any means.\nThe treaty is signed in 1923, and is not signed in any way or in any way or by any means. The treaty is signed in 1919, and is not signed in any way or by any means.\nThe treaty is signed in 1922, and is not signed in any way or by any means. It is not signed in any way or by any means. The treaty is signed in 1923, and is not signed in any way or by any means.\nThe treaty is signed in 1923, and is not signed in any way or by any means or by any",
             "tokens": 256,
             "eos": false,
             "rep4": 0.549,
+            "distinct2": 0.227,
+            "distinct4": 0.451,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 246
           },
           {
             "text": " was signed in 1921.\nToday the French Union is the oldest independent country in the world. It was first established in 1917, in the first part of the country. The independence of the country was marked by the French Revolution. In 1921, the French Revolution was the main cause of the Revolution.\nFollowing the independence of the country, the French Revolution was a significant turning point. It was a time when the French government decided to create the country\u2019s capital. The French was the main cause of the French Revolution.\nThe French Revolution was a turning point in the world\u2019s economic system. It was the political revolution that had come about in the years following the French Revolution. The French Revolution was a turning point in the history of the country, which influenced the French Revolution, and it was the turning point of the French Revolution.\nThe French Revolution was a turning point in the history of the country, which was a turning point in the history of the country. It was the turning point that led to the change in the French Revolution. The French Revolution was a turning point in the history of the country, which led to the rise of new industries, such as mining, food, and manufacturing.\nThe French Revolution was a turning point in the history",
             "tokens": 256,
             "eos": false,
             "rep4": 0.269,
+            "distinct2": 0.49,
+            "distinct4": 0.731,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 2
           },
           {
             "text": " took an active role in the war.\nThe first step was the capture of the military units from the North Atlantic to the Mediterranean. The military was in operation until the end of World War II. In 1953, the French government declared war.\nThe Spanish government declared war in the war. The war was the only military unit that was not known at all, which was named after the French government.\nAfter the war, the First World War, the war was divided into two main groups: the naval fleet and the fleet. The first group of the Marine Corps was located in the Atlantic Ocean. The first group, named for the Marine Corps, was the first Marine Corps. This group, named for the Marine Corps, was the first Marine Corps to be named after the French government.\nThe first group was the Marine Corps, named for the Marine Corps, was the first Marine Corps to be named after the French government.\nDuring the war, the Marine Corps was responsible for the creation of the naval fleet.\nThe second group, named for the Marine Corps, named for the Marine Corps, was named after the French government. The Marine Corps was responsible for designing and installing the Marine Corps, which was responsible for producing the naval fleet.\nDuring World War II",
             "tokens": 256,
             "eos": false,
             "rep4": 0.237,
+            "distinct2": 0.506,
+            "distinct4": 0.763,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " became known as \u201cThe Emperor of Japan and the Third Republic of China\u201d. The treaty is part of the Treaty of Versailles, which was signed in 1891, and its date in which it was signed in 1924. The treaty was signed in 1924, and its date in which it was signed in 1931 remains unclear.\nIn 1920, after the signing in October, the treaty was signed by the British and then the British. The treaty was signed in 1922, and its date in which it was signed in 1922 is called \u201cthe Emperor of Japan\u201d. The Treaty of Versailles is signed in 1937 and it was signed in 1937. The treaty was signed in 1972. The Treaty of Versailles was signed in 1973 and it was signed in 1978. The treaty was signed in 1934 under the Treaty of Versailles. The Treaty of Versailles was signed in 1984. The treaty was signed in 1935 and it was signed in 1936.\nWhile the treaty was signed in 1931, it is not known about the treaty\u2019s validity. The treaty was signed in 1981. This treaty was signed in 1987, but it was signed in 1972. The treaty was signed in 1972.\nThe treaty was signed in 1934, and it",
             "tokens": 256,
             "eos": false,
             "rep4": 0.269,
+            "distinct2": 0.498,
+            "distinct4": 0.731,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 251
           }
         ]
       },
@@ -59288,50 +59419,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.162,
+            "distinct2": 0.643,
+            "distinct4": 0.838,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 239
           },
           {
             "text": " the Journal of Infectious Diseases in the Journal of Infection, the authors found that in people who are exposed to certain chemicals in their clothing (such as pesticides) or during sex, the female genital organs are likely to be affected.\n\u201cWomen are exposed to certain chemicals, like latex, which can affect their reproductive organs,\u201d mentioned Dr. Karen D. W. H. Smith. \u201cShe is a highly sensitive woman. She is more sensitive to chemicals that interfere with the sperm and therefore her sperm production and reproduction. She is also sensitive to chemicals that interfere with sperm production, and is also sensitive to chemicals that interfere with sperm production.\u201d\n\u201cBecause of the low frequency of exposure to chemicals in the clothing, we believe that these chemicals interfere with sperm production,\u201d Dr. A. W. H. Smith concluded in a study published in the journal Science. \u201cIt\u2019s hard to know how they affect the female genital organs.\u201d\nThe authors of the study, from the Institute for Health and Cancer Research, analyzed data from six women in the UK who were exposed to chemicals in clothing. The study also found that the female genital organs were exposed to certain chemicals in clothing.\n\u201cYou could have",
             "tokens": 256,
             "eos": false,
             "rep4": 0.099,
+            "distinct2": 0.722,
+            "distinct4": 0.901,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 235
           },
           {
             "text": " the Journal of Physiology, some experts suggest that the growth of the brain can be slowed down in order to achieve the goal of learning, and that this will take time off.\nThe study was conducted in collaboration with the University of California, San Francisco, and the University of Michigan, who made a very clear and comprehensive study that looked at the growth of brain cell networks in the brain. The study also examined the effects of the oncogenic mutations on brain neurons in the brain.\nThe first results of the study were based on the following:\n- The most important findings are the effect of the oncogenic mutations on brain neurons that will be observed in brainstem cells that are exposed to neurons in the brain.\n- The most important findings are the following:\n- The effects of the oncogenic mutations on brain neurons that are not exposed to this disease include:\n- The effects of the oncogenic mutations on brain neurons that are responsible for the damage caused by the oncogenic mutations\n- The effects of the oncogenic mutations on brain neurons that are responsible for the damage caused by the oncogenes\n- The effects of the oncogenic mutations on the brain neurons that are responsible for the damage caused by the oncogenic",
             "tokens": 256,
             "eos": false,
             "rep4": 0.32,
+            "distinct2": 0.541,
+            "distinct4": 0.68,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 105
           },
           {
             "text": " 2015, the researchers concluded in a new study that could provide the data:\n- 1.4-5.6 B. The study looked at data from the U.S. Department of Agriculture and Food, while the study found that the study looked at the data collected from the U.S. Department of Agriculture and Food.\nThe study was published in November 2014.\nThe study was funded by the National Science Foundation, the Office of the Food and Agriculture and Resource Development for the Research and Development of the National Science Foundation.\nThe study was funded by the National Science Foundation, the Office of the Food and Agriculture and Food Development and Food and Agricultural Research.\nThe study was funded by the National Science Foundation and the National Science Foundation, and the National Science Foundation.",
             "tokens": 157,
             "eos": true,
             "rep4": 0.266,
+            "distinct2": 0.583,
+            "distinct4": 0.734,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 138
           },
           {
             "text": " the Journal of the American Medical Association, researchers found that the average age of the patient in the United States is between 18 and 49 years old. The average age of the patient in the United States is between 18 and 49 years old and older.\nThe study was published in the American Journal of Clinical Oncolithology.\nThe study involved a study of the human body. The study was also conducted by researchers from the University of Cincinnati, Ohio, Ohio, and the University of Cincinnati.\nThe study is published in the American Journal of Clinical Oncolithology.\nThe study is based on the study of the human body. The human body is the human body. The human body is the body\u2019s natural body. The human body is the same organ that controls the body. The human body is the human body. The human body is the natural organ. The human body is the human body. The human body is the human body. The human body is the human. The human body is the human body. The human body is the human body. The human body is the human body. The human body is the human body. The human body is the human body.\nThe human body is the human body\u2019s natural body. The human body",
             "tokens": 256,
             "eos": false,
             "rep4": 0.486,
+            "distinct2": 0.365,
+            "distinct4": 0.514,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 123
           }
         ]
       },
@@ -59344,50 +59490,775 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.672,
+            "distinct2": 0.2,
+            "distinct4": 0.328,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 253
           },
           {
             "text": " 2,100 meters.\nThe northern tip of the mountain lies the southern tip of the mountain lies the west and west of the mountains.\nThis mountain is the highest point on the mountain.\nThe mountain is the closest point on the mountain.\nThe mountains are the opposite of the mountain.\nThe mountain is the largest mountain in the world, and the mountain is the longest in the world.\nThe mountain is the hottest part of the world, and is the second in the world.\nThe mountain is the deepest point on the mountain.\nThe mountain is the tallest mountain in the world.\nThe mountain is the highest point on the mountain.\nThe mountain is the largest mountain in the world.\nThe mountain is the highest point on the mountain.\nThe mountain is the highest point on the mountain.\nThe mountain is the lowest point on the mountain.\nThe mountain is the tallest mountain in the world.\nThe mountain is the highest point on the mountain.\nThe mountain is the top of the mountain.\nThe mountain is the tallest mountain in the world.\nThe mountain is the highest point on the mountain.\nThe mountain is the highest point on the mountain.\nThe mountain is the highest point on the mountain.\nThe mountain",
             "tokens": 256,
             "eos": false,
             "rep4": 0.621,
+            "distinct2": 0.247,
+            "distinct4": 0.379,
             "looped": true,
             "loop_onset": 219,
             "loop_period": 11,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 256
           },
           {
             "text": " 4,000 meters, and the height of the mountain rises is 9,000 meters above sea level.\nThe mountain is the largest in the world.\nThe mountain is the largest of the four mountains, which lie about the size of the mountain. The mountain is the tallest and the tallest mountain is the tallest in the world.\nThe mountain is the most beautiful and the tallest mountain is the tallest mountain.\nThe mountain is the most beautiful and the least beautiful mountain is the tallest in the world.\nThe mountain is the most beautiful and the tallest mountain is the tallest in the world.\nA small mountain called the mountain is the tallest mountain in the world.\nA small mountain called the mountain is the tallest and the tallest mountain is the tallest in the world.\nA small mountain called the mountain is the tallest of the three mountains in the world.\nA small mountain called the mountain is the tallest.\nThe mountain is the most beautiful and the tallest mountain in the world.",
             "tokens": 200,
             "eos": true,
             "rep4": 0.528,
+            "distinct2": 0.312,
+            "distinct4": 0.472,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 196
           },
           {
             "text": " 4.5 meters and one of the highest peaks in the world.\nThe sun rises above the mountain, and rises above the mountain.\nA mountain rises above the mountain, and rises above the mountain.\nThe mountain is still very cold and there is no one in the world.\nThe mountain rises above the mountain.\nThe mountain is so cold that it is cold, and its cold weather is very cold and hot.\nThe mountain is hot and cold, and its temperature will be very cold and cold.\nThe mountain is very cold and it is very cold.\nThe mountain is almost cold and its cold.\nThe mountain is very cold and the temperature will be very cold and cold.\nThe mountain falls below the mountain.\nThe mountain is very cold and its temperature will be very cold.\nThe mountain is very cold and the temperature will be very cold.\nThe mountain is very cold and temperature is very cold, but its temperature will be very cold and the temperature will be very cold.\nThe mountain is very cold and temperature will be very cold and a temperature will be very cold.\nThe mountain is very cold and temperature will be very cold.\nThe mountain is very cold and is very cold.\nThe mountain is very cold",
             "tokens": 256,
             "eos": false,
             "rep4": 0.506,
+            "distinct2": 0.294,
+            "distinct4": 0.494,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 253
           },
           {
             "text": " 1,000 meters in a 2.4 degree. The city will be named after the city, and will be named after the city.\nThe town\u2019s name is located on the south side of the city. The name \u2018The City of Bremen\u2019 is located on the west side of the city and is named after the city. The city is named after the city, and it is named after the city. The area is named after the city, and is named after the city.\nThe city is named after the city, and it is named after the city. The city is named after the city, and it is named after the city. The city is named after the city, and it is named after the city. The city is named after the city, because it is named after and is named after the city. The city is named after the city, because it is named after the city, and it is named after the city. The city is named after the city, and it is named after the city.\nDance is also named after the city, and it is named after the city, because it is named after the city, because it is named after the city, because it is named after the city, because",
             "tokens": 256,
             "eos": false,
             "rep4": 0.628,
+            "distinct2": 0.263,
+            "distinct4": 0.372,
             "looped": true,
             "loop_onset": 224,
             "loop_period": 8,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
+          }
+        ]
+      },
+      {
+        "label": "agreement_gap",
+        "prompt": "The students who had spent the entire semester preparing for the final examination in organic chemistry",
+        "draws": [
+          {
+            "text": ", I have worked throughout the semester to review and prepare for the final exam in organic chemistry. I have worked with the students in the semester and I have worked with the students in the semester to create a well-organized and reproducible Chemistry lab.\nThis will help me to be an excellent reader, as I apply the material and my students will enjoy a variety of work together to get them on the first rubric for use in the lab.\nThis is an excellent way to help students in the process of grading to get the best grades.\nIt's a great way to help students in the process of grading.\nI hope this helps students have a great idea of getting the grades right there.\nI hope this helps students in the process of grading.\nThanks so much for helping me to learn the process of grading.\nThe following are the ideas of the rubric:\n1. Students in the process of grading are expected to learn how to do the following:\n2. Students in the process of grading are expected to learn how to do the following:\n3. Students in the process of grading are expected to learn how to do the following:\n4. Students in the process of grading are expected to learn how to do the following:\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.285,
+            "distinct2": 0.576,
+            "distinct4": 0.715,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 240
+          },
+          {
+            "text": " and biology, with the help of the first students, have been able to apply the new knowledge and engineering standards to their own engineering curriculum.\nThe students have been able to have an active interest in the chemistry and biology curriculum at the level of the curriculum, and have been able to apply the new knowledge. The students have been able to apply the fundamental concepts in chemistry and biology, and have been able to apply the new knowledge in chemistry and biology.\nThe students have been able to apply the concepts in chemistry and biology to their own engineering curriculum.",
+            "tokens": 111,
+            "eos": true,
+            "rep4": 0.278,
+            "distinct2": 0.536,
+            "distinct4": 0.722,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.2222222222222222,
+            "topic_span": 103
+          },
+          {
+            "text": ", and the students who attended the chemistry classes as well as the chemistry classes, were asked to submit a paper on the Chemistry Course.\n(See also: The Science Course for more\n- Organic Chemistry\n- Organic Chemistry",
+            "tokens": 45,
+            "eos": true,
+            "rep4": 0.024,
+            "distinct2": 0.886,
+            "distinct4": 0.976,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.2222222222222222,
+            "topic_span": 45
+          },
+          {
+            "text": ", and found that a few of the students who had completed the test had completed the final exam.\nThe results indicated that the students had the final exam. The students had the final exam.\n\"The students had been ready to finish the final exam, but only a few of the students will have the final exam.\n\"The students had an exam that was completed in the beginning for the final exam,\" said the student. \"They had an exam that was done in the end for the final exam,\" he added.\nThe students were asked to take the final exam. The students were asked to take the final exam.\n\"They had an exam that was completed by the end of the test,\" said the student. \"I decided that they would do it,\" said the student.\nThe students stated that they could take the final exam.\n\"They would do it for the final exam,\" said the student.\n\"The students would have to complete the final exam and have the final exam once the final exam.\"\nThe students then asked the student for the final exam.\nAnother student answered to the final exam.\n\"The students had completed the final exam.\"\nThe student answered to the final exam.\nThe students answered the final exam.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.296,
+            "distinct2": 0.447,
+            "distinct4": 0.704,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.2222222222222222,
+            "topic_span": 254
+          },
+          {
+            "text": " before graduating.\nThe students who took the final exam at the start of each year were asked to take the final exam.\nThe students who completed the final test at the end of the year were asked to take the final exam.\nThe student who took the final exam was asked to take the final exam at the end of the year.\nThe students who took the final exam at the end of the year were asked to take the final test at the end of the year.\nThe students who took the final exam at the end of the year were asked to take the final exam at the end of the year.\nThe students who took the final exam at the end of the year were asked to take the final test for the final exam.\nThe final exam at the end of the year was assigned to two students, one of which was the final exam, and one of which was the final exam.\nThe final exam at the end of the year was assigned to two students.\nThe final exam at the end of the year was also assigned to three students.\nThe final exam at the end of the year was assigned to two students.\nThe final exam at the end of the year was assigned to two students.\nThe final exam at the end",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.668,
+            "distinct2": 0.224,
+            "distinct4": 0.332,
+            "looped": true,
+            "loop_onset": 215,
+            "loop_period": 16,
+            "topic": 0.2222222222222222,
+            "topic_span": 252
+          }
+        ]
+      },
+      {
+        "label": "history",
+        "prompt": "The French Revolution began in 1789, when",
+        "draws": [
+          {
+            "text": " the French Revolution began in 1789, it was decided to create an empire, which would become a republic. France was then split into three major states: the British and the British.\nThe French Revolution: The French Revolution was a time for American revolution that took place in many colonies, and it was the main cause of the French Revolution. There were many factors, such as the economic status of the British and the European powers, but the French Revolution was a time of great influence in Europe.\nThe French Revolution started in 1789, when a new French revolution was planned, but it was not the main cause. The French Revolution was a time of great influence in the colonies, and it was a time of great influence in the colonies.\nThe French Revolution, which lasted from 1789 to 1789, was a time of great influence in the colonies. The French Revolution was a time of great influence in the colonies, which could be seen as a time of great influence on the colonies.\nThe French Revolution was a time of great influence in the colonies, but it was still important to understand the history of the Revolution. The French Revolution was a time of great influence during the 1789 revolutions, which helped to shape the colonies. The French Revolution was a time",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.277,
+            "distinct2": 0.522,
+            "distinct4": 0.723,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 253
+          },
+          {
+            "text": " the New York City was established, the British government was granted the independence to France. The British government established the French government in 1789, and the British government also established the French government.\nFrance's monarchy had changed in 1789 and 1789, and the British government also established the French government in 1789. The monarchy grew from the monarchy of France to the monarchy of France, and the monarchy of France. The monarchy had never ended.\nThe French government changed in 1789, and it changed the French government again. The monarchy was a monarchy and was the queen of France. The monarchy was not a monarchy, but the monarchy was a monarchy. The monarchy was not a monarchy, but it was a monarchy. The monarchy was a monarchy, and it was the monarchy.\nThe French government established the french government in 1789. The French government was the only government in France. The monarchy was the monarchy. The monarchy was a monarchy, and the monarchy was a monarchy.\nThe French government was a monarchy, and it was a monarchy. The monarchy was the monarchy, and it was a monarchy. The monarchy was a monarchy, and it was a monarchy. The monarchy was a monarchy, and it was a monarchy.\nThe French government was a monarchy",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.403,
+            "distinct2": 0.329,
+            "distinct4": 0.597,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 252
+          },
+          {
+            "text": " the British army was overthrown, the French began to build a new colony, the French began to invade France, and in 1793 he was overthrown. The French began to invade France, but the Spanish was forced to abandon France, and the French started to invade and occupy France. The French took the French and the French and the French conquered the French in a battle. The French were the French and British in a battle. France had the French and the French had become a new colony, and the French had become a colony.\nThe French then became a colony, and the French started to colonize France, but the French were not to be able to colonize France. The French were to be colonized by Spain, and in 1792 a colony was formed. The French and French were called the French and Germans. In 1795 the French were sent to France, and the French had to remain in France in the colony. The French and British were to be colonized by France, and they were to be colonized by the French. France was the first European colony, and the French were to colonize France.\nThe French and the French became a colony in 1789 and 1798. The French made the French and the French the British colony",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.166,
+            "distinct2": 0.506,
+            "distinct4": 0.834,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 253
+          },
+          {
+            "text": " a young French revolutionary, began to organize the French Revolutionary War, while other European nations began to organize the French Revolution. The French Revolution ended in 1789. In 1796, French forces were divided into a number of colonies. The British started to produce the French Revolution, but France had to fight against the French Revolution. The French Revolution was a struggle for the French Revolution. The French Revolution continued to be a common cause for British imperialism.\nIn 1796, French forces were divided into a number of colonies. The colonies were the only colonies of the French Empire, and the French colonies were the ones that were formed. The colonies were usually the ones that were used for industrial purposes, such as construction of bridges and bridges, but the French Revolution was not always the first of the colonies. France was the most important of the colonies in the world. The French Revolution was the first of all, the French Revolution brought about the French Revolution.\nThe French Revolution also included the Great French Revolution, which began in 1789. The French Revolution was the only major public movement in the world and was the first French revolution in the world. The French Revolution was the most important cause of all the French Revolution.\nThe French Revolution was a period of great concern, with many",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.17,
+            "distinct2": 0.608,
+            "distinct4": 0.83,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0,
+            "topic_span": 247
+          },
+          {
+            "text": " England's first successful ship was the first to become the first ship in North America. The Continental Congress had control over the colonies and it had not only cut off the colonies, but was also the first to be the first to be able to afford the ships of the new colonies. Many of the new colonies had no interest in the first part of the Continental Congress.\nThe first part of the Continental Congress was the Continental Congress in the early part of the Continental Congress. The Continental Congress had nothing to do with the new colonies. The Continental Congress had no interest in the new colonies. The Continental Congress had no interest in the new colonies, but the Continental Congress had no interest in the new colonies.\nThe Continental Congress had little interest in the new colonies between the colonies and the colonies. The Continental Congress had no interest in the new colonies, but the Continental Congress had no interest in the new colonies. The Continental Congress had no interest in the new colonies. It was not until the colonies of the new colonies that had been colonies, but it had no interest in the new colonies.\nThe Continental Congress had no interest in the new colonies. The Continental Congress had no interest in the new colonies, and then had no interest in the new colonies, but the Continental Congress had no",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.427,
+            "distinct2": 0.361,
+            "distinct4": 0.573,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          }
+        ]
+      },
+      {
+        "label": "anatomy",
+        "prompt": "The human heart is a muscular organ that",
+        "draws": [
+          {
+            "text": " is a natural organ that receives blood from the heart. The heart is located in the heart tissue, and it is part of the heart that functions normally in the heart.\nA heart is also called a muscle. The heart is the main organ that connects to the heart, and it is part of the heart that connects to the heart.\nThe heart is the main organ that connects to the heart, and it is part of the heart that is part of the heart that is part of the heart that is part of the heart. The heart is the heart that directs the heart to its most important function.\nA heart is the heart that connects to the heart and connects to the heart. The heart is responsible for supplying the heart with the heart with oxygen.\nA heart is the heart that connects to the heart. The heart works by attaching the heart to the heart. The heart is responsible for supplying the heart with oxygen to the heart by sending it to the heart. The heart is responsible for supplying the heart with oxygen to the heart by sending it to the heart.\nThe heart is responsible for supplying the heart with oxygen to the heart by sending it to the heart, and the heart is responsible for supplying the heart with oxygen to the heart. The heart is responsible",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.538,
+            "distinct2": 0.29,
+            "distinct4": 0.462,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 254
+          },
+          {
+            "text": " has a central nervous system, and is the heart that produces the blood and oxygen.\nThe heart is the organ which uses the blood to fight against infection.\nThe heart is the heart that is able to fight against bacteria in the blood.\nThe heart\u2019s natural ability to fight against infections is that it provides immunity and is able to fight against infections.\nThe heart is a vital organ which helps to fight against infection.\nThe heart is a system which helps to protect against infection.\nIt also helps to fight against infection, which can help to fight against infection.\nThe heart also aids to fight against infection.\nThe heart is a vital organ which aids in fighting against infection.\nThe heart can also support the body to fight against infectious diseases.\nThe heart is the heart which helps to fight against infection.\nThe heart also helps to fight against infection.\nThe heart is a vital organ that helps to fight against infection.\nThe heart is a vital organ that assists in fighting against infection.\nThe heart also helps to fight infection, which helps to fight against infection.\nThe heart also helps to fight against infection.\nThe heart also helps to fight against infection.\nThe heart also helps to fight against infection and can fight against",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.451,
+            "distinct2": 0.361,
+            "distinct4": 0.549,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 246
+          },
+          {
+            "text": " acts in the air, and has two functions: its job, the body, and the heart.\nThe body is composed of two parts: the heart, the heart, and the heart.\nIt is the heart, and the body is composed of two parts: the heart, the heart.\nThe heart is made up of numerous parts: the heart, and the heart.\nThe heart is composed of two parts: the heart, the heart, and the heart.\nThe heart is composed of three parts: the heart, the heart, the heart, and the heart.\nThe heart is composed of three parts: the heart, the heart, the heart, and the body.\nThe heart is composed of three parts: the heart, the heart, the heart, and the heart.\nThe heart consists of two parts: the heart, and the heart.\nThe heart is composed of three parts: the heart, the heart, and the heart.\nThe heart is composed of three parts: the heart, the heart, and the heart.\nThe heart is composed of three parts: the heart, the heart, and the heart.\nThe heart is composed of two parts: the heart, the heart, and the heart.\nThe heart",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.743,
+            "distinct2": 0.173,
+            "distinct4": 0.257,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 256
+          },
+          {
+            "text": " enables the muscles to perform daily tasks in order to form the muscles. But with the right tools, the body can balance and balance as well.\nThe most effective way of doing things is to do something. This is the reason why the body should work so that it is not broken down.\nThere are a few other ways to do things. These are easy projects, but the most important way to do things is to use the right tools. With the right tools and the right tools, you can do things and it is not difficult.\nThere is no way to do things in order to do things. There are also some ways to do things in order to do things in order.\nFor example, if a person can do something in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order to do things in order",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.455,
+            "distinct2": 0.424,
+            "distinct4": 0.545,
+            "looped": true,
+            "loop_onset": 149,
+            "loop_period": 5,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " allows you to breathe and exhale, and it can help you to breathe more deeply.\nThe main purpose of the term is to describe how the body\u2019s capacity to perform a function of oxygen-producing cells is to ensure that the body does not only absorb oxygen that is produced but also supply oxygen.\nThe body can also use its own internal energy for bodily functions such as breathing, energy production, and the body\u2019s ability to perform everyday tasks.\nIn a nutshell, the term \u201cmethol\u201d is used to describe a person\u2019s capacity to perform a function. The term \u201cmethol\u201d is also used to describe a person\u2019s capacity to perform a function.\nThe term \u201cmethol\u201d is similar to \u201cmethol\u201d, which means \u201cmethol\u201d, which is a specific type of organ that is used to perform a function of breathing.\nThe term \u201cmethol\u201d is used to describe the body\u2019s capacity to perform a function of breathing and the body\u2019s capacity to perform a function of breathing and the body\u2019s capacity to perform functions of breathing and the body\u2019s capacity to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.352,
+            "distinct2": 0.494,
+            "distinct4": 0.648,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 187
+          }
+        ]
+      },
+      {
+        "label": "geography",
+        "prompt": "The Amazon River flows through",
+        "draws": [
+          {
+            "text": " the Gulf of Mexico.\nThe main river in Mexico is the S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.B. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.905,
+            "distinct2": 0.086,
+            "distinct4": 0.095,
+            "looped": true,
+            "loop_onset": 172,
+            "loop_period": 7,
+            "topic": 0.0,
+            "topic_span": 9
+          },
+          {
+            "text": " the Amazon, where the Amazon is located and the Amazon is located. The Amazon is located in the Brazilian Amazon Mountains of the Amazon, and the Amazon is bounded by the Amazon. The Amazon is divided into two regions.\nAmazon Slaves, Amazon Slaves, and Amazon Rivers\nGoogle Slaves are both known for their large and beautiful landscapes. They have been found in the Amazon Mountains, but the Amazon is also known for its large lakes and rivers. The Amazon is known for its large flora and fauna. The Amazon has a rich history, and it is known for its large and unique flora and fauna.\nThe Amazon River is located in the Amazon, where the Amazon has a large and complex landscape. The Amazon is a major tourist destination, and it is home to the largest city in the Amazon, with a population of over 30 million people. The Amazon River is known for its large lakes and rivers, and it is home to many other people.\nThe Amazon River is a complex, complex, and complex river system that is home to several major tourist destinations. The Amazon River is home to many famous people, including the Amazon River, the Amazon River, and the Amazon River. The Amazon River is home to many famous people, including the Amazon River",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.174,
+            "distinct2": 0.518,
+            "distinct4": 0.826,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 256
+          },
+          {
+            "text": " the Amazon and other Amazones. The Amazon River flows through the Amazon and other Amazon. The Amazon's Amazon flows through Amazon.\nThe Amazon River flows through Amazon and other Amazones. The Amazon flows through Amazon, the Amazon, and the Amazon. The Amazon River flows through Amazon. The Amazon River flows through the Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon.\nThe Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon river flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon.\nThe Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon River flows through Amazon and other Amazon.\nThe Amazon River flows through Amazon. The Amazon River flows through Amazon. The Amazon",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.808,
+            "distinct2": 0.109,
+            "distinct4": 0.192,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0,
+            "topic_span": 258
+          },
+          {
+            "text": " a vast network of ocean-bound species, including the Atlantic Ocean. Despite its proximity to the Amazon River, the Atlantic is home to a vast array of marine ecosystems.\nThe Amazon River flows into the ocean into the ocean, creating a unique ecosystem that is essential for us to navigate the harsh, unique, and ever-expanding landscape of the Amazon.\nThe Amazon River flows through several layers of land, including the Atlantic Ocean, the Atlantic Ocean, and the Atlantic Ocean. The Atlantic Ocean is home to a diverse range of marine ecosystems, including the Atlantic Ocean, the Pacific Ocean, and the Atlantic Ocean.\nThe Amazon River flows through the Atlantic Ocean, creating a unique ecosystem that is critical for the marine ecosystem. From its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity to its proximity.\nThe Atlantic Ocean is home to a range of marine ecosystems, including the Atlantic Ocean, the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.47,
+            "distinct2": 0.373,
+            "distinct4": 0.53,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 130
+          },
+          {
+            "text": " the Mississippi River, and the Great Lakes.\nThe River, which flows through the Mississippi River, has a deep-water interface and a deep-water interface.\nThe water system, which flows through the Mississippi River, is called the Mississippi River.\nThe water system, which flows through the Mississippi River, is called the Mississippi River.\nThe river is made up of a type of gravel, and gravel.\nThe river is made up of a type of gravel and gravel and gravel.\nThe river is called the Mississippi River.\nThe Mississippi River is made up of rock, gravel, and sand.\nThe rivers are made up of mud, gravel, sand, and sand.\nThe river is made up of a type of gravel and gravel, and gravel.\nThe river is named after the river, and is named after the river.\nThe river is called the Mississippi River.\nThe river is made up of an area of sediment.\nThe river is named after the Mississippi River, and is named after the Mississippi River.\nThe river is named after the Mississippi River.\nThe river is called the Mississippi River.\nThe river is also called the Mississippi River.\nThe Mississippi River is named after the Mississippi River.\nThe Mississippi River",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.522,
+            "distinct2": 0.282,
+            "distinct4": 0.478,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 256
+          }
+        ]
+      },
+      {
+        "label": "math_definition",
+        "prompt": "In mathematics, a prime number is",
+        "draws": [
+          {
+            "text": " the number of years of mathematics, or the number of years of mathematics.\nHowever, there are many variations that are very difficult to understand. Some more, such as the number of years and years of mathematics, such as the number of years and years of mathematics, are very challenging.\nSome of the most popular languages, such as Italian and Hungarian, are spoken in the United States. In many countries, such as the United Kingdom, in particular Switzerland, is spoken in the United States, and in many countries in Europe.\nA number of major languages are spoken in the United States, and in many countries in Europe, so there are several different languages. Some of the most popular languages are Italian, and others have some other major spoken languages.\nThere are different languages, such as the \"N\" (the \"N\" (the \"N\").\nThe two most popular languages are the Italian, German, and Spanish. The second is the \"N\" (the \"N\" (the \"N\" (the \"N\") (the \"N\") (the \"N\") (the \"N\") (the \"N\") (the \"N\") (the \"n\" (the \"N\") (the \"N\") (the \"N",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.349,
+            "distinct2": 0.472,
+            "distinct4": 0.651,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 110
+          },
+          {
+            "text": " not a perfect number. Instead, it is a mathematical formula that you can use to calculate the number of digits using the given formula.",
+            "tokens": 27,
+            "eos": true,
+            "rep4": 0.0,
+            "distinct2": 1.0,
+            "distinct4": 1.0,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 20
+          },
+          {
+            "text": " infinite and the number is infinite. Thus the number is infinite.\nThis is because the number is infinite.\nThe number is infinite, so if we have to use the numbers and then the number is infinite, then the number is infinite.\nThus the number of the digits is infinite.\nThis is because the number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nIf we have to use the number of the digits in order to make the number, we need to use the numbers and the number is infinite.\nThe number is infinite.\nTherefore the number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number has infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\nThe number is infinite.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.711,
+            "distinct2": 0.192,
+            "distinct4": 0.289,
+            "looped": true,
+            "loop_onset": 151,
+            "loop_period": 6,
+            "topic": 0.3333333333333333,
+            "topic_span": 252
+          },
+          {
+            "text": " a prime number. As a result, the number in a rational number is the result of the number of elements, and the number of elements is a given number. This type of arithmetic can be obtained by using the mathematical formula for the formula.\nIf you do not find the number of elements, the formula will be the formula, but the formula will be the same as the formula.\n- The formula is the prime number of elements.\n- The formula is the prime number of elements.\n- The formula of the formula is the prime number of elements.\n- The formula is the prime number.\n- The formula of the formula is the prime number of elements.\n- The formula of the formula is the prime number of elements.\n- The formula of the formula is the prime number of elements.\n- The formula of the formula is the Prime number of elements.\n- The formula of the formula is the Prime number of elements.\n- The formula of the equation is the prime number of elements.\n- The formula is the Prime number of elements.\n- The formula is the prime number of elements.\n- The formula of the formula is the Prime number of elements.\n- The formula of the formula is the Prime number of elements",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.613,
+            "distinct2": 0.275,
+            "distinct4": 0.387,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 254
+          },
+          {
+            "text": " the number of digits, and a decimal number is the number of digits.\nIt is the number of digits of a given number, with the numerator in mind. The number of digits is the number of words in a given number, with the number of words in the number of letters.\nIt is the number of digits of a given number, with a number of words.\nFor example, in the numerator, the number of words in a given number, the number of words in a given number, and the number of words in a given number, is the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the number of words in a given number, with the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.704,
+            "distinct2": 0.18,
+            "distinct4": 0.296,
+            "looped": true,
+            "loop_onset": 115,
+            "loop_period": 10,
+            "topic": 0.3333333333333333,
+            "topic_span": 253
+          }
+        ]
+      },
+      {
+        "label": "environment",
+        "prompt": "Climate change refers to long-term shifts in",
+        "draws": [
+          {
+            "text": " the development and growth of a species in the soil. The decline in the soil yields the greatest loss to the soil as well as the most dramatic loss to the soil. To reduce the carbon footprint, it is necessary to limit the use of fossil fuel extraction which is necessary for the reduction of carbon dioxide and other pollutants in its atmosphere.\nHow to increase the carbon footprint\nThe most important thing that we can do is to add a few calories. The amount of calories you consume is the total amount of calories stored in the atmosphere. By taking out the carbon footprint, you increase the amount of waste it takes to landfills.\nAchieving the correct balance is crucial for the climate. The amount of calories you consume and the amount you consume is the most important thing that we can do for the planet. For example, if you are going to use a lot of energy, you will have no more energy than the amount of fats you consume. You can also reduce the amount of calories you take to landfills.\nIf you are spending more on food, you will have more calories that you can use. In addition to eating more calories, you will have more calories to eat. You will also have less calories to eat.\nHow to conserve the carbon",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.083,
+            "distinct2": 0.718,
+            "distinct4": 0.917,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666,
+            "topic_span": 139
+          },
+          {
+            "text": " climate variability, which may be influenced by the impact of climate change on the environment and ecosystems. Here\u2019s what it is:\n- Climate Change: Climate change threatens the human body; it affects the environment, which can affect the health of the body.\n- Climate Change: Climate change is a complex phenomenon that can occur in the human body. It can be caused by the effects of extreme weather, wind, and other factors such as temperature, water vapor, or weather conditions.\n- Climate Change: Climate change is a complex phenomenon that can have negative effects on the body. It can affect the quality of life, health, and other aspects of life.\n- Climate Change: Climate change is a complex phenomenon that can affect the health of the body. It can cause the body to produce more energy, which can contribute to the health of the body.\n- Climate Change: Climate change is a complex phenomenon that can have negative effects on the body. It can have negative effects on the body, which can lead to the health of the body.\n- Social Change: Climate change can affect the way in which people are treated and have a sense of belonging. It can also affect the way in which people feel about the world.\n- Climate Change:",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.3,
+            "distinct2": 0.529,
+            "distinct4": 0.7,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 255
+          },
+          {
+            "text": " the frequency of climate change. The longer-term impacts of climate change are felt by the Earth and climate.\nIn a report, the International Institute for Applied Climate Change (IUCN) released the report on climate change in the last three years, which is part of the IPCC report on climate change. The report says that the global climate change impacts of climate change, and the effects of global warming, especially on the environment, are not well understood.\n\u201cClimate change is a problem that impacts our environment, and that impacts our planet and the environment. We have been able to see a new way for us to understand and help reduce greenhouse gas emissions,\u201d said Professor David Cameron, senior research scientist in the department of Earth Science and Technology, and lead author of the paper.\n\u201cWe want to look for a new way to solve climate change problems,\u201d said Professor Cameron.\n\u201cClimate change is the kind of a problem that impacts our environment. It is a real problem that affects our environment. To solve this problem, it is very important that we have a clear picture of how the world works.\u201d\nThe report is published here by the National Science Foundation and the National Science Foundation.\n- The National Science Foundation,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.055,
+            "distinct2": 0.776,
+            "distinct4": 0.945,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 188
+          },
+          {
+            "text": " temperature and precipitation, leading to the growth of populations in tropical areas. This increase in precipitation can lead to changes in the natural systems that regulate rainfall patterns, such as rain or snow.\nImpact on Climate\nClimate change is a major concern that can affect rainfall patterns, particularly for those with the most-affected population. For example, the increased levels of precipitation are due to the changing seasons and the increasing seasons that occur in the north, particularly for the warmer regions of the globe. This can lead to increased precipitation patterns and increased rainfall patterns in the region.\nClimate Change can affect the natural balance of the natural balance of the earth, with extreme heat events and the lack of protection for the natural processes and the need for a more sustainable future.\nClimate change can affect the natural balance of the earth, as the weather shifts. For example, the climate can affect the natural balance of the Earth and the seasons, with extreme heat events and the rise of the Earth. For example, the climate can affect the natural balance of the earth, with changes in temperature and precipitation patterns.\nClimate change can also affect the natural balance of the earth, as the temperature changes. For example, the temperature may affect the natural balance of the earth, while the temperature may affect the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.194,
+            "distinct2": 0.6,
+            "distinct4": 0.806,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 235
+          },
+          {
+            "text": " the CO2 level of the oceanic and oceanic systems. For example, the CO2 level in the ocean is decreasing by as much as 20 degrees, and the oceanic systems in the oceanic and oceanic systems are changing the climate, with the latter being decreasing in the Atlantic Ocean. The CO2 levels of the oceanic systems are changing the oceanic and oceanic systems, and are changing the oceanic and oceanic systems. For example, in the oceanic and oceanic systems, the oceanic systems are changing the oceanic and oceanic systems. Therefore, the oceanic systems are changing the oceanic and oceanic systems, while the oceanic and oceanic systems are changing the oceanic and oceanic systems. This change is changing the oceanic and oceanic systems, and is changing the oceanic and oceanic systems, as well as changes in the oceanic and oceanic systems.\nThe oceanic and oceanic systems are changing the oceanic and oceanic systems, and are changing the oceanic and oceanic systems, as well as changes in the oceanic and oceanic and oceanic systems. The oceanic and oceanic systems are changing the oceanic and oceanic systems, and are changing the oceanic and ocean",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.581,
+            "distinct2": 0.267,
+            "distinct4": 0.419,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666,
+            "topic_span": 251
+          }
+        ]
+      },
+      {
+        "label": "recipe",
+        "prompt": "To make bread at home, you will need",
+        "draws": [
+          {
+            "text": " to buy or sell something in a bakery. This will make it more affordable.\nYou can also use bread at home by purchasing a large number of items from the home.\nUsing bread at home is an effective way to keep a healthy food on your home. You should include a lot of bread at home to maintain a healthy diet and prevent obesity.\nHow do you do it?\nYou should include a variety of fruits and vegetables in your local grocery store. If you are buying a wide variety of foods, you can make a food that is available in some stores. In addition, you can also make the bread by purchasing a variety of different pieces of bread.\nYou can also use bread at home by making a variety of other things. You can also use bread at home by using a variety of different types of bread, such as bread, brown rice, or white bread. These are also great ways to add some added flavor to your daily bread.\nWhat are the best foods for a meal?\nThe best foods for a meal are bread, yogurt, kimchi, and other foods. You will also need to include plenty of vegetables, fruits, and whole grains in your meals. You will also need to make sure that you have the right foods",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.067,
+            "distinct2": 0.765,
+            "distinct4": 0.933,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0,
+            "topic_span": 249
+          },
+          {
+            "text": " to get the most of the bread you\u2019ve done on your own.\nWhat Does It Mean to Be Sugar?\nThe typical answer is to be sugar, but it\u2019s not really that.\nThe reason why sugar is made by your body is sweet.\nThis is the difference between sugar and sugar.\nThe sugar is made by the body and the sugar is made by the body.\nThe sugar is made by the body and the sugar is made by the body and the sugar is made by the body.\nThere is a difference between sugar and sugar.\nHere is the difference between sugar and sugar.\nThe sugar is made by the body and the sugar is made by the body.\nIf you\u2019re still on the diet, the sugar is made by the body and the sugar is made by the body.\nThe sugar is made by the body and the sugar is made by the body and the sugar is made by the body.\nThe sugar is made by the body and the sugar is made by the body and sugar is made from the body and the sugar is made by the body and the sugar is made from the body.\nThe sugar is made by the body and the sugar is made by the body and the sugar",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.569,
+            "distinct2": 0.333,
+            "distinct4": 0.431,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 7
+          },
+          {
+            "text": " to be able to save the water and drink it.\nMake money in a good way.\nYou can also use a lot to make a profit.\nTo use the food to make it, you need to make a little more money.\nYou can use a lot to make a good, even if you don\u2019t produce any kind of food.\nYou can use a lot to make money in a good way.\nYou can use a lot to make a good money in a good way.\nYou can use a lot to make money in a good way.\nMany people have more money than people like to buy a lot.\nYou can use a lot to make money in a good way.\nYou can use a lot to make money in a good way.\nYou can use a lot to make good money.\nYou can use a lot to make money.\nYou can use a lot to make money in a good way.\nYou can use a lot to make money in a good way.\nYou can use a lot to make money in a good way.\nYou can use a lot to make money in a good way.\nYou can use a lot to make money in a good way.\nYou can use a lot",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.625,
+            "distinct2": 0.282,
+            "distinct4": 0.375,
+            "looped": true,
+            "loop_onset": 179,
+            "loop_period": 14,
+            "topic": 0.25,
+            "topic_span": 244
+          },
+          {
+            "text": " to add more flour and flour to your meals.\n- Cook the whole grain and flour mixture to the flour mix, so that it can be used for cooking.\n- Make bread from the outside.\n- Cook the whole grain, or flour, and then add it to your meals.\n- Add flour to the dough for a small bit of bread, and then add it to the dough for a few minutes.\n- Mix the flour mixture, either by adding flour or adding it to the dough, and then add it to the bread.\n- Add flour to the flour mixture, and add it to the bread.\n- Add butter and butter to the dough, and add it to the dough for a few minutes.\n- Add flour to the bread, and add it to the dough for a few minutes.\n- Add butter and butter to the dough for a few minutes.\n- Add flour to the dough for a few minutes, and add it to the bread for a few minutes.\n- Add flour to the flour mix.\n- Add flour to the dough for a few minutes, and add it to the dough for a few minutes.\n- Add flour to the dough for a few minutes, and add it to the dough for a",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.53,
+            "distinct2": 0.314,
+            "distinct4": 0.47,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 199
+          },
+          {
+            "text": " to know if you have a meal plan that contains 1/3 of bread.\n\u201cAs you can see, you need to know if you have a meal plan that you can eat. To eat one meal per day, we will eat a small amount of bread.\u201d\nA snack plan is a simple and straightforward process that can be repeated once a day to a meal.\nThe Food Guide\nThe food guide is a great way to get started and start when your food is processed. But if you have a snack plan for your meal, you can start with a few simple steps that you can do to get it in for a quick look at the food guide.\nThere is a great way to get started and start when you need to get started.\nFor a fast food plan, you can start at the right time, without the added number of foods you can eat.\nYou can get started and start eating a meal plan that includes food items like bread, biscuits, rice, and rice.\nYou can go to the food guide website to eat the food guide, but the following tips will help you get started and get started.\n- Eat the food guide for a quick look at the food guide for your food guide.\n- Plan the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.107,
+            "distinct2": 0.678,
+            "distinct4": 0.893,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 197
+          }
+        ]
+      },
+      {
+        "label": "literature",
+        "prompt": "William Shakespeare wrote many plays, including",
+        "draws": [
+          {
+            "text": " the playwright Edgar Allan Poe. In each play, a writer, author, playwright, plays, plays, characters, and plays take place in literature.\nAs in Shakespeare's dialog, \u201cWhen Shakespeare makes a play, we will think about Shakespeare's death, and the role of the playwright in the play. Shakespeare's play and themes in Shakespeare's plays will be the catalyst for the tragedy.\nWhen Shakespeare is a tragic hero, he is often depicted as a young man. In Romeo and Juliet, he is often depicted as a young girl. Shakespeare's play, however, is often depicted as a young man. Shakespeare's play, in turn, is often seen as a young man.\nWhat is the playwright\u2019s play?\nThe playwright plays are characterised by their dramatic character, the playwright, the playwright, the playwright, the playwright and the playwright. This play is often seen as a young woman and is one of the most important plays in the play.\nWhat are the major themes in the play?\nThe main themes in the play are:\n- The role of the playwright and the playwright play in the play.\n- The playwright plays a significant role in the play",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.15,
+            "distinct2": 0.6,
+            "distinct4": 0.85,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 250
+          },
+          {
+            "text": " his famous play 'The Tempest' and his famous play 'The Tempest'.\nThe next part is the story of what Shakespeare's Hamlet is and how it's ironic that Shakespeare's Hamlet plays 'The Tempest'. Shakespeare's Hamlet, in the play 'The Tempest', is written in the play 'The Tempest' and 'The Tempest'. Shakespeare's Hamlet is a play 'The Tempest', written in the play 'The Tempest'.\nThe 'The Tempest' and 'The Tempest' are written in the play 'The Tempest'. Shakespeare's Hamlet, 'The Tempest', the play 'The Tempest', is written in the play 'The Tempest'.\nThe 'The Tempest' is written in the play 'The Tempest'. Shakespeare's Hamlet is written in the play 'The Tempest'. Shakespeare's Hamlet is a play 'The Tempest'. Shakespeare's Hamlet is written in the play 'The Tempest'. Shakespeare's Hamlet is written in the play 'The Tempest'.\nThe 'The Tempest' is written in the play 'The Tempest'.\nThe 'The Tempest' is written in the play 'The Tempest'.\nThe 'The Tempest' is written in the play 'The Tempest'. Shakespeare's Hamlet is written in the play 'The Tempest",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.687,
+            "distinct2": 0.201,
+            "distinct4": 0.313,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666,
+            "topic_span": 244
+          },
+          {
+            "text": " The Merry Lady, the King, the Queen\u2019s Day for the Prince of Wales, the First Lady of England, the Lady of Wales, the Queen\u2019s Day for the Prince of Wales, the Queen Victoria of Ireland, the Queen\u2019s Day for the Prince of Wales.\nThe Queen\u2019s Day for the Prince of Wales were a celebration of the Kingdom, the Queen\u2019s Day for the Prince of Wales, the King\u2019s Day for the Prince of Wales, the Queen\u2019s Day for the Prince of Wales and the Prince of Wales. This is a special occasion for the Prince of Wales or the Queen\u2019s Day for the Prince of Wales.\nThe Queen\u2019s Day for the Prince of Wales were a celebration to the throne, the Queen\u2019s Day for the Prince of Wales and the Queen\u2019s Day for the Prince of Wales.\nThe Queen\u2019s Day for the Prince of Wales was a celebration of the Kingdom, the Queen\u2019s Day for the Prince of Wales, the Queen\u2019s Day for the Prince of Wales, the Queen\u2019s Day for the Prince of Wales, and the Queen\u2019s Day for the Prince of Wales.\nDespite",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.664,
+            "distinct2": 0.224,
+            "distinct4": 0.336,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " plays, plays, and other plays. The first plays in this play are played by Shakespeare.\nThe first plays in this play are the \"Pantheon\" of the English play. The first plays in this play are\nThe first plays in this play are the \"Pantheon\" and \"Pantheon\". The play is a play that occurs in the \"Pantheon\" (the play is also the play), which is\nThe title \"Pantheon\" is the play that is performed by the Son of Man and the Son of Man. The play is a \"The Pantheon\" and the play is the title of the play, but the title is also\nThe second play is the \"Pantheon\" which is performed by the son of the Son of Man. The play is of a kind, but is\nThe play is usually a play called \"Pantheon\" in the form of \"Pantheon\" or \"Pantheon.\" The play is performed by King Lear,\nThe son of King Lear, is the son of King Lear and King Lear. King Lear is a play in this play, and King Lear is a play from the Son of Man. King Lear is a play that is performed by King Lear",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.214,
+            "distinct2": 0.461,
+            "distinct4": 0.786,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 49
+          },
+          {
+            "text": " the sonification of the English son.\nIn the first two decades of the Civil War, the military began to take over the city, but this time the Civil War started. The main characters in the story are the story of a man named William Shakespeare. William Shakespeare uses the word \"the Lord of the Flies\" to describe how the King of England would run, and Shakespeare uses the word \"the Lord of the Flies\" to describe how the King of England would run into the city.\nThe story of the first King of England was written in 1710 when Henry David and Elizabeth I visited the city. As with the English Civil War, the war began with the arrival of King Charles II, as well as the signing of English and English.\nWilliam Shakespeare had a very good and interesting role in writing, that Shakespeare had been in the field in England, and that his influence on the world was a lot. Shakespeare wrote the first English sonification in 1610 when Henry David wrote the first English sonification in 1610.\nWilliam Shakespeare wrote the first English sonification in 1611 when Henry David was writing, and his wife Elizabeth was a very strong influence. This was because the king of England had changed the world, and his wife Elizabeth had changed",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.138,
+            "distinct2": 0.678,
+            "distinct4": 0.862,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 214
+          }
+        ]
+      },
+      {
+        "label": "technology",
+        "prompt": "The internet began as a research project in",
+        "draws": [
+          {
+            "text": " the United States, and became one of the most popular online sites in history. In order to learn more, visit the website, including the website links, the following websites:\nThe World of Cybercrime\nThe use of cybercrime has been increasing since the last quarter of the last century, and there are now about 20 million cyber criminals worldwide. Cyber criminals have become much more sophisticated and sophisticated, with a focus on security. However, the emergence of cybercrime in the United States has put another key advantage.\nThe rise of the Internet\nThe rise of the Internet has led to changes in the market for new computers, computers, mobile devices, laptops, mobile devices, and even even tablets. The increasing popularity of the Internet has led to the rise of online gaming to be a major source of cybercrime in the United States.\nThe rise of the Internet\nAs a result of the Internet, the availability of online gaming remains a problem. In the United States, the need for internet access has become increasingly significant. The rise of online gaming has brought about a growing concern for many people.\nThe rise of online gaming has also led to the emergence of online gaming, and the shortage of resources has led to the development of new technologies. The rise of digital gaming",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.095,
+            "distinct2": 0.702,
+            "distinct4": 0.905,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 200
+          },
+          {
+            "text": " 1995. At the time, it was the most exciting thing you could do about it, and it was so important that you were able to get a good idea of what you were searching for and what you would need.\nThere are a number of websites dedicated to this industry and its products:\n- The use of digital tools,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n- The use of digital tools in the market,\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.711,
+            "distinct2": 0.267,
+            "distinct4": 0.289,
+            "looped": true,
+            "loop_onset": 66,
+            "loop_period": 11,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the 1980s.\nAs new technology is in place of the big tech.\nWith that in mind, internet is a huge platform. With an internet of things, internet has become a popular method of communication and communication. It has come to be one of the most popular tools for online communication.\nTo do this, you can use the internet to communicate your messages.\nHow Internet is Web?\nWeb is a great way to learn, learn, and learn. A website could go a long way in the morning, when you feel your internet is opened.\nWhat is Web?\nWeb is a broad term that describes the idea of a website. It encompasses a set of information and features in a website. Web is a set of information which can be used to create a website.\nInformal web refers to the collection of information that is being used to create a website. It encompasses the entire collection of information that is being used to create a website.\nThere are many different types of Web, each with its own advantages. It is a set of information which can be used to create a website.\nThe various types of Web are used in different ways. There are three types of Web:\n- Web and Web\n- Web: Web is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.126,
+            "distinct2": 0.729,
+            "distinct4": 0.874,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 111
+          },
+          {
+            "text": " the US, which allowed for the proliferation of mobile phones.\nThe research on mobile phones has been ongoing since the beginning of the 1950s. The study of mobile phones was a large part of the global mobile population. The research also showed that the mobile phones were a large part of the population that is growing exponentially in the last decade.\nIn the past, the research of mobile phone technology has become a source of controversy and debate among researchers. The research of mobile phones is a big part of the larger population that has been growing since the 1980s.\nIn the past, mobile phone technology has become a major concern. One has to work together to create a new mobile phone. The research has been conducted by researchers from the University of Maryland and the University of Maryland.\nIn the past, mobile phone technology has also been used to provide a number of benefits to the mobile industry. These benefits include:\n- The mobile phone industry has become a major contributor to the growth of mobile phone technology. With the increasing adoption of mobile phones, the demand for mobile phones has increased by about a third and a third. However, it has also been seen that mobile phones have been a major contributor in the growth of mobile phone technology.\n- The mobile phone industry has developed",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.103,
+            "distinct2": 0.675,
+            "distinct4": 0.897,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 145
+          },
+          {
+            "text": " the late 1960s, but the research that was not funded by the Internet has made it clear that the internet was not entirely accessible. The Internet was not entirely accessible but an internet was not accessible to anyone else, and the internet was not accessible.\nThe Internet and the Internet were no longer limited to the internet, and the Internet was not accessible to anyone. The internet was not accessible for anyone, and the internet was not accessible to anyone. The Internet was not accessible to anyone, and the internet was not accessible and it was not accessible to anyone.\nAnother problem is the introduction of the Internet. There is no need for the Internet to be accessible to anyone, and the Internet was not accessible and the internet was not accessible to anybody.\nThe Internet was not accessible to anyone, and the internet was not accessible to anyone, and the internet was not accessible to anyone. The internet was not accessible to anybody, and the internet was not accessible for anyone. The internet was not accessible to anyone, and the internet was not accessible to anyone \u2013 and the internet wasn\u2019t accessible to anybody.\nThe Internet was not accessible and the internet was accessible to anyone, and the internet was not accessible to anyone, and the internet was not accessible to anyone. The internet",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.482,
+            "distinct2": 0.333,
+            "distinct4": 0.518,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 256
+          }
+        ]
+      },
+      {
+        "label": "economics",
+        "prompt": "Inflation occurs when",
+        "draws": [
+          {
+            "text": " a player loses a certain amount of money, and the other person\u2019s risk is not equal to the number of people who are doing the work, but rather than making it a payment or not doing it.\nWhen a player loses money from a business, they won\u2019t be able to pay their salaries or pay a certain amount of money. In theory, a player loses their jobs and their money is not enough.\nA player loses money from a business, and the other person will lose money by buying a lottery ticket. It\u2019s important to know the amount of money you will earn and what you\u2019re winning.\nA player loses money from a company, or a player loses money from a business, or a member of a corporation. This can mean that each player loses his or her money because of his or her ability to pay a specific amount of money.\nA player can lose money from a business, or a player loses money from a business, or a member of a corporation. A player can lose money by following the instructions or by having a good credit score.\nA player loses a certain amount of money, and the player will lose their money because of the value of the game. The player has to keep the game",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.19,
+            "distinct2": 0.624,
+            "distinct4": 0.81,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the price of the goods in the supply chain is higher than the price of the goods in the supply chain.\nThe price of the goods in the supply chain decreases or decreases because the price of goods increases.\nThe price of the goods in the supply chain decreases or decreases because the price of goods increases.\nIn general, the price of the goods in the supply chain decreases.\nThe price of the goods in the supply chain decreases as the price of the goods increases.",
+            "tokens": 96,
+            "eos": true,
+            "rep4": 0.516,
+            "distinct2": 0.326,
+            "distinct4": 0.484,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " inflation is more than a factor of -2% of the inflation that is inflationed by the inflationary inflation of the time series.\nAs a result, inflation is more and more important than the inflationary inflation of the United States.\nThe inflationary inflation of the United States is another example of inflation.\nThe inflationary inflation of the United States is a result of the inflationary inflation of the United States.\nThe inflationary inflation of the United States is a result of the inflationary inflation of the United States.\nThe inflationary inflation of the United States is a result of the inflationary inflation of the United States.\nThe inflationary inflation of the United States is a result of the inflationary inflation of the United States.\nThe inflationary inflation of the United States is a result of the inflationary inflation of the United States.\nThe inflationary inflation of the United States is an example of the inflationary inflation of the United States.\nThe inflationary inflation of the United States is a result of the inflationary inflation of the United States.\nThe inflationary inflation of the United States is a result of the inflationary inflation of the United States.\nThe inflationary inflation of the United States is a result of the inflationary inflation",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.739,
+            "distinct2": 0.196,
+            "distinct4": 0.261,
+            "looped": true,
+            "loop_onset": 185,
+            "loop_period": 22,
+            "topic": 0.5,
+            "topic_span": 256
+          },
+          {
+            "text": " a large number of new products are produced at the expense of consumers. In the case of a product, the consumers are likely to have a better chance to buy their products and therefore have a better chance of being sold.\nIn the case of a product, consumers are likely to have more options to buy their products. Consumers will be able to buy their products in the form of a liquid.\nAccording to a study published in the journal Consumer Reports, the average price for the product is a $2.2 billion, or $2.3 billion. The consumer price of a product is higher than the price of an individual, while at the same time, the market is likely to increase.\nThis is a new study published in the journal Consumer Reports. The researcher concluded that the price of a product is the only factor in determining the potential of a product. The new study also indicates that a large number of new products are produced at the expense of consumers.\nThe study also found that the rate of inflation reached the level of inflation of the product. At the same time, consumers are expected to have more options to buy their products and therefore have fewer options to buy their products and therefore have less options to buy their products and therefore have less options to buy their products",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.198,
+            "distinct2": 0.596,
+            "distinct4": 0.802,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 209
+          },
+          {
+            "text": " the price of a car is lower than the price of a car and the price of a car is lower than the price of a car and the price of a vehicle are lower than the price of a vehicle. A car is less likely to cost the car and the price of a car, and the price of a car is lower than the price of a car, and the price of a car is lower than the price of a car. That\u2019s why it\u2019s important to note that the price of a car is lower than the price of a car and the price of a car.\n- The price of a car is lower than the price of a car. You could make a car at a lower price but it isn\u2019t worth the price of a car.\n- The price of a car is lower than the price of a car.\n- The price of a car is lower than the price of a car.\n- The price of a car is lower than the price of a car.\n- The price of a car is lower than the price of a car and the price of a car is lower than the price of a car.\n- The price of a car is lower than the price of a car.\n- The",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.704,
+            "distinct2": 0.22,
+            "distinct4": 0.296,
+            "looped": true,
+            "loop_onset": 224,
+            "loop_period": 16,
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       }

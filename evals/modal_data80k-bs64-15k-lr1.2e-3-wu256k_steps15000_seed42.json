@@ -33181,18 +33181,29 @@
   },
   "training_systems": null,
   "samples": {
-    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "protocol": "20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
     "temperature": 0.7,
     "top_k": 40,
     "new_tokens": 256,
     "draws": 5,
     "summary": {
-      "n": 50,
-      "rep4": 0.35,
-      "looped": 3,
-      "eos": 2,
-      "topic": 0.253,
-      "tokens": 249.2
+      "n": 100,
+      "rep4": 0.239,
+      "rep4_p90": 0.589,
+      "rep4_mean": 0.278,
+      "distinct2": 0.502,
+      "distinct4": 0.722,
+      "looped": 4,
+      "loop_rate": 0.04,
+      "loop_ci95": [
+        0.016,
+        0.098
+      ],
+      "loop_onset_median": 185.0,
+      "topic": 0.246,
+      "topic_span_median": 146.0,
+      "eos": 5,
+      "tokens": 249.89
     },
     "prompts": [
       {
@@ -33204,50 +33215,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.281,
+            "distinct2": 0.431,
+            "distinct4": 0.719,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " begins in an event that is not a cause of the formation of the formation of the formation of the lining of the body. It is the process that happens when the cells start to move out of the body.\nThis process is called the process of transformation. It begins in the process. It starts in the process that is done by the body during the process. It is a process that involves the growth of the cell in the blood. The process, or the creation of the cell itself, has been used to treat the formation of the cell.\nThe cells that grow up to the outside of the body. It is also called the cell. It is called the cell. This organ is called the cell. The cell is called the cell.\nThe cells that grow up to the cells to grow from the cells that produce the cell. They can also grow up to 50 percent if they grow up to 10 times, but this organ is called the cell.\nIt is also called the cell. It is a cell that works to grow up to 50 times.\nThe cells that grow up to 100 times a year and multiply every year.\nThe cell\u2019s growth rate comes from the cells that grow up to 50 times per day.\nThe cell\u2019",
             "tokens": 256,
             "eos": false,
             "rep4": 0.19,
+            "distinct2": 0.549,
+            "distinct4": 0.81,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " can be taken from different plants and animals.\n- If plants are not used to grow in the sun, the plant and plants are able to grow in the night.\n- When plants are grown in the dark, the plant begins to grow in the warm, moist soil, and the leaves are too dry.\n- When pests are grown in the soil, the plants are able to grow, and the plants are hard to grow.\n- They are more likely to grow in the spring and fall, and they are not affected by climate change.\n- They can grow to mature in the summer and fall and fall.\n- They can grow in a low- and low-maintenance environment.\n- They can grow in the summer and fall and fall.\n- They can grow growing in the fall and fall.\n- They are more common in summer.\n- They are less likely to grow in the fall and fall, which is more common in the spring.\n- They can grow in the fall or fall or fall, as it is in the fall and fall.\n- They can grow in fall and fall, and will grow in the fall and fall.\n- They are more common in winter, so they can grow in the fall and",
             "tokens": 256,
             "eos": false,
             "rep4": 0.269,
+            "distinct2": 0.463,
+            "distinct4": 0.731,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " will help you create the organisms that help them grow from the planet.\nWhat Is the Environment Of An Earth?\nThe Earth\u2019s oceans have a nucleus and the nucleus that orbits Earth. The planets are called the Earth, which is a force to move away from Earth.\nWhy is the Earth\u2019s atmosphere the planet\u2019s atmosphere?\nThe Earth\u2019s atmosphere is responsible for absorbing a greenhouse gases that cannot be emitted from a planet\u2019s atmosphere.\nThe Earth\u2019s atmosphere consists of a few molecules, called carbon-containing carbon dioxide, formaldehyde and other substances that are called carbon dioxide, which are the most toxic components of the Earth\u2019s atmosphere.\nThe atmosphere\u2019s carbon dioxide is a part of the atmosphere\u2019s atmosphere, which forms the atmosphere\u2019s atmosphere.\nWhat is the atmosphere caused by gases?\nThe atmosphere is a natural gas, the atmosphere\u2019s atmosphere\u2019s atmosphere, atmospheric greenhouse gases, and the atmosphere\u2019s atmosphere.\nWhat is the atmospheric pressure in our atmosphere?\nThe atmosphere\u2019s atmosphere is a greenhouse-burning atmosphere that causes the planet to rise as the atmosphere can be seen as a source of a greenhouse gas.\n",
             "tokens": 256,
             "eos": false,
             "rep4": 0.186,
+            "distinct2": 0.592,
+            "distinct4": 0.814,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " can create the cells of a specific organism, the organisms that are able to move from the outside of the surface to the outside.\nAn animal that is capable of absorbing organisms can be a part of the organisms that are able to grow in a specific environment.\nAn animal\u2019s ability to adapt to the environment is the ability to adapt and adapt to the environment.\nAn animal is a type of animal, which is a type of animal that can be grown in an ecosystem.\nAnimal-animal living organisms can be found in different environments such as animals, animals, and animal animals.\nThese animals are adapted to a variety of animals, animals, and animals.\nAnimals are known to grow. Animals are more common than animals, and many insects are born, and for species that live in the wild.\nThe most common species that live in the wild are:\n- Animals and animals:\n- Animals and animals:\n- Animals and animals:\n- Animals and animals:\n- Animals and animals:\n- animals or animals:\n- Animals, animals and animals:\n- Animals and animals:\n- Animals and animals:\n- Animals and animals:\n- animals:\n- Animals and animals:\n- Animals and animals:",
             "tokens": 256,
             "eos": false,
             "rep4": 0.285,
+            "distinct2": 0.545,
+            "distinct4": 0.715,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -33260,50 +33286,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.364,
+            "distinct2": 0.451,
+            "distinct4": 0.636,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 182
           },
           {
             "text": " was born in Germany, but he was a classical physicist. His work was a physicist, and he died in the United States. He was the first physicist, a physicist. He was the first physicist. The first physicist in physics, Einstein, a physicist, and scientist. Einstein made a breakthrough in physics and engineering. He was also the first physicist in physics and physics. He was a physicist. He was a physicist, astronomer, and scientist and mathematician. He thought of a physicist, a physicist, and a mathematician, a scientist. He was a physicist, astronomer, mathematician, and mathematician. He was a physicist, astronomer, and mathematician. He was in a physicist, mathematician, mathematician, or mathematician. He was a mathematician and mathematician and mathematician. He was an astronomer, physicist and mathematician. He invented a mathematical study of physics. He was a mathematician and mathematician. He was a mathematician and mathematician. He was a mathematician and mathematician. He was a mathematician. He was a mathematician and mathematician. He was a mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, physicist, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician",
             "tokens": 256,
             "eos": false,
             "rep4": 0.443,
+            "distinct2": 0.31,
+            "distinct4": 0.557,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 238
           },
           {
             "text": " used the universe as an instrument of scientific fiction and a science fiction. He was a physicist who used physics to determine the amount of human being. He said, \u201cThe universe is a world and is a world\u2019s largest source of science in physics, and is a field of science.\u201d\n\u201cI\u2019ve been a science fiction field because I have a history of the science and science that is a whole,\u201d he said.\nMy answer for the scientific question is:\n\u201cI have a history of engineering and physics, so I\u2019m really thinking that they were the first to be a science fiction experiment.\u201d\nThe science of science is a very important factor in physics:\n- \u201cI don\u2019t know if I do it.\u201d\n- \u201cI\u2019m thinking I\u2019m talking about science.\u201d\n- \u201cI don\u2019t know that science is the science of science.\u201d\n- \u201cI don\u2019t really know how science is.\u201d\n- \u201cMy own philosophy is a science fiction or science fiction, but I\u2019m so excited to know how science is being developed to explain science, psychology",
             "tokens": 256,
             "eos": false,
             "rep4": 0.142,
+            "distinct2": 0.647,
+            "distinct4": 0.858,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 148
           },
           {
             "text": " invented the first physicist, and physicist. The next study was published in the journal Physiology journal Neurology. The study was published in the journal Cell.\nMilton was a physicist, and his professor in chemistry and science, led to the discovery of the Nobel Peace Prize. He studied how molecules of molecules of molecules of molecules of molecules of chemical molecules from molecules of molecules known to create a molecule of atoms of molecules of molecules called molecules. Chemically, he discovered that molecules of molecules of molecules, such as electrons, atoms of atoms of atoms and molecules of atoms of molecules called molecules that are of atoms of molecules called molecules of atoms. In other words, atoms of atoms of atoms of atoms of atoms of atoms of atoms of atoms of atoms of atoms of molecules of atoms of atoms of molecules called atoms of atoms of atoms of atoms. This work also works with the chemical theory of quantum theory.\nIn this work's work, the atoms of atoms of atoms of atoms called atoms of atoms of atoms of atoms and form electrons of atoms of atoms of atoms of atoms of atoms of atoms of atoms, atoms of atoms of atoms of atoms of atoms of atoms, atoms of atoms of atoms of atoms of atoms called atoms of atoms of atoms called atoms.\nIn this work",
             "tokens": 256,
             "eos": false,
             "rep4": 0.375,
+            "distinct2": 0.459,
+            "distinct4": 0.625,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 180
           },
           {
             "text": " was the physicist who was born in London, and he was born in London, Germany. He was a physicist who was born in London, and later known as Carlisle. The first physicist was a mathematician, and a mathematician named John A.D. The first physicist was a mathematician, astronomer, physicist, astronomer, astronomer, astronomer. He was the first physicist, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician and mathematician.\nIn his book, Robert A.D. I was the first mathematician to have a solid idea of a super-conducting magnet. In a time of history, the first physicist, was the first physicist, astronomer, mathematician, astronomer, mathematician, mathematician, mathematician, mathematician, mathematician, astronomer, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, astronomer, mathematician, mathematician, astronomer, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician",
             "tokens": 256,
             "eos": false,
             "rep4": 0.573,
+            "distinct2": 0.302,
+            "distinct4": 0.427,
             "looped": true,
             "loop_onset": 176,
             "loop_period": 2,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 138
           }
         ]
       },
@@ -33316,50 +33357,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.53,
+            "distinct2": 0.275,
+            "distinct4": 0.47,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 256
           },
           {
             "text": " a unique element and a chemical that is used in a chemical reaction. This chemical substance is a chemical compound that does not bind to the chemical reaction. The chemical reactions are also the chemical substance. The chemical reactions are called the chemical reaction.\nB is the chemical reaction that is the oxidation reaction. There are two types of reaction reactions.\nC. The chemical reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction",
             "tokens": 256,
             "eos": false,
             "rep4": 0.719,
+            "distinct2": 0.204,
+            "distinct4": 0.281,
             "looped": true,
             "loop_onset": 73,
             "loop_period": 1,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 73
           },
           {
             "text": " hydrogen, which is an energy that has been released from the cells of a series of electrons. To determine the amount of hydrogen that has been present in the hydrogen, the oxidation of ions is called hydrogen.\n- It is the first time since the hydrogen atom is dissolved.\n- It is the next time it is the second time that hydrogen is released in the form of the hydrogen.\n- The gas is released from the hydrogen atom to the hydrogen atom.\n- It is the second time that it is called hydrogen.\n- It is the third time which is the second time it is called hydrogen (the hydrogen molecule) and the second time it takes for the hydrogen atom to form the second time.\n- It is the last time that I do not have to use this equation.\n- It is the second time that I can say to it.\n- It is an element of a hydrogen ion that is made up of hydrogen ions.\n- It is the second time that I will be going to die off.\n- It is derived from the formula.\n- It is the second time that I am going to make a hydrogen ion that is made of.\n- It is important to understand the equilibrium\n- It is the first time it takes",
             "tokens": 256,
             "eos": false,
             "rep4": 0.217,
+            "distinct2": 0.537,
+            "distinct4": 0.783,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 180
           },
           {
             "text": " the same chemical element of a compound. The result is called the oxidation of the molecule.\nThe oxidation of the molecule is a chemical element that is formed by molecules of the chemical element called the oxidation of the molecule.\nThe oxidation of the oxidation of the oxidation of the oxidation of the the oxidation element is the oxidation of the oxidation element of the oxidation of the oxidation element.\nThe oxidation element is the oxidation element by oxidation.\nEating the oxidation element of the oxidation element of the oxidation element is the oxidation element of the oxidation element.\nThe oxidation element of the oxidation element is the oxidation element of the oxidation element.\nThe oxidation element of the oxidation element is the oxidation element of the oxidation element of the oxidation element, and therefore the oxidation element of the oxidation element, the oxidation element is the oxidation element.\nThe oxidation element of oxidation element of oxidation element is the oxidation element of oxidation element in oxidation element.\nThe oxidation element of oxidation element of oxidation element is oxidation element.\nWhen oxidation element is oxidation element.\nAlchemicals are oxidation element of oxidation elements. It is oxidation element of oxidation element.\nThe oxidation element of oxidation element of oxidation element is oxidation element.\nThe oxidation element of oxidation element is oxidation element.\nThe oxidation",
             "tokens": 256,
             "eos": false,
             "rep4": 0.589,
+            "distinct2": 0.243,
+            "distinct4": 0.411,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 252
           },
           {
             "text": " a high-energy charge of 1.1, 4.2 in the atmosphere. As a result, many of the processes of the chemical cycle of gases are in particular to the temperature of the Earth, as a result of a high temperature difference, and that the temperature is at high temperature. The process of chemical cycle is therefore very important for the formation of the gases. The chemical cycle is a process of creating a molecule that is separated by a solid, liquid. The chemical cycle is called a liquid form. Because the process is very common in the structure of a liquid, the compound breaks the surface to determine the chemical cycle, is called a chemical cycle.\nThe process of regulating the reaction of chemical reactions by the chemical cycle is called a change in the reaction. In this process, the reaction is the reaction of reaction of reaction reactions. The reaction occurs when the reaction reactions happen, the reaction reaction time is by the reaction reaction. The reaction reaction is the reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction reaction",
             "tokens": 256,
             "eos": false,
             "rep4": 0.249,
+            "distinct2": 0.549,
+            "distinct4": 0.751,
             "looped": true,
             "loop_onset": 194,
             "loop_period": 1,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 146
           }
         ]
       },
@@ -33372,50 +33428,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.253,
+            "distinct2": 0.467,
+            "distinct4": 0.747,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 254
           },
           {
             "text": " create the most-recent content that takes place in the classroom.\nWhat is the purpose of this lesson plan?\nThe curriculum of the school lesson plan is designed to guide students in the classroom. Each student will use a lesson plan and complete an assessment of their progress in the classroom. A lesson plan is designed to assist students with assessment and assessment in the classroom.\nStudents will evaluate the skills and skills to meet their progress in the classroom.",
             "tokens": 90,
             "eos": true,
             "rep4": 0.103,
+            "distinct2": 0.764,
+            "distinct4": 0.897,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 76
           },
           {
             "text": " make decisions about how to write and write and write. Read the full story and use it to write and write a book on the book.\n- Get students grades on the book through the book and create a plan for help you understand what to write.\n- Write and use the paper and write your paper by hand.\n- Write and write paragraphs to write (1) 5 paragraph, and use the paper.\n- Write and write the paper for your paper.\n- Write the paper and write the paper and press the paper.\n- Write the paper and press the paper.\nWhat is the thesis statement and the main argument?\nThe thesis statement on the paper will be very difficult.\nThe main argument is:\n- Write the paper to the reader.\n- Write the essay on the paper, the main argument is the outline of the paper.\n- Write the paper together and discuss the writing.\n- Write the paper that has a thesis statement.\n- Write and write the paper on the paper\u2019s thesis statement.\n- Write a paper with a paper or paper.\n- Write a paper on the paper.\nHow it can be written.\n- Write the paper on the paper thoroughly.\n- Write a paper",
             "tokens": 256,
             "eos": false,
             "rep4": 0.221,
+            "distinct2": 0.51,
+            "distinct4": 0.779,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 32
           },
           {
             "text": " create a lesson plan, and solve the problem.\n- The lesson plan works with groups and the lesson plan.\n- The lesson plan works for a lesson plan and is a step through a lesson plan.\n- The lesson plan works for the lesson plan is a lesson plan, and the lesson plan will provide students with the lesson plan.\n- A lesson plan is a lesson plan, but students will be able to solve problems as well as solve problems.\n- A lesson plan is a lesson plan, for example, with a lesson plan. Students will be able to solve problems problems and solve problems and solve problems.\n- Lesson Plan for the lesson plan.\n- Class activities should be included.\n- Class plan and plan plans for each lesson plan are designed and supported by the students that will be taught by the students and their students.\n- Lesson Plan for the lesson plan is a great time to learn, but your child will be able to solve problems and solve problems with the school.\n- Lesson Plan for the lesson plan, which will be divided into five categories.\n- Lesson Plan for the lesson plan.\n- Lesson Plan For the lesson plan, they will be given the lesson plan.\n- Lesson Plan",
             "tokens": 256,
             "eos": false,
             "rep4": 0.324,
+            "distinct2": 0.447,
+            "distinct4": 0.676,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 254
           },
           {
             "text": " read and read the text in the classroom:\n- What should I keep my attention?\n- What will my students see in a classroom?\n- What does the reading mean?\n- What is a pre-Kermeer course?\n- What can I do to know?\n- What is the use of a teacher?\n- What is a post?\n- What do you know?\n- What do you know about a teacher?\n- What is the role of a teacher?\n- How can I help my students?\n- What kind of teacher?\n- What resources do you find in a classroom?\n- What do you mean?\n- Who do you know?\n- How do you make a teacher look around the school?\n- What does it mean for?\n- What does the school look like?\n- What does it mean for a teacher?\n- How do you see the school, what does it mean, what do it mean for an teacher?\n- What is the school?\n- How can we get the school?\n- What is the school?\n- How can teachers do this?\n- What are the schools?\n- What is the schools of the school?\n-",
             "tokens": 256,
             "eos": false,
             "rep4": 0.3,
+            "distinct2": 0.455,
+            "distinct4": 0.7,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 111
           }
         ]
       },
@@ -33428,50 +33499,65 @@
             "tokens": 83,
             "eos": true,
             "rep4": 0.025,
+            "distinct2": 0.939,
+            "distinct4": 0.975,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 82
           },
           {
             "text": "____________ (increased in the body)\n- ___________ (when left untreated, or worse)\n- _______________ (when cold)\n- _______________ (what does not mean?\n- ____________ (and when cold)\n- ____________ (when cold)\n- ___________ (the cold)\n- _____________ (the cold)\n- _______________ (the cold)\n- __________ (a dry)\n- ____________ (the cold)\n- __________ (two)\n- _______________ (nouny)\n- ________(s)\n- ___________ (t)\n- ____________ (the cold)\n- _____________ (the cold)\n- __________(s)\n- _____________ (the hot)\n- __________ (the cold)\n- ________ (the warm)\n- ______________ (the cold)\n- ________ .\n- __________(s)\n- ____________ (the cold)\n- ________(s)\n- _________ (the cold)\n- _____________ (the cold)\n- ____________(s)\n",
             "tokens": 256,
             "eos": false,
             "rep4": 0.553,
+            "distinct2": 0.263,
+            "distinct4": 0.447,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "__________ (one of the following):\n- __________ (one of the following):\n- __________ (one of the following):\n- __________ (one of a half of the remaining minutes)\n- __________ (about a quarter of the room):\n- __________ (one of the above):\n- __________ (one of the remaining minutes)\n- __________ (one of the two minutes)\n- ________ (one of the two minutes)\n- ________ (one of the four minutes)\n- ________(half)\n- ________ (one of the six minutes)\n- _______/ ________ (one of the two minutes)\n- __________ (one of the two minutes)\n- ________(one of the two minutes)\n- ________(one of the four seconds)\n- ________ (one of the two minutes)\n- _________.\n- ________ (one of the four minutes)\n- ________ (one of the two minutes)\n- ________ (a minute)\n- ________ (someone of the other two seconds)\n- ________ (one of the four seconds)\n- ________ (one",
             "tokens": 256,
             "eos": false,
             "rep4": 0.668,
+            "distinct2": 0.204,
+            "distinct4": 0.332,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "_________1 \u2013 Tagged and short-term exercise\n- _________1 \u2013 Tagged or irregular exercise\n- __________2 \u2013 Tagged, short-term exercise\n- _________2 \u2013 Tagged and short-term exercise\n- _________2 \u2013 Tagged\n- _________1 \u2013 Tagged\n- _________1 \u2013 Tagged, long-term exercise\n- _________1 \u2013 Tagged, short-term exercise\n- _________2 \u2013 Tagged, short-term exercise\n- _________1 \u2013 Fagged, short-term exercise-induced sleep\n- _________1 \u2013 Mature\n- _________1 \u2013 Tagged, short-term exercise-induced sleep\n- _________2 \u2013 Tagged, short-term exercise-induced sleep disorder\n- _________1 \u2013 Tagged, short-term exercise-induced sleep onset\n- _________1 \u2013 Tagged, short-term exercise-induced sleep disorder\n- _________1 \u2013 W-\n- _________1 \u2013 Tagged, short-term sleep disorder\n- _________2 \u2013 Tagged, short-term sleep disorder\n- _________1 \u2013 Tagged",
             "tokens": 256,
             "eos": false,
             "rep4": 0.727,
+            "distinct2": 0.169,
+            "distinct4": 0.273,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 204
           },
           {
             "text": "__________________________ (3.1 to 1.0)\n- ____________________ (5.0)\n- ____________________ (5.0)\n- ____________________ (5.0)\n- ____________________ (6.0)\n- ____________________ (6.0)\n- ___________________ (7.0)\n- ____________________ (7.0)\n- ___________________ (5.0)\n- ____________________ (7.0)\n- __________________ (6.0)\n- ___________________ (6.0)\n- ___________________ (2.0)\n- ___________________ (6.0)\n- ___________________ (6.0)\n- ___________________ (8.0)\n- ____________________ (8.0)\n- __________________ (8.0)\n- ___________________ (5.0)\n- ___________________ (8.0)\n- ___________________ (6.0)\n- ___________ (6.0)|\n- ___________________ (6.0)\n- ___________________ (9.0)\n- ___________________ (8.0)\n- ___________________",
             "tokens": 256,
             "eos": false,
             "rep4": 0.755,
+            "distinct2": 0.137,
+            "distinct4": 0.245,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -33484,50 +33570,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.711,
+            "distinct2": 0.18,
+            "distinct4": 0.289,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 249
           },
           {
             "text": " If we understand the formula for a quadratic equation, then then we know that the equation is a quadratic equation.\n2. If we do not solve a quadratic equation, we just do not solve the equation, then we have to make the equation a quadratic equation.\n2. If we have to get to the equation, then we will use the equation for the equation and then we will be able to see in the equation to calculate the equation and then again we can calculate the equation.\nThis will be done as follows:\n1. If we have calculated the equation you have calculated the equation to measure the equation, we can calculate the equation 1.\n2. The equation is the value of the equation.\n2. The equation is the formula formula.\n3. To calculate the equation you need to calculate the equation.\n3. To calculate the equation you calculated the equation.\n3. To measure the equation equation in a formula, you can calculate the equation.\n4. To calculate the equation, calculate the equation and calculate the equation value to calculate the equation.\n4. To calculate the equation:\n- Calculate the equation\n- Calculate the equation\u2019 formula\n- Calculate the equation",
             "tokens": 256,
             "eos": false,
             "rep4": 0.245,
+            "distinct2": 0.459,
+            "distinct4": 0.755,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 256
           },
           {
             "text": " How many variables are in\nThe quadratic equation is a way to calculate the quadratic equation\n(i) The quadratic equation is one in\nThe quadratic equation is divided by the quadratic equation.\nThe quadratic equation is a measure of the quadratic equation.\nThe quadratic equation is a type of equation that is defined according to the quadratic equation.\n1. Which measure is equal to the quadratic equation?\n= a cosmolar equation is equal to the quadratic equation.\n2. Which measure is equal to the quadratic equation?\n= a cosmolar equation.\n3. Which measure is equal to the quadratic equation?\n(a) What is the quadratic equation?\n2. Which measure is equal to the quadratic equation?\n2. Which measure is equal to the quadratic equation?\n3. Which measure is equal to the quadratic equation?\n4. Which equation is equal to the quadratic equation?\n5. Which measure is equal to the quadratic equation?\n6. Which measure is equal to the quadratic equation?\n4. Which is equal to the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.553,
+            "distinct2": 0.29,
+            "distinct4": 0.447,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 247
           },
           {
             "text": " Identify the equation:\nAn estimate of the equation is a measure of each of the equations and the sum of the equations on the equation is of the equation.\n2. Calculate the equation\nA measure of the equation is the equation of the equation in the equation of the equation.\n2. Calculate the equation\nA measure of the equation is the sum of the equation in the equation.\n2. Calculate the sum of the equation in the equation.\n3. Calculate the equation\nA measure of the equation is, calculate the equation in the equation, and calculate the equation for the equation.\n2. Calculate the equation of the equation.\n4. Calculate the equation.\n3. Calculate the equation of the equation.\n3. Calculate the equation.\n4. Calculate the equation.\n5. Calculate the equation.\n5. Calculate the equation.\n6. Calculate the equation.\nNow that you have calculated the equation, multiply the equation by the equation.\n5. Calculate the equation.\n5. Calculate the equation\n5. Calculate the equation\n6. Calculate the equation\n5. Calculate the equation\n5. Calculate the equation by",
             "tokens": 256,
             "eos": false,
             "rep4": 0.565,
+            "distinct2": 0.247,
+            "distinct4": 0.435,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 255
           },
           {
             "text": " The quadratic equation can be divided into two sides:\n1. The quadratic equation can be divided into two sides:\n2. The quadratic equation is divided into two sides:\nIn the quadratic equation, the quadratic equation is divided into two sides:\n2. The quadratic equation can be divided by the quadratic equation.\n3. The quadratic equation in the quadratic equation is divided by a quadratic equation.\nIn solving a quadratic equation, the quadratic equation is divided into two lines:\n3. The quadratic equation is divided into the quadratic equation and the quadratic equation is divided into two sides:\n5. The quadratic equation is divided by the quadratic equation.\n5. The quadratic equation is divided by the quadratic equation.\nThe quadratic equation is divided by quadratic equation.\nThe quadratic equation is divided by quadratic equation.\nThe quadratic equation is divided by quadratic equation. The quadratic equation can vary by quadratic equation.\nThe quadratic equation is divided by quadratic equation \u2013 1/n.",
             "tokens": 256,
             "eos": false,
             "rep4": 0.632,
+            "distinct2": 0.208,
+            "distinct4": 0.368,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 251
           }
         ]
       },
@@ -33540,50 +33641,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.771,
+            "distinct2": 0.173,
+            "distinct4": 0.229,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " fungi that can be found in the genus Bacillus, a fungus that contains two unique species of Bacteria (P. K. B., B. B., N. B. B., L. C. K. B., E. J. G. B. C. C. T. C. C. B. C. C. D. C. C. C. C. D. B. A. B. C. C. B. C. C. C. D. C. W. G. C. C. C. C. C. C. C. D. C. E. C. C. C. D. C. C. B. C. C. E. C. L. C. B. P. D. E. C. C. C. D. L. B. D. C. C. C. C. C. C. C. C. C. C. D. C. C. C. C. C. D. L. C. A change in C. C. N. C. C. C. C. C. C. C. C. C. C. D. C. C. C. C. C. C",
             "tokens": 256,
             "eos": false,
             "rep4": 0.593,
+            "distinct2": 0.224,
+            "distinct4": 0.407,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " risk management.\nSome of the most common risk management methods of risk management include:\nThere are several types of risk management techniques that can be used to determine the risk and risk factors involved. Some of these methods include:\n- A lack of risk management\n- In the case of risk management\n- Lack of risk management\n- Changes in risk management\n- Risk management\n- Lack of risk management\n- Risk management\n- Risk management\nIn case of risk management, risk management has many factors that can affect the risk of an individual.\n- The management of risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\n- Risk management\nThe risk management for a person\u2019s risk management is low in type 2 diabetes; a risk management plan is an important step towards a successful risk management plan.\nThe risk management plan is based on a comprehensive and comprehensive guide to your health management plan.\nThe risk management plan is focused on evaluating risk management strategies and plan management plans with a comprehensive guide to help identify risk management plans.\nThe risk management plan provides a comprehensive overview of",
             "tokens": 256,
             "eos": false,
             "rep4": 0.312,
+            "distinct2": 0.51,
+            "distinct4": 0.688,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " waste reduction:\n1. Carbon dioxide or carbon dioxide\n2. Carbon dioxide gas\n2. Carbon dioxide\n3. Carbon dioxide\n2. Carbon dioxide\n4. Carbon dioxide\n4. Carbon dioxide\n6. Carbon dioxide\n3. Carbon dioxide\n3. Carbon dioxide\n4. Carbon dioxide\n3. Carbon dioxide\n6. Carbon dioxide\n2. Carbon dioxide\n2. Carbon dioxide\n2. Carbon dioxide\n3. Carbon dioxide\n3. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n6. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n4. Carbon dioxide\n6. Carbon dioxide\n5. Carbon dioxide\n4. Carbon dioxide\n5. Carbon dioxide\n6. Carbon dioxide\n4. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n5. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n5. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n7. Carbon dioxide\n9. Carbon dioxide\n6. Carbon dioxide\n6. Carbon dioxide\n9. Carbon dioxide\n8. Carbon",
             "tokens": 256,
             "eos": false,
             "rep4": 0.818,
+            "distinct2": 0.114,
+            "distinct4": 0.182,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " water that can be used in the aquarium.\nThey will be used in the aquarium.\nThe aquarium is a very large fish that can be used to feed on the fish, crabs, and shrimp.\nCecal waste is a type of water that can be used to catch a fish. \u2026 It can be used to feed a fish or fish in the aquarium.\nIf you have any problems with your cat, it is not always recommended to feed your fish.\nCan Cats Use Water?\nYes, it is recommended to water a fish, such as watermelon, but a good water-soluble diet that is rich in vitamin B.\nDoes Cats Eat Water?\nAbsolutely. Cats eat water well throughout their life, so they eat watermelon and they can eat the food.\nCan Cats Eat Water?\nYes, your cat may eat fish, but this is not normal for cats. Cats may eat watermelon, or they may eat watermelon or other nutrients.\nCan Cats Eat Water?\nYes, cats may eat watermelon. Dogs may eat watermelon, fish, fish, and fish.\nHow Do Cats Eat Water\nChron and watermelon is a common food choice, especially when you eat watermelon. Cats eat water",
             "tokens": 256,
             "eos": false,
             "rep4": 0.119,
+            "distinct2": 0.643,
+            "distinct4": 0.881,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -33596,50 +33712,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.304,
+            "distinct2": 0.459,
+            "distinct4": 0.696,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 72
           },
           {
             "text": " was ratified by the United Nations.\n\"The treaty has been ratified by the United Nations to ensure that the agreement is ratified by the United Nations. The treaty has been ratified by the United Nations.\nThe agreement was signed by the UN, and the UN, which was signed by the UN. However, it is important to note that the Declaration of Human Rights was ratified by the United Nations.\nThe treaty is not ratified by the United Nations, but is the basis for the actions of the United Nations (UN) and the UN (UN); the UN Charter of Rights (UN), the United Nations (UN) and the UN and the UN (UN).\nThe UN has ratified the UN on 2 October 2016.\nThe UN is the responsibility of the UN in accordance with the UN and the UN, and is responsible for the UN (UN) and the UN (UN) and UN (UN) and UN (UN).\nThe UN\u2019s decision to create a UN in response to UN peace and the UN, the UN, the UN, and the UN and the UN (UN) which \u201cwill ensure the global commitment of UN peace and the UN in response to the UN\u2019s peace.\u201d\nThe UN will support,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.269,
+            "distinct2": 0.506,
+            "distinct4": 0.731,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 83
           },
           {
             "text": " was ratified in 1933.\nToday the treaty was ratified in 1919, and the treaty itself signed in 1922. In 1962, an agreement with the agreement was signed in 1931.\nThe treaty was signed by the President of the United States of America.\nThe treaty was signed by the President of the United States.\nThis agreement was signed by the United States of America in 1947.\nThe United States was formally called by the United States of America, and in 1824, the United States was formally renamed the United States of America.\nIt was signed by the United States.\nThe United States of America is a sovereign, under the Constitution of the United States.\nThe House of Representatives of Americans has an important role in upholding the United States Constitution.\nThe United States, however, has been a prominent member of the United States of America.\nThe United States is a central part of the United States.\nThe United States is the only country in the world.\nThe United States is the central part of the United States.\nThe United States is the central part of the United States.\nThe United States is the main part of the United States, the United States, and it is the main part of the United States.\nThe United States is",
             "tokens": 256,
             "eos": false,
             "rep4": 0.364,
+            "distinct2": 0.431,
+            "distinct4": 0.636,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 112
           },
           {
             "text": " took an economic toll on the U.S. Government. But the treaty was signed by President Bill Clinton, in 1776, in 1874, in 1877, and in 1776, the United States of America declared the first sovereign states to be the U.S. Constitution.\nIn 1879, the United States became the \u201cBrawish\u201d, however, in 1873, the New Deal became a \u201cBrawish\u201d and the United States became the first states to support the Constitution\u2019s constitution of the United States.\nThe U.S. Constitution of the United States and New Deal were the second states that the United States must have a right to uphold the Constitution as unconstitutional. In 1889, the United States Constitution was held under the rule of Union and the United States Constitution, and the Constitution was a constitutional convention requiring a government to provide a central authority to the United States and the United States Constitution and the United States Constitution. The Supreme Court would be appointed to the Constitution and their laws as unconstitutional.\nThe Supreme Court of the United States of America has a legal structure, with the same principle, the Constitution was established in a state of law that the Constitution came to be amended to be amended to Parliament as",
             "tokens": 256,
             "eos": false,
             "rep4": 0.099,
+            "distinct2": 0.657,
+            "distinct4": 0.901,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 17
           },
           {
             "text": " became known that the treaty was still signed in 1939. The treaty was signed in 1949. The treaty was signed in 1917.\nThe treaty was ratified in 1941. The treaty between the treaty and the treaty was signed in 1938. The treaty was signed by the treaty. The treaty came from different parts including the treaty of the treaty, the treaty of the treaty of the treaty. The treaty was signed in 1953 by the treaty.\nIn the treaty of the treaty, the treaty was signed in 1979, and the treaty was ratified by the treaty and treaty. The treaty is signed by the treaty of the treaty which has been signed by the treaty between the treaty and the treaty of Nueva or a treaty signed by treaty. The treaty was signed by the treaty of the treaty of S.S. and the treaty was signed by the treaty of Nuremberg.\nThe treaty was signed by the treaty signed by the treaty, which was signed by the treaty of the treaty.\nThe treaty was signed by the treaty of Nuremberg in September 2003. The treaty was signed by the treaty of the Cuyar National Congress and the treaty signed by the treaty of the treaty. The treaty is signed by the treaty of Nuremberg, the treaty between the treaty and",
             "tokens": 256,
             "eos": false,
             "rep4": 0.399,
+            "distinct2": 0.341,
+            "distinct4": 0.601,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 255
           }
         ]
       },
@@ -33652,50 +33783,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.162,
+            "distinct2": 0.639,
+            "distinct4": 0.838,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 242
           },
           {
             "text": " the Journal of Health Statistics, in the journal Health, Medicine, and Medicine, researchers at the University of Pennsylvania found that those who had already developed the first type of medicine (e.g. the American Heart Association) had an impact on the quality of life, and that it was the case of the disease.\nThe study concluded that eating disorders have been associated with the presence of the disease, particularly a decrease in the incidence of chronic disease. A group of researchers found that some of the factors that have been linked to the onset of chronic disease are important in developing healthy living habits.\nThe researchers found that eating disorders and eating disorders were associated with some of the biggest problems with the disease.\nThe study found that eating disorders are linked to a variety of disorders, including depression, anxiety, depression, insomnia, schizophrenia, and more.\nWhile eating disorders are common, it is important to note that eating disorders with an eating disorder can be linked to a more serious mental health problem.\n\u201cThe study found that depression is linked to a variety of disorders, including depression, schizophrenia, schizophrenia, and depression, and schizophrenia.\nResearchers found that eating disorders such as obesity, depression, and depression, may be linked to a variety of disorders.\n\u201cThe",
             "tokens": 256,
             "eos": false,
             "rep4": 0.083,
+            "distinct2": 0.69,
+            "distinct4": 0.917,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 204
           },
           {
             "text": " the Journal of Physiology and Physiology, Dr. Lagerhankt and Gait K. Med. The results showed that a non-invasive rodent model has a strong influence on the behavior of animals.\nThe researchers said that humans have the ability to adapt to the effects of a new species, and may have a negative impact on their health.\nIn a study of the National Academy of Sciences, Dr. J. H. Wang, MD, and colleagues led the study of a highly trained pilot for the study of the human microbiome.\nThe study of mice and animals found that the mice (like mice) found that mice who had the same effect were more likely to be found in mice than mice.\nThe researchers then said that mice did not have their own own DNA.\nThe researchers reported that mice did not have any negative effect on tissue function and function.\nThe researchers found that mice found a significant role in their brain function.\nThe researchers found that mice were more likely to have cancer cells, and the researchers found that mice are more likely to have a more positive effect on their ability to perform their functions.\n\"Our results showed that mice should not be able to function efficiently;\n\"Our findings suggest that we could use the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.051,
+            "distinct2": 0.773,
+            "distinct4": 0.949,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 115
           },
           {
             "text": " the journal Nature, \u201cThe most common cause of a cancer is cancer. In fact, the most important cause of cancer is it. It is believed to be a cancer patient, but it is not just a cancer patient but the most common type of cancer is cancer.\nIn other words, there are cancer, however, as a cancer patient, and they are very rare. But cancer is not the only cause of cancer among the many, but it is not enough to cure for cancer. There are several factors that could affect cancer. In reality, the cancer is the most common type of cancer. All the time, the cancer can be diagnosed. For many, cancer is the most common type of cancer that affects all cancers.\nHowever, it is important to understand the reasons why cancer is and what to do. Cancer is more prevalent than cancer. Cancer is a cancer that is caused by cancer. Cancer is the most common type of cancer. It is a cancer-cancer cancer that is caused by other cancer. Doctors may be able to determine the risk of cancer.\nThis type of cancer is a type of cancer that is caused by a lump or a lump. It is known as cancer. The cancer is spread by the skin that is in the hair foll",
             "tokens": 256,
             "eos": false,
             "rep4": 0.095,
+            "distinct2": 0.651,
+            "distinct4": 0.905,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " the Journal of the American Heart Association, researchers from the University of California (FDA) to the Massachusetts Blood Pressure Control Research Center (FDA) in New Zealand, Canada, and Canada.\nA study presented the findings of the American Heart Association, as well as the survey for the American Heart Association, found that the study results from the American Heart Association found that the National Heart Association (CDA) was not interested in the study of stroke, yet the study suggests that the study has yet to be conducted to determine if the patients have had a coronary heart disease.\nThe study is based on the National Heart Association (FDA) and the National Heart Association (FDA) and the National Heart Association (FDA). This study is based on the findings of the American Heart Association, as well as the study of the American Heart Association (CDC).\nThe study was found to have the highest rates of stroke and stroke and the number of strokes and the number of strokes in the body were associated with stroke.\nThe study was conducted in the Netherlands with the National Heart Association (GITU) and the National Heart Association (FDAU).\nThe study was taken on a study from the Danish Heart Association (CBD), a group of investigators who tested",
             "tokens": 256,
             "eos": false,
             "rep4": 0.202,
+            "distinct2": 0.592,
+            "distinct4": 0.798,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 241
           }
         ]
       },
@@ -33708,50 +33854,775 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.217,
+            "distinct2": 0.447,
+            "distinct4": 0.783,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 253
           },
           {
             "text": " 2 metres above the summit. The mountain is surrounded by a mountain, which means the valley of the mountain and the elevation of the mountains above the summit. It is located on the east side of the mountain, where the valley is still being steep.\nThe mountains represent the mountains of mountains and mountains. It is the sky to a mountain, but the valley of the mountains is a square.\nWhat is the mountain and the mountain?\nThe valley is very steepy with the mountains of the mountain. It is situated in the mountains of the valley. The valley is bounded by the mountainous mountains of the mountains to the mountains, and the mountains are the mountains of the mountains. They are part of the mountain.\nWhat is the valley of mountains?\nThe elevation of the mountains is on the east of the mountains of the plains of the mountains and mountains. It is known as the mountains of valleys, where the mountains are surrounded by mountains and valleys. The mountains are covered by mountains, streams, and rivers on the east side of the mountains and rivers. It is a valley of mountains, but this is seen as the mountains of the valley.\nWhat is the valley of mountains?\nThe mountains of the mountains are the mountains of the mountains of the sea.",
             "tokens": 256,
             "eos": false,
             "rep4": 0.154,
+            "distinct2": 0.478,
+            "distinct4": 0.846,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 252
           },
           {
             "text": " 4 feet and so on.\nThe mountain slopes of the mountain hills, which is the main mountain area of the mountain zone, are in full swing.\nThe park is a mile of up to 1,600 feet.\nThe mountain peaks of the mountain ranges of the hills and mountains can be seen as a mountain, with some elevation of about 1,000 feet, which is a mountain-shaped mountain.\nThe mountain ranges are the height of the mountain ranges of many mountain ranges.\nThe mountain ranges of the mountain range are the most recorded peaks.\nThe mountain range is a distance of about 1,000 feet.\nThe mountain ranges of the mountain range range are divided to 15 meters.\nThe mountain ranges of the mountain range range from about 900 to 500 meters.\nThe mountain ranges are a range of mountains which can be found in the mountains.\nThe mountain ranges range from about 1200 to 3000 meters in height, with a height of about 6 meters in height. The mountains range from about 500 meters to around 800 meters of terrain, but the mountains, cliffs and mountains are also known to include snow and mountains.\nThe mountain range range ranges from about 800 meters to around 800 meters, and the mountains are almost 700 km long.\nThe mountains",
             "tokens": 256,
             "eos": false,
             "rep4": 0.142,
+            "distinct2": 0.604,
+            "distinct4": 0.858,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 256
           },
           {
             "text": " 4 feet. This is one of the most common mountain peaks in the country. It is a mountain mountain where the mountain peaks have fallen from the mountains of the mountains and a mountain mountain. The mountain is surrounded by the mountains, which makes it a unique bird. The mountain ranges of the mountain ranges have many mountains of mountains. The mountain ranges of mountains are the mountains. A mountain range is the elevation of the southernmost mountain ranges and the elevation of the mountain ranges.\nThe mountain ranges are very popular and the mountain range is the mountains of the valley. The mountain ranges are a part of the mountains, which are the mountains of the mountains of South America. The mountain range ranges from 7 to 8 km\u00b2 and the rugged mountains of the Himalayas, to 12 meters. The mountain ranges range from 1.5 to 1.5 km2, with the most rugged mountain range, the mountain ranges from 1.4 to 1.8 km2, 2.5 km2, to 6.5 km2, and the mountain range ranges from 1.4 km2, a.2km2, with the largest mountain ranges from 25 to 35 m2, the mountain range is the highest.\nThe mountain ranges are in the mountains where the valley ranges",
             "tokens": 256,
             "eos": false,
             "rep4": 0.099,
+            "distinct2": 0.569,
+            "distinct4": 0.901,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 252
           },
           {
             "text": " 1st, about 2 feet tall.\nThe mountain peaks in the west, the mountain peaks at its peak in height.\nThe mountain peaks were found in the Southern Ocean, the southernmost part of the islands in the southwest.\nThe mountain peaks in the southern part of the mountains, known as the Ice Age.\nThe mountain ranges in the west of the southern Sierra Nevada Mountains.\nThe mountain ranges in the north, making it the most famous mountain mountain ranges in the southern part of the country.\nOther mountain ranges are the mountain ranges of the southernmost part of the area. They are the mountains.\nThe mountain ranges in the eastern part of the Southern Atlantic and western part of the South.\nThe mountain ranges in the northwest, and the southern part is the northern part of the region of the Sierra and is a coastline of 1.6 degrees east of the central Mexico.\nThe south-west is the westmost part of the area of the region.\nThe mountain ranges of the Rocky Mountains, the southern part of the northern part of the area of the eastern Appalachian Mountains from the southern part of the Appalachian Mountains, the eastern part of the Appalachian Mountains.\nThe south-east is surrounded by the eastern part of the Appalachian Mountains, the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.209,
+            "distinct2": 0.502,
+            "distinct4": 0.791,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "agreement_gap",
+        "prompt": "The students who had spent the entire semester preparing for the final examination in organic chemistry",
+        "draws": [
+          {
+            "text": " study were at a number of years to be published in the journal Science.\nThe students of the two countries were asked to apply a mathematical perspective with the same degree.\nThe participants were asked to write an idea by asking for the answers and their results.\nStudents were asked to write a test, which was not a test, but the students tried to write a test, and the students got more information about the test.\nThere were no test participants, and students needed to write an idea.\nIt was to be a good idea.\nIt was a good idea to test a student\u2019s idea.\nFor the student, it could be a great idea of how to write a test.\nThe students were asked to write an idea.\nFor the student, they were asked to write a test sheet. The students were asked to write a test sheet for the student.\nThey were asked to write a paper.\nThey were asked to write a paper sheet to write a paper sheet, and they were asked to write a paper sheet.\nThey were asked to write a paper sheet on the paper sheet.\nThey were asked to write an outline for the student.\nThey were asked to write a paper sheet or write a paper sheet.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.265,
+            "distinct2": 0.514,
+            "distinct4": 0.735,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 239
+          },
+          {
+            "text": " and the idea of the study was well documented in their analysis of the study.\nThe sample was analyzed and analyzed in a paper published in the journal Science The most important part of this paper was used by the researcher. The sample was collected and analysed with the data collected from the samples in the sample that was collected and analyzed in a labbed.\nWe are going to conduct an experiment to evaluate the results of the sample. The samples are taken from the samples for the sample.\nThe sample was tested and analyzed for the sample. This sample was tested and tested for the sample samples (mixed sample) and then tested for the sample.\nThe sample was tested to determine which samples were collected, the samples were collected during the sample.\nOur samples were analysed for each samples and were analyzed from the samples.\nThe samples were analyzed in the sample samples and collected samples were collected from the sample samples.\nThe samples were collected from samples collected at the sample samples. The samples were used for assessment.\nThe samples were collected in the sample samples were collected from samples collected in samples collected on samples collected to collect samples collected. The sample sample was sampled from samples collected by the sample samples collected at the sample samples.\nResults from the sample samples were performed to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.126,
+            "distinct2": 0.561,
+            "distinct4": 0.874,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": ", he found that the first test was required as the original. In contrast, the results of the final study were compared to the first test.\nThe second test was the final test for the first test. The second test was the final test. The first test was the first test that was used to test the first test. The second test was the first test. The second test was the second test, and the first test is the second test. The second test was done with the second test, and the second test was tested. The second test was done after the test was completed. The test was performed in the second test. The test was performed by the test. The results were the first test. The test was done by the test. The test was used to test the first test and the end test. The test was done using the test method using the test method. The results were done using the test method, but the test was completed using the test. The test was performed using a test method called the test method. The test was done using the test method using the test method used to test the test method. The test method was done with the test procedure. The test method was done in the test method. The test method was done using the test",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.328,
+            "distinct2": 0.361,
+            "distinct4": 0.672,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 48
+          },
+          {
+            "text": " would be required. They were the subjects of the semester, but were given a rigorous and rigorous examination and they had written the composition.\nThe final exam is the first exam, and the first exam is the first exam.\nThis is the first exam for the first exam. The second exam will be the second exam for the fourth exam.\nThe second exam is the second exams. The second exam will be the final exam.\nA second exam is the fourth exam in the second examinations. The second exam is the fourth exam. There are four types of tests.\nThe second test is the first exam of the second exam. However, the second test is the third test.\nThe second test is the third test of the ninth test.\nThe second test is the fourth test. The second test is the first testing.\nThe third test is the first test to test the first exam for the first test.\nThe second test is the second test test. The first test is the first test test. The second test is the second test but the third test is the first test. The second test is the second test.\nThe first test is the second test test. The first test is the first test test. The second test is the second test.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.32,
+            "distinct2": 0.365,
+            "distinct4": 0.68,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 99
+          },
+          {
+            "text": ".\nThe students also found it necessary to create their own ideas and methods. The students were asked to add the ideas they had learnt in organic chemistry.\nHe told them to use the materials as they said to them. After the project was completed, they did not use the materials to make their own ideas.\nAfter the project was completed, the students had given a new idea to help them build a new creative curriculum.\nThis lesson was taken into account only in the class of the school. The students also taught them how to use these materials as they were not the most important.\nThis lesson was a very important skill in the classroom.\nStudents were invited to read the worksheet using the materials that they had for. They were not only as important as their students, but as it was as important for students, they were given the materials that they needed for their students.\nTeachers were asked to read the worksheet. The first lesson in the year, students were asked to know what they wanted.\nIt was a good idea to follow the worksheet.\nThe lesson was given to the students.\nStudents were given the worksheet at a time, which was on the sheet with the alphabet.\nStudents found that the kids were given the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.04,
+            "distinct2": 0.729,
+            "distinct4": 0.96,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 249
+          }
+        ]
+      },
+      {
+        "label": "history",
+        "prompt": "The French Revolution began in 1789, when",
+        "draws": [
+          {
+            "text": " the Spanish Revolution began to be the first time in Britain. In 1808, the Spanish Revolution began to break down the French Revolution.\n- The Dutch Revolution was the first time of the Revolution. It was followed by a post of the British Revolution. French Revolution became a major form of the Industrial Revolution. French Revolution became the first major. France became a more popular place of independence.\n- The British Revolution began in 1793, when the French Revolution started. The British Revolution began in 1776.\n- The British Revolution became a major source of economic. France was the first day of the Revolution. Germany had to be a major component of the French Revolution. France had to be a major part of the British Revolution. France was the most profitable country in France.\n- Germany was a country in the Netherlands and England was one of the most popular immigrants in the world. Germany became a major player in the United States. America was the first country in the country in the world. Spain was a major player in the United States. France did not become the largest country in the world, but did not stop in the same way as Germany. Spain was a part of Germany, but eventually the nation in the United States was born. Spain had not yet been the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.111,
+            "distinct2": 0.6,
+            "distinct4": 0.889,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 146
+          },
+          {
+            "text": " the New York Revolution was established, the British Revolution was formally viewed as a free and unplanned process.\nTo the end of the 17th century, the Americans were forced to take into the colonies and the British forces were then abolished and free of the colonies for the new colonies, and the colonies were not fully established in the colonies. But the French Revolution was not the result of the expansion of the colonies and then the British colonies were forced to move away from the colonies.\nThe British Revolution has been formed and the British Revolution has been a major issue in the American colonies. The British colonies, the British colonies, the Dutch colonies, the French colonies, and the colonists, were in the colonies. The colonists, the colonists, and the colonists, they were also the ones in the colonies. The British colonies were the only colonies in the colonies, the colonies, the colonies, and the colonies. The British colonies in the colonies and the colonies were the colonies. The British colonies were the colonies. They had colonies to be settled and land for the colony.\nThe American colonies were part of the colonies. The colonies were the colonies for the colonies and the colonies. The colonies were divided into colonies (not the colonies, the colonies were the colonies. The colonies were",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.178,
+            "distinct2": 0.506,
+            "distinct4": 0.822,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 131
+          },
+          {
+            "text": " the Dutch army attacked England. The French armies began to build as the French army.\nThe British army eventually moved to England. As he was the king of England, at the age of 14, the German army was still alive, and at the age of 17.\nIn 1789, the British army was defeated against the British, and the French was a military force. The French was the French, and the Japanese were the French. The French was the French.\nIn 1789, the British army had been defeated by the French. The British was known as the German Confederacy.\nIn 1698, British troops had been taken in the French. The British was one of the most influential British military forces in the colonies, and in 1767, all of the British troops were executed.\nIn 1784, British troops were commanded by the British. The British Army had been executed by the British. The British were the only British soldiers. The British were the British soldiers. British soldiers were killed by the Germans. Some of the soldiers of the British were the German soldiers and soldiers. In 1781, British soldiers were ordered and their soldiers were taken up by the British.\nIn 1779, British troops were made from the British in 1761, and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.091,
+            "distinct2": 0.608,
+            "distinct4": 0.909,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 132
+          },
+          {
+            "text": " a young young man, he spent a long time in his life while he lived in Paris, and he became a wealthy man.\nThe French revolution, at the beginning of the 16th century, was a very important and powerful leader in the British Empire. To the time they played a significant role in the British Empire and the British Empire.\nEarly on the 19th century, the French Revolution changed the culture of French and British Empire. By 1881, German settlers settled in the United States, including British colonial lands. The French Revolution changed Britain' independence and became a crucial role for the French revolution.\nThe French Revolution of 1781-1885\nIn 1892, German settlers were divided into British colonies and Britain. The French Revolution lasted until the 16th century, and the British colonies were replaced with Britain. The colonies were made up of colonies, and the French colonies were divided into British colonies and the colonies were divided into British colonies.\nAfter the war in 1812, German settlers had been settled in France and the Netherlands. The colonies were divided into British colonies and British colonies.\nDuring the war, French colonists found great quantities of land and food. French colonists were able to meet the British colonies, as were slaves. French colonists found themselves",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.071,
+            "distinct2": 0.698,
+            "distinct4": 0.929,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 253
+          },
+          {
+            "text": " it changed the way for many people to be slaves who made slaves. This was the most extreme, but the French became slaves and slaves.\nAfter the Civil War, the American Revolution was marked by the war of the 1840s, the American Revolution. It was later in the 18th century. The American Revolution began in 1891, when the American Revolution became popular during the Civil War.\nWhen the Americans changed a series of the events they were able to see if they were a good public in the 17th century. The American Revolution was a type of war, and the Americans were not afraid of the wars. The American Revolution was an event on the American Revolution today. The American Revolution opened the colonies in the 1920s, including the American Revolution. The Industrial Revolution was a major part of the American Revolution. The American Revolution was formed by the Americans. The American Revolution was formed in the 17th century.\nThe American Revolution was the first to begin to be the abolition of American slavery in the 1800s. The American Revolution was the first to be an abolition of slavery in the early 19th century. The American Revolution was the first to be known as the American Revolution. The Revolution was a period of a period of political upheaval. One of the most significant",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.13,
+            "distinct2": 0.627,
+            "distinct4": 0.87,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 241
+          }
+        ]
+      },
+      {
+        "label": "anatomy",
+        "prompt": "The human heart is a muscular organ that",
+        "draws": [
+          {
+            "text": " is a natural organ that is responsible for regulating the body\u2019s cells.\nThe human body is constantly metabolised by the body. The internal organs are activated by the body, which in turn form the muscles into the body.\nThe body consists of the body\u2019s cells, glands, muscles, organs, tissues. The body\u2019s cells are also the parts of the body, body, body, and ligaments.\nThe body is responsible for regulating the body\u2019s circulation and the body's circulation.\nThe body\u2019s circulation and body temperature range are also called the body\u2019s arteries. The body\u2019s blood from the inside body may help to regulate blood pressure.\nA blood pressure on the body should also be taken through the body\u2019s blood. The body\u2019s blood through the body sends oxygen to the body through the body to move through the blood. The body does not need oxygen to oxygen or oxygen and oxygen to the body.\nThe body\u2019s ability to move freely to the body requires oxygen, oxygen, and oxygen. The body\u2019s ability to move freely within a body\u2019s water supply is a key aspect of maintaining a healthy body\u2019s blood through",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.19,
+            "distinct2": 0.561,
+            "distinct4": 0.81,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 64
+          },
+          {
+            "text": " has a positive effect on brain function, the heart is responsible for regulating memory and energy expenditure.\n- The heart is a nervous system called the heart to produce energy that is used to transport energy.\n- The heart is in the blood, the heart is responsible for regulating the blood vessels of the heart.\n- An increase in blood pressure also increases blood glucose levels.\n- The heart is responsible for the heart and lungs.\n- The heart is responsible for the heart and heart.\n- The heart is responsible for the heart.\n- The heart is vital for the heart.\n- The heart is responsible for the heart and the heart.\n- The heart is responsible for the heart, heart, and heart.\n- The heart of the heart is responsible for the heart.\n- The heart is responsible for the heart.\n- The heart is responsible for the heart.\n- This, in the heart, is responsible for the heart to which heart is responsible for the heart, and the heart.\n- The heart is responsible for the heart, which has the heart, heart, and the heart.\n- The heart is responsible for the heart.\n- The heart is responsible for the heart.\n- The heart will and the heart are",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.514,
+            "distinct2": 0.318,
+            "distinct4": 0.486,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 255
+          },
+          {
+            "text": " acts in the brain, but its functions are not yet fully understood.\nThe human heart is a muscle that is responsible for the development of the heart and function of the body.\nThe brain is also the first brain, and it is the brain responsible for the functioning of the brain.\nThe brain is a brain that consists of the brain and the nervous system.\nThe brain is a neurotransmitter that makes the brain more flexible.\nThe brain is a neurotransmitter that acts as an energy source for the brain to be the brain. The brain is responsible for the development of its brain.\nThe brain is an important part of the brain. It is the brain responsible for the development of the brain.\nThe brain is a neurotransmitter that helps in the development of neurotransmitters.\nPeople who have already been diagnosed with these neuropathy issues are not necessarily a very serious disease.\nOne of the main causes of neuropathy is the development of brain growth. Many people experience dementia, as well as other people with Alzheimer\u2019s, they are a huge part of the brain that can cause neuropathy.\nWhat is neuropathy?\nNeuropathy is a condition that affects the brain. It is a chronic condition that causes neuropathy in the brain",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.142,
+            "distinct2": 0.627,
+            "distinct4": 0.858,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 30
+          },
+          {
+            "text": " has become its center in the heart.\nThe heart is also the first known organ in the digestive system that is responsible for the immune system. The heart is the primary organ that is responsible for regulating the nervous system in the body.\nThe brain is the most essential organ in the body's body. The organ consists of the nervous system and the nervous system. This includes the nervous system and the nervous system. The nervous system, therefore, can be used as an organ in the body.\nAn organ organ and nerve is used to protect the nervous system. The nervous system consists of a muscle that is formed by the adrenal gland. The nervous system is responsible for regulating the nervous system. The nervous system consists of the nervous system and the nervous system. The nervous system is responsible for the sympathetic nervous system. When the nervous system is formed, the nervous system is responsible for carrying out activity, the nervous system is responsible for the nervous system in a way that is created. The nervous system is responsible for the nervous system that is responsible for the nervous system and is responsible for the nervous system.\nHow do I get to know the body?\nYou have been to feel comfortable with the body that we know the heart is connected to it. You are not already able",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.253,
+            "distinct2": 0.522,
+            "distinct4": 0.747,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 246
+          },
+          {
+            "text": " is called the digestive tract that is passed on to the digestive tract.\nYou are the main organ in the body of the nervous system. It contains a large amount of fats and fats that are consumed in the organs. The nervous system consists of a small part of the nervous system, which is the blood supply.\nAns: A blood vessel is a secret for the pancreas that is made up of the body, such as a gas. It is a very small kind of like the heart and gets up to the heart. It is an extremely small process of producing the blood vessels. It takes about 5-7 hours and is the best form of energy.\nAns: It is also a muscle, a small body that is one of the most important organs.\nAns: A person with a heart or a heart, is a heart of the heart that is caused by the heart, which is caused by the heart, which is caused by the heart, which is referred to as a heart attack or heart attack.\nAns: A heart attack occurs when the heart causes problems of the heart and stroke. It is a heart attack and causes a stroke.\nThe heart attacks and strokes are also called atherosclerosis. The heart attacks, which",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.087,
+            "distinct2": 0.682,
+            "distinct4": 0.913,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 253
+          }
+        ]
+      },
+      {
+        "label": "geography",
+        "prompt": "The Amazon River flows through",
+        "draws": [
+          {
+            "text": " the river to the east.\nThe river which flows through the river has been cleared through water and water is used for the drainage of rivers around the water.\nThe river is the place where the river flows through the river, while the river is located within the river.\nThis is where the river flows and the river flow, which flows away from the river, the river and the river to the river.\nThe river that flows through river the city has been transported before the passage of the River. The river is also used in the river.\nThe river flows through the river to the river or the river, and the river is used in the river to create a river.\nThe river flows through the river\nThe river flows and flows of the river and the river to the river and the river flows into the river\nThe river is divided into two sides:\n(a) the river with the river of the river, which flows from the river and flows from the river to the river and the river and flows from the river.\n(b) the river flows through the river and flows from the river river and the river of the river.\n(d) the river, which flows through the river, flows from the river, flows from the river",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.257,
+            "distinct2": 0.42,
+            "distinct4": 0.743,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.75,
+            "topic_span": 256
+          },
+          {
+            "text": " the Gulf of Mexico to the east of the United States and the Pacific coast, which is often considered to be a threat to the United States and a region of the country. The Gulf of Mexico is the most common place in the country and is the country of the world. It is located in the southeast and northernmost part of the country.\nThe Gulf of Mexico is the biggest city in the world, and it is the world\u2019s largest city in the world. From the north, the city is the world\u2019s largest place in the world, and it is the largest city in the world. It is also the country\u2019s largest city, and it is the country\u2019s largest city in the world. India\u2019s oldest cities are the world\u2019s largest cities and towns in the world.\nThe country\u2019s largest city in the world is the world\u2019s most populous city in the world. It is the capital of the world\u2019s largest city, but it is the capital of the world\u2019s largest city. It is the country\u2019s largest city in the world, and is the world\u2019s largest city in the world.\nThe country\u2019s oldest known city in",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.348,
+            "distinct2": 0.404,
+            "distinct4": 0.652,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the Amazon River. The Amazon River is a large part of the Amazon River. It is the Amazon River's Amazon River. The Amazon River lies in the Amazon River and is part of the Amazon River\u2019s Amazon River.\nThe Amazon River\nIt\u2019s a small country to see the Amazon River. It\u2019s a low-income country, and has a rich diversity of wildlife, including wildlife, wildlife and other wildlife.\nThe Amazon River\n\u201cA big place of Amazon\u2019s wetlands was the first river to be found in the Amazon River,\u201d the Amazon River was the first to be found in the Amazon River in the Amazon River.\nPhoto credit:\nThe Amazon River River is the largest freshwater lake in the world, with a small island of the Amazon River.\nThe fish\u2019s beaches are located at the bottom of the water-filled rivers below the bottom of the river\u2019s water. The salt is found and is the largest salt in the world.\nThe fish\u2019s salt is called \u201cPomones.\u201d\nThe fish\u2019s salt is also called \u201cPomones,\u201d which is the smallest fish in the world. The fish\u2019s",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.158,
+            "distinct2": 0.561,
+            "distinct4": 0.842,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 189
+          },
+          {
+            "text": " a vast network of ocean-based systems. It is a very diverse landscape where the water is in the form of a river and a water-rich river.\nThe water from the lake\u2019s river is a testament to the enduring power of water, making it a good idea to start on the river.\nThe water on Lake Water is a natural resource in the area. It is the main source of water as it plays in the water, is water flowing through the river and a river.\nThe water is a river which is surrounded by the water and water. It is a watershed of the valley and can be found in the water. Water is often a natural resource, but it is not a natural resource.\nThe river itself is rich in water. It is an excellent water for the water. It is also a natural resource which is made of water. It is a good source of water.\nWater is a natural resource for water, especially water. It is known as water. Water is also a natural resource for irrigation. Water is the water flowing to water. Water can be used for water, water, water, water, water, soil. Water is also used for irrigation purposes. It is also used for irrigation, irrigation, or irrigation.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.095,
+            "distinct2": 0.596,
+            "distinct4": 0.905,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 149
+          },
+          {
+            "text": " a state of great power, and the city of Arna, which is a river of water. The city of Arna is situated on the northeast side of the River, where it is located outside an area of the valley of Arna. It is the place of the city of Arna and a mountain on the south side of the river.\nThe city of Arna, from the city of Arna. Located in the city of Arna, the town of Arna and the city of Arna, is situated in the city of Arna.\nThe city of Oahu was in good position and in the city of Arna. The city of Arna was rebuilt and rebuilt, and was rebuilt in the city of Arna in 1787, when the city of Arna was built in the city of Arna, the city of Arna and the city of Allekma.\nThe city of Arna is called the Sambra. In 1281, the city of Arna was located at the entrance of Arna. It is located about 9 kilometers east of Arna, which can be used for the development of the city of Arna. This is the place where the city has been built.\nThe village of Arna",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.254,
+            "distinct2": 0.52,
+            "distinct4": 0.746,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 69
+          }
+        ]
+      },
+      {
+        "label": "math_definition",
+        "prompt": "In mathematics, a prime number is",
+        "draws": [
+          {
+            "text": " called the \u201cburden of the universe,\u201d and is a very powerful leap.\nIt is known that the universe is still an energy source, the energy is converted to a solid mass. There are many different types of energy, such as hydrogen peroxide, e.g.\nA. The Sun (1) is a state of energy. This energy is a major source of energy. The earth's energy is energy-efficient.\nHydrogen is the gas which is stored in an empty planet. It's the largest source of energy. It's the largest source of energy, from the Earth's energy storage.\nThere are two types of energy:\n- Energy: Energy is energy.\n- Energy is energy.\n- Energy plays a significant role in energy production.\n- Energy is a source of energy, energy, and energy.\n- Energy is a global energy source for energy conversion and energy is a key component of energy production.\n- Energy has the largest source of energy.\n- Energy is built with the power of energy.\n- Energy is a major source of energy.\n- Energy is a source of energy.\n- Energy is built on energy.\n- Energy is a key component of energy production.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.233,
+            "distinct2": 0.569,
+            "distinct4": 0.767,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " in a number of words, and is in a number of words.\n- A number is an integer in a number of words, including \u201cthe number of words,\u201d and \u201cthe number is a number.\u201d\n- A number of words are in the number of words, phrases, and words.\n- A number is a number of words or phrases.\n- A number of words are a number of words.\n- A number of words are not included.\n- A number of words are also represented by a number of words.\n- A number of words is a number of words.\n- A number is a number of words.\n- A number of words are common words.\n- A number of words are derived by the number of words.\n- The number of words is similar to a number of words.\n- A number of words are a number of words that have been spelled.\n- The number of words in the number of words has been recorded.\n- One of the most common words in the number of words in the number of words in the number varies.\n- There is no number of words that are related to the number of words in the number of words in the number of words.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.458,
+            "distinct2": 0.329,
+            "distinct4": 0.542,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 253
+          },
+          {
+            "text": " that it is an equation that has a percentage of a population.\nThis is because of any other reason in this definition and which is, the most important thing is to say, and it is a measure of how many people can be in the right direction.\nThe concept of \u201csuperiority\u201d is that there are two types of problems which are very different from each type of reasoning being.\nNow, one of the most common types of problems is a lot of problems in the world.\nThe most common problem in Mathematics is the type of mathematics which is when a student is learning it.\nThe basic idea is to use the basic principle of mathematical reasoning.",
+            "tokens": 137,
+            "eos": true,
+            "rep4": 0.0,
+            "distinct2": 0.875,
+            "distinct4": 1.0,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 135
+          },
+          {
+            "text": " a lot more complex than a typical class.\n- Students have the opportunity to develop a class of math with the goal of solving some mathematical problems and problems.\n- Students need a wide variety of math skills in class.\nStudents need to be given their own degree and grade level. They need the ability to organize and compose their own math skills in class.\n- Students need to be assigned to the students.\n- Students need to be assigned to the students.\n- Students are required to submit their own knowledge and skills to their students.\n- Students will need a variety of mathematics skills.\n- Students will be required to complete a course that includes their knowledge and skills, and to the course of the course.\n- Students will be given a grade level in their learning areas.\n- Students will be required to complete a course of their class.\n- Students will be provided a grade level of instruction.\n- Students will be engaged in activities that will not be engaged in activities.\n- Students will be required to complete a course for an extended period of time.\n- Students will be engaged in activities that will be used to develop in their classes.\n- Students will be required to complete the course.\n- Students will be required to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.281,
+            "distinct2": 0.525,
+            "distinct4": 0.719,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 120
+          },
+          {
+            "text": " an example of the number in a decimal, or one decimal. In algebra, the number of digits in a decimal is a decimal.\nIn numerals, a decimal is a decimal with a decimal. A decimal will be one decimal. In numerals, each decimal has a decimal in a decimal order.\nThe number of numbers is 10 and will then multiply.\nThe number of numbers in a decimal would be 12.\nThe number of numbers in a decimal would be 12.\nWhen you multiply your number in the decimal formula, one can multiply and multiply by 2.\nFor decimal.\nTo multiply the number of numbers in a decimal, you can multiply the number in a decimal order.\nNow multiply the number by 2.\nTo multiply the number of numbers in a decimal order\nTo multiply the number in a decimal, multiply the number by 2.\nTo multiply the number by 2.\nIn this case, multiply the number by multiplying by 2.\nNow multiply the number.\nTo multiply the number by 2.\nNow multiply the number by 2.\nTo multiply the number by 1.\nTo multiply the number by 1.\nNow multiply the number by 2.\nNow multiply the number by 2.\nThe number by 3",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.407,
+            "distinct2": 0.373,
+            "distinct4": 0.593,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "environment",
+        "prompt": "Climate change refers to long-term shifts in",
+        "draws": [
+          {
+            "text": " the development and development of a variety of health and well-being.\n- Medical Issues: The World Health Organization (WHO): The Global Impact of Disease Control and Prevention, The World Health Organization (WHO) (WHO) recommends that there is no risk of developing diabetes and the world health risks associated with the pandemic. The WHO has also stated that it is a major factor contributing to the development of disease prevention.\n- Environmental Quality: Some health issues that are affected by the health-related condition can lead to a significant increase in the rate of death in the United States. It is also important to adopt a range of preventive measures to prevent and treat the diseases.\n- A Comprehensive Guide to Diabetes Control and Prevention\n- National Institutes of Health and Human Services (NAP) recommends the following:\n- Healthy Approval of Diabetes\n- Diabetes and Disease: The American Academy of Pediatrics (NAP) recommends a thorough review of the latest data:\n- Diabetes and Metabolism: The American Academy of Diabetes and Drug Administration (NAP), recommends that your child will be diagnosed with a history of diabetes and its families.",
+            "tokens": 229,
+            "eos": true,
+            "rep4": 0.035,
+            "distinct2": 0.829,
+            "distinct4": 0.965,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " climate change, as well as rapid and high-level shifts in precipitation, rising weather patterns, and intensifying rainfall.\nThe study was conducted in 2016 and in 2018, the report said that \u201cThe global warming of all rainfall in the United States is a major contributor to increased greenhouse gas emissions in the country.\u201d\n\u201cThe average rainfall in the United States is about 40 percent in the United States, and the average rainfall in the US is about 5.5 percent in the United States,\u201d said Mambi, director of a U.S. Environmental Health Policy Center at the Brookings Institution. \u201cThe average rainfall in the United States is about 20 percent in the United States.\u201d\nThe study found that the average rainfall in the United States was between 18% in the United States and the United States. The average precipitation in the United States is about 4.5 percent in the United States, which has the highest recorded temperature in the United States. This is about 1.5 percent in the United States, according to the Centers for Disease Control and Prevention.\nCurrently, the average rainfall in the United States is about 0.7 percent. The rainfall is about 0.1 percent in the United States.\nThe average temperature",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.194,
+            "distinct2": 0.612,
+            "distinct4": 0.806,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 12
+          },
+          {
+            "text": " the world's population.\nThe Global Fund has also played a role in the development of the Global Fund.\nIn a report, the world's largest global GDP has been the primary and most important economic development ever since.\nThe Global Fund has started a new project to develop a new project to develop the Global Fund. The project will be funded by the Global Fund for Economic Cooperation and Development (FDA) Centre for Economic Cooperation (NI), a European Partnership for Economic Cooperation (NIAM), which is also funded by the Global Fund for Economic Cooperation (UAE), and a consortium of the UN.\nThe World Trade Organization (NCE) is a partnership between local and international nations and foreign countries. It serves as the largest network of international institutions, including the European Development Bank (NIAM), and the European Development Bank (NCE), to the European Union of the UN.\nThis partnership is located in the UK, where the United Nations has a new national partnership with the International Monetary Fund (NCE) and the International Monetary Fund (NCE) and the UN (NCE) by the United Nations (EU) and the United Nations (EU) and the UN (EU) (EU), the UN (EU) and the EU (EU)",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.154,
+            "distinct2": 0.631,
+            "distinct4": 0.846,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " temperature, precipitation, and rainfall.\nIn this article we will explore the importance of the IPCC\u2019s climate and natural resources to create a better policy of reducing climate change and how climate change impacts climate change impacts.\nThe IPCC\u2019s Climate Change Fund\nWhat are the three main sources of climate?\nThis is the first state study to examine the global climate change in the coming years, which has been a source of ongoing climate change. Climate change and global warming have been a major concern for the future.\nThe IPCC does not need to be objective in any way. It is not just a single entity that is dependent on the global climate change and the global warming world.\nHowever, IPCC\u2019s climate policy has been an issue for every country that has been around for many years.\n\u201cWe do not want to know the climate and the way we are going to see the climate,\u201d explains the IPCC.\nThe IPCC\u2019s climate change has to be defined as a \u201cclimate change\u201d.\nThe Earth\u2019s climate is in the \u201cclimate\u201d of the United States.\nThe IPCC is trying to determine how climate change affects the global climate?\nThe IPCC\u2019s Climate Change and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.067,
+            "distinct2": 0.733,
+            "distinct4": 0.933,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 255
+          },
+          {
+            "text": " the world, and it also has less to get the information. For example, there are currently no longer a wide range of activities and activities, such as walking and cycling, in a way that is based on what we need to do.\nAlthough the focus of the school is on the role of teacher education, it\u2019s important to know that it is not true to the teacher, therefore, the teacher and teacher. The teacher\u2019s role in teacher education is that the student will have more information about their student\u2019s strengths and weaknesses, and to their needs to be successful at the time.\nThe teacher and teacher\u2019s role in school is crucial for the student to understand and understand what to do. For this, students should be able to see which level of education can work and how to apply their knowledge.\nThe teacher\u2019s role in education is also important in teaching and learning. The student is not in their hands, but in an effort to learn to practice the role of a student.\nTeachers should be encouraged as they are in this age, and they should be in the family.\nTeachers should be encouraged to consider their role in the school.\nTeachers must be encouraged to read with their teachers and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.047,
+            "distinct2": 0.8,
+            "distinct4": 0.953,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          }
+        ]
+      },
+      {
+        "label": "recipe",
+        "prompt": "To make bread at home, you will need",
+        "draws": [
+          {
+            "text": " to buy an assortment of breads, a few of the ingredients in the breads, and, as well as in a few hundred or eighty-one days, that is, as the breads, the breads, and a pint of breads, the breads are made into bread and flour.\n- To make breads a meal, a meal is an excellent substitute for bread and bread.\n- To be a source of goods, breads are allowed to cook in a wide range.\n- To be a source of goods, breads are made in the form of bread, pasta, bread, grain, bread and bread.\n- To be a source of goods, the bread is used in a variety of other ways, and the whole world is the only way to be an alternative.\n- To be a source of goods, and the whole world is different from the same one.\n- To be a source of goods, goods, and services, to be the store of goods, the goods, and the goods and services of the goods it provided to the goods they are used.\n- To be an official source of goods, goods and services, in particular, to be transported as a source for the goods you have purchased and sold",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.206,
+            "distinct2": 0.553,
+            "distinct4": 0.794,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 142
+          },
+          {
+            "text": " to boil it up in the hot water. This will be the case with a few different methods to take as many times as many years as the dough dries. This will be a very good idea of how it works for you.\nIt is very important to make this with lots of great work. It is important for a variety of cooking and cooking. It is also very important to cook on the stove, but with the most cooking food in the kitchen, you can try to cook or cook it in the oven and cool the oven and make it easier to cook.\nThere are many kinds of vegetables that you can use to cook or cook. Here are some examples of what you will learn:\n- 1. You should have to make the dough in the kitchen and the pasta.\n- 1. You will need to put the dough into the kitchen and then use any one of the most ingredients in your cup.\n- 1. You will need to start and prepare the dough in the kitchen.\n- 1. You will need to bake in the oven and give it to the dough.\n- 1. You will need to make the dough in the oven.\n- 3. If you have two kinds of dough with the dough, your dough is the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.111,
+            "distinct2": 0.702,
+            "distinct4": 0.889,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 231
+          },
+          {
+            "text": " to be a safe, nutritious meal.\n- Limit the amount of food you choose, like your child\u2019s diet will help you get the most healthy.\n- Take your time to maintain your health care, as is a good place to avoid stress.\n- Avoid eating, too, even with exercise.\n- Avoid smoking.\n- Avoid smoking.\n- Avoid smoking altogether.\n- Avoid smoking.\n- Avoid smoking or drinking alcohol consumption.\n- Try smoking.\n- Avoid smoking or alcohol consumption.\n- Avoid smoking or alcohol consumption.\n- Avoid smoking.\n- Keep your personal belongings away from the state.\n- Take medications.\n- Limit alcohol consumption.\n- Avoid alcohol or alcohol consumption.\n- Avoid alcohol alcohol.\n- Avoid smoking.\n- Make sure you drink.\n- Avoid smoking.\n- Avoid smoking, drinking alcohol or alcohol can irritate the body.\n- Avoiding alcohol or alcohol.\n- Avoid smoking or alcohol.\n- Avoid alcohol.\n- Avoid consuming alcohol.\n- Avoid drinking alcohol or in moderation.\n- Avoid drinking alcohol.\n- Avoid smoking.\n- Avoid smoking.\n- Take alcohol and alcohol products.\n- Avoid alcohol and alcohol.\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.348,
+            "distinct2": 0.443,
+            "distinct4": 0.652,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 164
+          },
+          {
+            "text": " to add a small amount.\n- Make a big difference\n- Use the right amount of bread or a portion of bread\n- Avoid the excess amount of bread or other ingredients such as bread, bread, and pasta\n- Add a few slices, either without frying or frying\n- Limit the amount of bread or sugar to produce a small amount of bread\n- Take a burger or a salad\n- Bring the butter and lean beef and stir the butter and salt\n- Pour your butter and pepper in the pan and the salt\n- Add two tablespoons of bread\n- Cook the flour and mix the bread with a little butter and cheese\n- Try the bread with a spoon with a spoonful of butter or a cup of bread\n- Cook the bread to a bowl\n- Serve the bread in the pan and a little cream\n- Cook the bread to add a spoon\u2019s milk to a quart\n- Serve the bread in the pan, then stir it up and boil them with a flour\n- Serve the bread and be the pasta.\n- Serve the bread;\n- Serve the bread and drink it;\n- Serve it in the pan and make bread from a bread.\n- Serve it in the pan and bake it.\n- Serve",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.13,
+            "distinct2": 0.616,
+            "distinct4": 0.87,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 241
+          },
+          {
+            "text": " to create a great assortment of breads and vegetables. You will need to make a difference in the amount of food you are growing on to make a difference.\nFor the long-term goal, there are two ways to make breads. It is important to make bread in order to be a good source of food. It should be a good source of the whole way.\nTo make breads, pasta is a great source of the whole stuff, so you can add your own breads and the whole stuff you enjoy. The main thing you want to know about breads and how they cook you are. The whole stuff you need to know is a good source of the whole food.\nThe whole thing you want to do: Do you have a salad with the whole thing you need to know? Well, that you should be on your own.\nThe whole thing you need to make and work you should have. You can find a meal in the family.\nThe whole thing you\u2019ll learn is that you\u2019ll be a good idea for the family. You can be an excellent way for the family and friends. It\u2019s a great way for you to help your family.\nWhat is your name?\nThe name of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.071,
+            "distinct2": 0.659,
+            "distinct4": 0.929,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 181
+          }
+        ]
+      },
+      {
+        "label": "literature",
+        "prompt": "William Shakespeare wrote many plays, including",
+        "draws": [
+          {
+            "text": " the creation of his own work in the story of the play. The story of the play, the story of the play, the play, the play, the play, the play, the play, play, play, play, play, play, play, play, play, play, play, play, play, play, play, play and play in the play.\nThe play is a play of the play, the play, the play, the play, the play, the play, the play, the play, play, the play, play, play, play and play. The play is a play, play, play, play, play, play, play, play, play, the play, play, play, play, play, play, play, play, play, play, play, play, play, play, play, play, play, play, play, play, play and play. The play is also played in play, play, play, play, play and play, play, play, play, play, play, play/the play, and play.\nThe play, play and play are a valuable and enjoyable play. The play and play play play play play will create a wide range of play and play. Play can",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.652,
+            "distinct2": 0.204,
+            "distinct4": 0.348,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " his work in the book, The Adventures of Macceth and the Holy Spirit, which would be his own best friend. The plays of Macceth and the Holy Spirit were also called the Father of John the Baptist. The most famous play of Macceth is the John of John of Mary.\nThroughout the novel, Macceth was not to be a playwright, but rather a playwright of the play. Macceth and the play were a prominent playwright and a painter of the painting. Macceth was a playwright, and his work was inspired by Macceth and his work were to be completed. Macceth was a playwright of the playwright John Clinius (1515-1750-1961), and a great deal of the playwright John Clinius (1916-1860) was a significant figure of the playwright. Macceth was a lecturer of the playwright John Clinius (1860-1818) and his father John Clinius (1760-1848). He was a skilled musician of art, but his masterpieces were often used in the play. Macceth was a great playwright of the playwright John Clinius (1715-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.194,
+            "distinct2": 0.588,
+            "distinct4": 0.806,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 27
+          },
+          {
+            "text": " the Old Shakespeare, the King, the King, and the King for the King.\nThe first and foremost of Shakespeare wrote Shakespeare, the only son who was the first and foremost of the United States to have the greatest part of the world. The first one who was the first and third of his time was written in the early nineteenth century.\nDuring the last half of the ten years, the second half of the sixteenth century was written, and the second half of the 12th century. The second half of the twenty-first century was written, and the second half of the 13th century, was written in the second half of the 17th century. The third half of the 20th century was written in the third half of the 19th century, a second half of the 19th century, and the fourth half of the 19th century. The second half of the 19th century, the third half of the 19th century, was written in the second half of the 19th century. It is the third half of the 19th century. It is the fifth half of the 19th century, which dates back to the 18th century.\nThis is the third half of the 19th century. It is in the tenth century, with the first",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.304,
+            "distinct2": 0.439,
+            "distinct4": 0.696,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 26
+          },
+          {
+            "text": " his work, his works, the play, and his work. He was the playwright of the novel, and took his own life in the book and his work at the end of his life. His novel is a novel, the playwright of Shakespeare, and his works.\nFor the young to be remembered through the famous play, the playwright must have at a very high quality, and the playwright must have been able to find him, as well as the playwright must know the character of the playwright. This will not necessarily be a one of the most popular personalities of the playwright in the play.\nThe playwright must be made for the sake of the playwright, as well as the playwright, for the purpose of the playwright. The playwright must be familiar with the playwright's playwright's playwright's playwright's playwright should be a member of the playwright's playwright \"the playwright\" and \"the playwright must be a part of the playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's playwright's",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.312,
+            "distinct2": 0.478,
+            "distinct4": 0.688,
+            "looped": true,
+            "loop_onset": 205,
+            "loop_period": 3,
+            "topic": 0.0,
+            "topic_span": 51
+          },
+          {
+            "text": " the death of his own.\nThe story of an unknown is often seen as a way of life.\nThe novel is based on the words he can tell.\nThe novel is not in the same way as the story of a man who is on the verge of the death of him.\nThe classic is the story of a man who once has been given himself, which is the story of a man who is on the brink of his life.\nThe story of a man who is on the verge of being born in the heart of a man who is on his head will be saved.\nThe story of a man with a man who is on the verge of being born and born in the heart of a man who is born.\nThe story of a man who had come to be a man, who is called war with life and death that he is at the heart of his life.\nThe story of a man is about death in the body of a man who has come to be the man.\nThat is a story of a man who is to be born, in a man who is the soul of man and love.\nThe story of man is the man who is not the good and evil, and he is the man who is so beautiful that",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.249,
+            "distinct2": 0.522,
+            "distinct4": 0.751,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          }
+        ]
+      },
+      {
+        "label": "technology",
+        "prompt": "The internet began as a research project in",
+        "draws": [
+          {
+            "text": " the United States, and became part of the United States\u2019s history. In order to be a new issue, the United States, the United States, the U.S. and the United States and the United States, was formed by a new type of government, a federal government, and a new state. The main aim of these was to determine how many citizens in the United States had been informed about the United States, and the state of the United States. It was also a new government to determine the history of the United States, the United States and the United States. It was also the first African American, Dutch and American.",
+            "tokens": 130,
+            "eos": true,
+            "rep4": 0.173,
+            "distinct2": 0.636,
+            "distinct4": 0.827,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the mid-1960s, where the data were collected from the United States and the United States. The data are collected from the \u201cAnecd\u201d database: \u201cAnecd\u201d data is available to the public. The data is then used as a means of reporting data, reporting data, and data analysis. It is also available to the public, which means that the data used for the study is often used as a means of reporting information about the data, the data that is found below. It has been widely used for the research and development of data processing, and the data are collected using the data for the research and information provided by the public. This is also the main purpose of the research that is not intended to be done to a business.\nThe research is based on the statistical data collected and the statistical data used for the analysis of the data. In this paper, we use data from the collected data for the data. This is a first time the data was collected and stored in the database.\nThe data were collected using the data that showed the data collected in the data. The data were collected and stored in the data collected in the data collected from participants, and the data was collected. The data were collected from the collected",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.091,
+            "distinct2": 0.604,
+            "distinct4": 0.909,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 160
+          },
+          {
+            "text": " the 1980s.\nAs a result, the researchers found the largest data collection and a collection of data for the study.\nData science and technology has also contributed to the development of the data science and technology used in the field.\nThe researchers and analysts who developed data science to analyze data from the data are also being integrated into a model that is often used to predict data.\nThe research was conducted to identify the first data scientists from the University of California and the U.S. Geological Survey.\nThe researchers said that the researchers were able to identify the data from the data science to predict the extent of the data collected and the current data.\nThe researchers found that data science and engineering in the field of data science would be more important for the research and development of the data.\nIn a study, the researchers found that the data scientists used data to predict the distance between data scientists and the data. As a result, they found that data scientists would predict the time and time we had the data they collected and analysed was not.\nThe team found that data scientists, as well as the average data scientists, would be used to predict how data scientists could predict the distance between data and the data collected.\n\u201cWe had to be able to predict",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.036,
+            "distinct2": 0.671,
+            "distinct4": 0.964,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 167
+          },
+          {
+            "text": " the US, while in the UK, the US was able to support it in the future. The program\u2019s new technology and its potential for innovation in the region was a key component in the global world.\nThe research project also helped the scientists, engineers, and engineers, engineers, and engineers, and engineers, researchers, and engineers, the researchers and engineers. It also helped scientists and engineers to build a new world in the world.\nThe research project was led by the scientists in the field of science.\nThe researchers have discovered that the scientific team was able to answer the results of the experiment by a team of researchers to work together to create a new field of scientific research.\nThe team created a new process that would have been created in the field of science, science and science.\n\"The process of research is a step in the process of finding a new field of study,\" said Dr. Martin.\n\"We are working hard and we are working hard to find out how to make a project. We believe that science is a kind of science that can help you do anything,\" he said.\n\"You will have to use it\"\nThe results are in a new field of scientific research,\" Dr. Martin said.\nThe researchers are",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.063,
+            "distinct2": 0.733,
+            "distinct4": 0.937,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 255
+          },
+          {
+            "text": " the region of the world.\nThis project is an open field of research and development. It is also a guide to the development of information on the research and development of an organization. It is also a resource to work with students to develop and develop a new study and development plan.\nIt is important to include a team of researchers at the University of Maryland (the University of Maryland). This collaboration is one of the world\u2019s most important areas of research and research work and research work.\nThe project is a collaboration of the University of Maryland, and the University of Maryland. It aims to work in a range of areas. It will provide practical advice and advice in a range of areas of research.\nThe project is a partnership between the University of Maryland and the University of Maryland, and the Department of Education.\nThe project will help you with a variety of sources like the University of Pittsburgh. Here\u2019s a brief summary of the project:\nThe project will help you with the skills to share your knowledge.\nThe project will help you improve your understanding of the topic of the research topic and the topic, and you will be given additional information about the work you can use to determine it.\nThe project will include the research topic, the area",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.103,
+            "distinct2": 0.675,
+            "distinct4": 0.897,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 252
+          }
+        ]
+      },
+      {
+        "label": "economics",
+        "prompt": "Inflation occurs when",
+        "draws": [
+          {
+            "text": " inflation is higher, inflation is a major factor in the production of inflation and inflation. Inflation is a major factor in the production of inflation. Demand decreases when inflation is increased, inflation is the major factor in the production of inflation. Forflation refers to the inflation and demand for inflation.\nThe inflation is a major factor in the production of inflation on the production of deflation. A rise in inflation is a result of inflation, which is not a result of inflation. The inflation is the result of inflation, because the inflation is the result of inflation.\nThe inflation is the result of inflation.\nThe effect of inflation on inflation is not caused by inflation. It is the result of inflation in the economy.\nThe inflation is caused by inflation, which is due to the price of a commodity or a commodity. It is a result of inflation which is used to create financial statements by a few.\nThe deflation can be caused by inflation. The deflation is the result of the inflation. The other two countries are the second largest state, and the same is the most important state for inflation. This is the result of the deflation in a different way: by the time the inflation is expected to form a major change in the inflation in the coming year. The inflation will be",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.174,
+            "distinct2": 0.533,
+            "distinct4": 0.826,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 254
+          },
+          {
+            "text": " the inflation rate is lower inflation rate, inflation rates are higher.\n- The inflation rate is higher in the inflation rate.\n- The inflation rate is a high inflation rate.\n- The inflation rate is high compared to the inflation rate.\n- The inflation rate has a low inflation rate. The inflation rate is high inflation rate.\n- The inflation rate increases.\n- There are approximately 1.5% of inflation rate in the previous three years.\n- The inflation rate is equivalent to the inflation rate. The inflation rate is the percentage of the inflation rate.\n- The inflation rate is calculated by the rate of inflation.\n- The inflation rate is based on the rate of inflation.\nThe inflation rate is calculated by the rate of inflation, the rate of inflation is calculated to be by the rate of inflation.\nThe rate is calculated by the rate of inflation from the rate of the rate of inflation.\nThe rate is calculated by the rate of inflation in the current year.\nThe rate is divided by the rate of inflation in the previous year.\nThe rate of inflation is calculated by the rate of inflation in the future.\nThe rate is calculated by the rate of inflation in the new year.\nThe rate of inflation in the current",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.435,
+            "distinct2": 0.329,
+            "distinct4": 0.565,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 253
+          },
+          {
+            "text": " inflation is in the process of inflation, inflation is usually a result of inflation. Inflation is a global phenomenon that is due to the number of reasons for inflation in the first place.\nThe increase in inflation is the rise of deflation for a two month. The increase in inflation can be attributed to the inflation. The average inflation rate is the increase in the inflation rate.\nThe rise of inflation is the ratio of inflation. The net inflation is the ratio in the sum of inflation. This is the difference.\nThe inflation rate is the lowest rate because the demand is the same as the total inflation ratio. The increase in inflation for other currencies is the increase in inflation. This decrease is the decrease of inflation.\nThe increase in inflation rates is the increase in the inflation rate. The increase in inflation means the increase in inflation rate.\nThe increase in inflation has been observed due to the decrease in inflation rates.\nThe increase in inflation rates is the increase in inflation rate.\nThe increase in inflation rates is the increase in inflation rate of inflation.\nThe increase in inflation rates in the first two years is the increase in inflation rate, the increase in inflation rate.\nThe increase in inflation rates by the rise of the inflation rate in the last three years.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.245,
+            "distinct2": 0.467,
+            "distinct4": 0.755,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 249
+          },
+          {
+            "text": " inflation is inflation and the inflation rate is over-peak. The term inflation is about to be used as a currency.\nWhat is unemployment?\nThere are two main types of unemployment:\n- unemployment and unemployment:\n- unemployment: unemployment and unemployment, unemployment and unemployment are the most common types of unemployment.\n- unemployment: unemployment, unemployment, unemployment, unemployment, etc.\n- unemployment: unemployment has been caused due to unemployment, unemployment, unemployment and unemployment.\n- unemployment is a major cause of unemployment in the economy.\n- poverty: unemployment goes to a much more than a short answer for each of the reasons people have to pay for an individual.\nThis is not a major issue, but it is a major issue in the world.\n- Poverty is a major issue in the world. It is in many ways. The country may not have any unemployment. It was a lot of different factors in the world. In the wake of the crisis, unemployment is a major issue.\n- poverty is an existential issue of economic freedom. At the end of the Cold War, a group of people from the country has struggled to do better. Poverty is a major issue in the country. It is a major issue in the nation. It is a major",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.134,
+            "distinct2": 0.639,
+            "distinct4": 0.866,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 15
+          },
+          {
+            "text": " inflation comes in a short term\n- inflation is a term used in a long term\n- inflation can be a term used to refer to the amount of inflation in various types of currencies\n- inflation is a term used to refer to a general term for which the financial growth is in the form of inflation.\nAccording to the U.S. Treasury, inflation is a term used to refer to the amount of inflation in the form of inflation. The amount of inflation in the form of inflation is a term used to refer to the amount of inflation in the form of inflation in the form of deflation.\n- The term for inflation, inflation in the form of deflation is a term used to refer to inflation. The term for deflation is often used to refer to the amount of inflation in the form of inflation.\nThis is the first term for inflation because it is used to refer to inflation in the form of inflation.\n- The term for deflation is used to refer to inflation in the form of deflation in parts of the country.\n- There are some other common causes.\n- The term for deflation is used in many countries.\n- The term for deflation refers to inflation in parts of the country.\n- The term for deflation in parts of the country is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.411,
+            "distinct2": 0.376,
+            "distinct4": 0.589,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 238
           }
         ]
       }

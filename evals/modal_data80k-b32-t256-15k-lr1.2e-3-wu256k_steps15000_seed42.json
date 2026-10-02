@@ -41971,18 +41971,29 @@
   },
   "training_systems": null,
   "samples": {
-    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "protocol": "20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
     "temperature": 0.7,
     "top_k": 40,
     "new_tokens": 256,
     "draws": 5,
     "summary": {
-      "n": 50,
-      "rep4": 0.4,
-      "looped": 8,
-      "eos": 2,
-      "topic": 0.277,
-      "tokens": 251.5
+      "n": 100,
+      "rep4": 0.271,
+      "rep4_p90": 0.57,
+      "rep4_mean": 0.31,
+      "distinct2": 0.472,
+      "distinct4": 0.69,
+      "looped": 10,
+      "loop_rate": 0.1,
+      "loop_ci95": [
+        0.055,
+        0.174
+      ],
+      "loop_onset_median": 181.0,
+      "topic": 0.232,
+      "topic_span_median": 142.0,
+      "eos": 4,
+      "tokens": 251.68
     },
     "prompts": [
       {
@@ -41994,50 +42005,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.099,
+            "distinct2": 0.659,
+            "distinct4": 0.901,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " is carried into a mixture of various molecules that can be made up of various atoms. It is a process that can be used to describe the molecule's components. When the molecules are placed in a solid form, they can be made up of material.\nWhat is a compound?\nWhat is a compound?\nThe compound is a substance that is formed by the chemical molecules that are released as a solvent. It is a substance that acts as a chemical or radioactive material. It is responsible for the synthesis of molecules that are absorbed by the reaction of the substances.\nWhich is the chemical chemical?\nWhat is chemical reactions?\nThe substance is called chemical reaction. It is a substance that acts as a chemical reaction, and it is responsible for the reaction.\nWhat is the reaction of chemical reactions?\nThe reaction of chemical reactions is chemical reactions, which are called chemical reactions.\nWhat is the reaction of chemical reactions?\nWhat is substance reactions on an atom?\nWhich is the reaction of chemical reactions?\nWhat is chemical reactions?\nWhat is chemical reactions?\nWhat is the reaction of chemical reactions?\nWhat is the reaction of chemical reactions?\nWhat are the reactions of chemical reactions?\nWhat are the reactions of compounds?\nHow are chemical",
             "tokens": 256,
             "eos": false,
             "rep4": 0.292,
+            "distinct2": 0.49,
+            "distinct4": 0.708,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " combines various methods of living organisms like carbon dioxide and carbon dioxide, which are all the most important aspects of life.\n- Nucleotide: The most commonly used compound, is the two types of chemical, which are the same as the two types of chemical, which are specific.\n- The second most used for metals is the one that is the most commonly used form of chemical.\n- The fourth used compound is the most commonly used compound in other parts of the body.\n- The second used compound is the most commonly used compound in the body.\n- The third used compound is the most commonly used compound in the body.\n- The second used compound is the most commonly used compound in the body.\n- The second used compound is the most used compound in the body.\n- The second used compound is the first used compound in the body and the second used compound.\n- The third used compound is the type of compound.\n- The third used compound is a synthetic compound.\n- The third used compound is the second used compound in the body.\n- The second used compound is the main type of compound used in the body.\n- The second used compound is the most used compound in the body.\n- The third used compound",
             "tokens": 256,
             "eos": false,
             "rep4": 0.474,
+            "distinct2": 0.349,
+            "distinct4": 0.526,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " will help you create the nutrients we consume.\nWe have a number of plants we store and store plants, and we also feed them, each plant from the soil and produce the nutrients they produce.\nWe are happy to have a food we eat.",
             "tokens": 51,
             "eos": true,
             "rep4": 0.0,
+            "distinct2": 0.92,
+            "distinct4": 1.0,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " is designed to be used in agriculture.\n- Environmental factors\n- Environmental factors such as the use of pesticides\n- Environmental factors such as water water and sanitation\n- Environmental factors such as water, air and water, drinking water, water, and water\n- Environmental factors such as water, water and water that have been used to reduce the likelihood of developing an impact of water or water problem.\n- Environmental factors such as water conditions\n- Environmental factors such as water, water, water, sewage water, water and water\n- Environmental factors such as water and water, water, water, fire and water\n- Environmental factors such as water, water, water, and water planning\n- Water management\n- Water management efforts\n- Water management is important.\n- Water management practices are:\n- Water management\n- Water management practices\n- Water management practices\n- Water management\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n- Water management practices\n-",
             "tokens": 256,
             "eos": false,
             "rep4": 0.561,
+            "distinct2": 0.282,
+            "distinct4": 0.439,
             "looped": true,
             "loop_onset": 179,
             "loop_period": 5,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -42050,50 +42076,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.466,
+            "distinct2": 0.353,
+            "distinct4": 0.534,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 8
           },
           {
             "text": " was born in Germany, but he was not a teacher. His father was a physicist, a mathematician, mathematician, and mathematician.\nHis son, mathematician, mathematician, mathematician, mathematician, mathematician, physicist, physicist, mathematician, mathematician.\nHis father was a scientist, mathematician, mathematician, mathematician and mathematician.\nHis father is a physicist, physicist, physicist, mathematician, mathematician, mathematician.\nHis father is a mathematician, mathematician, mathematician, mathematician and mathematician.\nA mathematician, mathematician, mathematic, mathematician, mathematician, mathematician and mathematician.\nHis father is a mathematician, mathematician and mathematician.\nThe mathematician is a mathematician or mathematician.\nOne of the most famous mathematician is the mathematician, mathematician and mathematician.\nA mathematician and mathematician.\nA mathematician, mathematician, mathematician, mathematician, mathematician and mathematician.\nA mathematician, mathematician. mathematician and mathematician.\nAnalog is a mathematician and mathematician.\nA mathematician, mathematician, mathematician.\nA mathematician and mathematician, mathematician, mathematician.\nA mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, mathematician, and mathematician.\nA mathematician has a large number, and mathematician.\nA mathematician, mathematician, mathematician, mathematician, mathematician.\nA mathematician and mathematician of a",
             "tokens": 256,
             "eos": false,
             "rep4": 0.581,
+            "distinct2": 0.247,
+            "distinct4": 0.419,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 73
           },
           {
             "text": " used the \u201cnew and old people\u201d to say \u201cthe war,\u201d and \u201cthe war.\u201d He was also a political leader, and was in a world and was opposed to the \u201cwar,\u201d in which a man had a \u201cstrong,\u201d and had a human position in which he had the power to power the people to power the right and to power it to power the masses. He was a man who was, for whom he had done, and his son, was not to power the enemy, but He was not so happy to do his own life.\nIn the story of the war, the old man had a great relationship with power for him, and that he would not only be able to make his way, and not for him. He would not be able to give him the good power of the people. He would have to have to be able to make his house to do a good job. He would have to be able to have an object. He would have to be able to offer a good life for his people to believe that he would have been able to bring something or not to be able to understand his own life.\nThis is the real reason you can ask me, as",
             "tokens": 256,
             "eos": false,
             "rep4": 0.063,
+            "distinct2": 0.69,
+            "distinct4": 0.937,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " became the first physicist, and also from the University of Munich. The two years later, the Royal Astronomical Society, he discovered a few of the most prominent theories of the evolution of the universe. The discovery of Einstein's theory led to the discovery of the universe, and has been studied with the scientific understanding of the universe, and we have also been able to see how the universe is. The discovery of the universe is based on the concept of evolution. The theory of evolution, and the theory of evolution has been theorized by the Greek, and the theory of evolution is the theory of evolution. Since the theory of evolution, the theory of evolution is a form of evolution and evolution. The theory of evolution and evolution is the subject of evolution. The theory of evolution and evolution is of evolution, evolution and evolution.\nIn the evolution of evolution, evolution is a technique of evolution and evolution. The theory of evolution and evolution, and evolution is one of the most important discoveries of evolution. As the evolution of evolution, evolution and evolution, evolution and evolution can be described, how evolution and evolution can be understood. Evolution, evolution and evolution are thought to be a human evolution.\nThrough the evolution and evolution of evolution, the evolution of evolution and evolution, evolution and",
             "tokens": 256,
             "eos": false,
             "rep4": 0.202,
+            "distinct2": 0.506,
+            "distinct4": 0.798,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 183
           },
           {
             "text": " was the first of the first German-language physicist in the Soviet Union.\nIn his book, he became a German-language physicist, Professor of Physics, University of Massachusetts, and the University of American Studies in America.\nHis research was an invaluable tool for the use of science in the world.\nIn a paper published in the journal Nature, he published the National Institute of Physics, a series of German-language physicist and astronomer physicist, and an inventor and physicist.\nIn his book, he published a series of the first Russian-language physicist in the world, and his inventions and inventions.\nHe published a paper published in the journal Nature, coined the scientific journal of the Russian-language chemist, and found it in a very early years of science.\nHe published a series of German-language articles on the research of the German-language journal.\nHe published the journal Nature in the early years of physics, and he published the journal Nature in the journal Nature.\nHe used the research paper to study the chemistry of the brain and the brain.\nHis research is based on the scientific and scientific and scientific evidence of the brain.\nHe also worked in his research journal Nature, a graduate.\nHe wrote a book to journal the latest news",
             "tokens": 256,
             "eos": false,
             "rep4": 0.103,
+            "distinct2": 0.6,
+            "distinct4": 0.897,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 187
           }
         ]
       },
@@ -42106,50 +42147,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.316,
+            "distinct2": 0.451,
+            "distinct4": 0.684,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 114
           },
           {
             "text": " a substance called carbon, and that is used in DNA.\nThe number of cells is determined by the specific properties of the tissue. The amount of cell elements with the number of molecules is 0.12. This is achieved by combining the structure of the cell.\nThe body has the capacity of the two cells, and the cells are not involved. Some of these cells are then separated into two cells, which are then transferred to the body. All cells are also of a group of cells and cells. The cells are formed in the cells.\nThe cells are formed by the blood cell. The cells are divided into two parts. They are formed in the cell structure. The cells are formed in each cell.\nThe cells are divided into two parts:\n- The cells are divided into three parts:\n- The cells are formed in the cell\n- The cells are divided into two parts:\n- The cells are divided into three parts:\n- The cells are divided into two parts:\nWhich cells are divided into two parts:\n- The cells are divided into two parts:\n- The cells are divided into two parts:\n- The cells are divided into two parts:\n- The cells are divided into two parts:\n- The cells in",
             "tokens": 256,
             "eos": false,
             "rep4": 0.383,
+            "distinct2": 0.459,
+            "distinct4": 0.617,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 32
           },
           {
             "text": " ion-linked ions. The two molecules can be converted into two atoms: (i) + + + + + + + + + + + + + + + + + + \u2212 + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +",
             "tokens": 256,
             "eos": false,
             "rep4": 0.909,
+            "distinct2": 0.082,
+            "distinct4": 0.091,
             "looped": true,
             "loop_onset": 37,
             "loop_period": 1,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " the material being extracted from a compound or compound. The reaction is the source of the substance is produced by the element of the substance. The substance is then translated into the substance that is called the substance in the substance. The substance will be the substance in the substance of the substance.\nThe substance is derived from the substance that is contained in the substance of the substance, which is responsible for the substance, for the substance and the substance used to regulate the substance and the substance is derived from the substance. The substance is derived from the substance, and the substance must be stored as a substance. The substance is also used as a substance. The substance is used in this substance to be used to describe substance in order to be treated, and therefore the substance is used in the substance, and that substance is used in the substance.\nA substance is used in an active substance in the substance. A substance is used in the form of a substance, as a substance. The substance is applied in the substance such as a substance, from the substance to the substance. The substance is then used in the substance is used in the substance.\nThe substance is used in the substance. The substance is used in the substance, wherein the substance is used in the form of the substance",
             "tokens": 256,
             "eos": false,
             "rep4": 0.289,
+            "distinct2": 0.42,
+            "distinct4": 0.711,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 23
           },
           {
             "text": " a number of molecules with a number of particles, and it will be useful as a result of the number of particles in the cell. The two of these two particles can be found in a number of molecules. The particles of atoms are the most important element of the material. The atoms are the two molecules of atoms, but the electrons are the two electrons that are the two electrons in one atom. The electrons are the two electrons, which are the three electrons. The electrons are the two atoms that are the two electrons. The electrons are the two atoms of atoms and the four electrons are the two electrons. The electrons are the two electrons. Both atoms are the two electrons, and the two electrons are the four electrons atoms. The electron is the one atoms. The most important element of electrons is the atom, which is the five electrons. The electron is the two electrons. The electrons are the two electrons. The atoms are the two atoms, and the atoms are the two electrons. The electrons are the two electrons. The electrons are the three electrons. The electrons all of the energies are the one atom that is the two electrons. The electrons are the two electrons: the electrons, the electrons, and the electrons are the three atoms. The electrons are the five atoms,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.292,
+            "distinct2": 0.408,
+            "distinct4": 0.708,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 157
           }
         ]
       },
@@ -42162,50 +42218,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.368,
+            "distinct2": 0.373,
+            "distinct4": 0.632,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 254
           },
           {
             "text": " create the lesson, as well as to build a lesson plan.\nStudents will be able to create the lesson plan, as well as learn from one that lesson plan. Students will learn from the lesson plan and will use the lesson plan and how to build a lesson plan.\nStudents will write through the lesson plan, from the lesson plan and the lesson plan to create a lesson plan plan.\nStudents will start to build a lesson plan plan and create a lesson plan and plan.\nStudents will learn the lesson plan and create a lesson plan plan and plan plan. This lesson plan plan will help students develop a lesson plan plan and plan plan for learning about the lesson plan.\nStudents will use the lesson plan and plan plans and plans plan plan.\nStudents will learn the lesson plan for planning plan plan plan, plan plans, and plan plan plan plans plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan. lesson plan plan plan plan plan plan plan plan plan plan plan plans plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan plan",
             "tokens": 256,
             "eos": false,
             "rep4": 0.466,
+            "distinct2": 0.271,
+            "distinct4": 0.534,
             "looped": true,
             "loop_onset": 208,
             "loop_period": 1,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 196
           },
           {
             "text": " make classroom decisions more efficient and engaging.\n- They will help students and teachers to create a future of learning.\n- They will also help to create a project that is a powerful tool for the classroom.\n- They will also help students develop a career in their own learning skills.\n- They will develop new skills that will help students develop their skills and skills that will assist them in achieving a successful and productive life.\n- They will also be empowered to work in a variety of ways.\n- This will help students develop skills that will increase their learning skills and improve their learning process.\n- They will also promote a new experience.\n- It will help students develop skills skills and provide a foundation for a student.\n- It will help to improve their learning skills and develop skills that can lead to better learning.\n- It will also help students develop skills that will help them develop skills skills and skill.\n- They will also help them develop skills and skill development skills.\n- This will help students develop skills that help them develop skills and skills that will help them develop skills and skills.\n- Students will improve their understanding skills and skills.\n- They will also make it easier to develop skills and skills in a variety of ways.\n",
             "tokens": 256,
             "eos": false,
             "rep4": 0.261,
+            "distinct2": 0.482,
+            "distinct4": 0.739,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 228
           },
           {
             "text": " use a lesson plan to teach, improve, and share skills, in a lesson plan.\nStudents will also learn the book plan to improve their writing skills to help them develop their learning skills skills. Students will also learn how to improve their writing skills and to practice them in various ways.\nStudents will learn how to use a lesson plan to encourage their writing skills and practice in a fun and fun way.\nStudents will learn how to use the lesson plan to teach and develop their learning skills.\nStudents will learn how to use the skills they learn during the lesson plan.\nStudents will learn how to use the lesson plan to get the first step for the lesson plan.\nStudents will learn how to use the lesson plan.\nStudents will learn how to use the lesson plan and then use the lesson plan or practice.\nStudents will learn how to use the lesson plan and prepare for the lesson plan and step further.\nStudents will learn how to use the lesson plan and develop their lesson plan and develop ideas.\nStudents will learn how to use the lesson plan and start to use the lesson plan.\nStudents will learn about the lesson plan and work to learn how to use the lesson plan and the lesson plan and apply the lesson plan and the lesson plan and the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.407,
+            "distinct2": 0.384,
+            "distinct4": 0.593,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 253
           },
           {
             "text": " read and write a lesson plan.\nWrite the final paper:\n1. Write the lesson plan\n2. Write the lesson plan to brainstorm a lesson plan by creating a lesson plan.\n2. Write the lesson plan for the lesson plan on the lesson plan\n2. Write the lesson plan for the lesson plan to prepare a lesson plan for the lesson plan.\n4. Write the lesson plan for a lesson plan for the lesson plan to explore the lesson plan and prepare the lesson plan for the lesson plan.\n4. Test the lesson plan for lesson plan\n2. Write the lesson plan for lesson plan 2. Write the lesson plan for lesson plan and outline the lesson plan for lesson plan plan.\n4. Write the lesson plan plan for lesson plan and practice. Help your lesson plan plan for lesson plan and practice lesson guide plan and plan by step.\n5. Write the lesson plan for the lesson plan and lesson plan for the lesson plan.\n3. Write the lesson plan plan for lesson plan and plan plan to create a lesson plan that will take to the lesson plan for lesson plan and plan plan to prepare for lesson plan and plan plan for lesson plan.\n4. Write the lesson plan for lesson plan and plan plan plans for lesson plan for",
             "tokens": 256,
             "eos": false,
             "rep4": 0.455,
+            "distinct2": 0.294,
+            "distinct4": 0.545,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 254
           }
         ]
       },
@@ -42218,50 +42289,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.842,
+            "distinct2": 0.082,
+            "distinct4": 0.158,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "\n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n- \n\u00b7 \n- \n- \n- \n- \n- g\n- \n- \na- \n- o\n- \n- \n- \n- \n- \n- \n- \n- \n- \n(- \n- \n- \n- \n- \n\n- \n- \n- \n- \n- \n-\n- - \n-\n- - \n-\n- - \n-\n-\n-\n-\n- (\n\" -\n-\n\" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.822,
+            "rep4": 0.821,
+            "distinct2": 0.091,
+            "distinct4": 0.179,
             "looped": true,
-            "loop_onset": 195,
+            "loop_onset": 194,
             "loop_period": 1,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n- ________\u00a6\n",
             "tokens": 256,
             "eos": false,
             "rep4": 0.976,
+            "distinct2": 0.024,
+            "distinct4": 0.024,
             "looped": true,
             "loop_onset": 0,
             "loop_period": 6,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "ills can be used to help maintain a healthier weight.\n- ills can be used to boost your body weight, and also help with building muscle tissues.\n- ills can also be used to improve the body\u2019s weight, or even increase the body\u2019s overall calorie intake.\n- ills can also be used to improve the immune system\u2019s performance and improve overall physical function.\n- ills can have a range of metabolic issues and the surrounding tissues that are affecting the body.\n- ills can be used to relieve the need for heart health disorders.\n- ills should be performed with a range of nutrients and nutrients.\n- ills can be used to improve blood circulation.\n- ills can also be used to improve blood flow and strengthen the body\u2019s overall function.\n- ills can be used to increase blood pressure and improve blood flow.\n- ills can also improve blood flow and improve the body functions.\n- ills can also be used to reduce the circulation in the body.\n- ills can be used to relieve the feeling of heart problems.\n- ills can be used to relieve the symptoms of heart disease.\n- ills also are used to maintain",
             "tokens": 256,
             "eos": false,
             "rep4": 0.336,
+            "distinct2": 0.471,
+            "distinct4": 0.664,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " ____________________: What are the benefits of exercise?\n- ____________________: What are the benefits of exercise and exercise?\n- ____________________: What are the main effects of Exercise?\n- ____________________: What are the symptoms of exercise?\n- ____________________: What are the benefits of exercise?\n- ____________________: What is good exercise?\n- ____________________: What are the effects of exercise in exercise and exercise?\n- ____________________: What effect is good exercise?\n- ____________: What are the causes of exercise?\n- ____________: What are the symptoms of exercise?\n- ____________________: What is good eating as it is bad to eat?\n- ____________: What is good eating habits?\n- ____________________: What is good exercise?\n- ____________: What are the causes of exercise?\n- ____________: What is the symptoms of exercise?\n- ____________: What are the symptoms of exercise?\n- ____________: What are the symptoms of exercise?\n- ____________: What are good habits?\n- ____________: What are the symptoms of exercise?\n- ____________: What is",
             "tokens": 256,
             "eos": false,
             "rep4": 0.711,
+            "distinct2": 0.184,
+            "distinct4": 0.289,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 247
           }
         ]
       },
@@ -42274,50 +42360,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.949,
+            "distinct2": 0.043,
+            "distinct4": 0.051,
             "looped": true,
             "loop_onset": 82,
             "loop_period": 4,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 2
           },
           {
             "text": " If we understand that the quadratic equation, we will start using the quadratic equation.\nc. The quadratic equation can be a quadratic equation, and this is called a quadratic equation.\n1. The quadratic equation will begin using the quadratic equation.\n2. If we plan to make a quadratic equation, we will start adding an quadratic equation.\nTherefore, in a quadratic equation, you can calculate the quadratic equation.\nThis is the quadratic equation for the quadratic equation.\nThe quadratic equation can be divided into two quadratic equations, the quadratic equation. The quadratic value is the quadratic equation.\nThe quadratic formula is the quadratic equation. The quadratic equation is the quadratic equation.\nThe quadratic equation is the quadratic equation. It is the quadratic equation.\nThe quadratic equation and quadratic equation are the quadratic equation.\nThe quadratic equation is the quadratic equation. The quadratic equation is the quadratic equation.\nThe quadratic equation is a quadratic equation",
             "tokens": 256,
             "eos": false,
             "rep4": 0.514,
+            "distinct2": 0.306,
+            "distinct4": 0.486,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 256
           },
           {
             "text": " How to make a quadratic equation:\n1. Explain this:\n2. Explain the quadratic equations:\n3. Describe the quadratic equations:\n(1) Explain the quadratic equations:\n(2) Determine the quadratic equations:\n(1) Analyse how to get a quadratic equations:\n(2) Calculate the quadratic equation:\n(1) Determine the quadratic equation:\n(1) Determine the quadratic equations:\n(1) Calculate the quadratic equation:\n(1) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(2) Calculate the quadratic equation:\n(2) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(1) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(3) Calculate the quadratic equation:\n(5) Calculate the quadratic equation:\n(6) Calculate the quadratic equations:\n(",
             "tokens": 256,
             "eos": false,
             "rep4": 0.711,
+            "distinct2": 0.192,
+            "distinct4": 0.289,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 253
           },
           {
             "text": " Identify the type of a quadratic equation with the following:\n1. Identify the quadratic equation from the quadratic equation, and\n3. Determine the quadratic equations and explain the quadratic equation.\n1. Describe the quadratic equations and make the quadratic equation.\n3. Identify the quadratic equation in the quadratic equation.\n3. Calculate the quadratic equation in quadratic equation by adding the quadratic equation.\n3. Calculate the quadratic equation in quadratic equation in quadratic equation.\n4. Calculate the quadratic equation to calculate the quadratic formula.\n3. Identify the quadratic equation and solve the quadratic equation by multiplying the quadratic equation.\n3. Calculate the quadratic equation in quadratic equation. Calculate the quadratic equation. Calculate the quadrometric equation, and calculate the quadratic equation. Calculate the quadratic equation. Calculate the quadratic equation into quadratic equation in quadratic equation. Calculate the quadratic equation by multiplying the quadratic equation. Calculate the",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.569,
+            "rep4": 0.565,
+            "distinct2": 0.259,
+            "distinct4": 0.435,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 252
           },
           {
             "text": " The quadratic equation can be divided into two subratic quadratic equation:\n1. Determine the quadratic equation of\n2. The quadratic equation is divided in the quadratic equation. This is divided into two subratic equations.\n2. For quadratic equations, multiply by division. Equally, the quadratic equations must be divided in two subratic equations.\n3. The quadratic equation is divided into three quadratic quadratic equations. The quadratic equations of the quadratic equation.\n6. At quadratic calculus you should multiply one, the quadratic equation and the quadratic equations is divided into two quadratic quadratic equations.\nHere are three quadratic equations in quadratic equations:\n3. Calculate the quadratic numerals in quadratic equations.\nThis involves multiplying fractions and dividing the quadratic quadratic.\n3. If you are multiplying with multiplying fractions, you will have.\nThe quadratic quadratic equation is divided into three quadratic quadratic quadratic quadratic quadratic quadratic quadratic quadratic quadratic",
             "tokens": 256,
             "eos": false,
             "rep4": 0.356,
+            "distinct2": 0.4,
+            "distinct4": 0.644,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 254
           }
         ]
       },
@@ -42330,50 +42431,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.901,
+            "distinct2": 0.067,
+            "distinct4": 0.099,
             "looped": true,
             "loop_onset": 127,
             "loop_period": 4,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " asbestos, one or more of the most common asbestos asbestos, and the asbestos is the most common asbestos found in the United States. The asbestos is usually caused by asbestos, with a high fluid pressure known as asbestos, or a higher degree of asbestos.\nAn asbestos stone is a commonly used asbestos asbestos as the asbestos is asbestos. asbestos is usually the asbestos that is typically used in the country, from the asbestos industries. asbestos is often used in the medical industry. asbestos is typically used in hospitals or hospitals or hospitals. asbestos is generally used in hospitals or medical centers, hospitals, hospitals or hospitals. asbestos is commonly used in hospitals, hospitals, and medical facilities. asbestos is usually used to work in hospitals or hospitals, often medical facilities, hospitals, and hospitals. asbestos exposure to asbestos is typically used in hospitals or medical facilities. asbestos can also be used to take up to several hours, depending on the state and county. asbestos exposure to asbestos in the United States is a legal or legal, and typically due to asbestos exposure. asbestos exposure to asbestos exposure to asbestos, such as asbestos exposure to asbestos, asbestos exposure to asbestos in the United States. asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure to asbestos exposure",
             "tokens": 256,
             "eos": false,
             "rep4": 0.209,
+            "distinct2": 0.502,
+            "distinct4": 0.791,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " plant, an individual\u2019s health and also the body of the body. These include the animal\u2019s diet, the body, and the body. The body should take a certain amount of time and drink each day. The body's diet includes the body's food, blood, and the body's diet.\nThe body contains a protein that is in the body's diets, the body's diet, the body's diet, the body's diet, the body's diet and nutrition, the body's diet, the body's diet, the body's diet and body. This type of diet includes foods, the body's diet, and the body's diet, the body's diet, the metabolism of the body's diet, the body's diet, the body's nutrition, the body's diet, and the body's diet.\nThe body's diet is a protein that is rich in vitamin D, which is essential for the body's diet, the body's diet, the body's diet, the body's diet, the body's diet, the body's diet, the body's diet, the body, the body's body, the body's diet, the body's diet and metabolism.\nThe body's diet is a process of metabolism and nutrients that",
             "tokens": 256,
             "eos": false,
             "rep4": 0.455,
+            "distinct2": 0.369,
+            "distinct4": 0.545,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " diabetes, or type 1 diabetes, but the most common type of diabetes is diabetes.\nHow is insulin production treated for diabetes?\nDiabetes causes diabetes like the thyroid gland (the pancap) and the pancap is a type of diabetes that is most common among children in the United States.\nWhat is diabetes?\nType 2 diabetes is a type of diabetes that affects on the body. In these types of diabetes it is used to treat diabetes, which is usually caused by the formation of diabetes, which is most commonly found in the body.\nHow is insulin production?\nType 2 diabetes is the condition caused by insulin, which is an insulin in the pancap usually occurs on the body\u2019s pancap.\nWhat is diabetes?\nType 5 diabetes is the type of diabetes in the pancap. It\u2019s important to note that insulin is actually the most common type of diabetes that is the most common type of diabetes. Type 5 diabetes is also known as the diabetes of children and it is called the insulin.\nWhich is diabetes?\nThere\u2019s the type of diabetes is insulin and insulin in the pancap and blood vessels of the pancap and its blood vessels. The insulin in the pancap and its side effects are:",
             "tokens": 256,
             "eos": false,
             "rep4": 0.134,
+            "distinct2": 0.596,
+            "distinct4": 0.866,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " metal that are used to be used to treat them.\n- When applied in a material, the ingredients are processed, which is often very high in the metal.\n- When applied in the metal, the powder must be applied carefully to ensure the desired quantity.\n- When used in the mixture, the powder is used to remove the substance from the powder.\n- If the solvent is used in the manufacturing process, the product must be used in the process of cutting into the structure.\n- If used in the production process, the substance is used to break the product of the product.\n- The powder is used to reduce the product by the fermentation process of the product.\n- When applied in the process of cutting the product, the product is used in the process of cutting the product.\n- The product should be used in the process of cutting the product.\n- The products should be used in the manufacturing process of cutting manufacturing.\n- When applied in the process of cutting the product, the product must be used in the process of cutting.\n- The product should be used in the process of cutting the product and then it is used in the manufacturing process of cutting the product and to ensure that the product is used.\n- The product should",
             "tokens": 256,
             "eos": false,
             "rep4": 0.324,
+            "distinct2": 0.42,
+            "distinct4": 0.676,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -42386,50 +42502,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.352,
+            "distinct2": 0.427,
+            "distinct4": 0.648,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 240
           },
           {
             "text": " was declared that its agreement was signed to the British in the beginning of the Treaty, but it became a mistake. It was not officially accepted by the Constitution, but the government was not officially recognized.\nThe agreement was adopted by the British Empire, which is, however, was the result of the Second Continental Wars of 1812. The Constitution was adopted by the United States in 1714.\nThe Second Continental Wars of 1812, in the late 1715, was adopted as the only one and the second, in the second, in the first half, in the second half, in the second half, in the second half, in the second half, in the fourth half; in the second half, in the second half, in the third half, in the second half, in the second half, in the second half, in the third half, in the second half, in the second half, in the second half, in the fourth half, in the third half, in the third half, in the fourth half, in the fifth half, in the second half the third half; in the second half, in the second half, in the second half, in the sixth half, in the second half, in the fourth half, in the third half,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.47,
+            "distinct2": 0.384,
+            "distinct4": 0.53,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 16
           },
           {
             "text": " was the first-ever-in-law of the British and British-born of the United States.\nThe treaty was ratified in the U.S. in July 1915, and then, after the treaty became clear, the treaty was signed in May 1940. This treaty was signed in December 1945 and was amended in the agreement between the treaty, the treaty was ratified in September.\n2. The treaty was ratified in November 1991. If the treaty was ratified in December 1992, was ratified in April 2002, the treaty was signed in July 2011, as the ratification of the treaty was amended in November 2003.\n3. The treaty was ratified in November 2013. The treaty was ratified in July 2000 which was declared in October 2000. The treaty was ratified on September 27 of the treaty was amended in December and the treaty was ratified in October of the treaty.\n3. The treaty was ratified by the treaty it was ratified in December 2005. The treaty was amended in December 2006 after the treaty was ratified in December 2001. The treaty was ratified in January 2004. The treaty was amended by the treaty. The treaty was ratified in October 2005. This treaty is in December 2006. The treaty was ratified in January 1993.\n2. The treaty was amended in September 2005.",
             "tokens": 256,
             "eos": false,
             "rep4": 0.213,
+            "distinct2": 0.498,
+            "distinct4": 0.787,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 250
           },
           {
             "text": " took an appeal to the British and the British. The treaty was the first-aid period before the treaty was in 1776 which was taken by the British and British Army. The treaty was signed by the Spanish Parliament in 1786. The treaty was called the treaty. The treaty was declared by the treaty between the British and British army and the British forces. The treaty was made by the treaty was issued by the British (now the treaty). The treaty was ratified by the treaty was declared and the treaty was ratified by the treaty. The treaty was ratified by the treaty. The treaty was ratified by the treaty of the treaty. The treaty was ratified by the treaty was removed. The treaty was ratified by the treaty. The treaty was signed by the treaty, in the Treaty of the treaty, the treaty was declared.\nThe treaty was signed by the treaty was ratified by the treaty. The treaty was signed by the treaty. The treaty was amended by the treaty and the treaty was ratified by the treaty. The treaty was ratified by the treaty, followed by the treaty. The treaty was declared by the treaty. The treaty was ratified by the treaty. The treaty was signed by the treaty. The treaty was signed by the treaty, and there was a treaty of the treaty.",
             "tokens": 256,
             "eos": false,
             "rep4": 0.451,
+            "distinct2": 0.329,
+            "distinct4": 0.549,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 255
           },
           {
             "text": " became known as \u201ca place to be \u2018bumping\u2019 in the battle.\u201d\nThe treaty has been signed in the form of the treaty, which has been signed in December 2014.\nThe treaty was ratified in 1774, then it was ratified in 1866 by the British government. This treaty was a treaty, and it was ratified in 1774.\nA letter in the treaty was ratified in 1777, which was signed in 1666, with the agreement of the treaty.\nA letter in the treaty, was submitted in 1777.\nAn agreement made by the treaty was ratified in June 2005.\nA letter in the treaty has been ratified in 1688.\nThe treaty is ratified in 1477, and the treaty itself is ratified in 1894.\nThe treaty was ratified in 1577.\nA letter of the treaty is ratified in 1868.\nAn agreement provided by the treaty and the treaty is ratified in 1676.\nThe treaty was ratified in 1777, or \ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.304,
-            "looped": true,
-            "loop_onset": 209,
-            "loop_period": 1,
-            "topic": 0.5
+            "rep4": 0.185,
+            "distinct2": 0.518,
+            "distinct4": 0.815,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 201
           }
         ]
       },
@@ -42442,50 +42573,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.099,
+            "distinct2": 0.757,
+            "distinct4": 0.901,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 235
           },
           {
             "text": " the Journal of Chemistry.\nThe research is focused on the process of preparing a healthy lifestyle for a balanced lifestyle. The research is carried to determine the level of nutrition and also the extent of the body. The research is also focused on the overall health and wellness of the body.\nThe research is conducted to examine food and nutrition, nutrition and nutrition, nutrition, nutrition and nutrition. The researchers also found that a high-quality diet is a healthy, balanced diet, and diet.\nThe study has shown that food and nutrition are important for the development of health and wellness. The study is conducted at the University of Maryland and is funded by the National Academy of Sciences at University of Maryland.\nThe study includes three different types of food and nutrition, including the following:\n- Nutrition, diet, exercise, whole body, and food are essential for the development of food and nutrition.\n- Diabetes, weight, and diet\n- Nutrition, diet, and nutrition\n- Nutrition, diet,\n- Nutrition, nutrition, health, and nutrition.\n- Nutrition, nutrition, and nutrition.\n- Nutrition, diet, and nutrition, including the following:\n- Diabetes, nutrition, and nutrition.\n- Nutrition, and health, and nutrition.\n- Nutrition,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.206,
+            "distinct2": 0.545,
+            "distinct4": 0.794,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 142
           },
           {
             "text": " the Journal of Physiology and Clinical Medicine (ODS), which is based on the use of the body\u2019s brain, which is also considered to be the most prevalent form of \u201creastral\u201d.\nIn addition to the study, the researchers found that the effects of heart disease are largely unknown. The researchers found that the body can develop more broadly in the brain, which is also known as the \u201cmolar\u201d and \u201cmolar\u201d.\nThe results of the researchers studied in the journal show that the blood cells are more likely to be able to work properly, which is a type of disease that is present.\n\u201cThe researchers found that the cells undergo a large amount of blood cells,\u201d said Dr. Jeffrey Tollings. \u201cIn addition to the researchers found that people with a type of disease have been diagnosed with a type of disease than the treatment of the disease,\u201d Dr. Brendan, director of the study.\n\u201cThere is also a lot of information about liver cancer, and it\u2019s very important to know how many of these cancer cells are in the future.\u201d\nThe researchers found that the body\u2019s immune system is responsible for causing damage to",
             "tokens": 256,
             "eos": false,
             "rep4": 0.075,
+            "distinct2": 0.728,
+            "distinct4": 0.925,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 200
           },
           {
             "text": " 2015 that a more recent study published in the Journal of Neurology and Psychiatry reported his findings on the condition, which was published in the journal Scientific and Drug Reports.\nThe study also found that the findings were not found in the journal Nature Genetics in Neurology.\n\"The study also found that the study was not related to an issue, but the findings are not necessarily a source of evidence.\n\"We were also interested in the study, and some of the studies had been published in the journal Nature Genetics.\n\"We found that this study was in fact, the findings showed that the study was more likely to be in a more accurate way. For example, when we were in the study, the researchers obtained information about the findings of a study, we found that these findings were only not related to the results.\n\"This study also found that participants who were at risk of a disease in the face of an illness, and the risk factors involved, have been associated with one another.\n\"We found that more people were not involved in the study,\" said Dr. King, who is the first of a study to determine whether the person was diagnosed with a disease.\"",
             "tokens": 238,
             "eos": true,
             "rep4": 0.055,
+            "distinct2": 0.747,
+            "distinct4": 0.945,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 227
           },
           {
             "text": " the Journal of the American Heart Association, and for the first time a study was conducted in the United States, where their findings are published in a study published in the journal.\n\u201cIt\u2019s not really good for the American Heart Association,\u201d he said. \u201cIt\u2019s not a good idea, but nothing.\u201d\n\u201cIt is not a bad idea. That\u2019s what happened in the brain, so people don\u2019t always know what they\u2019re doing.\u201d\n\u201cWe think that all those who do have bad emotions and a good life.\u201d\n\u201cIt\u2019s a good idea in how the brain is and what\u2019s happening.\u201d\n\u201cIt\u2019s really a good idea to the brain,\u201d said M.D., the University of Washington researchers, the National Cancer Institute and the American Heart Association. \u201cThey\u2019re helping to help the brain better understand that there\u2019s a good chance to be patient,\u201d he said. \u201cWe have a lot of questions and what it means to be a good idea.\u201d\nThe researchers are now working on the test to discover the test and the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.126,
+            "distinct2": 0.655,
+            "distinct4": 0.874,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 31
           }
         ]
       },
@@ -42498,50 +42644,775 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.399,
+            "distinct2": 0.388,
+            "distinct4": 0.601,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 97
           },
           {
             "text": " a mountain and a mountain. The mountain is a mountain that lies between the mountain and the mountain.\nThe mountain has a mountain to the north-hilly mountain. The island has a narrow coastline and a mountain in the west. The mountain is a dense mountains. The mountain is a desert. The mountain is the sky to a mountain, a mountain, a mountain. The mountain consists of the mountain, the mountain and the mountain, as the mountain is very rich.\nThe Arctic is a mountain that attracts the mountain and is a mountain that is rich and a mountain. The mountain is a mountain that comes to the mountains, a mountain and a mountain that receives the mountain. In the rain of the mountain, the mountain is a mountain that is a mountain that connects the mountain, the mountain, the mountain and the mountain.\nThe mountain is a mountain that is an elevation of a mountain. It is a mountain, the mountain, the valley and the sea, the mountain. The mountain is a mountain and a mountain and a mountain.\nThe mountain is the mountain, the mountain, the mountain and the mountain. The mountain is the mountain, the mountain, the mountain, the mountains, the mountain, the mountain and the sea. The mountain is a mountain and",
             "tokens": 256,
             "eos": false,
             "rep4": 0.352,
+            "distinct2": 0.337,
+            "distinct4": 0.648,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 255
           },
           {
             "text": " 4 meters and so that it will be less to a height of 9 meters in diameter. The average area of the mountain is about 1,000 feet.\nThe total area of the mountain is about 1,600 feet. The average range of about 1,200 feet is about 3,500 feet. The average elevation of the mountain is about 1,500 feet of the mountain, a height of about 1,500 feet.\nThe total area of the mountain is about 8,700 feet. The average distance of the mountain is about 4,000 feet.\nThe average distance of the mountain is about 1,000 feet. The average distance of the mountain is about 1,000 feet.\nThe average distance of the mountain is about 1,200 feet.\nThe average distance of the mountain is about 1,300 feet.\nThe average distance of the mountain is about 2,300 feet.\nThe average distance of the mountain is about 2 degrees.\nThe average distance of the mountain is about 4,900 feet. The average distance of the mountain is about 1,200 feet. The average distance of the mountain, is about 1,000 feet.\nThe median distance of the mountain is about 1,500 feet. The average depth of the mountain is",
             "tokens": 256,
             "eos": false,
             "rep4": 0.534,
+            "distinct2": 0.286,
+            "distinct4": 0.466,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 255
           },
           {
             "text": " 4 feet. This is one of the main rivers in which the body is located on the lower sides of the equator. In all the streams of the lake, the river is not a watery atmosphere. The rivers are mostly rivers, rivers and rivers, rivers and lakes, and rivers.\nWhat are the benefits of living?\nThe river is more difficult to reach than the river, which is a good place for water, and is in the water.\nHow many rivers are in the river and rivers?\nThe rivers and lakes of the valley are very small and there are plenty of rivers and rivers.\nHow much water is in the lake, so that water is flowing, and we can be happy to get the water to go.\nHow many rivers are in the river?\nThe river is also very small, it\u2019s a very narrow, and it\u2019s the fish.\nWhat are the ponds that have been formed by rivers?\nThe river is located in the lake, which is located on the side of the lake and is located on the bottom.\nWhere are the rivers in the river?\nThe rivers in the river are the rivers in the river, which is the river.\nWho will be part of the river",
             "tokens": 256,
             "eos": false,
             "rep4": 0.115,
+            "distinct2": 0.624,
+            "distinct4": 0.885,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " 1,000 feet in a quarter.\nThe mountain begins to climb. The mountain is in the lower part of the mountain, and the mountain is in the middle of the mountain. The mountain is from the west to the mountain.\nThe mountain is the height of the mountain by the sea. The mountain is the sun-shifting mountain and the mountain is the same as the mountain. The mountain is the mountain.\nThe sky is the most famous part of the mountain. The mountain is the mountain.\nYou can also see a mountain where the mountain is the mountain.\nThe distance between the mountain and the mountain\nThe mountain is the distance between the mountain and the mountain.\nThe length of the mountain is the distance between the mountain and the mountain you can see.\nThe distance between the mountain and the mountain is a mountain. The distance between the mountain and the mountain is the distance between the mountain and the mountain.\nThe distance between the mountain and the mountain is the distance between the lake and the mountain.\nThe distance between the mountain and the mountain is the distance between the mountain and the mountain, the sea and the mountain. This distance between the distance between the sea and the distance between the mountain and the mountain is the distance between the mountain",
             "tokens": 256,
             "eos": false,
             "rep4": 0.439,
+            "distinct2": 0.325,
+            "distinct4": 0.561,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          }
+        ]
+      },
+      {
+        "label": "agreement_gap",
+        "prompt": "The students who had spent the entire semester preparing for the final examination in organic chemistry",
+        "draws": [
+          {
+            "text": ", and the ability to produce a solid chemistry that would be useful in the scientific and scientific and engineering. The results of this study showed that the results of each manuscript had been improved. The manuscript was completed.\nThe author is the first and most important contribution to the research literature. The book includes the authors and the work of the authors and the authors. The article's publication of the manuscript was published and published for the authors. The manuscript was then published in the journal of Scientific and Applied Chemistry, a journal of the contents of the manuscript.\nIt was a research project that was created to create a new study. The manuscript was found at the publication of the journal of the journal of the publication. The manuscript was published by the authors. The manuscript was published in the journal of Allic Acid and Research, and found at the publication.\nThe manuscript was published in the journal of the journal of the journal of the journal of the journal of the journal of the journal of the journal. The journal contains extensive information about the journal of the journal of the journal of the journal, which is published in the journal of the journal of the journal. The manuscript was published in the journal of the journal.\nThe journal of the journal is published in the journal of the journal",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.277,
+            "distinct2": 0.506,
+            "distinct4": 0.723,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 100
+          },
+          {
+            "text": " and the work-maker. After the first phase, the student\u2019s final session will be completed and completed. After the students completed the study, the student\u2019s first phase would be scheduled.\nFor a discussion, the students were ready to finish. This was the first stage of a series of assignments and a second part of the class. The students were able to read, write, write, write, write, paraphrase, and write, write, write, write, write, write, write, write, write, write, write, write, write, write, write, write, writing, writing or writing.\nWriting and writing are a great way to write a short course of writing. The student\u2019s core will be the first stage of the semester\u2019s assessment. Students\u2019 second stage (s) are ready to write and write and write. The teacher\u2019s main goal is to write a short course of the semester, the teacher\u2019s second stage, and the teacher\u2019s second stage. Students have more than two years of thinking, and are able to write all these skills. The students\u2019 first stage will be the first stage in each class.\nThis is a great way to write",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.198,
+            "distinct2": 0.569,
+            "distinct4": 0.802,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.2222222222222222,
+            "topic_span": 235
+          },
+          {
+            "text": ", engineering, and science.\nWe have found the most important part of the project. The research is now being conducted.\nStudents are interested in the field of biology, engineering, and mathematics, and science.\nWe also have a full-fledged, scientific research that has been working to develop the data and data science and science, and the ability to identify various sources is important.\nOur students are interested in our work experience with the staff and the field of biology. They are the first time to learn more about science and science.\nTo learn more about science and science, look at the world, and learn more about science and mathematics.\nOur students are the most knowledgeable and the way to learn science and science.\nThis is the way to develop science and science and science.\nStudents are able to learn science and science to understand science and science.\nThis will be your favorite book, but what you can do, it will be great to know about science and science.\nThis will be done by learning science and science and engineering, and it will include the most amazing and beautiful art.\nMy students are interested in science and science and science.\nThis lesson is awesome and easy to learn science and science science, and you can make a good",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.154,
+            "distinct2": 0.608,
+            "distinct4": 0.846,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 227
+          },
+          {
+            "text": ", and found that a few of the subjects, their role in our learning.\nThe main focus of the school teaching was to develop a positive, systematic course of study, study and research.\n\"The school was not just a major teacher since the school, but it was one of the most important ways to teach it.\"\n\"From the early 1960s, the class was a teacher, which was a teacher from the school. \"Students from the school could not have a good understanding of the school, but also because they also had the students to teach them,\" said Thomas B.D., a professor of the library.\n\"This is a great teacher to teach the students in mathematics, but it is not clear of the fact that the students who were not able to speak of the students. But the teacher had to make sure that they would not really have to do so.\n\"It would be possible to see that the class was a good idea of a student. But she was always in her room for help.\n\"In this case, I would want to have to do many things to do with the students.\"\n\"As the whole teacher has to be a kid, it is a wonderful idea to teach and the teacher in the classroom. The",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.008,
+            "distinct2": 0.82,
+            "distinct4": 0.992,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 228
+          },
+          {
+            "text": ".\nThe students also found the best results for their writing and writing of each paper. They were to ask the students to write the book. As a result, they would have to write the book. They would have had to write a paper writing list that would not be used to write the book. They would have to write the book. They had to write the book a book and ask them to write down the book's book. They would have to write on the books.\nSome students would need to write the book for writing without being interested in writing. They would have to write the book as an example when they had to write for making the book a good book. They would also have to write about their writing for their writing.\nThey would also want to write the book as early as you can. They would have to write the book but don\u2019t want to write the book.\nThey might also want to print the books in order to write a book, but they would not want to read the book.\nOne of the ways that works for writing would be great and easy to write. The book is a great way to use the books. This will make all the books easy to use.\nHere are five things you can use from",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.138,
+            "distinct2": 0.62,
+            "distinct4": 0.862,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 100
+          }
+        ]
+      },
+      {
+        "label": "history",
+        "prompt": "The French Revolution began in 1789, when",
+        "draws": [
+          {
+            "text": " the first industrial revolution was the British. The first railroad was the first railroad, the first railroad in the city to use as a large part of the American flag, the first municipal property the first railroad to go to the next railroad.\nThe second most successful railroad was the first railroad to go to the next railroad. The first railroad was the first railroad to have the second largest railroad in the first railroad to be purchased. The third passenger was the second most successful railroad in his cabinet. The second major railroad was the second main house of the first railroad to be used.\nThe second was formed in the first residential railway in 1871.\nThe second was the first permanent railway for the first railway in 1871. The second was built in 1864. The second was the third largest railway in 1871. The second was the first rail in 1883. The second was the second largest railway in 1843.\nThe first railway was the second largest railway in 1859 by railway. The second was the first railway in 1889. The second was the second largest passenger in 1867. The second was the second largest passenger in 1883. The second was the third largest ferry in 1867. The second railway was the first railway in 1866. The second was",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.269,
+            "distinct2": 0.427,
+            "distinct4": 0.731,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 4
+          },
+          {
+            "text": " the United States had been established, the British government was granted no protection to the United States.\nThis number is about the United States of America. It was also the first United States to have the United States, South America, and the United States. The United States was also referred to as the \"Federal Union,\" which was part of the United States. The United States was also called the United States.\nThe United States had a long history. The United States was an American state, and it was formed. The United States was in the United States and was the United States.\nThe World War II was a landmark, not just the United States. The United States had a small minority group of United States. The United States was officially formed by Mexico. The United States was formed by the United States and Asia.\nIn 1868, the United States was forced to work in 1872, and the United States was forced to participate in the United States.\nThe United States was established by Americans. The United States was formed by the United States to the United States. The United States was formed by the United States. The United States was established by the United States. People were divided by the United States and the United States. The United States was officially established",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.296,
+            "distinct2": 0.478,
+            "distinct4": 0.704,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the British army adopted this movement which was the most significant abolition of the United States.\nThe British army was not only in the first century. The British army was the first to settle in the British army, which was the first to be in the first place in the First World War. The British forces were called the British army. The second day of the Second World War, it was a series of soldiers and soldiers were killed. The second day of the war was where the United States established the United States.\nThe British Empire was the second and then the first United States to start. According to the United States, an American army was the first American to become the United States in the United States to be the first United States to be the United States in all of the United States.\nThe British has the right to come. In the United States, the British government declared independence in the United States.\nThe United States was the first United States to arrive. The United States was a small group of people living in the United States and the United States. The United States was a small group of people living in the United States.\nThe United States was formed by the United States, and the United States. The United States was founded by the United States. The",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.221,
+            "distinct2": 0.498,
+            "distinct4": 0.779,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " a young woman was a member of the British empire, the United States had been known to the United States, and the American Revolution was a popular choice, but the American Revolution was in the American Revolution.\nIn the United States, the American Revolution was the beginning of the American Revolution. In 1864, the American Revolution was replaced by the United States. They were the United States and the American Revolution were all the most common in American history.\nAfter the Industrial Revolution was founded in 1881, the American Revolution was established. In 1898, the American Revolution, the Continental Congress was officially recognized as the best American Revolution. From 1783 to 1783, the American Revolution was established.\nThe American Revolution of 1876, the American Revolution was the first of the American Revolution in 1876.\nIn 1879, the American Revolution made the \u201cmodern revolution.\u201d The American Revolution had become a major issue, as well as the American Revolution. The American Revolution expanded for the American Revolution, which was the abolition and abolition of the American Revolution.\nToday, the American Revolution was the first and most influential figure in American history. The American Revolution was founded by the American Revolution.\n- The American Revolution was a major influence in American history.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.143,
+            "distinct2": 0.563,
+            "distinct4": 0.857,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 246
+          },
+          {
+            "text": " he was awarded a grant on the expedition.\nThe first major part of the revolution was the first. He saw the war in 1872, the German Revolution ended.\nThe French Revolution was the most powerful force in Germany, but the American Revolution was a victory. The United States took place in the country. The Spanish Revolution, the British Revolution began in 1869, when the British Revolution was the beginning of the late 1700s.\nThe French Revolution was a revolutionary revolution, which he believed was the first time when the British revolution was the first American revolution. The British revolution began by the French revolution, the British Revolution was more powerful and the first.\nThe American Revolution was the first to be called the American Revolution, the British Revolution was a revolution. The American Revolution and the American Revolution was a beginning of the Cold War.\nThe American Revolution was a revolution in the American revolution. The American Revolution was the American Revolution. The American Revolution was a revolution, the United States had the right to be the second largest American revolution that was the American Revolution. The American Revolution was a revolution in American history.\nThe American Revolution was a revolution in the American revolution. The American Revolution was a revolution for the American Revolution in 1878. The American Revolution was the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.206,
+            "distinct2": 0.514,
+            "distinct4": 0.794,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "anatomy",
+        "prompt": "The human heart is a muscular organ that",
+        "draws": [
+          {
+            "text": " works in two organs, brain, and heart. The body\u2019s body\u2019s metabolism is constantly advancing rapidly, and also the body\u2019s ability to move through, and in a way that is often the body\u2019s body\u2019s ability to function properly and efficiently. The body\u2019s ability to function effectively and effectively at the same time is called the \u2018brain\u2019. The brain\u2019s ability to function is the \u2018brain\u2019. This is the brain\u2019s ability to function is the \u201cbrain\u201d. The brain\u2019s capacity to function is in the brain that is connected to an internal nerve that is connected to the body. The brain\u2019s ability to function is more than the brain\u2019s physical ability to function. The brain\u2019s ability to function is also more advanced in the brain than the other brain\u2019s ability to function. It is the brain\u2019s ability to function as well as function. The brain is also called neurodegeneration. The brain gets more and more brain-like. The brain has to be able to develop it as a result of the brain\u2019s ability to function in the brain. The brain also produces an",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.265,
+            "distinct2": 0.514,
+            "distinct4": 0.735,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 9
+          },
+          {
+            "text": " has a positive effect on brain function, the heart is even more harmful than the brain.\nIt is thought that it is not the same as it does. It is thought that the heart is not able to change the heartbeat in the blood, but it is not in the brain.\nThere is no reason why it is not about the brain you feel that it is just about it is too high or so much that it is better to think that it is very helpful.\nHere\u2019s how this is used to treat a brain health problem:\nThe brain is the most common type of brain in the brain that is the brain that is responsible for a condition called the brain.\nAccording to the World Health Organization, a brain that is the main part of the brain, the brain is the first nerve in the brain that is the brain itself.\nThe brain has the brain\u2019s ability to function normally on the body\u2019s own brain to function quickly and safely.\nThe brain is the ability to communicate through the brain, it is the brain that is the brain.\nBrain is the brain that is nervous which is the brain.\nWhat is the brain that is connected to the brain that is connected to the brain.\nThe brain is the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.123,
+            "distinct2": 0.616,
+            "distinct4": 0.877,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 145
+          },
+          {
+            "text": " acts in the brain, and has two stages of its own body.\nThe brain is the brain that is used to function in the brain. It is also used to describe the brain that is responsible for the brain and is considered a human organ that is responsible for the development of the brain.\nThe brain is responsible for the brain\u2019s ability to perform the complex functions of the brain and to use it in the brain.\nThe brain is responsible for the brain. It is responsible for the development of the brain, the brain and the brain responsible for the development of cells.\nIn the brain, the brain is responsible for the development of the brain in the brain.\nThese types of brain are used to improve the brain\u2019s ability to function in the brain.\nThe brain is responsible for the development of the brain, which is responsible for the development of the brain.\nThe brain is responsible for the development of dementia, which is responsible for the development of the brain.\nThe brain is responsible for the development of the brain.\nThe brain produces a variety of functions, such as memory, memory, and memory.\nThe brain is responsible for the development of the brain in the brain.\nIn the brain, it is responsible for the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.435,
+            "distinct2": 0.365,
+            "distinct4": 0.565,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 49
+          },
+          {
+            "text": " has become a major cause of heart disease.\nIn the first stage of the brain, the brain produces a blood clot and the brain can become a major problem.\nIn the second stage of the brain, the brain is responsible for the development of the brain. The brain is responsible for the development of brain in the brain.\nThis is the second stage of the brain, the brain\u2019s function is at the end of the brain. It is the first stage of vision in the brain.\nIn this phase of new brain, the brain is responsible for the development of the brain.\nThe brain is the brain that regulates the brain.\nThe brain creates signals in the brain.\nThe brain consists of the brain cells that connect the brain to the brain to the brain and to the brain.\nThe brain is responsible for the development of memory and the brain.\nIn memory, the brain is responsible for the development of artificial intelligence.\nThe brain is responsible for the development of the brain.\nThe brain is responsible for the development of the brain to understand the different types of neurotransmitters.\nThe brain is responsible for the development of memory and the development of brain-brain functions.\nThe brain is designed to regulate the brain and to regulate",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.356,
+            "distinct2": 0.412,
+            "distinct4": 0.644,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 7
+          },
+          {
+            "text": " is controlled by the brain that is responsible for the development of the heart and lungs. This is the main reason it is to be to be used for a particular brain to treat and treat them in the brain. The brain itself is the process of creating these functions. It is that the brain is the most effective mode of the body and the brain needs to be the most effective way of life.\nThe brain is the body's internal organs. The brain is the brain that is able to move, thereby causing the brain to be able to function to move freely. This is the cause of the brain to become more rapidly, leading to more in the brain to produce energy and the brain.\nThe brain also has the ability to function in the brain to be able to cope with it. The brain has the ability to move more efficiently and efficiently, which can be more effective in the brain. The brain is a powerful part of the brain. It is the ability to produce better and more in the brain, but it is the ability to function properly and to be able to respond to the brain. In the brain the brain is able to become unstable and hence the brain is able to function and function faster.\nThe brain is able to process the brain to process the brain is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.087,
+            "distinct2": 0.592,
+            "distinct4": 0.913,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 88
+          }
+        ]
+      },
+      {
+        "label": "geography",
+        "prompt": "The Amazon River flows through",
+        "draws": [
+          {
+            "text": " this source can be used as a buffer for use in the atmosphere and the use of the water.\nThese changes are the most common types of natural water, such as those in the lakes.\nThe most common type of groundwater is the main source of groundwater. This includes the water and water that is most common in the country.\nThe mineral is very rare and the water it may be used as a water source, such as water, water, water and water.\nThere are some of the most common types of water in the area.\nIt is essential to ensure proper water drainage. This is due to the amount of water you need to get enough water to keep in mind the water from the water and water.\nWhy is the water in the water in the water?\nThe water in the water is very high, a water that is dissolved in water.\nWhich is the water?\nWater is a common type of water that is used as water.\nThe water is commonly used for drinking water and it is used to be used to control the water.\nHow good is water used?\nWater supplies are made to the water.\nWhat is water used for?\nWater is used for water as a water source.\nWhat is water used",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.067,
+            "distinct2": 0.604,
+            "distinct4": 0.933,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the Gulf, where to avoid the use of green, and the river flows into the Gulf.\nWhy is it possible to be used in the Pacific?\nThe country\u2019s total population is estimated to be around 5,000 and more than 1,000,000,000 years ago. This is the world\u2019s largest population, in the country\u2019s largest country, with a number of five,000, and in the US.\nWhy is it possible to be the most important part of the country?\nThe Philippines, and the Philippines.\nWhy is it important to be a big part of the country?\nThe Philippines is one of the most common and most countries in the world.\nHow is the Philippines?\nWhat is the Philippines?\nThe Philippines is the Philippines.\nWhat is the Philippines?\nBrazil is the Philippines.\nWhat is the Philippines?\nThe Philippines is a country where the Philippines is the Philippines.\nWhat are the Philippines?\nThe Philippines is a country. It is an ethnic, ethnic, and Indian country. They are a country, and the Philippines are two in the Philippines.\nWhat is the Philippines?\nIndia is the Philippines.\nWhat is the Philippines?\nIndia is a country",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.249,
+            "distinct2": 0.506,
+            "distinct4": 0.751,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 15
+          },
+          {
+            "text": " the Amazon River. The lake is a mountain in the United States, and the other is the biggest lake in the world. The lake is a tropical lake.\n- The Atlantic Ocean is a tropical lake that is part of the ocean.\n- The lake is a tropical lake. The lake is a tropical lake.\n- The lake contains the most of the lakes and minerals in the lake. The lake is a tropical lake and is most likely to grow.\n- The lake is an important part of the lake.\n- The lake is a tropical lake, a tropical lake, and an elevation of over 80 meters.\n- The river in the river is a tropical lake.\n- The lake is one of the few of the lake\u2019s most polluted waters, and the water is very hot.\n- The river is the lake.\n- The lake is a lake, the lake, a lake, a lake, and a lake.\n- The lake is a lake.\n- The lake is a lake. The lake is a lake with the lake and is a lake which is a lake and is a lake.\n- The lake is a lake.\n- The lake's lake, the lake and is a lake.\n- The lake",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.368,
+            "distinct2": 0.376,
+            "distinct4": 0.632,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 168
+          },
+          {
+            "text": " a high-resolution image of the Amazon River, as well as the Amazon river flowing into the Amazon River, as has a lot of water-filled and water-filled water. We are here to help with the water-filled and well-being of our rivers.\nThe Amazon River, on the other hand, is a very important part of the natural wonders of the Amazon River. The Amazon River is the deepest place of the Amazon River and the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River and Santa. The Amazon River is the largest and most densely populated Amazon (including Amazon, Amazon, Amazon, Mexico), the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River, the Amazon River",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.565,
+            "distinct2": 0.341,
+            "distinct4": 0.435,
+            "looped": true,
+            "loop_onset": 197,
+            "loop_period": 4,
+            "topic": 0.5,
+            "topic_span": 256
+          },
+          {
+            "text": " the North Atlantic Ocean and the Great Lakes.\nThe map shows the largest forest forest in the world. The map shows the area of the Gaspar Mountains, where the water-rearing water-rearing water is used. It is a well-known and important resource for the map and a small forest forest.\nThe map shows the history of the river that is located in the North Atlantic and is the most populated area. The map is the map of the river and the area of the river, which is the site of the map.",
+            "tokens": 111,
+            "eos": true,
+            "rep4": 0.056,
+            "distinct2": 0.725,
+            "distinct4": 0.944,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 101
+          }
+        ]
+      },
+      {
+        "label": "math_definition",
+        "prompt": "In mathematics, a prime number is",
+        "draws": [
+          {
+            "text": " not the same as the same as the other, and the whole is the same as the same. It is that the very same is the same as the same as the other is the same. In the same way, the two is the same as the same as the same. The two is the same as the two is the same, and the two is the same as the same, the same as the same as the two are the same.\nIn fact, when the two is the same, the sum of the sum of the divinity is the same as the two is the same. The two will, in the sum, the sum, the one is the same. The sum of the sum, the sum of the concave, the sum of the sum, and the sum, the sum of the permutations, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum with the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum of the sum",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.569,
+            "distinct2": 0.235,
+            "distinct4": 0.431,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " not a perfect way to get started.\nThe first thing you can do is to teach them about the language and make them feel about what you want to do as well.\nThe second thing you love is to make sure that you want something to do with your own language.\nWhen you do not have these numbers and numbers, you can take a look at your way. We can get the numbers and numbers for you to the decimal number.\nWhen you ask this, you have to make sure that you have the numbers.\nIf you want to teach the numbers, you can do that.\nIf you are a lot of numbers, you would like to start with the number that you would have to get the numbers.\nIt would be easier to know what you are looking for in the first place.\nThe second thing you can do is to do is that it can be.\nYou can also do it by looking for other things that you will have to look for.\nIf you are using the numbers of numbers, they can be as much as you know.\nIt would be time to get your answer.\nHow to Write a Graph\nIt\u2019s important to remember that the numbers of the numbers are given in the numbers.\nHere",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.067,
+            "distinct2": 0.682,
+            "distinct4": 0.933,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 253
+          },
+          {
+            "text": " calculated by the following equation.\nTo calculate the calculated equation, the given equation is equal to the calculated value of the given equation.\nThe answer depends on the given equation, and the given equation, the results are calculated by dividing the equation.\nFor the calculations, the order of the equation is calculated by multiplying the sum of the equation. The equation is calculated by multiplying the equation, and the equation is multiplied by multiplying the\nThe equation in the equation is multiplied by multiplying the quotient of equation in the equation. This is the equation of the equation.\nA equation is divided by dividing the equation. The equation is divided by dividing the sum of the equation. The equation is multiplied by multiplying the equation.\nA table is divided by multiplying the number of the equation in the equation, and the formula is multiplied by dividing the fraction of the equation in the formula. A table is multiplied by dividing the fraction of the equation.\nIn the equation of the equation, the equation of the equation is multiplied by dividing the equation. The formula is multiplied by multiplying the sum of the equation from multiplying the equation. The equation is divided by multiplying the equation. For the equation is multiplied by multiplying the formula, the value is divided by dividing the equation into the equation.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.32,
+            "distinct2": 0.349,
+            "distinct4": 0.68,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 154
+          },
+          {
+            "text": " a type of data used in the class.\n- a number of data stored in a class.\n- a number of data used in the class.\n- a number of data used in a class.\n- a number of data used in a class (e.g., a fraction of the age of data used in the class.\n- a number of data used in the class.\nThe range of data used in the class is a number of data that is contained between the data used in the class.\n- a number of data used in the class (e.g., \u201cs.\u201d) was used in the class.\n- an analysis of information used in the class.\n- a number of data used in the class.\n- a number of data used in the class.\n- a number of data used in the class.\n- an example of the data used in the class.\n- a number of data used in the class.\n- a number of data used in the class.\n- a number of data used in the class.\n- a number of data used in the class.\n- a number of data used in the class.\n- a number of data used in the class.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.7,
+            "distinct2": 0.216,
+            "distinct4": 0.3,
+            "looped": true,
+            "loop_onset": 183,
+            "loop_period": 11,
+            "topic": 0.3333333333333333,
+            "topic_span": 248
+          },
+          {
+            "text": " an important factor in determining the current standard deviation between the three independent digits.\nIt is the most common factor in mathematics. It is the most common factor in mathematics. The term \"citations\" is used to denote a number of variables.\nThe term \"citations\" is used to describe the number of variables that are used for the same reasons. A type of regression equation is used to indicate the number of variables.\nThe term \"citations\" is used to describe a number of variables that are used to describe the probability of one variable.\nIn mathematics, the number of variables is used to denote a number of variables that are used to describe the number of variables.\nThe probability of any data is used in mathematics.\nThe number of variables is used to describe the number of variables that are used to represent the number of variables that are used to describe the numbers of both variables.\nThe probability of the value of variables is to represent the number of variables that are used to describe.\nThe probability of a variable is shown to be squared.\nIn mathematics, the probability of a variable is calculated for the value of a variable. The probability of a variable is determined by a variable, rather than a variable.\nThe probability of a variable is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.356,
+            "distinct2": 0.42,
+            "distinct4": 0.644,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 218
+          }
+        ]
+      },
+      {
+        "label": "environment",
+        "prompt": "Climate change refers to long-term shifts in",
+        "draws": [
+          {
+            "text": " the development and development, but still in the same way that will lead to the change in the future.\nThe process of climate change is to be solved by the development of a new carbon footprint. The concept of climate change is that there is no human experience. The main goal is to create a new and sustainable environment for both the future and the environment.\nThe goal of Climate change is to be to change the global climate change, and to improve global climate change and climate change. This will have the impact of climate change. By taking out the changes in the economic situation and supporting the growth of future climate change, we will have to invest in the creation of the global energy crisis through the 2030 Agenda.\nAs the global climate change continues to rise, climate change has increased. This is where the global climate change has been affected by human actions. Climate change, the global global climate change, poverty, climate change, and pollution impacts on climate change are the effects of climate change, and the global climate change.\nTo help you find more options for climate change, consider the following:\n- A link to Climate Change:\n- Climate change.\n- Climate change. It\u2019s in the global climate crisis.\n- Environmental change.\n- Climate",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.047,
+            "distinct2": 0.694,
+            "distinct4": 0.953,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          },
+          {
+            "text": " climate change, as the city\u2019s main climate change continues to impact the weather as well-being of the region.\nThe Global Climate Change Project (DENA) is a global climate crisis in the wake of a climate crisis in the United States. The climate crisis is one of the main challenges faced by the climate crisis.\nThe Climate Crisis has been an important part of the future. The climate crisis is a key issue in the global climate crisis. The climate crisis is a major issue in our economy, including the world\u2019s climate, which has been exacerbated by climate change, and the climate crisis has occurred.\nThe climate crisis has occurred in the wake of a global climate crisis. This is a major issue in the world. The climate crisis is a period of crisis in the coming weeks. Climate crisis is a significant part of the past: The global warming in the wake of a global climate crisis.\nThe climate crisis has been a major issue in the last. The climate crisis is a major issue in the world and the global climate crisis that persists for the next two decades. The Climate crisis is a major problem in this world. The climate crisis is a problem in many parts of the world.\nClimate change is a major problem in the coming",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.182,
+            "distinct2": 0.545,
+            "distinct4": 0.818,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 249
+          },
+          {
+            "text": " the world. While we may be able to adapt to the changing and changing climate trends that contribute to climate change, we can do this with a global climate change.\nThe Climate Action Plan is an initiative that will be able to generate climate action in the future of climate change. It will be a good task for policymakers to focus on climate change.\nAt the same time, all climate change should have equal impact on climate change. We will be able to reduce the impact of climate change, but we will also be able to change the global climate policy agenda.\nThe Climate Action Plan is a partnership to fund a plan for sustainability and help reduce greenhouse emissions and improve environmental awareness. It will be a great way to reduce greenhouse emissions and enhance energy efficiency.\nThe Water Ahead Project (CCS) is designed to help improve climate change and mitigate climate change.\nThe New World\u2019s Climate Action Plan reflects the need to focus on the climate change and how it impacts climate change.\nThe Climate Action Plan is designed to expand the future of Climate Action Plan.\nThe climate change plan is a significant part of the Climate Action Plan.\nThe Climate Action Plan is designed to improve the climate and climate action plan. The goal is to reduce greenhouse emissions and reduce greenhouse",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.115,
+            "distinct2": 0.667,
+            "distinct4": 0.885,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 243
+          },
+          {
+            "text": " the environment, the impact of the climate, the climate change, the climate, and the atmosphere. The climate change and future changes in the climate change, the climate change, and the climate change, the climate change, the impact of climate change and climate change, would result in the impact of climate change, the climate change and climate change. In the past, global climate predictions are the impacts of climate change, the climate change, and the effects of climate change and climate change, the climate change and climate change should be observed and what does the impact of climate change and climate change.\nThe climate change patterns in the climate change and climate change change are a major part in the world\u2019s planning and adaptation of climate change. The Climate change is a significant part of the climate change and climate change, as the climate change impacts climate change, the climate change and climate change and climate change. This includes the Global Climate Change Climate Change Climate Change Climate and Climate Change Climate Change Climate Change Climate to Climate Change Climate Change that impact climate change, the climate change and climate change, the climate change, the Climate Change Climate Assessment, Climate Change Climate Change Change Climate Change Climate Change Climate Change Climate Change Climate Change, Climate Change Climate Change Climate Change Climate Change Climate Change Climate Change Climate",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.387,
+            "distinct2": 0.38,
+            "distinct4": 0.613,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          },
+          {
+            "text": " the world, and where the global warming is rising, the CO2 emission rate of the global warming and the global warming changes in the atmosphere, climate change, and global warming, as well as the global climate.\nIn summary, the global climate change is the effect of climate change, the IPCC Climate report is an interesting and interesting and intriguing article in this article.\nThis article will explore the implications of climate change, the key to the impact of climate change in the future.\nThe United Nations Climate Change Index is a powerful tool for climate change. The Climate Change Index is a great way to protect the planet\u2019s atmosphere, which is used to protect the planet\u2019s environment.\nThe Climate Change Index is a global climate change that has been made to rise to extreme weather events, the climate change and the climate crisis.\nThe Climate Change Index is a unique and natural disaster in the oceans, where it is, is not, in the global climate and climate but also in the worst climate crisis, it is also the main problem for a planet as climate change.\nThe Climate Change Index is a big strategy to address climate change and encourage the Earth\u2019s climate-change.\nClimate change: Climate change can lead to a more sustainable climate",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.079,
+            "distinct2": 0.702,
+            "distinct4": 0.921,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          }
+        ]
+      },
+      {
+        "label": "recipe",
+        "prompt": "To make bread at home, you will need",
+        "draws": [
+          {
+            "text": " to buy or sell something on a shopping shop, and you must buy, and you should not buy.\n1. How to buy or sell a shopping item in a restaurant?\nIf you want to sell a pizza in your store, it's a good idea to buy a pizza to buy.\n3. How to store a pizza in a restaurant?\n1. What to buy a pizza?\n2. What to buy one pizza?\n5. What to add?\n7. What to do next?\nIf you want to buy an cookies, buy a pizza instead of purchasing it, you can purchase it with a pizza. The table is the \"Million dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar dollar currencies dollar dollar dollar.\n8.\n7.\n|Buy prices in a day to $3.\n4. How to buy a pizza from a dollar?\n4. How to store a pizza in a pizza?\na. How to store a pizza with a pizza?\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.308,
+            "distinct2": 0.451,
+            "distinct4": 0.692,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " to get your milk back into the freezer. This will be all the time to drink too quickly.\nHow to use a Milk?\nYou know about the amount of milk you want. You are eating a lot of sugar and fat. You do not eat breakfast, but it won\u2019t be a sure.\nIt would be a good way to find your diet and how you will eat.\nHow to Use a Milk?\nOne of the key things you can do is to keep in mind that your diet has a weight and also, it\u2019s important to keep your body healthy.\nIf you use a formula or formula or formula, then you can use a formula for formula formula for formula.\nIf you have formula and formula formula that is the formula.\nIf you are a formula in formula or formula, then you can add formula.\nYou should use a formula formula for formula formula formula (a formula formula for formula formula formula).\nIf you do not use formula formula, you should then convert formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula formula",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.229,
+            "distinct2": 0.596,
+            "distinct4": 0.771,
+            "looped": true,
+            "loop_onset": 208,
+            "loop_period": 1,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " to be able to get the water in the oven or the freezer with the oven.\n- You will need to use a cooking cart to get the oven to ensure the temperature is to the oven.\n- You will need to keep the oven to the sun.\n- The oven to drink, even if you are cooking at home, you will need to put it in place.\n- You will need to use a small powder to put it in the oven on the oven.\n- You will need to do the oven with the oven.\n- You will be in a hot oven.\n- You will have some tips to keep your bed clean.\n- You will need to cook the oven while you don\u2019t need to use a glass.\n- You will need to be able to cook the oven while you don\u2019t need to use it.\n- You should use a bottle of water if you can afford a baking oven to boil it in the oven.\n- You will need to cook the oven if you have a hot oven.\n- You want to make that heat (or hot) hot oven.\n- You need to be in the oven for the microwave oven or for the refrigerator.\n- You should use a baking",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.273,
+            "distinct2": 0.486,
+            "distinct4": 0.727,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 235
+          },
+          {
+            "text": " to add a small amount.\n- Make a big difference\n- Give the right amount of food you need to avoid.\n- Make a strong and safe option\n- Make a good taste of the food you want to buy.\n- Remove the amount of food you need to keep.\n- Add a good taste to the food with a fresh food.\n- Add a little to a salad which may be a good taste.\n- Turn it up to a regular drink.\n- Take a few drops to the bottom of the food.\n- Add a little bit of water.\n- Allow the whole grain.\n- Drink the whole grain until it is boiling.\n- Add a little bit of water.\nHow much can you cook in your kitchen?\nWhen cooking it is time for something a little bit of water.\n- Don\u2019t leave it up at least two times in the room.\n- Do not cook in the kitchen.\n- Give a little food.\n- Never forget to be as good.\n- Have an old cup of water.\n- Have a meal for a meal.\n- Avoid a lot of water from a meal.\n- Have a meal\n- Have a snack or meal.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.138,
+            "distinct2": 0.608,
+            "distinct4": 0.862,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 56
+          },
+          {
+            "text": " to know if you have a little salt and water. You need to make bread at home, but there are other things to do on to make bread. You should always try to put the soup into the bread in the kitchen.\nAs you can see, you\u2019ll need to be a good source. To get rid of candy, be sure to put it at home, you should not be able to eat. You can have the bread to be a good place when your food is processed. But if you\u2019re ready for sweets, try to add a little salt and water. Then you need to use it as a natural food in the kitchen you can choose which to cook.\nThe best way to use is to take care of dishes that can be used to a variety of dishes. Some foods include fruits, vegetables, and vegetables and vegetables. Some foods, like nuts, fruits and vegetables and vegetables have also been used to add some fruits or vegetables.\nYou can also consider using a food-based diet for foods you can use with foods that are used to help you keep the health of your home.\n- Exercise for foods that are used to help you eat fruits and vegetables.\n- Drink them for food at home.\n- Limit the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.04,
+            "distinct2": 0.773,
+            "distinct4": 0.96,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 251
+          }
+        ]
+      },
+      {
+        "label": "literature",
+        "prompt": "William Shakespeare wrote many plays, including",
+        "draws": [
+          {
+            "text": " the poetry of his own work. In addition, the poem explores the history of the poem, and by contrast to the fact that he was the first man to be the father of the lady, who was the poet of the play. Thus, the story will be seen in his life, but the poem will be the last man of his father and the man of a certain man who was the mother of an oxal, and the great man of the man of the man of the people of the king of the king of the kingdom is now the king of the king of the king of the king of the king. In both cases, this is the man who is the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king was king of the king of the king of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.518,
+            "distinct2": 0.361,
+            "distinct4": 0.482,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " his poems, poems, and other forms of writing. The poems, poems, and letters, are written throughout the church. The poems can be distinguished from those of the poems, but they are not part of the poem. The most important is its composition for the poem, and the other of them is that the reader is not one of the poem.\nFor more information on literary writing, the poem is a poem, and is in the form of poems and a poem. If you have a look at the most important poem you can find, your reader can look at the most important and the literary material of the poem.\nThe poem is a poem, which is a poem, is a poem, one of the most important to the poem. The poem is a poem, a poem, a poem, and a poem. The poem contains a poem, a poem, a poem, an, bibliography, and an extensive literature of the poem.",
+            "tokens": 192,
+            "eos": true,
+            "rep4": 0.143,
+            "distinct2": 0.613,
+            "distinct4": 0.857,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the Shakespeare\u2019s greatest, and the most profound Victorian art genre.\nThe most popular form of Shakespeare\u2019s fiction, the only \u201cman of Shakespeare\u201d is the only one-of-the-art film that appears in the world, but the most common form of his, Shakespeare was the first of the early age.\nThe main distinction between Shakespeare and Shakespeare, and the period of the 16th century is from the early ages of the 19th century. In Shakespeare\u2019s poetry, it is the first and most common form of Shakespeare\u2019s poetry. This is what Shakespeare was now in Shakespeare\u2019s poetry.\nThis book is an excerpt from the Greek poem, and it is also a great book of poetry, but it is also a great book of literature and literature.\nI am thinking about the history of Shakespeare\u2019s poetry, which is the most popular form of Shakespeare\u2019s poetry. Shakespeare\u2019s poetry was written in the 19th century. The most popular form of Shakespeare\u2019s poetry is the history of Shakespeare\u2019s poetry.\nThe style of Shakespeare is a genre of the early history of Shakespeare\u2019s poetry, which has been in origin, such as the Renaissance,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.19,
+            "distinct2": 0.592,
+            "distinct4": 0.81,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666,
+            "topic_span": 240
+          },
+          {
+            "text": " his work, and his work remains a major source of work and in his book.\nIn the 1920s, Lear was a very popular in life and when he was successful in his life and in his life.\nHe had the power to work with the soul and soul and soul. He was a philosopher and scientist, and he had a kind of man. His father, \"the world of man is that man is the world for everything, the world of man, and is the world of man.\"\nIn the 1920s, Lear was able to make a man in the same way as the soul of man, and as he was a man in his life. He was the people of man, and he was a man, for himself, and he is the son of the soul. He was the world of man, and his father is the world of man, and he was the world of man.\nIn the 1930s, Lear is a great philosopher and author. He was the world of man, who was the world of man, a man and his wife. He was the world of man. He is a great man, and he was the world of man. He was the world of man. He was the world of man, who was the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.237,
+            "distinct2": 0.482,
+            "distinct4": 0.763,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the Shakespeare\u2019s.\nThe story is written as an essential symbol of a woman\u2019s life. As a woman\u2019s death in the church, she is the patron in the church\u2019s life and the mother of Jesus. When the woman is in the church, she is the best woman of the world. As the mother of Jesus, the woman is the mother of the goddess. He is the father of the woman. The girl is the king of the god who is the father of the goddess. The son of Jesus is the son of the goddess of the god.\nThe mother of the goddess was the god of the queen who is the god of the god. She is the father of the goddess.\nThe woman is the mother of the goddess. The mother of the goddess is the character of the woman. When the king of the king is the god of the god, the woman is the goddess of the goddess.\nThe woman is a woman of the goddess known as the goddess.\nThe woman is the god of the goddess. It is the father of the goddess. The woman\u2019s mother of the goddess is a woman. This is the woman\u2019s name.\nThe woman\u2019s mother of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.237,
+            "distinct2": 0.396,
+            "distinct4": 0.763,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 2
+          }
+        ]
+      },
+      {
+        "label": "technology",
+        "prompt": "The internet began as a research project in",
+        "draws": [
+          {
+            "text": " the United States, it became one of the most expensive and expensive and costly costs.\nBut some of the biggest problems are that there is a lot of the internet. There are some examples of where IoT and IoT use are among the most competitive, and the cost of the Internet is increasing.\nOne of the most important aspects of IoT technology is the big impact on the Internet. While the technology is a big concern for many people, the Internet, and the Internet industry is also driving a lot of the Internet.\nThe technology is the ability to carry the Internet to make sure that when the Internet is used.\nThe Internet is a type of technology that may have a lot of safety and it is important to remember that we are not using the internet. IoT technology is a huge issue.\nThe Internet is the ability to interact with IoT technology. Smartphones are designed to be a major part of the Internet. They are also used to connect with other devices and devices. This is because the technology is in the form of a smartphone, which can be easily accessed.\nThe Internet is a network of the Internet. It is also used to build a computer system that can carry the Internet in the right direction. Some technology is not the same as any other technology.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.036,
+            "distinct2": 0.741,
+            "distinct4": 0.964,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 240
+          },
+          {
+            "text": " the mid-1960s, where the data were collected from the United States from the United States and Europe from June 2005 to September 2009.\nThe global pandemic has been a key factor in the development of the internet. The international climate was also affected by the pandemic and the pandemic. Since the pandemic in 2021, the global pandemic has been around in the United States and the United States. The pandemic has focused on the pandemic, but the global pandemic has changed itself.\nThe pandemic has been around to be the most vulnerable and we have not seen. The pandemic has been in the first since, in fact, due to a number of people who had been vaccinated or who had already had a vaccine in the past decade. The pandemic has already had a significant impact on the pandemic. The pandemic has yet to be an alarming problem.\nThe pandemic has changed drastically since the pandemic has gone. This has caused the pandemic to revolutionising and promote the pandemic.\nThe global pandemic is a global problem and continues to become a major problem on the pandemic. The pandemic has been around for years and has recently been around for decades.\nIn 2016, the pandemic has begun to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.134,
+            "distinct2": 0.635,
+            "distinct4": 0.866,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 47
+          },
+          {
+            "text": " the 1980s.\nAs a result, the company of the internet has more than doubled. It is estimated that the Internet has more than doubled. The internet has more than doubled.\nWhen it comes to the Internet, it has more than doubled and more than an average.\nIt seems like a new Internet. The internet has more than doubled.\nThe Internet has more than doubled.\nWith the new Internet, users are going to need to know what computers are being able to go, and when people are able to go.\nAnd today\u2019s digital world has a lot of disadvantages.\nBut they have to say that it\u2019s a lot like a bit like a lot.\nWhat you\u2019re looking for is a lot of people.\nIt\u2019s a lot like a lot of people, but it\u2019s not the only way I might have to talk about. As a result, people can\u2019t find the internet in their lives.\nPeople are working with the internet.\nIt\u2019s hard to understand how it can be used in every business.\nThe internet has a lot of benefits. The internet has more than half of the internet you have.\nIn the realm of Internet, the internet",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.115,
+            "distinct2": 0.651,
+            "distinct4": 0.885,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 256
+          },
+          {
+            "text": " the US, while in the UK, the US was able to provide the most basic information.\n- The European Union was supported by a national security initiative in the 1970s and was made in the 1950s.\n- The first of May, the US was a large number of years-long-time.\n- The European Union was an area where the Russian government had a strong sense of how to build a country.\n- The foreign policy has been made in the United States by an independent group of Soviet relations, including the US, and the US.\n- The US was also called to establish its own currency, which was a key part of the Soviet Union in the region.\n- The state had a good idea in its own world, and the international government was able to make a case.\n- The foreign policy has been in the United States.\n- The European Union was adopted by the National Security Council in 1995.\n- The United States was officially adopted by the U.S. government.\n- The USSR was not the first European state to have a significant impact on the US.\n- The USA had a strong sense of security.\n- The United States had a strong history with the US, a large number of people and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.119,
+            "distinct2": 0.671,
+            "distinct4": 0.881,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 156
+          },
+          {
+            "text": " the region of the world.\nThis is a big business field that can be used to make money or money, and then by providing information on the internet. You can also use some more money to make money, and you can make money and even more money.\nYou can also offer a business platform\nYou can also earn money. It\u2019s a cheap way to get money, but it\u2019s a big difference in the cost of money and money. You can also earn money for money if you are a bad thing.\nThere are many different ways to do that. Some people who think that they are very likely to have a lot of money in the country, and some of the most common people in the world are living things. You can also earn money for money or money.\nOne of the reasons why it\u2019s so important to make money is that you can buy money. You can buy money or buy money for money and sell money for money. You can purchase money for money or buy.\nIf you\u2019re a good guy, you can buy money or sell money for money, and you can buy money for money. It also includes money and can buy money that is more lucrative.\nYou can buy money to pay",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.087,
+            "distinct2": 0.624,
+            "distinct4": 0.913,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 31
+          }
+        ]
+      },
+      {
+        "label": "economics",
+        "prompt": "Inflation occurs when",
+        "draws": [
+          {
+            "text": " the US government decided to adopt a debt system and to a steady supply and increase taxes. This was because the US government needed to build an economic balance in the US.\nA major report on the Federal Reserve, the US government issued the draft \"the US dollar\" for a total of 4.7 million square miles in the US, and the US government agreed to bring a new loan.\nIn September 1999, US President Jimmy Carter called the US government to pay off $1,000 for the US government to pay a second.\nA New York Times\nThe United States is a state of economic and economic value that is the only country. President Joe Biden was the president. Biden also had a strong influence on the current government.\nThe Biden administration, according to the US Bureau of Foreign Affairs, states that all of them are considered as the US Bureau of Foreign Affairs and the US Bureau of Foreign Affairs.\nThe Bank of the United States is the US, the US and the US.\nThe State Government is a state of a state of an average of 25 million dollars. This state has the highest income of the US and has the $2,000 for the US and the US population.\nThe state has a median income of $1,000",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.059,
+            "distinct2": 0.722,
+            "distinct4": 0.941,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the inflation rate is high, the inflation rate is higher than the average inflation rate. The inflation rate is lower than the inflation rates to which the inflation rate increases.\nThis is the difference between inflation rates and the inflation rate.\nThe inflation rate is higher than the inflation rate.\nAnother reason for inflation is that inflation rates are higher than the average inflation rate. It is estimated that the inflation rate is higher than the inflation rate.\nThe inflation rate is not higher than the inflation rate.\nA CPI is higher than the average inflation rate by the ratio.\nA CPI is a measure of inflation, which is the average of inflation.\nInflation ratio, inflation rates are higher than the average of the average of the average.\nA CPI is a measure of the inflation rate.\nThe CPI is lower than the average.\nThe CPI is lower than the average of the average.\nAn CPI is lower than the average of the average.\nThe CPI is an average of the average by the average.\nThe CPI is the mean the average of the average.\nThe average of the average is the average.\nThe CPI is a measure of the average.\nThe average of the average is the average that the average is around 1.\nThe",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.387,
+            "distinct2": 0.337,
+            "distinct4": 0.613,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 158
+          },
+          {
+            "text": " inflation is not as a result of a period of time, or when inflation is not a period of time, it is time to do the inflation in the fall of monetary.\nWhat is inflation?\nThe inflation is the result of the CPI. An inflation is the result of an inflation curve. Inflation, inflation is the rise of the inflation in the inflation curve.\nWhich is inflation?\nThe inflation curve is the inflation curve.\nWhat happens in the inflation curve?\nThe inflation curve is the inflation curve.\nWhat is the inflation curve?\nThis indicates the inflation curve is the ratio of inflation. The inflation curve is the inflation curve.\nHow do inflation break is the inflation curve?\nThe inflation curve is the inflation curve.\nWhat is inflation?\nThe inflation scale is the inflation curve, and the inflation curve is the inflation curve, and the inflation curve can be the inflation curve.\nWhat is inflation?\nThe inflation curve is the inflation curve.\nWhat factors are the number of inflation variables in an inflation?\nThe inflation curve is the inflation curve.\nWhat are the average inflation in inflation?\nThe average inflation curve is the inflation curve.\nWhat are the difference between inflation and the inflation scale?\nAverage inflation is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.375,
+            "distinct2": 0.396,
+            "distinct4": 0.625,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 255
+          },
+          {
+            "text": " inflation is imposed by the inflation of the American economy of the United States.\nThe rise is an increasing trend in the past decade, with the rise of inflation in the past decade, and the trend of the Soviet Union.\nThe increase in inflation is associated with the rise of the global economy in the world.\nIn 2011, the OECD of the European Union has announced a significant reduction in economic growth.\nIn the 1980s, the US has announced a total trend in the 1980s and the world has been increasing.\nAlthough the increase in inflation will be considered a result.\nIn 2010, the average global inflation rate has been around 5 percent but the increase in inflation is not attributable to inflation, which is a global trend.\nThe rise of the American Revolution has already been due to the rise of the economic slowdown in the world, and the economic development of the country has been over to rise.\n\u201cThe shift in the global economy is largely due to the lack of the economic growth of the Chinese capital,\u201d said the OECD government analyst Dr. John T. F. Kennedy, the Economist of the South African Economic Policy and the Financial Policy (COP) says:\n\u201cWe are also taking notes in the economic growth of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.036,
+            "distinct2": 0.706,
+            "distinct4": 0.964,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 142
+          },
+          {
+            "text": " the amount of inflation would be more than the same. In fact, as a result, the inflation rate is due to the fact that the inflation rate is equivalent to the ratio, the inflation rate in inflation increases.\nThe inflation rate is equivalent to the average inflation rate, and the volatility rate is calculated by the number of inflation in the country. However, the inflation rate doesn't change.\nAlthough inflation rates aren't the most significant, it is important to note that inflation rates are higher than the average inflation rates that are more than the average inflation rate.\nAccording to the report, inflation rates are an average of those people, leading to inflation rates of inflation.\nThe CPI is not a measure of a recession, but it is not a measure of the CPI due to inflation.\nAnd the CPI is also the same as the inflation rates because it is a measure of more than the average, which is the average inflation rate.\nA CPI is a measure of the CPI and the CPI is not a measure of the CPI.\nThe CPI is a measure of inflation rates that can exceed the average when you get higher than the average above.\nYou can also consider the CPI. You must also consider the CPI, which is a measure of the CPI.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.13,
+            "distinct2": 0.584,
+            "distinct4": 0.87,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 217
           }
         ]
       }

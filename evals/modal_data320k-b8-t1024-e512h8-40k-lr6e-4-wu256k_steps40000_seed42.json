@@ -58817,18 +58817,29 @@
     "peak_mem_kind": "cuda max_memory_allocated"
   },
   "samples": {
-    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "protocol": "20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
     "temperature": 0.7,
     "top_k": 40,
     "new_tokens": 256,
     "draws": 5,
     "summary": {
-      "n": 50,
-      "rep4": 0.504,
-      "looped": 13,
-      "eos": 5,
-      "topic": 0.367,
-      "tokens": 246.0
+      "n": 100,
+      "rep4": 0.423,
+      "rep4_p90": 0.78,
+      "rep4_mean": 0.447,
+      "distinct2": 0.387,
+      "distinct4": 0.553,
+      "looped": 17,
+      "loop_rate": 0.17,
+      "loop_ci95": [
+        0.109,
+        0.255
+      ],
+      "loop_onset_median": 183.0,
+      "topic": 0.331,
+      "topic_span_median": 237.0,
+      "eos": 9,
+      "tokens": 242.58
     },
     "prompts": [
       {
@@ -58840,50 +58851,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.356,
+            "distinct2": 0.447,
+            "distinct4": 0.644,
             "looped": true,
             "loop_onset": 214,
             "loop_period": 13,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " begins in an event that is not created as a result of the structure and composition of the plants.\n- The production of photosynthesis in the atmosphere is a process that takes place over time, from the air to the atmosphere.\n- The temperature of photosynthesis is a process where the photosynthesis is the process that takes place in the photosynthesis.\nBy being able to create a solar system, the photosynthesis process is a very process. It takes from the photosynthesizing cells that have the desired effect on the growth rate of photosynthesis.\n- The photosynthesis process is basically the process of photosynthesis.\n- The photosynthesis process is a process which takes place around a certain amount of time, so it is essential to have the capacity to process photosynthesis in the body and to make sure that the photosynthesis process is the process of photosynthesis.\n- The photosynthesis process is an attempt to produce a desired effect, or to create a desired effect.\n- The photosynthesizing cells are not easily accessible to the environment, so the photosynthesis process is the process of photosynthesis.\n- The photosynthesis process is a process that takes place between the photosynthesis and the photosynthetic growth rate.",
             "tokens": 250,
             "eos": true,
             "rep4": 0.206,
+            "distinct2": 0.558,
+            "distinct4": 0.794,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 245
           },
           {
             "text": " is characterized by an energy-efficient, renewable energy source that provides various advantages.\nThe conversion of energy from the primary and secondary sources of energy into the primary and secondary sources of energy into the primary and secondary sources of energy are the main sources of energy.\nThe primary sources of energy are energy and energy. As the primary sources of energy are the primary sources of energy, the primary sources of energy are energy and energy.\nNatural sources of energy are energy. These sources are renewable sources of energy, such as coal and oil. These sources are essential for electricity production.\nEnergy is also very important for the secondary sources of energy. These sources of energy are energy and energy, which are mainly used to produce energy.\nEnergy is also important for the secondary sources of energy that are energy efficient.\nEnergy is also important for the secondary sources of energy. It is important to note that the primary sources of energy are energy source and energy.\nEnergy is used to generate energy. It is used to generate energy by generating electricity from the primary source to energy.\nEnergy is used to generate electricity. This allows the secondary sources of energy to generate electricity.\nEnergy is a renewable energy supply. It is used to generate electricity from the primary source in the primary and",
             "tokens": 256,
             "eos": false,
             "rep4": 0.304,
+            "distinct2": 0.435,
+            "distinct4": 0.696,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " will help you create the most efficient and efficient way to reduce your carbon footprint.\nIf you wish to reuse the right type of biomass, then you could start by using the same method to make the most efficient and efficient living.\nIf you want to reuse the right type of biomass, then you can use the right type of biomass.\nIf you want to reuse the right type, then you can use the right type of biomass that will be the best choice. You can use the right type of biomass or other methods, but you can also use the right type of biomass for the type of biomass you want.\nIf you want to reuse the right type of biomass you want to reuse the right type of biomass you want to reuse the right type of biomass.\nIf you want to reuse the right type of biomass, then you can use the right kind of biomass.\nThe right type of biomass you want to reuse the right type of biomass you want to choose from. If you want to reuse the right type of biomass, then you can use the right type of biomass that will be the best choice.\nIf you want to reuse the right type of biomass, you can reuse your biomass.\nIf you want to reuse the right type of biomass you want to",
             "tokens": 256,
             "eos": false,
             "rep4": 0.545,
+            "distinct2": 0.325,
+            "distinct4": 0.455,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " is carried out in a similar manner.\n- Photosynthesis is a process that is carried out in a variety of ways.\n- Photosynthesis is the process of heat and nutrients that are then transferred to the Earth.\n- Photosynthesis is the process of producing heat and nutrients that are then transferred from the earth to the Earth.\n- Photosynthesis involves an organism which is made into living organisms. Photosynthesis is the process of storing everything from sunlight and nutrients to water.\n- Photosynthesis is the process of producing heat and nutrients that are then separated into the water and nutrients.\n- Photosynthesis is an process of creating heat and nutrients to produce heat and nutrients that are then transferred from the earth to the earth. Photosynthesis is the process of storing energy to produce heat and nutrients that are then stored in the earth to store energy. Photosynthesis is the process of creating heat and nutrients that are then converted into heat.\n- Photosynthesis is the process of storing things and nutrients that are then transferred into the heat and nutrients that are transferred into the earth. Photosynthesis is the process of storing things and converting it to heat. Photosynthesis is the process of storing everything from food, energy and nutrients that are then transferred into heat, the processes and processes of producing",
             "tokens": 256,
             "eos": false,
             "rep4": 0.395,
+            "distinct2": 0.404,
+            "distinct4": 0.605,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 230
           }
         ]
       },
@@ -58896,50 +58922,65 @@
             "tokens": 29,
             "eos": true,
             "rep4": 0.0,
+            "distinct2": 0.929,
+            "distinct4": 1.0,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 23
           },
           {
             "text": " was born in Germany and had a family who was an associate professor of education at the University of Cambridge, who was also a professor of education at the University of Cambridge, who was a member of the University of Cambridge.\n- Albert Einstein was a Germanman who believed that Einstein made a breakthrough in his theory of relativity. Einstein was a physicist who believed that Einstein was a physicist who believed that his theory was not related to Einstein's theory of relativity.\n- Albert Einstein was a physicist who believed that Einstein has a brain, such as the brain, that was believed to have a brain to use the brain for use in order to produce a brain. He was a physicist who believed that Einstein's theory of relativity was a theory of relativity.\n- Albert Einstein was an American physicist who believed that Einstein's theories were the study of Einstein's theory of relativity.\n- Albert Einstein was a physicist who believed that Einstein was a physicist who believed that Einstein was a physicist who believed that Einstein was a physicist.\n- Albert Einstein was a physicist who believed that Einstein was a physicist who believed that Einstein was a physicist because he believed that Einstein was a physicist who believed that Einstein was a physicist who believed that he was a physicist who believed that Einstein was a physicist who believed that Einstein",
             "tokens": 256,
             "eos": false,
             "rep4": 0.447,
+            "distinct2": 0.404,
+            "distinct4": 0.553,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 256
           },
           {
             "text": " believed the universe was an ancient, and he was a professor of physics at the University of Edinburgh.\nHis theory has been confirmed by the American scientific physicist, who was the first to be the first to be a science professor.\nThe theory is a theory that has a definite shape. The theory, which was known as the Albert Einsteinian, was the first to study the theory of relativity. Einstein had a telescope that was a magnet, and the Einsteinian was a physicist, who was fascinated by the theory of relativity.\nThe theory is a theory that has a true shape. Einstein\u2019s theory is not the only theory of relativity but it has a different structure. Einstein\u2019s theory, for example, is a theory about relativity. Einstein\u2019s theory of relativity is not a theory.\nThe theory is a theory of relativity. Einstein made some claims about the theory of relativity. Einstein has a theory of relativity, but it has a theory that has a theory of relativity. Einstein\u2019s theory is not true. Einstein\u2019s theory is a theory of relativity, and it has a theory of relativity. Einstein uses the theory of relativity to determine the theory of relativity.\nThe theory is a theory of relativity to explain the theory of",
             "tokens": 256,
             "eos": false,
             "rep4": 0.261,
+            "distinct2": 0.506,
+            "distinct4": 0.739,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 255
           },
           {
             "text": " became the first physicist to understand the quantum theory in which the universe is expanding and expanding, as it does today, the universe is expanding and so has a few new inventions that have been made in the past.\nWhat is the universe?\nThe universe is expanding and expanding. Astronomers are currently being able to build a universe in a way that is much more than a millionths and a half billion years old. The universe is expanding.\nThe universe is expanding and expanding. Astronomers are working to harness the power of gravity and energy, and so on.\nHow do cosmic systems work?\nBecause of the quantum nature of the universe, there is an understanding of how the universe works. The universe is expanding and expanding, so it is expanding, and so on.\nWhat is the universe?\nThe universe is expanding and expanding. As a result, it is expanding and expanding. But it is expanding and expanding.\nWhat is the universe?\nThe universe is expanding and expanding, but it is expanding. It is expanding and expanding. It can be a big challenge, but it does not take time to build.\nWhat is the universe?\nSince it is expanding, there is an understanding of the universe\u2019s physical space. It is",
             "tokens": 256,
             "eos": false,
             "rep4": 0.237,
+            "distinct2": 0.561,
+            "distinct4": 0.763,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 252
           },
           {
             "text": " became the first to know Einstein.\nIn 1891, Einstein was born in Germany and graduated from New York University in 1883. The term Einstein was coined as a \"father of the father of a computer.\" Einstein was born in 1892.\nWhile Einstein lived in a small city, it was a German-born physicist who was born in 1886. However, Einstein was born in 1802.\nIn 1872, Einstein was born in the city of Munich, where he had a son, who was a child. Einstein was born in 1901. In 1896, Einstein was born in a small family in 1891. He was a son of a doctor. Einstein was born in 1901.\nIn 1889, Albert Einstein was born in 1895. He was born in New York, which was a German-born teacher.\nIn 1896, Einstein was born in New York City, and a French-born father of a family from New York City, where he was born in 1818.\nIn 1902, Albert Einstein was born in New York City and was born in New York City, New York City, and was born in New York City, and was born in New York City.\nThe first Einstein born in New York City, Berkeley, was born in New",
             "tokens": 256,
             "eos": false,
             "rep4": 0.206,
+            "distinct2": 0.529,
+            "distinct4": 0.794,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 254
           }
         ]
       },
@@ -58952,50 +58993,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.617,
+            "distinct2": 0.216,
+            "distinct4": 0.383,
             "looped": true,
             "loop_onset": 183,
             "loop_period": 36,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 255
           },
           {
             "text": " a substance called carbon, and is a chemical element.\nA substance called carbon is a chemical compound that contains a substance called carbon. Carbon is a chemical element with a complex chemical compound called carbon.\nA substance called carbon is a chemical element with a chemical compound that contains an element in an atom.\nIt is a compound that has a chemical element in a physical form. Carbon is a chemical element with a chemical formula and a group of molecules called carbon.\nThe chemical compound is a chemical element with a chemical compound that forms carbon atoms.\nA substance is a chemical compound with a chemical compound that is a chemical compound.\nA substance called carbon is a chemical compound.\nA substance called carbon is a chemical compound in the form of a chemical compound.\nA substance called carbon is an organic compound with a chemical compound that has a chemical compound called carbon.\nCovalent compounds are compounds that have a chemical compound called carbon.\nA substance called carbon is a chemical compound that is a chemical compound.\nCovalent compounds are a chemical compound that is a chemical element with a compound that is a chemical substance.\nA substance called carbon is a compound called carbon.\nCovalent compounds are substances that can be used for chemical reactions.\nA",
             "tokens": 256,
             "eos": false,
             "rep4": 0.423,
+            "distinct2": 0.345,
+            "distinct4": 0.577,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 252
           },
           {
             "text": " a few elements, but not a molecule or molecule. In some of the elements, a molecule is a substance that is not reactive to carbon.\n2. When you think of a molecule, you are trying to find a molecule in your cell. This means that the action of a molecule is to select one molecule from the molecule.\n3. When you think of a molecule to work by a molecule, you can do it by simply selecting the one you want to make sure you have the right molecule.\n4. When you think of a molecule, you can do it by combining it into your cell.\n5. When you think of a molecule, you can do it by using a molecule.\n6. When you think of a molecule, you can do it by using a molecule, you can do it by combining it into your cell by using a molecule, a molecule, or a molecule, you can do it by doing it by using a molecule.\n6. When you think of an atom, you can do it by adding it to your cell by adding it to its original form.\n7. When you think of a molecule, you can do it by using a molecule.\n7. When you think of a molecule, you can use it",
             "tokens": 256,
             "eos": false,
             "rep4": 0.372,
+            "distinct2": 0.447,
+            "distinct4": 0.628,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 16
           },
           {
             "text": " a variety of different types. It is found in the plant-based products of different types, including:\n- Biomass: It is known for its ability to conduct chemical conversion with various other types of chemicals.\n- Biomass: It is highly resistant to various chemicals and the use of different types of chemicals to meet the needs of various types of chemicals.\n- Biomass: It is highly resistant to environmental chemicals, such as UVB and CO2, which are toxic to many types of chemicals.\n- Biomass: It is a highly resistant to chemical reactions that are known to be active in the body.\n- Biomass: It is highly resistant to environmental chemicals, such as:\n- Biomass: It plays a vital role in the environment and reduces environmental toxins.\n- Biomass: It is highly resistant to environmental chemicals, such as pesticides and pesticides.\n- Biomass: It is resistant to environmental chemicals, such as methane, nitrogen, and ozone.\n- Biomass: It is highly resistant to environmental chemicals and is resistant to environmental toxins.\n- Biomass: It has a wide range of chemical applications, including chemicals, such as nitrogen oxides and UVB and H",
             "tokens": 256,
             "eos": false,
             "rep4": 0.352,
+            "distinct2": 0.498,
+            "distinct4": 0.648,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 245
           },
           {
             "text": " a short-lived polymer that is formed by a polymer with a long-acting polymer, which is a polymer and a polymer that is formed by an electron. The polymer is a polymer with an electron, a polymer that is involved in the synthesis and distribution of the polymer. The polymer is either a polymer or a polymer, or a polymer that is formed by an electron. The polymer is formed by a polymer that is formed by a polymer that is formed by a polymer or by an electron. A polymer is formed by a polymer that is formed by a polymer that is formed by an electron, a polymer that is formed by an electron. The polymer is formed by a polymer that is formed by an electron, and by a polymer, a polymer that is formed by an electron that is formed by an electron, the polymer is formed by a polymer that is formed by an electron that is formed by an electron. The polymer can be formed by an electron, or by a polymer that is formed by an electron and a polymer that is formed by a polymer that is formed by an electron. The polymer is formed by a polymer that is formed by an electron, a polymer that is formed by an electron. The polymer is formed by an electron that is formed by a polymer that is formed",
             "tokens": 256,
             "eos": false,
             "rep4": 0.605,
+            "distinct2": 0.224,
+            "distinct4": 0.395,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59008,50 +59064,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.079,
+            "distinct2": 0.702,
+            "distinct4": 0.921,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 239
           },
           {
             "text": " make sure they are working on a task. Students will also learn about the concepts and ideas that they might like to build on their own work.\n- They will teach how to express their own work, but will also be able to learn how to code in their own right-of-world.\n- They will also teach how to code in their own works.\n- They will teach how to code in their own work.\n- They will teach how to code in their own works.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math and science.\n- They will teach math.\n- They will teach math and science.\n- They will teach",
             "tokens": 256,
             "eos": false,
             "rep4": 0.692,
+            "distinct2": 0.243,
+            "distinct4": 0.308,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 48
           },
           {
             "text": " make decisions about their own lives and how to make decisions about their own lives. There is no single answer that brings to mind that every individual is unique.\nThe second lesson will focus on the lesson, which is easy to understand, and also what you can learn from it. This lesson provides a way to develop new thinking skills and knowledge in life.\nThis lesson will focus on the lesson, which will focus on the lesson, and also the lesson for the lessons.\nEach lesson focuses on the lesson, and also includes a lesson plan.\nThis lesson will focus on the lesson, and also includes a lesson plan and lesson plan.\nThis lesson will focus on the lesson, and also includes a lesson plan.\nThis lesson will focus on the lesson, and also includes a lesson plan and lesson plan.\nThis lesson will focus on the lesson, and also includes a lesson plan.\nThis lesson will focus on the lesson plan, lesson plan, and also includes a lesson plan and lesson plan.\nThis lesson will focus on the lesson plan and lesson plan.\nThis lesson will focus on the lesson plan, and will focus on the lesson plan.\nThis lesson will focus on the lesson plan lesson plan, and will focus on the lesson plan.\nThis",
             "tokens": 256,
             "eos": false,
             "rep4": 0.549,
+            "distinct2": 0.345,
+            "distinct4": 0.451,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 252
           },
           {
             "text": " use a variety of different teaching methods to apply the same basic teaching methods in a way that is necessary for learning.\nHere is a list of ways to use a variety of teaching methods in a classroom setting.\n1. Use a clear picture of the lesson using a picture of the lesson\n2. Use one example of the lesson while the students are learning how to use a picture of their own learning while the students are learning how to use the picture.\n3. Use the pictures to show the lesson;\n4. Use a list of a picture to show the lesson.\nThis activity also includes the lesson and a lesson plan.\n5. Use a picture for the lesson\n6. Use a picture to show the lesson and a lesson plan.\nThis activity includes activities like interactive lessons, lesson plans, and video games for the lesson.\n6. Use the video games to help students understand the lesson.\nThis activity includes activities like activities like lesson plans, games, and activities with the lesson plan.\nThis activity includes activities like lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, lesson plans, and lesson plans.\nThis activity includes activities like activities",
             "tokens": 256,
             "eos": false,
             "rep4": 0.273,
+            "distinct2": 0.486,
+            "distinct4": 0.727,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 247
           },
           {
             "text": " read and write the text in the text.\nThe students will learn how to write the text and write the text in the text. The students will learn the text in the text as well as in the text.\nThe students will learn how to write the text in the text.\nThe students will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nThe students will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nThe students will learn how to write a text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in a text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\nStudents will learn how to write the text in the text.\n",
             "tokens": 256,
             "eos": false,
             "rep4": 0.826,
+            "distinct2": 0.11,
+            "distinct4": 0.174,
             "looped": true,
             "loop_onset": 214,
             "loop_period": 13,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 246
           }
         ]
       },
@@ -59064,50 +59135,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.984,
+            "distinct2": 0.016,
+            "distinct4": 0.016,
             "looped": true,
             "loop_onset": 0,
             "loop_period": 4,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "\u0c04\u0cea\u0c4d\u0cd9\u0c4d\u0cea\u0c4d\u09aa\u0c4d\u0cf1\u0ce4\u0c4d\u0c4d\u0c4d\u0cc7\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c5d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\u0c4d\ufffd",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.866,
-            "looped": true,
-            "loop_onset": 80,
-            "loop_period": 3,
-            "topic": 0.0
+            "rep4": 0.861,
+            "distinct2": 0.087,
+            "distinct4": 0.139,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "__________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ _______________ __________ __________ __________ _______________ __________ __________ __________ __________ __________ __________ ___________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ ________",
             "tokens": 256,
             "eos": false,
             "rep4": 0.957,
+            "distinct2": 0.027,
+            "distinct4": 0.043,
             "looped": true,
             "loop_onset": 170,
             "loop_period": 3,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "_________tteacher.edu/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man/b_man_d_man/b-man/b_man/b_man_man_man_man/b_man/b_man/b_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_man_",
             "tokens": 256,
             "eos": false,
             "rep4": 0.909,
+            "distinct2": 0.063,
+            "distinct4": 0.091,
             "looped": true,
             "loop_onset": 151,
             "loop_period": 2,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "                                                                                                                                                                                                                                                                ",
             "tokens": 256,
             "eos": false,
             "rep4": 0.996,
+            "distinct2": 0.004,
+            "distinct4": 0.004,
             "looped": true,
             "loop_onset": 0,
             "loop_period": 1,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59120,50 +59206,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.945,
+            "distinct2": 0.039,
+            "distinct4": 0.055,
             "looped": true,
             "loop_onset": 174,
             "loop_period": 29,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " If we are not sure where to start\n1. If we are to solve a quadratic equation, you can get the following equation:\n1. If we can solve a quadratic equation, then we can solve another equation:\n2. If we can solve a quadratic equation, then we can solve another equation:\n3. If we are to solve a quadratic equation, then we can solve a quadratic equation with the following equation:\n4. If we have solved the quadratic equation, then we can solve the quadratic equation in the equation, then the next equation.\n5. If we can solve a quadratic equation, then we can solve a quadratic equation.\n6. We can solve a quadratic equation with an example of a quadratic equation.\n7. When we can solve a quadratic equation, we can solve a quadratic equation with a square root of the quadratic equation.\n8. If we can solve a quadratic equation, then we can solve a quadratic equation, then we can solve a quadratic equation with a square root of the quadratic equation.",
             "tokens": 247,
             "eos": true,
             "rep4": 0.533,
+            "distinct2": 0.309,
+            "distinct4": 0.467,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 246
           },
           {
             "text": " Create a quadratic equation\n2. Create a quadratic equation\n3. Integrate the quadratic equation\n3. Decide the quadratic equation\n4. Integrate the quadratic equation\n5. Create a quadratic equation\n5. Create a quadratic equation\n5. Creating a quadratic equation\n3. Create a quadratic equation\n5. Create a quadratic equation\n6. Create a quadratic equation\n7. Create a quadratic equation\n5. Create a quadratic equation\n11. Create a quadratic equation\n12. Create a quadratic equation\n5. Create a quadratic equation\n5. Create a quadratic equation\n6. Summatic equation\n6. Get a quadratic equation\n7. Create a quadratic equation\n8. Create a quadratic equation\n5. Create a quadratic equation\n6. Create an quadratic equation\n7. Create a quadratic equation\n8. Divide a quadratic equation\n9. Create a quadratic equation\n8. Create a quadratic equation\n8. Create a quadratic equation\n8. Create a quad",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.696,
+            "rep4": 0.694,
+            "distinct2": 0.177,
+            "distinct4": 0.306,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 249
           },
           {
             "text": " Identify the type of triangle in the square root of the triangle and\n2. Identify the type of triangle in the square root of the triangle, and\n3. Identify the three quadratic equations.\n4. Define the quadratic equation in two words.\n5. Identify the quadratic equation in the square root of the triangle and\n5. Identify the quadratic equation in the square root of the triangle and\n5. Identify the quadratic equation in the square root.\n6. Sum the quadratic equation in the squares root of the square root of the square root of the triangle root of the square root.\n7. Identify the quadratic equation in the square root of the square root of the square root of the triangle root of the triangle root of the square root of the triangle root.\n9. Identify the quadratic equation in the square root of the square root of the square root.\nIdentify the quadratic equation in the square root of the square root of the square root of the triangle root of the triangle root of the square root of the square root of the square root of the square root of the square root.\n10. Identify the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.644,
+            "distinct2": 0.224,
+            "distinct4": 0.356,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 209
           },
           {
             "text": " The first step\nThe first step is to solve a quadratic equation. The second step is to solve a quadratic equation. The third step is to solve the quadratic equation.",
             "tokens": 40,
             "eos": true,
             "rep4": 0.297,
+            "distinct2": 0.538,
+            "distinct4": 0.703,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 39
           }
         ]
       },
@@ -59175,51 +59276,66 @@
             "text": " the most\n- 1-3-2-3-4-4-4\n- 2-3-4-4-6-6-2-4\n- 2-3-4-3-5-4-4-4-4-6-4-4-5-5-3-4-8-5-4-5\n- 5-4-4-5-4-5-5-7-7-8-6-6-4-5-8-5-9-7-8-6-6-7-7-7-7-7-6-8-7-7-8-8-7-7-7-7-7-8-9-8-1-8-7--10-7-4-8-9--7-9-8-6-8-7--1-4--6-8--6-8--6-1-6-6-8--8-8-9--8-7-9--9-6--2--8--8-8-8--8-8--9--8-",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.522,
+            "rep4": 0.454,
+            "distinct2": 0.179,
+            "distinct4": 0.546,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " human health. The first is the treatment of a patient, which can be administered to individuals with a higher risk of developing complications. The second type of treatment is the treatment of a patient and the second type of treatment that can be carried out in the hospital. These are the treatment of a patient\u2019s body and the treatment of a patient by the patient. The doctor can administer a blood test to determine the underlying cause of a patient\u2019s disease. The treatment of a patient is usually given to the patient\u2019s body. The patient can also administer drugs to the patient through a blood test and then administer the drug to the patient using a blood test.\nA blood test is usually taken to the person\u2019s body, and the patient is usually given intravenously. The medicine is usually taken after several hours. After the treatment is complete, the patient becomes a permanent nurse. The patient is then placed to the patient to the patient\u2019s body. The patient is then placed to the patient.\nA blood test is administered to the doctor and the patient is then sent to the patient, to the patient with the same procedure. The patient is then placed to the patient to the patient\u2019s body. The person is then placed to the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.198,
+            "distinct2": 0.537,
+            "distinct4": 0.802,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " cancer:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases, or the number of cases of cancer:\n\u2013 the number of cases:\n\u2013 the number of cases of cancer:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases per the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:\n\u2013 the number of cases:",
             "tokens": 256,
             "eos": false,
             "rep4": 0.917,
+            "distinct2": 0.059,
+            "distinct4": 0.083,
             "looped": true,
             "loop_onset": 90,
             "loop_period": 7,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " bacteria:\n- Cucophila: A type of bacterial infection\n- Infection: A type of bacterial infection\n- Infection: A type of bacteria\n- Infection: A type of bacterial infection\n- Infection: A type of bacterial infection\n- Infection: A type of bacteria\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Copper Polyphenols||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\nFor more information, see the Health Canada page.\n|Health Canada page. You will receive PDF\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative antibiotics||\n|Preparative and effective antibiotics||\n|Preparative and effective antibiotics||\n|Preparative",
             "tokens": 256,
             "eos": false,
             "rep4": 0.735,
+            "distinct2": 0.208,
+            "distinct4": 0.265,
             "looped": true,
             "loop_onset": 206,
             "loop_period": 25,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " protein that are found in the body.\n- Protein-rich Protein The body contains all the amino acids in the enzyme. The proteins in the protein are secreted by the muscle cells.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acids.\n- Protein-rich Protein The body contains all the amino acids in the amino acid and a chemical element.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acid, with all the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acid in the amino acids in the amino acid.\n- Protein-rich Protein The body contains all the amino acids in the amino acids.\n- Protein-rich Protein The body contains all the amino acids in the amino acids.\n- Protein-rich Protein The body contains all the amino acids in the amino acid.\n-",
             "tokens": 256,
             "eos": false,
             "rep4": 0.755,
+            "distinct2": 0.184,
+            "distinct4": 0.245,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59232,50 +59348,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.585,
+            "distinct2": 0.243,
+            "distinct4": 0.415,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 253
           },
           {
             "text": " was ratified by the German government, and the British government was officially recognized in the Treaty of Versailles.\nThe Treaty was officially signed by the German government to regulate the country's exports of goods, services, and services. The Treaty was signed on June 23, 1919, and the Treaty of Versailles signed an agreement was signed by the Dutch government.\nAfter the treaty, the Treaty was signed on August 9, 1923, with the Treaty of Versailles, which took place in the country from which the Treaty was signed in August 1918.\nIn May, the Treaty of Versailles was signed on the border between Germany and France, and France. After the war, the Treaty was signed in June 1939, but in January 1939, the Treaty was signed on August 9, and the treaty was signed on July 10, 1919. It was signed by the Dutch in December 1941, and it was signed on August 9, 1928.\nThe Treaty was signed on August 8, 1924.\nOn August 8, 1924, the Treaty was officially signed on July 6, and the Treaty was signed on August 9, 1923.\nThe Treaty was signed on July 5, 1924, and the Treaty was signed on September 8, 1924. The treaty was signed,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.198,
+            "distinct2": 0.525,
+            "distinct4": 0.802,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 255
           },
           {
             "text": " was decided that the treaty was signed on April 12, 1939. The treaty was signed in 1918 and was signed on April 12, 1941. It was signed on April 2, 1942. This treaty was signed on April 5, 1942 by the United States Navy.\nThe treaty was signed on May 2, 1941, in the agreement between the United States Navy and the Canadian National Guard.\nThe treaty was officially signed on April 6, 1944. It was signed on April 6, 1941, after that treaty was signed on April 7, 1941.\nThe treaty was signed in 1919. The treaty was signed on April 8, 1941, and the treaty was signed on April 12, 1941.\nThe treaty was signed on August 5, 1944. The treaty was signed on April 7, 1941. It was signed on May 12, 1944.\nThe treaty was signed on April 14, and the treaty was signed on April 13, 1944.\nThe treaty was signed on April 7, 1944.\nIt was signed on April 8, 1946.\nThe treaty was signed on April 7, 1941, but it was signed on April 8, 1942.\nThe treaty was signed on April 6, 1944. The treaty was signed on April 7, 1945.\nThe treaty was signed",
             "tokens": 256,
             "eos": false,
             "rep4": 0.415,
+            "distinct2": 0.333,
+            "distinct4": 0.585,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 256
           },
           {
             "text": " took control over this vast area of the country. The government was the supreme court of the United States in the 1950s and was elected to be the United States House of Representatives in the mid-1990s.\nThe government of the United States was called the \"U.S.\" It was an organization of civil rights. The constitution was not a simple step, but it was a federal right to take control of the country. In 1955, it was a federal right to make a federal right to the United States from the United States to the United States.\nThe United States has ratified the United States Constitution of the United States and has ratified the United States Constitution of the United States and has ratified the United States Constitution of the United States. The United States Constitution of the United States has ratified the United States Constitution of the United States, which has a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, a constitution, an constitution, a constitution, a constitution, a constitution, a constitution, an constitution, a constitution",
             "tokens": 256,
             "eos": false,
             "rep4": 0.458,
+            "distinct2": 0.404,
+            "distinct4": 0.542,
             "looped": true,
             "loop_onset": 222,
             "loop_period": 15,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " became known as \u201ca.\u201d and that it did not include the United States Constitution.\nThe Treaty of the United States was signed by the United States Constitution, which was signed by the United States Congress. However, the Treaty was the most important and most important treaty came from the Treaty of the United States. Although the Treaty was signed, the United States Congress adopted the United States as the United States Constitution and the United States as the United States.\nThe Treaty of the United States was ratified by the United States Constitution and ratified by the United States Constitution. The agreement on the United States and ratified the United States Constitution, provided the United States Constitution and ratified the United States Constitution.\nThe Treaty of the United States was ratified by the United States Constitution and ratified the United States Constitution. The United States was ratified by the United States Constitution and ratified the United States Constitution, which was ratified in the United States. The Treaty of the United States was ratified on October 4, 2014. The United States Constitution was ratified by the United States Constitution, with more than 2% of the U.S. Constitution. This was ratified by the United States Constitution as the United States Constitution.\nThe Treaty of the United States took place in the United States, with over 1",
             "tokens": 256,
             "eos": false,
             "rep4": 0.387,
+            "distinct2": 0.388,
+            "distinct4": 0.613,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 242
           }
         ]
       },
@@ -59288,50 +59419,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.522,
+            "distinct2": 0.318,
+            "distinct4": 0.478,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " the Journal of Chemistry in the Journal of Chemistry, the journal, was published in the journal Circular Chemistry. The journal is also written in the journal\u2019s journal \u201cL.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.p.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.P.",
             "tokens": 256,
             "eos": false,
             "rep4": 0.834,
+            "distinct2": 0.133,
+            "distinct4": 0.166,
             "looped": true,
             "loop_onset": 217,
             "loop_period": 2,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 15
           },
           {
             "text": " the journal of the International Journal of the American Medical Journal published in the journal Circumv.\nThe journal is published in the journal, published in the journal Psychological and Health Perspectives.\nThe journal was published in the journal Physical and Health Perspectives.\nDrinking about the journal\u2019s physical health and health, researchers at the University of Cambridge School of Medicine and Technology.\nDrinking about the study, Drinking about the journal, Drinking about the journal, Drinking about how the journal works for you.\nProfessor Beveridge, a neuroscientist from the University of Oxford and University of Pittsburgh, told the journal that the journal was a neuroscientist from the University of Michigan, and told the journal that journal was a neuroscientific substance that was \u201cthe most important part of the brain.\u201d\nHe said the journal is no longer a physical therapist, Drinking about the journal, but he also provided a brain-like representation of the central nervous system that controls the brain and spinal cord.\n\u201cIt was a biological function and that was a neuroscientist from the University of Michigan,\u201d Drinking said.\n\u201cThis research, which was published in the journal, Drinking.\nDrinking about the",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.182,
+            "rep4": 0.166,
+            "distinct2": 0.622,
+            "distinct4": 0.834,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 239
           },
           {
             "text": " its journal Nature in the journal Nature and Technology, researchers found that the compound was linked to an increased number of studies over the past 50 years, and researchers found that this compound could be linked to a number of studies across the world.\nThe researchers looked at the number of studies for other molecules in the cell. These include a number of experimental compounds that can be linked to a number of studies.\n\u201cThis study is known to allow the protein to be used to the cells for the development of new proteins,\u201d explains Dr. Michael A. McDonald.\nA new study published in Nature Neuroscience has led to a new study that finds that the compound is linked to a number of studies in the body.\n\u201cWe believe that a number of studies are important in determining how this particular compound will interact with the cells in the cell,\u201d says Dr. McDonald.\n\u201cThis is a great way to improve our brain health by helping us increase our capacity to use these cells,\u201d explains Dr. McDonald.\n\u201cWe are also a great source of research on how cells respond to changes in the brain are involved in the way we think about cell processes,\u201d says Dr. McDonald.\nThe study also found that the cells in",
             "tokens": 256,
             "eos": false,
             "rep4": 0.103,
+            "distinct2": 0.71,
+            "distinct4": 0.897,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 250
           },
           {
             "text": " the journal Diabetes Research, we have analyzed the data to determine the quality of the patient\u2019s blood glucose levels.\nThe researchers found that the fasting glucose levels were linked to a higher risk of heart disease, stroke, and heart attack. The researchers also found that fasting glucose levels were linked to the glucose level in people with diabetes.\nThe study also found that fasting glucose is linked to a higher risk of heart disease as well as stroke, a condition that can cause a variety of symptoms, including heart attack, heart attack, stroke, and heart attack.\n\u201cThe study is also looking at a more recent study that demonstrates the importance of controlling the glucose levels in the body.\u201d\nThe studies found that fasting glucose levels were linked to a higher risk of heart disease, stroke, and stroke. The researchers found that fasting glucose levels were linked to a higher risk of heart disease, stroke, heart disease and stroke.\nThe researchers found that fasting glucose levels increased in people with diabetes, according to a study published in the journal Diabetes Research.\nThe study also found that fasting glucose levels in people with diabetes increased in people with diabetes.\nIn the study, the researchers discovered that fasting glucose levels were linked to an increased risk of heart disease, stroke and",
             "tokens": 256,
             "eos": false,
             "rep4": 0.277,
+            "distinct2": 0.525,
+            "distinct4": 0.723,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 236
           }
         ]
       },
@@ -59344,50 +59490,775 @@
             "tokens": 212,
             "eos": true,
             "rep4": 0.641,
+            "distinct2": 0.223,
+            "distinct4": 0.359,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 210
           },
           {
             "text": " 2 meters. The mountain ranges are known as the Great Valley.\nThe mountain is situated on the mountain range and has a population of 4.3 million people.\nIn other words, the mountain range is very large, with a population of about 4.2 million. It is in this mountain range.\nThe mountain ranges are famous for their majestic mountain ranges.\nThe mountain ranges are large, with the highest mountain range.\nThe mountain ranges are very small, with the highest mountain range.\nThe mountain ranges are about 1.5 miles long and are the highest mountain ranges.\nThe mountain ranges are the highest mountain range.\nThe mountain ranges are the largest mountain range.\nThe mountain ranges are the highest mountain ranges, with about 2.6 million people, the highest mountain range.\nThe mountain range is the highest mountain range.\nThe mountain ranges are the highest mountain ranges.\nThe mountain ranges are high mountain ranges.\nThe mountain ranges are the highest mountain ranges.\nThe mountain ranges are the highest mountain range.\nThe mountain ranges are the highest mountain ranges.\nThe mountain range range is a mountain range.\nThe mountain ranges are high mountain range mountains.\nThe mountain ranges are the highest mountain range.\nThe mountain ranges are",
             "tokens": 256,
             "eos": false,
             "rep4": 0.462,
+            "distinct2": 0.365,
+            "distinct4": 0.538,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 254
           },
           {
             "text": " 4 meters.\nThe mountain has a unique mountain range. The mountain ranges are small and small, with a slightly larger plateau, with a lower elevation of 0.5 meters. The mountain ranges are high, with a slightly larger plateau, with a slightly smaller plateau. The mountain ranges are low and lower, with an elevation of 0.5 meters.\nThe mountain ranges are high and high, with a higher peak. The mountain ranges are high, with a higher peak. The mountain ranges are high, with high and high peaks.\nThe mountain ranges are high, with a slightly smaller plateau. The mountain ranges are high, with high peaks and low peaks. The mountain range averages 1.5 meters. The mountain ranges are high, with a higher peak.\nThe mountain ranges are high, with a slightly smaller plateau, with high peaks. These peaks are high, with a lower peak. The mountain ranges are low, with a higher peak on the lower peak.\nThe mountain range is high, with a higher peak in the lower peak. The mountain ranges are high, with a higher peak, with a high peak, with a slightly smaller peak.\nThe mountain range is low, with a lesser peak. The mountain ranges are low, with a lower peak",
             "tokens": 256,
             "eos": false,
             "rep4": 0.47,
+            "distinct2": 0.298,
+            "distinct4": 0.53,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 248
           },
           {
             "text": " 4 feet. This is one of the most common in the United States.\nHow Do We Eat a Wild West?\nThe largest deer species in the world are the African American Red deer and the African Red deer.\nHow Do You Eat a Wild West?\nThe African Red deer is a small and small- to medium sized animal. They are small to medium sized animals, and can be used to eat other species. They are often found in the South African Red Deer, but in the North and North American Red Deer, they can be used to eat wild animal.\nHow Do You Eat a Wild West?\nThe African Red deer have a small number of different species, including white-tailed deer, black-tailed deer, and black-tailed deer.\nWhich is the most common African Red Deer?\nThe African Red deer is a small, larger deer, and can be either used to eat a wild or to eat a wild or to eat a wild or to eat a wild or to eat a wild or to eat a wild or to eat a wild or to eat a wild.\nHow Do You Eat a Wild West?\nThe African Red Deer is the second most common African Red Deer.\nHow Do You Eat a Wild West?\nThe",
             "tokens": 256,
             "eos": false,
             "rep4": 0.32,
+            "distinct2": 0.475,
+            "distinct4": 0.68,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " 1.5 meters in height. The mountain peaks are much larger than the mountain ranges. The mountain ranges are large. The mountain ranges are large.\nThe mountain ranges are smaller. The mountain ranges are low. The mountain ranges are large. The mountain ranges are larger. The mountain range is larger. The mountain ranges are larger and have very large. The mountain ranges are smaller.\nThe mountain ranges are large. These are large. They are large. The mountain ranges are smaller. The mountain ranges are large. The mountain ranges are high. The mountain ranges are small. The mountain range is larger. The mountains are larger. The mountain ranges are small.\nThe mountain ranges are high. The mountain ranges are small. The mountain ranges are small. The mountain ranges are large. The mountain range is larger. The mountain ranges are larger. The mountain ranges are large. The mountain ranges are larger. There are more. The mountain ranges are small. The mountain ranges are large. The mountain range is large. The mountain ranges are small. The mountain ranges are smaller. The mountain ranges are larger. The mountain ranges are more. The mountain range range is larger. The mountain ranges are larger. The mountain range is larger. The mountain ranges are larger. The mountain ranges",
             "tokens": 256,
             "eos": false,
             "rep4": 0.648,
+            "distinct2": 0.204,
+            "distinct4": 0.352,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 255
+          }
+        ]
+      },
+      {
+        "label": "agreement_gap",
+        "prompt": "The students who had spent the entire semester preparing for the final examination in organic chemistry",
+        "draws": [
+          {
+            "text": ", I have worked throughout the semester to study and have a lot of experience in my teaching courses.\n- The student who was studying in organic chemistry, and while the students were studying in organic chemistry, I thought I would be studying the results of those students who did not have the course assignments on the basis of their own.\n- The students who were reading this article, and the students who were studying in organic chemistry, and that\u2019s the students who were studying in organic chemistry, but they were also studying in organic chemistry.\n- The students who were studying in organic chemistry, and I am now studying in organic chemistry, and I have worked on different types of chemistry for their own.\n- The students who were studying in organic chemistry, and I would be studying in organic chemistry and in organic chemistry.\n- The students who were studying in organic chemistry, and I would be studying in organic chemistry with a lot of experience as well.\n- The students who were studying in organic chemistry, and I would be studying in organic chemistry or I would be studying in organic chemistry to study chemistry in organic chemistry.\n- The students who were studying in organic chemistry, and they were studying in organic chemistry and they would be studying in organic chemistry.\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.423,
+            "distinct2": 0.404,
+            "distinct4": 0.577,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 253
+          },
+          {
+            "text": " and published a study in chemistry.\nThe students were able to:\na. They were able to:\nb. They came to the study group from the American Journal of Chemistry and published two papers in the journal Science and Technology.\nc. They were able to:\nd. They were able to:\ne. it was the study group from the American Journal of Chemistry, and\nd. They were able to:\ne. they had a small, small, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, short, long, long, long, long, long, long long, long, long, long, long, long, long, long, long, long, long, long, long, long, long, short, long, short, long, long, long, long, long, long, short, long, short, long, long, short; long, long, long, short, long, long, long, short, long, short, long, long, long, long, long, long, long, long, long, short, short, long",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.652,
+            "distinct2": 0.259,
+            "distinct4": 0.348,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 78
+          },
+          {
+            "text": ", in addition to the high school chemistry graduate students. They had been taught in the lab of chemistry and in addition to the high school students. After completing the course of the course, the students had completed a course for the semester.\nIn order to successfully prepare students for the high school chemistry exam, students were able to work on the chemistry, with an emphasis on their understanding of chemistry. Students had a great time for the chemistry, and they had the opportunity to study chemistry. Many of the students had completed the semester, with a variety of chemistry students.\nStudents were able to conduct their course tests, and with the help of chemistry, they might have to be able to work on the chemistry.\nStudents were able to work on the chemistry, with their classmates to work on the chemistry and were able to work on the chemistry.\nStudents had to work on the chemistry and have the opportunity to study chemistry.\nStudents have to work on the chemistry and have the opportunity to study chemistry and have them working on the chemistry and have the opportunity to study chemistry.\nStudents are able to work on the chemistry, and have a passion for the chemistry, and have the opportunity to study chemistry.\nStudents in chemistry are able to work on the chemistry, and have a",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.296,
+            "distinct2": 0.49,
+            "distinct4": 0.704,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.2222222222222222,
+            "topic_span": 252
+          },
+          {
+            "text": ", and found that they had the necessary support, their ideas, and their own ideas, and the students who had been allowed to write a dissertation, or to write a dissertation, and they had the opportunity to learn and have the opportunity to think critically about the research and develop their ideas.\nStudents must be familiar with how their findings are shaped and how they need to be able to write a dissertation, or to write a dissertation.\nStudents should also be present with a specific structure and specific requirements.\nStudents should also be present with the knowledge and knowledge they need to become familiar with the content in other classes.\nStudents should be given a formal requirement for students to have an understanding of the subject.\nStudents should be able to write a dissertation and not be able to write a dissertation.\nStudents should be given a specific structure or scope of the subject.\nStudents should be able to write a dissertation, as opposed to a particular class.\nStudents should be given a formal requirement for the study in order to be able to write a dissertation.\nStudents should be given a formal requirement as many teachers should be able to write a dissertation, which is not a formal requirement as a formal requirement.\nStudents should be given a formal requirement for the study, and should",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.3,
+            "distinct2": 0.522,
+            "distinct4": 0.7,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 244
+          },
+          {
+            "text": " before graduating.\nThe students who took the course of the course were:\n- the first semester, which took place by the end of the semester.\n- the second semester, which would last until the deadline.\n- the third semester, which took place at least once.\n- the fourth semester, which took place at least once.\n- the fourth semester, which took place at least once.\n- the fourth semester, which took place at least once.\n- the third semester, which took place at least once.\n- the third semester, which took place at least once.\n- the fourth semester, which took place at least once.\n- the fourth semester, which took place at least once.\n- the fifth semester, which took place at least once.\n- the fourth semester, which took place at least once.\n- the sixth semester, which lasted at least once.\n- the fourth semester, which takes place at least once, in the final exam, which lasted only once.\n- the fourth semester, which took place at least once.\n- the sixth semester, which took place at least once at least once, in the final exam, took place at least once.\n- the fourth semester, which",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.64,
+            "distinct2": 0.243,
+            "distinct4": 0.36,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.2222222222222222,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "history",
+        "prompt": "The French Revolution began in 1789, when",
+        "draws": [
+          {
+            "text": " the French Revolution began in 1789. The movement was eventually fought in the French Revolution.\nThe French Revolution was a serious setback in the French Revolution. The French Revolution was fought in the French Revolution. France was the most important ally of British rule in French America. The French Revolution was also the second most important British revolution in the French Revolution. It was a result of France\u2019s independence and the French Revolution was the French Revolution.\nThe French Revolution was a major part of the French Revolution. The French Revolution was a period of the French Revolution. France was the French Revolution.\nThe French Revolution was a period of peace between France and France in 1789. The French Revolution was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France did not fall in the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.597,
+            "distinct2": 0.282,
+            "distinct4": 0.403,
+            "looped": true,
+            "loop_onset": 215,
+            "loop_period": 6,
+            "topic": 0.6666666666666666,
+            "topic_span": 254
+          },
+          {
+            "text": " the French Revolution began in 1789, while the French Revolution had begun in 1789, when France established in 1789, France was the first. In 1789, French revolution was gradually established in 1789, and France made it the first French Revolution that began in 1881, when France was a major colony in 1792, and at the end of the 1789 colonies of France was the first to be formed. The French Revolution ended in 1789, in 1881, and in 1789, French and French governments began to implement a new treaty of independence, and had a great influence, especially in the country, and in 1748.\nThe French Revolution was not until 1883, after the French Revolution, but after the French Revolution, they were introduced to France in 1779. The French Revolution was the second to be controlled by French Revolution, and the second to be controlled by French revolution.\nThe Spanish Revolution began in 1883, and the French Revolution was the second to the French Revolution, which was a major part of the French Revolution. The French Revolution was a period of upheaval and turmoil. The French Revolution was a period of turmoil or a period of turmoil or upheaval, and the French Revolution was the first to change in the French Revolution.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.142,
+            "distinct2": 0.541,
+            "distinct4": 0.858,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0,
+            "topic_span": 255
+          },
+          {
+            "text": " the Dutch were in England, which was the first to build a new town in the 19th century. The Dutch revolution in 1789 was an act of 1812, which made it a very important part of the Dutch Revolution, which was a period of peace.",
+            "tokens": 53,
+            "eos": true,
+            "rep4": 0.0,
+            "distinct2": 0.923,
+            "distinct4": 1.0,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 45
+          },
+          {
+            "text": " a young woman was working at the French Revolution, but she was also one of the most successful women artists of the time.\nOn the other side, her mother was always looking in a way that was a very important and powerful leader. She was very successful. She was a great advocate after the French Revolution, that she was in French. She was a very powerful ally. She was a very powerful and powerful leader in the French Revolution. She was a well-known poet who was the greatest leader of French poetry. She was an inspiration, a writer, and a great writer.\nIn 1792, she was a very talented writer. She was a popular writer, and she was also a great admirer of French literature. She was very popular in the French, but she was very well-known in the French, but she was very much admired by many.\nIn 1785, French had become a member of French, and she was a very popular woman. She was an important figure in the French Revolution. She was a famous and famous figuremaker. She was also a great-great French woman who was a great boy. She was a good friend of French, but she became very famous.\nThe French Revolution was a very important, successful and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.107,
+            "distinct2": 0.608,
+            "distinct4": 0.893,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 249
+          },
+          {
+            "text": " it was organized by the French Revolution.\nIn 1789, Napoleon moved to France and he was elected to the British by the British.\nAfter the Revolution ended the French Revolution and French revolutionaries were forced to settle in Germany.\nIn 1789, Napoleon was elected to the United Nations for France, which included French, Dutch, French, French, French, French, French, French, French and French.\nIn 1789, Napoleon became the second president of France.\nUnder the rule of the French Revolution, Napoleon became the first president of France.\nThe French Revolution began in 1789, and the French Revolution was more important than the French Revolution.\nAfter the French Revolution and French revolutionaries were finally elected, the French Revolution was the French Revolution.\nAfter the war, Napoleon became the first capital of the French Revolution.\nAfter the French Revolution, Napoleon became the first President of the United States.\nAfter the French Revolution, Napoleon was the first capital of the United States.\nDuring the war, Napoleon was the first capital of the United States.\nAfter the war, Napoleon was the second president of the United States.\nAfter the French Revolution, Napoleon needed to lead a successful army in the United States.\nAfter the war, Napoleon was",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.364,
+            "distinct2": 0.412,
+            "distinct4": 0.636,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 236
+          }
+        ]
+      },
+      {
+        "label": "anatomy",
+        "prompt": "The human heart is a muscular organ that",
+        "draws": [
+          {
+            "text": " is a natural organ that receives blood from the blood. The blood is located in the heart tissue, and it is located in the heart. The blood is located in the heart tissue, where the blood is located. The blood is situated in the heart of the heart. The blood is located in the heart. The blood is located in the heart. The blood is located in the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. This artery is located in the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. A blood clot is located in the heart of the heart. The blood is located in the heart of the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood carries blood from the heart. The blood is located in the heart of the heart of the heart. The",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.767,
+            "distinct2": 0.153,
+            "distinct4": 0.233,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 254
+          },
+          {
+            "text": " has a central nervous system, and it is a part of the brain that is involved in the control of the body. When the blood vessels stop, the heart beats and blood vessels slow down, and it is damaged, which in turn causes the heart to be damaged in the brain.\nThere are many different kinds of heart problems that can be caused by heart disease, heart disease and other medical conditions. Heart diseases are caused by the disease, which is the disease caused by the virus. The disease can cause heart failure, stroke, stroke, and other illnesses.\nThe heart disease can also cause heart failure, which can cause heart failure and other health problems. Heart diseases can also cause heart disease.\nThis disease causes both the heart and the heart to be affected by the disease. When the heart is unable to function properly, the heart is unable to function properly. The heart is unable to do so.\nThe heart cannot function properly and cannot function properly. The heart is unable to function properly, and the lungs are overloaded. The heart cannot function properly and the heart is unable to function properly.\nThe heart can be affected by the disease. The heart cannot function properly. A heart has the ability to function correctly. The heart can also function properly and it can",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.134,
+            "distinct2": 0.561,
+            "distinct4": 0.866,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 249
+          },
+          {
+            "text": " acts as a biological organ, and the skeletal system is a type of organ that acts as an electrical system. The organ is a type of organ which consists of the bones that hold up to the heart. It is the type of organ that acts as a muscle cell in which the electrical system is responsible for the heart's processes. It is the type of organ that acts as a muscle cell. It is the type of organ that acts as a muscle cell that acts as a \"receptor\" but it is part of the body that helps regulate the heart's functions.\nThis organ is the type of organ that acts as a muscle cell that acts as a muscle cell in which the muscle cells produce energy, which is responsible for the growth of the muscle cells. It is the type of organ that acts as a muscle cell in which the cells are responsible for the growth of the muscle cells.\nThe type of organ that acts as a muscle cell in which the muscle cells produce energy, which acts as a muscle cell in which the muscle cells produce energy. It can be a type of organ that functions as a muscle cell in which the muscle cells produce energy. It is the type of organ that acts as a muscle cell in which the body is responsible for the balance of energy",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.447,
+            "distinct2": 0.384,
+            "distinct4": 0.553,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 239
+          },
+          {
+            "text": " has a high density of fat, with a high density of 3 times a high density of fat. This is a small amount of fat that we have to use to see on the body after digestion.\nA blood test test for heart disease is a test that has some problems. The test is based on a blood test that has a high density of fat.\nYour doctor will usually use a blood test to check your blood test. Your doctor will usually perform a blood test test.\nYour doctor will administer a blood test. Your doctor will administer a blood test. Your blood test will be tested for:\nYour doctor will perform a blood test. Your blood test will be tested by a blood test.\nYour doctor will have blood tests. Your doctor will perform blood tests. Your blood tests will be tested for:\nYour doctor will perform blood tests. Your blood tests will be tested for:\nYour doctor will perform blood tests. Your blood tests will be tested. Your blood tests will be tested for:\nYour doctor will perform blood tests on blood tests. Your blood tests will be tested for:\nYour doctor will perform blood tests. Your blood tests will be tested for:\nYour doctor will perform blood tests tests. Your blood test will be tested for:",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.455,
+            "distinct2": 0.353,
+            "distinct4": 0.545,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 47
+          },
+          {
+            "text": " is composed of fat, fat, and fat.\nIn this article, we will explore the relationship between the two main functions, namely:\n- Cardiovascular System: The heart is a system of oxygen and energy. The heart is a system of oxygen and oxygen, and that oxygen is essential for blood oxygen.\n- Cardiovascular System: The heart is a system of oxygen and oxygen that is vital to the heart.\n- Heart is the heart that is responsible for the heart\u2019s function.\n- Heart is a system of oxygen and oxygen that is vital to the heart.\n- Cardiovascular System: The heart is a system of oxygen that is crucial for blood oxygen and oxygen.\n- Cardiovascular System: The heart is one of the most important organs in the human body.\n- Cardiac System: The heart is a system of oxygen that is important for the heart, and the heart is the heart.\n- Heart Function: The heart has a cell and heart.\n- Cardiovascular System: The heart is an organ that acts as a cell.\n- Cardiovascular System: The heart plays a crucial role in the heart\u2019s function.\nThe heart is composed of fat, fat, and protein.\n- Cardiovascular System",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.356,
+            "distinct2": 0.447,
+            "distinct4": 0.644,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.75,
+            "topic_span": 241
+          }
+        ]
+      },
+      {
+        "label": "geography",
+        "prompt": "The Amazon River flows through",
+        "draws": [
+          {
+            "text": " the river to the northwest.\nThe river is so thick that it has a significant impact on the environment since it has the potential to make it difficult to maintain.\nThe river is extremely rich and has a great source of water and is a great source of water and it is a great source of water and it is a very important resource for river users. The river is highly and has a rich and useful water source, which is rich and can be found in many other sources, including the river in the form of water.\nThe river is also rich and essential for rivers as well as the river making it essential for river users. The river is rich and is rich in water, which is a rich and rich water source, making it a valuable resource for many residents.\nThere are many rivers in the river, which is rich and rich in water and are rich in water. The river is rich with the rich and rich water, making it a valuable water source for the community, making it a valuable resource for various community groups.\nThe river has a rich and rich water source that has a rich and rich water source and has a rich and important resource. The river is rich and rich in water, making it a valuable resource for many families and communities.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.209,
+            "distinct2": 0.518,
+            "distinct4": 0.791,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 237
+          },
+          {
+            "text": " the Amazon River delta to the east of the United States and the Pacific Ocean. The Amazon River Delta is divided into two zones. The Amazon River Delta is bounded by the Indian Ocean, where the Amazon River is the largest river in the world, and the Pacific Ocean, which is the most fertile country in the world.\nThe Amazon River Delta is the most fertile country in the world. The Amazon River Delta is the largest river in the world, and it is the largest river in the world. This river is the largest river in the world, which is the largest and most fertile country in the world. The Amazon River is also the largest river in the world, with a total of 50,000 square miles.\nThe Amazon River is a great place in the world, with the most fertile country in the world, with a population of about 30,000 people. The Amazon River is also the largest river in the world, with a population of about 1,500,000 square miles. The Amazon River is a little fertile land and it is the largest river in the world.\nThe Amazon River Delta is one of the largest river in the world, with a population of about 1,200,000,000,000,000.\nThe Amazon River Delta is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.415,
+            "distinct2": 0.376,
+            "distinct4": 0.585,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 254
+          },
+          {
+            "text": " the Amazon River. The Amazon River is a vast desert that flows through the country. The Amazon River's fertile habitat is rich in salt and can be found in various habitats. The Amazon River (also known as Amazon River) is a major source of water and resources for agricultural purposes. The Amazon River is a unique destination for the Amazon River.\nThe Amazon River is a vast desert that drains through the Amazon River. It flows through the Amazon River and provides a deep understanding of the natural resources and the importance of the Amazon river. The Amazon river is a rich, rich and rich, and rich river. The Amazon River is a rich, rich, and rich river, which makes it a rich and rich and rich river. The Amazon River is a rich, rich and rich river, with a rich and rich river.\nThe Amazon River is a rich, rich river and rich river. The Amazon River is a rich, rich river that is rich and rich, and rich. The Amazon River is a rich and rich river that provides some rich river. When the Amazon River is a rich, rich river, it is rich and rich, rich, and rich. The Amazon River is rich, rich, and rich, and rich. The Amazon River is rich and rich,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.356,
+            "distinct2": 0.388,
+            "distinct4": 0.644,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 251
+          },
+          {
+            "text": " a series of maps.\nThis is the most important and efficient way to build an effective platform for the project.",
+            "tokens": 23,
+            "eos": true,
+            "rep4": 0.0,
+            "distinct2": 1.0,
+            "distinct4": 1.0,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the river, which was once the center of the stream, and the flow of water into the river basin.",
+            "tokens": 22,
+            "eos": true,
+            "rep4": 0.0,
+            "distinct2": 0.952,
+            "distinct4": 1.0,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 20
+          }
+        ]
+      },
+      {
+        "label": "math_definition",
+        "prompt": "In mathematics, a prime number is",
+        "draws": [
+          {
+            "text": " needed in order to make it a viable alternative to the mathematics theory. The mathematics argument is that the mathematics theory is not very straightforward but it is one more appealing to mathematical problem.\nIn some cases, the mathematics theory is more applicable to mathematics. The theory states that the mathematical theory is not only useful, but also allows for the mathematics theory.\nThe mathematical theory states that mathematics theory is not only a mathematical concept but a theory is also more relevant to mathematics. In the case of mathematics theory, an assumption is that mathematics is not only a theory but a theory that is a theory that is more applicable to mathematics.\nThe theory states that mathematics is the only general approach to mathematics theory. There are many theories that can be used to determine the basic mathematical theory.\nThe theory states that mathematics is the only theory that is not based on mathematics. In mathematics theory, it is possible to determine the fundamental mathematical concepts that are not applicable to mathematics.\nThe theory states that mathematics is a theory that is a theory that is not a theory, with the exception of mathematics theory.\nThe theory states that mathematics is a theory that is a theory that is a theory. It states that mathematics is a theory that is a theory that is a theory that is a theory that",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.261,
+            "distinct2": 0.49,
+            "distinct4": 0.739,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 240
+          },
+          {
+            "text": " in a number of ways:\n- A, or a combination of the two or three numbers,\n- A, or a combination of the two or the three numbers,\n- A, or a combination of the two or three numbers,\n- A, or a combination of the two numbers,\n- A and a combination of the two numbers,\n- A or two numbers,\n- A or a combination of the two numbers,\n- A, or a combination of the two numbers,\n- A, or a combination of the two numbers,\n- A, or a combination of the two numbers,\n- A or a combination of the two numbers,\n- A or a combination of the two numbers,\n- A or A\n- A or A combination of the two numbers,\n- A or a combination of the two numbers,\n- A or an equivalent of a combination of the two numbers,\n- A, or a combination of the two numbers,\n- A, or a combination of the two numbers\n- A or a combination of the two numbers, or a combination of the two numbers,\n- A or an equivalent of the two numbers,\n- A or a combination of the two numbers, or a combination",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.775,
+            "distinct2": 0.137,
+            "distinct4": 0.225,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 252
+          },
+          {
+            "text": " needed to solve problems using numbers, and the students will be able to solve problems using the mathematical tools.\nThe students also have the opportunity to solve problems using the mathematical tools and solve problems using the mathematical tools and solve problems using the mathematics.\nThe students have access to the mathematics knowledge online. They can also learn more about the topics and help them to solve problems using the math knowledge online. They also have the opportunity to solve problems using the math knowledge online.\nSome of the students have access to the mathematics knowledge online.\nThey have the opportunity to solve problems using the math knowledge online. They have access to the mathematics knowledge online.\nThey have the opportunity to solve problems using the math knowledge online. They have the opportunity to solve problems using the mathematical tools and solve problems using the mathematical tools and solve problems using the math knowledge online.\nThey are the people who are interested in mathematics knowledge online. They are the people who are interested in math knowledge online. They are interested in the skills and the skills of mathematics knowledge online.\nThey are interested in the skills and the knowledge from which they are interested in mathematics knowledge online. They are interested in the skills and knowledge of mathematics knowledge online. They have the opportunity to solve problems using the mathematical tools and solve",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.526,
+            "distinct2": 0.31,
+            "distinct4": 0.474,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 253
+          },
+          {
+            "text": " a lot more interesting than this, because the math in a rational way is not the same in the math. This can be said of the same basic problems that are solved in the mathematics world.\nWhat is the main reason for the math problems?\nThe math is simple. The math is done by multiplying the number of the number of decimal places in the denominator by 1. This is done by multiplying the number of the numbers by 1. This is done by multiplying the number of decimal places in the denominator by 2. This is done by multiplying the number by 2. The number of decimal places in this way is multiplied by multiplying the number by 2. This is done by multiplying the number by 2. This is done by multiplying the number by 2. This is done by multiplying the number by 2. This is done by multiplying the number by 2.\nWhat is the main reason for mathematics?\nIn the math problems, the math problems can be solved by multiplying the number by 2. This is done by dividing the number by 2. This is done by multiplying the number by 2. This is done by dividing the number by 2. This is done by multiplying the number by 2. This is done by multiplying the number by 2.\nWhy does mathematics",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.502,
+            "distinct2": 0.361,
+            "distinct4": 0.498,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 256
+          },
+          {
+            "text": " awarded to the student\u2019s mathematical abilities, which can be used in the classroom.\n1.1.2.2.3.4.3.2.3.3.4.6.3.4.3.4.4.4.4.4.4.1.4.4.4.4.\n2.2.1.5.3.4.4.6.6.3.4.4.4.6.3.2.4.5.4.4.4.4.4.4.4.4.4.4.4.3.4.4.4.4.4.4.4.4.5.6.4.4.4.4.5.4.4.4.4.4.4.4.4.6.4.3.4.4.4.4.4.4.4.4.4.5.6.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.739,
+            "distinct2": 0.125,
+            "distinct4": 0.261,
+            "looped": true,
+            "loop_onset": 205,
+            "loop_period": 2,
+            "topic": 0.0,
+            "topic_span": 8
+          }
+        ]
+      },
+      {
+        "label": "environment",
+        "prompt": "Climate change refers to long-term shifts in",
+        "draws": [
+          {
+            "text": " the development and development of a variety of health and wellness challenges.\nThe role of the internet industry in preventing the spread of diseases has been highlighted in the article.\nThe Impact of the internet industry on the internet industry\nThe use of computer and other computer technologies has increased the chances of a major accident in the country. The use of computers and other computers has led to the rise in the number of accidents in the country.\nThe use of computer and other computer technologies have resulted in the increase in the number of accidents in the country.\nThe use of computer and other computer technologies has also increased the likelihood of a major accident in the country.\nThe use of computers and other computer technologies has also led to the emergence and spread of the internet.\nThe use of computer and other computer technologies has also led to the development of new computer technologies.\nThe use of computers and other computer technologies have also led to the development of new computer technologies.\nThe development of new computer technologies has led to the development of new technologies and the development of new computers and new technologies.\nThe use of computers and other computers has also led to the development of new systems in recent years.\nThe use of computer and other computer technologies has also led to the development of new computer",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.407,
+            "distinct2": 0.384,
+            "distinct4": 0.593,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " climate change, as the world faces a greater threat of climate change and more urgent threats. In the United Nations\u2019 Climate Change Summit (UNCL), a new project developed by the UN Climate Summit, focused on climate change and the environment\u2019s ability to address climate change.\nThis is a long-term approach to climate change. Climate change has been an important tool for the future of climate change in the world.",
+            "tokens": 86,
+            "eos": true,
+            "rep4": 0.0,
+            "distinct2": 0.882,
+            "distinct4": 1.0,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 82
+          },
+          {
+            "text": " the world's population.\nThe Global Warming Strategy is based on the Global Warming Strategy and provides an extensive and comprehensive overview of the world's changing climate patterns.\nThe Global Warming Strategy aims to help to address the changing climate patterns in the future of the world. It also involves a series of environmental policies and actions that can be taken on account.\nThe Global Warming Strategy aims to address the changing climate patterns in the future of the world. It is also used globally by the global population that is on the rise in global warming.\nIn the Global Warming Strategy, the Global Warming Strategy aims to address the changing climate patterns in the future of the world. The Global Warming Strategy aims to address the changing climate patterns in the future. The Global Warming Strategy aims to address the changing climate patterns in the future of the world.\nThe Global Warming Strategy aims to address the changing climate patterns in the future of the world. The Global Warming Strategy aims to address the changing climate patterns in the future. To address the changing climate patterns, the Global Warming Strategy aims to address the changing climate patterns in the future.\nGlobal Warming Strategy aims to address the changing climate patterns in the future. It provides an overview of the global W",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.51,
+            "distinct2": 0.345,
+            "distinct4": 0.49,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 243
+          },
+          {
+            "text": " the world\u2019s population. This shift in population growth leads to a reduction in the number of food insecurity in the future.\nThe Global Warming of the Ecosystem\nThe climate crisis is a global event that has resulted in global warming and the rise of global temperatures. The global warming is a global event that could come from extreme weather conditions and global warming. This has been the primary stage for global warming. The global warming continues to erode global warming. The global warming is a major concern worldwide for the world and the world.\nThe Global Warming of the Ecosystem\nThe planet is a global event that is often referred to as the Global Warming in the world. The global warming and the rise of global warming are the hottest part of the world that is in the world that is still in the world. In the United States, the global warming is a global event that could cause global warming as a result of global warming.\nThe global warming is a global event that has emerged from the global warming. Global warming is a global event that is not just a global event, but a global event that is likely to happen to a global event. The climate crisis is a global event that is a global event that has occurred throughout the world.\nThe",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.206,
+            "distinct2": 0.537,
+            "distinct4": 0.794,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 237
+          },
+          {
+            "text": " the energy sector and infrastructure sector, but also in the development of technologies and infrastructure.\nThe first phase of a global climate change adaptation to the \u201cGrowth-of-global\u201d in terms of global response to climate change is to help the development of the global climate change adaptation.\nThe report is a \u2018in-depth analysis of the climate change impacts of energy in the global climate system, and a literature review of the CO2 emissions and climate change effects of the CO2 footprint of the global climate system.\u2019\nThe report is a report of the IPCC\u2019s findings from the IPCC\u2019s report, which includes IPCC\u2019s results, which are part of a series of IPCC\u2019s report\u2019s report\u2019s results.\nThe report is a survey of the global climate system.\n\u201cThe IPCC\u2019s report is a series of IPCC\u2019s annual annual report, which presents the IPCC\u2019s report\u2019s annual report, which is part of a series of a series of IPCC\u2019s annual report\u2019s annual report.\u201d\nThe report, which is part of a series of atmospheric and climatic events, is the report\u2019s annual report\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.225,
+            "distinct2": 0.525,
+            "distinct4": 0.775,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666,
+            "topic_span": 244
+          }
+        ]
+      },
+      {
+        "label": "recipe",
+        "prompt": "To make bread at home, you will need",
+        "draws": [
+          {
+            "text": " to buy or sell something that will benefit you.\n- When you start making bread, you will need to buy a new bread.\n- The first thing you will do is to get a bread at home.\n- You will need to buy something that will help you.\n- If you have bread to buy, you will need to buy two bread at home.\n- If you want to buy something that should be eaten one day.\n- If you want to buy something that will be eaten one day.\nIf you want to buy bread, you will need to buy one day.\nIf you want to buy bread, you will need to buy a new bread.\nThe second thing you will do if you want to buy a new bread.\n- The second thing you will do is to buy a new bread.\n- The third thing you will do is to buy bread at home.\n- The second thing you will do is to buy bread at home.\n- The third thing you will do is to buy bread at home.\n- The third thing you will do is to buy bread at home. You will need to buy bread at home and you will need to buy the new bread at home.\n- The third thing you will",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.502,
+            "distinct2": 0.302,
+            "distinct4": 0.498,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.75,
+            "topic_span": 248
+          },
+          {
+            "text": " to get it.\n- Make sure you don\u2019t have enough time to cook it.\n- Make sure you\u2019re using a plan to make sure you\u2019re not using your food.\n- Use a pot or a pot that is a good food for your own health.\n- Make sure you set your cooking plate in a pot and use the pot.\n- Use a pot that is easy to cook and floss.\n- Use a pot that will keep you hydrated and healthy.\n- Use a pot to heat it and water.\n- Use a pot to heat it.\n- Make sure you\u2019re properly hydrated.\n- Use a pot that is full of water, so it\u2019s important to use a pot.\n- Use a pot that is too hot, as it should be cooked, especially if it\u2019s not used.\n- Use a pot to heat it.\n- Use a pot that has a heat, so it should be more water if you don\u2019t have enough time to cook.\n- Use a pot or a pot that is too hot or hot.\n- Use a pot that is too hot or hot to hot.\n- If you\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.336,
+            "distinct2": 0.486,
+            "distinct4": 0.664,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 129
+          },
+          {
+            "text": " to be strong enough to keep your bread warm.\n- Make sure you have a healthy dish.\n- Keep your bread warm to warm.\n- Make sure you wash your bread and it well.\n- Make sure you have a strong pot all to keep your bread warm.\n- Make sure you brush your bread regularly.\n- Make sure you have a clean and healthy cooking habit.\n- Make sure you\u2019re cooked in a cool, dry, and dry.\n- Make sure you clean the small portions of the bread.\n- Once you have a clean, clean it with a clean cloth and a warm cloth.\n- Make sure you\u2019re cooked before the next meal.\n- Make sure you have a healthy meal.\n- Make sure you have the right size, size, and size.\n- Avoid using a variety of fruits, vegetables, and fruit.\n- Avoid using a variety of fruits and vegetables.\n- Use natural oils like olive oil or lard, and avoid using synthetic oils like olive oil.\n- Avoid using natural oils like olive oil (spinach).\n- Avoid using natural oils like olive oil.\n- Avoid using natural oils like olive oil.\n- Avoid using natural oils like olive",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.328,
+            "distinct2": 0.49,
+            "distinct4": 0.672,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 157
+          },
+          {
+            "text": " to add more flour to your next meal.\nIt is easy to start and finish before adding to the flour.\nYou can add more flour to your next meal.\nIncluded from the recipe are in a hurry to start.\nYou can also add more flour to your next meal.\nNow that you are ready to produce a small meal, you can start to add more flour to your next meal.\nYou can also add more flour to your next meal.\nThe third meal is for a few pieces of bread.\nYou can add more flour to your next meal.\nIf you add more flour than a few pieces of bread, you can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more flour to your next meal.\nYou can add more",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.648,
+            "distinct2": 0.275,
+            "distinct4": 0.352,
+            "looped": true,
+            "loop_onset": 132,
+            "loop_period": 11,
+            "topic": 0.25,
+            "topic_span": 130
+          },
+          {
+            "text": " to know if you have a little salt.\n- You need to learn about how you are cooking.\n- If you are on a pot or you would like to bake, you would like to eat one of the three.\n- If you have a large salt, you would be able to cook your bread.\n- You have a large salt in the oven to make it to cook.\n- You need to cook.\n- You are ready to cook the bread.\n- You have a large salt in the oven.\n- You want to cook.\n- You should cook the bread.\n- You need to cook the bread.\n- You have a large salt in the oven.\n- You have a large salt in the oven.\n- You can cook the bread.\n- You have a large salt on your bread.\n- You have a large salt in the oven and you have a large salt in the oven.\n- You have a large salt in the oven and you have a small salt in the oven.\n- You have a large salt in the oven, you have a small salt in the oven.\n- You will need to cook the bread.\n- You have a large salt in the oven.\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.526,
+            "distinct2": 0.31,
+            "distinct4": 0.474,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 242
+          }
+        ]
+      },
+      {
+        "label": "literature",
+        "prompt": "William Shakespeare wrote many plays, including",
+        "draws": [
+          {
+            "text": " the \"Treato,\" in which each of his plays were often performed by the king, and by his own actions. The King brought his life to death for his father, and his father, for the other, and for the crown, which he was most influenced by his actions, his actions, his actions, and his own actions.\nThe King, a King of England, was the king of England, while the King of England, who was the king of England, and the King of England. He was among the most notable for his success in the English language and the Anglo-Saxon. King William I of Scots was not even a king, but a king, and was a king of England, and his king was a king of England. A king's play was called \"The King\", and his son William I of England, was born William I of England.\nThe king's father was a king of England, and his father, a king of England, was the king of England, and his father, and his father. It was a king of England and his brother, and his son, and his son, Queen and queen, and his son. The king, who was a king, was a king of England, and his father",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.19,
+            "distinct2": 0.529,
+            "distinct4": 0.81,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666,
+            "topic_span": 175
+          },
+          {
+            "text": " his plays, the King of all time.\nThe play is about the death of the King of Denmark and her son, who is the son of King of Denmark.\nThe play is about the King of Denmark, and the most famous playwright in the country.\nThe play is about the death of the king, and the King of Denmark, and his son is the son of Denmark.\nThe play is about the death of the king of Denmark and his son, and is about the death of her brother, and it was about the death of her brother, and the Queen of Denmark.\nThe play is about the death of her brother, and he is said to be the son of King of Denmark.\nThe play is about the death of the king, and he is said to have been the son of Denmark.\nThe play is about the death of the king, but it is about the death of the king of Denmark.\nThe play is about the death of the king, and the son is a story of King of Denmark.\nThe play is about the death of a king in Denmark, and it is about the death of the king.\nThe play is about the death of the king of Denmark, and there are about 1,000",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.482,
+            "distinct2": 0.318,
+            "distinct4": 0.518,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 2
+          },
+          {
+            "text": " The Shakespeare Shakespeare had the greatest role in the play of his own life.\nThe play \u201cThe Shakespeare Shakespeare\u201d by Homer (1865) was one of the most famous plays in the play of the play. The play is considered a play by Shakespeare, and it is considered the most popular play of the plays in the plays of Shakespeare. The play is considered a play by many other plays in the play of Shakespeare. This play, therefore, plays are considered to be more popular. The play is performed by Shakespeare, and it is considered to be one of the most significant plays in the play of Shakespeare. The play is considered to be one of the most famous play Shakespeare literature in the play of the plays of the plays. The play is considered to be one of the most popular plays of the play, and it is considered to be the most famous play of the play. Shakespeare is considered to be one of the most famous plays of the plays of the play.\nThe play is considered to be one of the most popular plays in the play. Shakespeare is considered to be the most renowned play in the play of the play of the play. Shakespeare was the most famous play in the play of the play of the play in the play. Shakespeare\u2019s",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.368,
+            "distinct2": 0.369,
+            "distinct4": 0.632,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 253
+          },
+          {
+            "text": " his plays \u201cThe New Testament\u201d in his plays and his plays \"The New Testament\" is about the novel. The New Testament does not have the power of the New Testament.\nThe New Testament is a text that is used to show the lives of both people and the New Testament. It is important to note that the New Testament is not a language because a New Testament is a language that is used to describe the lives of the people, people, and people. The New Testament is a text that is used to describe the lives of the people, people, and people.\nThe New Testament also includes several other types of people, such as the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, the New Testament, and the New Testament.\nThe New Testament is a text that is used for the New Testament, the New Testament, the New Testament, the New Testament, the New Testament,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.53,
+            "distinct2": 0.329,
+            "distinct4": 0.47,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 124
+          },
+          {
+            "text": " the Shakespearean plays, the plays, and the plays. The Shakespeare plays has a strong role in the play, and it has a strong influence on both the play and the play. The play is known for its unique roles and plays, and it is often associated with the play.\nIn Shakespeare\u2019s play, Shakespeare is not only the play but also the plays. Shakespeare\u2019s play is characterized by its complex and intricate structure. Shakespeare plays is characterized by its complex structure, structure, and architecture.\nThe play is characterized by its intricate structure, which is a complex and multifaceted play. Shakespeare has a wide range of plays, and it is commonly played with its intricate structure and structure. This structure is characterized by its complex structure, often with the emphasis on its use and its role in various aspects of play.\nIn conclusion, the play is crucial in its overall play, and it is crucial to comprehend its importance in society. Its role in play serves as a powerful reminder of its role in various plays, and it serves as a powerful reminder of its importance in society.\nThe play is characterized by its complex structure and its influence on various aspects of play, including its complex structure, its structure, its structure, its structure, its structure",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.154,
+            "distinct2": 0.557,
+            "distinct4": 0.846,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 241
+          }
+        ]
+      },
+      {
+        "label": "technology",
+        "prompt": "The internet began as a research project in",
+        "draws": [
+          {
+            "text": " the United States.\nThe study, published in the journal Science Advances, was conducted in collaboration with the University of Texas, USA, the UK, the UK, and Canada. The paper presented a report for the first time being published in the journal Science Advances, which is a step-by-step process, which was used to create a digital archive of the Internet.\nThis is a new approach to using a library of the Internet, which can be used in the form of digital technologies, such as the Internet, the Internet, the Internet and the Internet, and the Internet, the Internet and the Internet, the Internet, and the Internet, and the Internet, and the Internet, and the Internet, the Internet, the Internet, the Internet, and the Internet, the Internet, the Internet, the Internet, and the Internet, the Internet and the Internet, the Internet, the Internet, and the Internet, the Internet, its Internet, the Internet and the Internet and the Internet, and the Internet, the Internet, the Internet, the Internet, the Internet, the Internet, the Internet, the Internet, and the Internet, the Internet, the Internet, and the Internet, the Internet, the Internet, the Internet, the Internet, the Internet,",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.553,
+            "distinct2": 0.357,
+            "distinct4": 0.447,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 255
+          },
+          {
+            "text": " the mid-1960s, where the data was collected from the United States and the United States. The research center was the first to be located in the United States, and the rest of the world was the center.\nThe research was able to make use of data as well as the data collected from a variety of sources. Data was collected from the data collected from the United States and the sources of data collected from the United States. Data was collected from the information about the data, including data from the United States and the United States.\nThe data was collected from the United States, and the data collected from the U.S. National Library of Agriculture. The data were collected from the United States and exported to the United States.\nThe data collected from the United States was collected from the United States and the United States. The data were collected from the United States and selected from the United States to produce the data. The data was then collected from the United States and the data was collected from the United States and the data was collected from the United States.\nThe data was collected from the United States, and collected from the United States and Mexico.\nThe data collected from the United States and the United States was collected from the United States and from the United",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.415,
+            "distinct2": 0.38,
+            "distinct4": 0.585,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 47
+          },
+          {
+            "text": " the early years of the 1960s. While the company of the American Association of American Women's Association (AAC), the nonprofit organization has the largest database of online resources on the internet. The organization has the largest database of online resources and offers for people who are online. The company is a nonprofit organization that is headquartered in the U.S. (P.A.P.), the organization\u2019s founders, and philanthropist organizations. The organization\u2019s founders, the organization\u2019s founders, and the organization\u2019s founders are the most influential of the organization\u2019s founders.\nIn the 1980s and 1990s, the organization\u2019s founders, led by the U.S. Department of Education, the organization\u2019s founding fathers, and the American Revolution. The organization\u2019s founders, the company\u2019s founders, and the organization\u2019s founders, founded by the United States in the early 1990s and the United States. The organization\u2019s founders, John S. White, and the founders, are the most influential in the organization\u2019s history. The organization\u2019s founders, led by John S. White, and George H. Black, were the first-year founders, the organization",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.253,
+            "distinct2": 0.537,
+            "distinct4": 0.747,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 37
+          },
+          {
+            "text": " the US, while the Internet was a part of the US business. The company was a leader in business, and the new CEO of the company was the \u2018Big Apple\u2019. The business was the first to change its business. The company became the first to change its business. It was a business.\nThe company went on to make the business process.\nIt was the first to change its business.\nWhen it got to change it, the company was able to change its business. It worked to change its business.\nThe company was able to change its business.\nThe company is able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe firm was able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe company was able to change its business.\nThe company was able to change its",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.605,
+            "distinct2": 0.286,
+            "distinct4": 0.395,
+            "looped": true,
+            "loop_onset": 161,
+            "loop_period": 10,
+            "topic": 0.0,
+            "topic_span": 6
+          },
+          {
+            "text": " the late 1960s. At the same time, the internet was not the last major change in the world, and the internet was about to be used as a tool for an internet connection.\nThe internet was not the first major change in the world. It was a series of events that started with the internet, and there was a great deal of tension between the internet and the internet. This was done in the early 1960s.\nThe internet was a great deal of power and money. It was a huge amount of money. It was not the first major change in the world. It was a lot of money. It was the most important factor in the world in the world, and the internet and the internet were the most important factor in the world. The internet was also the fastest in the world.\nThe internet is a great deal of power. It was an important factor in the world, and it was a lot of money. It was also the biggest factor for the internet, which is the most important factor in the world. The internet was the fastest in the world, and it was the biggest factor in the world, and it was the highest factor in the world.\nThe internet was a great deal of power. It was a huge issue in the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.32,
+            "distinct2": 0.431,
+            "distinct4": 0.68,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 242
+          }
+        ]
+      },
+      {
+        "label": "economics",
+        "prompt": "Inflation occurs when",
+        "draws": [
+          {
+            "text": " a person is a person who is a person and not a person has a personality who is a person because of a person\u2019s behavior.\nThis is where a person is a person or not a person who is a person. This situation can be due to the situation that it is an event that is a person\u2019s behavior.\nThe situation can be caused by a person or not having a personality or personality. For example, a person with a personality who is a person with a personality who is a person, the person with a personality who is a person.\nThe situation can be caused by a person who is a different personality. This situation can occur by a person or someone who has a personality who is a personality who is a person.\nIt can also be caused by a person having a personality or a personality who is a person who is a person who is a man.\nPeople can also be caused by a person having a personality that is a person with a personality that is a person who is a person, or a person who is a person or person who is a person who is a person who is a person who is a person who is a person who is a person who is a person who is a person who is a person who is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.466,
+            "distinct2": 0.322,
+            "distinct4": 0.534,
+            "looped": true,
+            "loop_onset": 217,
+            "loop_period": 4,
+            "topic": 0.5,
+            "topic_span": 135
+          },
+          {
+            "text": " the inflation rate is reached at 2 percent.\nThe inflation rate of inflation is based on the inflation rate of the inflation rate of the inflation rate of the inflation-adjusted US economy.\nThe inflation rate of the inflation rate of the inflation-adjusted US economy is about 5 percent of the total inflation-adjusted US economy.\nThe inflation rate of the inflation-adjusted US economy is about 4 percent of the total inflation-adjusted US economy.\nThe inflation rate of the inflation-adjusted US economy is about 2 percent of the overall inflation-adjusted US economy.\nThe inflation rate of the inflation-adjusted US economy is about 5 percent of the global inflation-adjusted US economy.\nThe inflation rate of the inflation-adjusted US economy is about 1 percent of the total inflation-adjusted US economy.\nThe inflation rate of the inflation-adjusted US economy has a variable rate of US unemployment in the last 25 years.\nThe inflation rate of this inflation-adjusted US economy has an average of 4 percent inflation-adjusted US economy.\nThe inflation rate of the inflation-adjusted US economy is about 1 percent of the total inflation-adjusted US economy.\nThe inflation rate of the inflation-adjusted US economy is about 4 percent of the total inflation-adjusted US economy.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.66,
+            "distinct2": 0.227,
+            "distinct4": 0.34,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 251
+          },
+          {
+            "text": " inflation occurs in the market by the individual.\n- Consumer Price: The inflation rate of your monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly annual monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly annual monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly quarterly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly quarterly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly annual monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly monthly",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.889,
+            "distinct2": 0.094,
+            "distinct4": 0.111,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 16
+          },
+          {
+            "text": " a person\u2019s interest income is paid to a person who is not paying, but is not paid to a person who is not paying.\nThere are ways to pay a person\u2019s interest in the marketplace. It is also a common way to keep track of your interest in the market. This is especially true in the market but will not allow for the growth of your interest.\nAccording to the Centers for Disease Control and Prevention, this is a relatively rare problem. It is actually a very common problem in the economy. It can also be a serious problem that is causing your interest.\nIt is also a common problem that can be prevented but it can be fatal. It can also be fatal.\nIt can also be a common issue for people who are not paying for a good deal, but a lot of people may be able to pay for a good deal. It is also a common issue that can be avoided by people who have a good deal.\nIn some cases, the risk of a negative attitude is usually low. It is a common problem that can be avoided by a group of people who are not paying for a good deal.\nSome people may be able to pay for a good deal. It is also a common problem that is caused",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.182,
+            "distinct2": 0.592,
+            "distinct4": 0.818,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the goods in a country are more than their goods. In fact, they can be a significant factor in the prices of goods, and they can be more expensive to buy.\nThe term \u201crecyclable\u201d refers to a combination of prices and services that are not in the form of goods. This is because in some other words, it is a term that refers to the price of goods or services that are not in the form of goods.\nThe \u201crecyclable\u201d refers to the amount of goods that are used for money. It is used in many different ways. For example, they are used to buy goods that are used for goods that are used for the purpose of selling a goods.\nThe \u201crecyclable\u201d refers to the amount of goods used for the purpose of determining the price of goods. This includes goods that are used for the purpose of determining the price of goods.\nThe \u201crecyclable\u201d is a word given to the quantity of goods that are used for the purpose of determining the price. It is used in both the quantity of goods that are used for the purpose of determining the price of goods.\nThe \u201crecyclable\u201d refers to the quantity of goods that are",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.379,
+            "distinct2": 0.463,
+            "distinct4": 0.621,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       }

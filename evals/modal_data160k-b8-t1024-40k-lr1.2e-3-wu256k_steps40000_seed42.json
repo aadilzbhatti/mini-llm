@@ -58817,18 +58817,29 @@
     "peak_mem_kind": "cuda max_memory_allocated"
   },
   "samples": {
-    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "protocol": "20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
     "temperature": 0.7,
     "top_k": 40,
     "new_tokens": 256,
     "draws": 5,
     "summary": {
-      "n": 50,
-      "rep4": 0.578,
-      "looped": 15,
-      "eos": 2,
-      "topic": 0.24,
-      "tokens": 249.9
+      "n": 100,
+      "rep4": 0.538,
+      "rep4_p90": 0.856,
+      "rep4_mean": 0.536,
+      "distinct2": 0.31,
+      "distinct4": 0.464,
+      "looped": 26,
+      "loop_rate": 0.26,
+      "loop_ci95": [
+        0.184,
+        0.354
+      ],
+      "loop_onset_median": 191.0,
+      "topic": 0.254,
+      "topic_span_median": 119.0,
+      "eos": 3,
+      "tokens": 252.38
     },
     "prompts": [
       {
@@ -58840,50 +58851,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.854,
+            "distinct2": 0.118,
+            "distinct4": 0.146,
             "looped": true,
             "loop_onset": 83,
             "loop_period": 6,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " is carried out by a mixture of different molecules of the same molecules. When the molecules are so excited, they can be created with the same molecule, which allows them to produce a molecule to produce an energy.\nA molecule is formed when the molecules are so excited, but the molecules are so excited. The molecule that is then excited, and the molecules are so excited, but the molecules are excited, and so excited are excited.\nThe molecules are excited and excited. They are excited and excited because they are excited because they are excited. They are excited because they are excited, and they come together and excited, but they are excited. They are excited because they are excited.\nThe molecules are excited because they are excited because they are excited because they are excited because they are excited because they do not have enough energy to produce the same molecule.\nThe molecules are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited because they are excited",
             "tokens": 256,
             "eos": false,
             "rep4": 0.534,
+            "distinct2": 0.322,
+            "distinct4": 0.466,
             "looped": true,
             "loop_onset": 174,
             "loop_period": 4,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " is used to develop energy-efficient components of the atmosphere.\nThe process of energy is usually called energy. Thus, the energy is called energy.\nThe energy is used to make energy efficient, like for example. In this case, energy can be used to produce energy, which can be used to produce energy for energy.\nThe energy is used to produce energy in various ways of energy.\nThe energy is used to produce energy in different ways.\nEnergy is also used to produce energy from energy.\nEnergy is used to produce energy from energy.\nThe energy is used to produce energy from energy and to produce energy as energy, which is used to produce energy and energy.\nEnergy is used to produce energy from energy by heating and cooling and cooling.\nThe energy is used to produce energy from energy by heating and cooling and cooling.\nThe energy is used to produce energy from steam and other energy by heating and cooling.\nThe energy is used to produce energy from electricity and electricity by heating and cooling.\nThe energy is used to produce energy from electricity and cooling.\nThe energy is used to produce energy from heat and water.\nThe energy produced by heating and cooling is the system of energy from the heat and steam.\nThe energy produced",
             "tokens": 256,
             "eos": false,
             "rep4": 0.415,
+            "distinct2": 0.38,
+            "distinct4": 0.585,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " will help you create the system by converting the cells into a single cell into a cell that is responsible for producing the cell.\nThis is a simple and simple process that is used to get your cells to be able to make the cells into the cells. In this system the cells are able to produce cells that are producing the cells into cells. In addition to producing cells, their cells can be used to store the cells into cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that get cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that produce cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells that are producing cells",
             "tokens": 256,
             "eos": false,
             "rep4": 0.628,
+            "distinct2": 0.282,
+            "distinct4": 0.372,
             "looped": true,
             "loop_onset": 223,
             "loop_period": 4,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " is carried out in a number of different forms of life.\nSolving and learning is a crucial part of understanding this process.\nAn example of the concept of nature is that it is a person\u2019s ability to learn and understand what they are and how they are.\nGrammar is a type of cognitive process that is a part of the human being. It is a person\u2019s ability to learn, learn, and understand what they are, what they are and what they are learning.\nGrammar is an artificial intelligence technique that is used to manipulate the brain in a way that they are used to control the brain. It is used to control the brain and learn to control the brain, and how they are learning, learn, and learn from the perspective of the world.\nGrammar has a specialized skill to learn, and it is used to learn and to learn. It is one of the most powerful tools in learning, and is used to train people. It is also used to train people to learn and learn from the perspective of the world.\nGrammar is taught in an academic setting. It is used to train people to learn, learn, and learn from the perspective of the world, and learn from the perspective of",
             "tokens": 256,
             "eos": false,
             "rep4": 0.202,
+            "distinct2": 0.525,
+            "distinct4": 0.798,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -58896,50 +58922,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.154,
+            "distinct2": 0.627,
+            "distinct4": 0.846,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 253
           },
           {
             "text": " was involved in the creation of a new generation of physicists. His work was the first of the first time, and he was eventually able to find the Universe, a new physics-science-based experimental physicist, known as Einstein.\nResearchers from the University of California have found that there are several different types of magnetic fields that have been used in the field of physics. These are highly specialized applications in computer science, which are magnetically studied.\nThere is also a new study on how magnetic fields are used in magnetic fields, such as the magnetic fields.\nThe magnetic field of physics is a very new study of how magnetic fields are studied.\nThe magnetic fields are a large magnetic field, or a large magnetic field, and their magnetic fields are magnetic fields.\nThe magnetic fields are magnetically studied and are known for the magnetic field of physics. The magnetic fields are known for the magnetic field of physics, and they are used in magnetic fields.\nThe magnetic fields are magnetically studied, and are known to be magnetically studied.\nHowever, magnetic fields are highly specialized, as they have a magnetic field.\nThey are magnetically studied, and they have a magnetic field.\nThese fields are magnetically studied and are known for the magnetic fields of physics",
             "tokens": 256,
             "eos": false,
             "rep4": 0.174,
+            "distinct2": 0.588,
+            "distinct4": 0.826,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 256
           },
           {
             "text": " has been the first to study Einstein's first English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English-born English",
             "tokens": 256,
             "eos": false,
             "rep4": 0.953,
+            "distinct2": 0.047,
+            "distinct4": 0.047,
             "looped": true,
             "loop_onset": 9,
             "loop_period": 3,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 255
           },
           {
             "text": " became the first German-born physicist to be born in Berlin.\nThe German-born physicist who died in Berlin was responsible for having a strong magnetic field physicist who was the first of the German German-born physicist.\nOn October 26, 1942, the German-born physicist named Sch\u00f6nigut von Aberm, was born in Berlin in Berlin in a world known as Berlin on August 12, 1943.\nHe died in Berlin in Berlin in 1942.\nHe died in Berlin in 1941.\nHe died 1st in Berlin, 1945.\nIn 1945 Berlin was an American physicist. He was born in Berlin in the United Kingdom.\nHe died in Berlin in 1945.",
             "tokens": 139,
             "eos": true,
-            "rep4": 0.118,
+            "rep4": 0.119,
+            "distinct2": 0.65,
+            "distinct4": 0.881,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 123
           },
           {
             "text": " was the first to think Einstein. He was also an Einstein physicist who was a physicist and physicist who was the first to do research. The term Einstein is the first to think that Einstein has not been a science student since his death.\nA number of physicists would look to Einstein's theory as a scientific physicist. Einstein is a physicist. He would be very interested in Einstein's work, but it would be a lot easier. Einstein's theory is called Einstein. Einstein, though, Einstein would have been a physicist. Einstein would be a physicist.\n\"The first thing we think is to think about Einstein,\" Einstein said. He told the statement.\nThe Einstein Einstein is a physicist who has not been a scientist when he has been a physicist. He would be the best scientist for the matter physics of the time. He worked in the lab, but that doesn't have been a Nobel Prize in Physics.\n\"We are going to be the first of them to be a scientist. They would be a scientist,\" he said.\n\"You have come across the table to find out that the Einstein has made the first time in physics,\" he said.\nThe first time in physics is to think about Einstein's theory. He has been fascinated to think about Einstein's",
             "tokens": 256,
             "eos": false,
             "rep4": 0.059,
+            "distinct2": 0.667,
+            "distinct4": 0.941,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 255
           }
         ]
       },
@@ -58952,50 +58993,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.356,
+            "distinct2": 0.392,
+            "distinct4": 0.644,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 5
           },
           {
             "text": " a substance called the substance called a substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance. The substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance named the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the substance called the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.937,
+            "distinct2": 0.039,
+            "distinct4": 0.063,
             "looped": true,
             "loop_onset": 174,
             "loop_period": 3,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " a few-sexygen containing molecules, including the hydrogen- and oxygen atoms. (From the molecular level of the molecule to the hydrogen- and oxygen atoms, the molecule is at a certain rate), whereas the nucleosomes in the molecular level of the two molecules is only in place, which is known to play a role in the regulation of the cell's structure and the dynamics of the cell's structure.\nThe drug of cancer cells is one of the most promising drugs for cancer, and the drugs are both promising. The drug of cancer drugs is currently linked to the development of cancer.\nThe drugs are now available to help the patients have more opportunities for cancer, and these drugs are very effective against cancer.\nThe drug is then used as a drug to treat cancer. It is used to create high-quality drugs that are used in the prevention of cancer, but this can also help patients develop cancer.\nThe drug of cancer is not as effective as long as it is, and it can be used as a drug to treat cancer.\nThis drug is used to treat cancer in patients with cancer but also for cancer patients with cancer.\nThe drug of cancer is also used to treat cancer in patients with cancer and also to treat cancer.\nThe drug",
             "tokens": 256,
             "eos": false,
             "rep4": 0.13,
+            "distinct2": 0.686,
+            "distinct4": 0.87,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 31
           },
           {
             "text": " any chemical known as the hydrolbromide. It is an alkali in the hydrolbromide, a chemical compound being formed from the hydrolbromide. It is the most common organic matter in most of the alkali in the well-known alkali in the world. It is responsible for the development of a chemical compound with a chemical compound. It is an alkali in the well-known alkali in the world as an alkali in the world, in the form of alkali in the world. It is also the most common organic matter in the world. It is a chemical compound being formed from the hydrolbromide, which is a compound in the form of the alkali, which is an alkali in the world. However, it can be found in a wide variety of compounds. It is a compound in the form of a chemical compound. It is a compound in the form of a compound in the form of a compound. It is classified as a compound in the form of a compound in a chemical compound. It can be found in a variety of compounds, including the compound. It is a compound in the form of a compound in the form of a compound. It is a compound in the form of a",
             "tokens": 256,
             "eos": false,
             "rep4": 0.443,
+            "distinct2": 0.341,
+            "distinct4": 0.557,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 214
           },
           {
             "text": " a high-energy chemical element called Nd(OH). It is composed of one of the major types of chemical catalytic elements that are typically of chemical elements that are classified in the chemical element.\nOxygen is a chemical element with a high-energy chemical element with a high-energy chemical element with a high-energy chemical element with a high-energy chemical element called Nd(OH). It is composed of one of the major types of chemical catalytic elements.\nOxygen is a chemical element with a high-energy chemical element containing a high-energy compound element called Nd(OH). It consists of one of the major types of chemical catalytic elements.\nOxygen is a chemical compound that acts on a high-energy chemical element with a high-energy chemical element called Nd(OH). It is composed of two types of chemical catalytic elements. It is composed of two types of chemical catalytic elements called Nd(OH). It is composed of two types of elements called Nd(OH).\nOxygen is a chemical element with a high-energy chemical element with an extremely high-energy chemical element called Nd(OH). It is composed of two types of other compounds called Nd(OH).",
             "tokens": 256,
             "eos": false,
             "rep4": 0.613,
+            "distinct2": 0.267,
+            "distinct4": 0.387,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 235
           }
         ]
       },
@@ -59008,50 +59064,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.668,
+            "distinct2": 0.247,
+            "distinct4": 0.332,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 239
           },
           {
             "text": " make sure they are working with the information they should be doing.\nWhat is the lesson?\nThe lesson is based on the lesson, and lesson that the lesson focuses on how to make sure that students are working with the information they need to follow. The lesson is based on the lesson, which students learn as a whole.",
             "tokens": 66,
             "eos": true,
             "rep4": 0.111,
+            "distinct2": 0.785,
+            "distinct4": 0.889,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 62
           },
           {
             "text": " make decisions about how to make decisions.\n4. Read the Lesson\nThis lesson will teach you how to make decisions about decisions.\n- Identify the facts of the two groups, the following questions.\n- Find the facts and the more you can take.\n- Find the facts and the more you know.\n- Find the facts and the more you can take.\n- Make sure you have the information available to the author.\n- Understand what you can take.\n- Find the facts and the more you can take.\n- Make sure your answer is made.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and the more you can take.\n- Find the facts and facts and the more you can take.\n-",
             "tokens": 256,
             "eos": false,
             "rep4": 0.664,
+            "distinct2": 0.259,
+            "distinct4": 0.336,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 18
           },
           {
             "text": " use a model (and so, they will learn how to use a model) with a model (and so, the book is not only a model) to use a model to use a model. As students can use a model for example, the model and the model will be the model more than the model.\nThe teacher will learn how to use a model for a model because of their own model (as a model) and as a model at all. A model will be a model, when the model will be the model at all, a model will be the model. The model will also be the model and a model at all.\nThe model will be a model to use a model to use a model that will be the model of a model. The model will be the model at all that model is the model.\nThe model will be the model by which the model will be the model for the model. It will be the model that is the model that is the model that is the model. In the model, the model will be the model, whether the model is a model.\nThe model will be the model of a model that is the model that is the model. For example, when the model is a model, the model will be",
             "tokens": 256,
             "eos": false,
             "rep4": 0.304,
+            "distinct2": 0.369,
+            "distinct4": 0.696,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 68
           },
           {
             "text": " read and read the text in the classroom:\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- Why does reading affect the reading?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What is it?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What is the difference between reading and reading?\n- What does the difference between reading and reading?\n- What is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat are the differences between reading and reading?\n- What are the differences between reading and reading?\n- What is the difference between reading and reading in the classroom?\n- How is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference between reading and reading?\nWhat is the difference",
             "tokens": 256,
             "eos": false,
             "rep4": 0.767,
+            "distinct2": 0.161,
+            "distinct4": 0.233,
             "looped": true,
             "loop_onset": 193,
             "loop_period": 10,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59064,50 +59135,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.696,
+            "distinct2": 0.224,
+            "distinct4": 0.304,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "\u0ba4\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u09aa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\ufffd\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0c2a\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa\u0baa",
             "tokens": 256,
             "eos": false,
             "rep4": 0.929,
+            "distinct2": 0.043,
+            "distinct4": 0.071,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "__________ is a great way to help you to exercise your body effectively.\n- __________ involves a lot of things that can help you to help.\n- __________ can help you to help you to improve your overall health.\n- __________ is a great way to help you to reduce your risk of developing diabetes.\n- __________ is a great way to help you to improve your health.\nThis is a great way to help you to improve your risk.\n- __________ is a great way to help you to improve your risk of developing diabetes. It is a great way to help you to help you to improve your health.\n- __________ is a great way to do things to help you to reduce your risk of developing diabetes.\n- __________ is a great way to help you to improve your risk of developing diabetes.\n- __________ is a great way to help you to better manage your risk of developing diabetes.\n- __________ is a good way to help you to improve your risk of developing diabetes.\n- __________ is a great way to help you to improve your risk of developing diabetes.\n- __________ is a great way to help you to improve your risk",
             "tokens": 256,
             "eos": false,
             "rep4": 0.676,
+            "distinct2": 0.212,
+            "distinct4": 0.324,
             "looped": true,
             "loop_onset": 208,
             "loop_period": 20,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 11
           },
           {
             "text": "_______________,\n- _______________,\n- _______________,\n- _______________,\n- _______________,\n- _______________,\n- _______________,\n- ___________,\n- _______________,\n- _______________,\n- _______________,\n- ______________,\n- _______________,\n- _______________,\n_______________,\n_______________,\n_______________,\n_______________,\n_______________,\n______________,\n_______________.\n______________,\n______________,\n______________,\n______________,\n_______________,\n______________,\n______________,\n_______________,\n_______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n_______________,\n______________,\n______________,\n______________,\n______________,\n_______________,\n______________,\n_______________,\n_______________,\n_______________,\n______________,\n______________,\n_______________,\n______________,\n______________,\n______________,\n______________,\n______________,\n______________",
             "tokens": 256,
             "eos": false,
             "rep4": 0.905,
+            "distinct2": 0.051,
+            "distinct4": 0.095,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "                                                                                                                                                                                                                                                                ",
             "tokens": 256,
             "eos": false,
             "rep4": 0.996,
+            "distinct2": 0.004,
+            "distinct4": 0.004,
             "looped": true,
             "loop_onset": 0,
             "loop_period": 1,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59120,50 +59206,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.672,
+            "distinct2": 0.196,
+            "distinct4": 0.328,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " If we understand that the following is a mathematical equation, this equation is a constant and constant. A constant of two variables should be given equal to zero.\n2. If we understand that the following is a mathematical equation, we should implement the equations:\n1. If we understand that the following is a mathematical equation, we should implement the equation:\n1. If we understand that the following is an equation, we should be given the following:\n1. If we observe that the following is an equation, then the following is a mathematical equation:\n2. If we observe that we know that the following is a mathematical equation, then the following is a mathematical equation, then the following is a mathematical equation:\nThe following is a mathematical equation:\n1. If we observe that we observe that we observe that we observe that we observe that we observe that we observe at the following:\nIn a rational equation, we observe that we observe that we observe at the following:\n1. If we observe that we observe that we observe the following is a mathematical equation, then the following is a mathematical equation.\n2. If we observe that we observe that we observe that we observe, then the following is a mathematical equation, then the following is a mathematical",
             "tokens": 256,
             "eos": false,
             "rep4": 0.585,
+            "distinct2": 0.259,
+            "distinct4": 0.415,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 249
           },
           {
             "text": " How to solve a quadratic equation:\n1. How to solve a quadratic equation:\n2. How to solve a quadratic equation:\n3. What is the equation? How to solve a quadratic equation:\na. What is the equation? How to solve a quadratic equation:\na. How to solve a quadratic equation:\na. What is the equation that solves a quadratic equation:\na. What is the equation of a quadratic equation? How to solve a quadratic equation:\nb. What is the equation? What is the equation of the equation? How to solve a quadratic equation:\na. What is the equation? What is the equation about a quadratic equation? What is the equation that solves a quadratic equation? How to solve quadratic equation:\na. How to solve a quadratic equation:\na. What is the equation of a quadratic equation? Why do I solve a quadratic equation? What is the equation that solves a quadratic equation? What is the equation of the equation? How to solve a quadratic equation,\na. What is the equation of a quad",
             "tokens": 256,
             "eos": false,
             "rep4": 0.719,
+            "distinct2": 0.165,
+            "distinct4": 0.281,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 253
           },
           {
             "text": " Identify the type of problem:\n2. Identify the type of problem at the end of the problem:\n3. Identify the type of problem\n4. Identify the type of problem and identify the function of the problem:\n5. Identify the definition of the problem:\n6. Identify the type of problem at the end of the problem and identify problems in the problem.\n9. Identify the type of problem and identify the problems in the problem:\n10. Identify the type of problem.\n11. Identify the problems in the problem:\n12. Identify the type of problem and identify the problem.\n12. Identify the type of problem.\n12. Identify the type of problem.\n12. Identify the type of problem.\n12. Identify the type of problem and identify the result.\n12. Identify the type of problem.\n12. Identify the type of problem.\n13. Identify the type of problem.\n12. Identify the type of problem.\n13. Identify the type of problem and identify the problem.\n14. Identify the type of problem.\n15. Identify the type of problem.\n15. Ident",
             "tokens": 256,
             "eos": false,
             "rep4": 0.613,
+            "distinct2": 0.212,
+            "distinct4": 0.387,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " The following equation:\n2. The following equation:\n1. The following equation:\n1. The equation:\n1. The following equation:\n2. The following equation:\ni. The following equation:\ni. The following equation:\ni. The following equation:\ni. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. B. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. B. A. A. A. B. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A. A.",
             "tokens": 256,
             "eos": false,
             "rep4": 0.897,
+            "distinct2": 0.063,
+            "distinct4": 0.103,
             "looped": true,
             "loop_onset": 203,
             "loop_period": 2,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 58
           }
         ]
       },
@@ -59176,50 +59277,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.913,
+            "distinct2": 0.082,
+            "distinct4": 0.087,
             "looped": true,
             "loop_onset": 17,
             "loop_period": 5,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " human health. The first list of the three main types of human health are diabetes. The main cause of diabetes can be very debilitating.\nThere are three main types: diabetes, high blood pressure, diabetes, diabetes, and heart disease.\nThe average lifespan of people with diabetes is estimated to have a higher risk of developing obesity.\nThe average lifespan of people with diabetes is about 2 years old.\nThe average lifespan of people with diabetes are about 2 years old.\nThe average lifespan of people with diabetes depends on the overall health of the body.\nThe average lifespan of people with diabetes is about 2 years old.\nThe average lifespan of people with diabetes is approximately 1\u20135 years old.\nThe average lifespan of people with diabetes is about 6 years old.\nThe average lifespan of people with diabetes varies from 10 to 30 years.\nThe average lifespan of people with diabetes varies from 10 to 10 years, and it is about 2 years old.\nThe average lifespan of people with diabetes is about 20 years old.\nThe average lifespan of people with diabetes is about 3 years old.\nThe average lifespan of people with diabetes is about 10 years old.\nThe average lifespan of people with diabetes is about 1 to 13 years old.\nThe average lifespan",
             "tokens": 256,
             "eos": false,
             "rep4": 0.47,
+            "distinct2": 0.396,
+            "distinct4": 0.53,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 31
           },
           {
             "text": " vaccines: an antibiotic, which is the main type of vaccine. These are known as a vaccine and the primary vaccine, which is usually the primary vaccine, which is the primary vaccine.\nThe two types of vaccine are the primary vaccines for the first 2. The primary vaccine is a vaccine booster, which is a vaccine that is approved by the FDA. The vaccine is called the primary vaccine.\nThere are also two types of vaccine: a vaccine, the first 2 vaccine and the second 2 vaccine.\nThe first 4 vaccines are a vaccine that is used to be used to make vaccines. The vaccine is used to the children and should be vaccinated and vaccinated for a vaccine.\nThe second vaccine is a vaccine that is used to make vaccines. The vaccine is used to prevent infection, but the vaccine has to be used to control and protect against infections.\nThe vaccine is used to hold the vaccine for the first 4 days.\nThe second vaccine is used to spread the vaccine. It is used to protect against infections and prevent infections from infection and diseases. The vaccine is used to protect against infections and prevent infections from infections and diseases.\nThe second vaccine is used to spread the vaccine. The vaccine is used to fight infection and prevent infections from infection. The second vaccine",
             "tokens": 256,
             "eos": false,
             "rep4": 0.209,
+            "distinct2": 0.494,
+            "distinct4": 0.791,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " virus virus: type 1 virus, but the virus may also be spread only within the body, and other viruses.\n- The virus is a viral vector that is transmitted by the body by the body.\n- The virus is a virus that is transmitted by the body by the body.\n- The virus is transmitted by the body by the body, the body is transmitted by the body by the body.\n- The virus is transmitted by the body by the body by the body through the body.\n- The virus is transmitted by the body by the body by the body by the body through the body.\n- The virus is transmitted by the body by the body by the body through the body by the body by the body through the body from the body by the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through the body through",
             "tokens": 256,
             "eos": false,
             "rep4": 0.755,
+            "distinct2": 0.176,
+            "distinct4": 0.245,
             "looped": true,
             "loop_onset": 154,
             "loop_period": 3,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " artificial intelligence.\n- Artificial intelligence (AI) is the most important part of the AI development and technology.\n- AI is the most important part of human intelligence, but its meaning is the only way to be learned from the vast majority of the human population.\n- AI is a good resource to live.\n- AI is a good resource to live and live in and around the world.\n- AI is a good resource to live with it.\n- AI is the most important part of AI. It will be the most important part of AI development and technology.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource to live with it.\n3. AI is a good resource to live with it.\n- AI is a good resource to live with it.\n- AI is a good resource",
             "tokens": 256,
             "eos": false,
             "rep4": 0.656,
+            "distinct2": 0.271,
+            "distinct4": 0.344,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59232,50 +59348,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.609,
+            "distinct2": 0.235,
+            "distinct4": 0.391,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 246
           },
           {
             "text": " was ratified by its ratification. The treaty was signed by the Congress, which was ratified by 17 April 1919.\nThe treaty was signed on November 22, 1919, and the treaty was signed on December 22, 1919, and the treaty was signed by President Robert J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J. J.",
             "tokens": 256,
             "eos": false,
             "rep4": 0.818,
+            "distinct2": 0.149,
+            "distinct4": 0.182,
             "looped": true,
             "loop_onset": 52,
             "loop_period": 2,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 49
           },
           {
             "text": " was based on the treaty. The treaty was signed by the treaty. The treaty was signed in 1919, and the treaty was ratified in 1919. The treaty was signed by the treaty. The treaty was signed in 1919, and the treaty was signed in 1919. The treaty was signed in 1919.\nThe treaty was signed in 1919. The treaty in 1919, was signed in 1919. The treaty was signed in 1919, and the treaty was signed in 1919. The treaty was signed by the treaty. The treaty was signed in 1919, and it was signed in 1919.\nThe treaty was signed in 1919, and the treaty was signed in 1919. The treaty was signed in 1919, and it was signed in 1919, which was signed in 1919, and it was signed in 1919.\nThe treaty was signed in 1919, and it was signed in 1919. The treaty was signed in 1919, and it was signed in 1919, and it was signed in 1919. After the declaration of 1919, the treaty was signed in 1919. The treaty was signed in 1919, and it was signed in 1919, and it was signed in 1919. The treaty was signed in 1919, and it was signed in 1919. The treaty was signed in 1919, and it was signed in 1919. It",
             "tokens": 256,
             "eos": false,
             "rep4": 0.783,
+            "distinct2": 0.137,
+            "distinct4": 0.217,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 252
           },
           {
             "text": " took an appeal to the United States. The treaty began a war of the United States, which led in the Revolutionary War of 1811.\nThe treaty was signed in 1921 in 1919. The treaty was signed by 1947. The treaty was signed by 1947 in 1921.\nThe treaty was signed by 1947. The treaty was signed by 1947. The treaty is signed by 1947 until 1947.\nThe treaty was signed from 1947 to 1948.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1949 in 1934.\nThe treaty was signed by 1948 and 1947. The treaty was signed by 1947.\nThe treaty was signed in 1949.\nThe treaty was signed by 1951.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947, and the treaty was signed\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947.\nThe treaty was signed by 1947, and the treaty was signed by 1947.\nThe treaty was signed in 1949.\nThe treaty was signed by 1947,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.628,
+            "distinct2": 0.255,
+            "distinct4": 0.372,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 253
           },
           {
             "text": " became known that it was illegal.\nIn 1947, it did not include the use of \u201cthe French flag\u201d in many ways.\nThe treaty was signed by Congress, and its establishment was adopted in the early months of the U.S. Constitution.\nThe treaty was signed by Congress in 1965.\nOn a November, the treaty ended in 1971, when the treaty was signed in 1967 by Congress, the treaty was signed in 1971.\nThe treaty was signed by Congress, and the treaty was signed by Congress.\nThe treaty was signed by Congress, and the treaty was signed by Congress.\nThe treaty was signed by Congress, and the treaty was signed in 1967, a resolution signed by Congress.\nThe treaty was signed by Congress, and its implementation was signed by Congress.\nThe treaty was signed by Congress, and it was signed by Congress, and the treaty was signed by Congress, and it was signed by Congress.\nThe treaty was signed by Congress, and it was signed by Congress, or by Congress.\nThe treaty was signed by Congress, and it was signed by Congress, until the signing of Congress was signed by Congress.\nThe treaty was signed by Congress, and it took its action for the treaty, and it was",
             "tokens": 256,
             "eos": false,
             "rep4": 0.506,
+            "distinct2": 0.369,
+            "distinct4": 0.494,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 252
           }
         ]
       },
@@ -59288,50 +59419,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.32,
+            "distinct2": 0.439,
+            "distinct4": 0.68,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 108
           },
           {
             "text": " the Journal of Biological Psychiatry, in the journal, the journal, was published in the journal, which was published in the journal in the journal (see the journal). The journal was published in the journal journal, and the journal was published in the journal of the journal.\nThere are several studies of the journal, including the journal of the journal, which is published in the journal. The journal is published in the journal for a wide range of scientific, mental and physical therapy. It is not a good idea to talk about the journal and the journal, and that is, it is clear that it is very simple. It is not a good idea of all but it is a good idea to do that. However, it is not a good idea to talk about the journal. It is really a good idea to talk about it and talk about it so that it is used to talk about it.\nThe journal of the journal on the journal can be found in the journal, which is published in the journal of the journal. The journal is also published in the journal where the journal is published. The journal is published in the journal on the journal of the journal of the journal.\nThe journal is published in the journal of the journal, but the journal is published in the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.281,
+            "distinct2": 0.431,
+            "distinct4": 0.719,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 254
           },
           {
             "text": " the Journal of Internal Medicine, some experts believe that the study was the most important and important aspect of the study. The study showed that, in the study the study was the least important predictor of the study. The study was also the least reliable predictor of the study.\nA study was conducted in the study of participants. The researchers surveyed the study whether participants were more likely to have a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of an higher risk of a higher risk of a higher risk of a higher risk of a lower risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk of a higher risk",
             "tokens": 256,
             "eos": false,
             "rep4": 0.672,
+            "distinct2": 0.251,
+            "distinct4": 0.328,
             "looped": true,
             "loop_onset": 199,
             "loop_period": 4,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 70
           },
           {
             "text": " 2015, a study of nine children and young children were found for girls with autism, while they were found to have autism.\nIn addition, a study of nine children with autism were found to have autism in children with autism. Although autism was rare, children with autism were less likely to have autism. In addition, children with autism have autism.\nIn addition, a study published in 2015, showed that autism is a key driver of autism, and some kids with autism had autism for the majority of boys.\nIn addition, autism was not detected in children with autism.\nIn addition, autism was linked to autism.\nIn addition, with autism, autism was linked to autism, autism, autism, autism, autism, autism, autism, and dysbability.\nIn addition, children with autism were found to have autism, including autism, autism, autism, autism, autism, autism, autism, autism, and autism.\nIn addition, autism, for autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism, autism,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.482,
+            "distinct2": 0.329,
+            "distinct4": 0.518,
             "looped": true,
             "loop_onset": 196,
             "loop_period": 2,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 77
           },
           {
             "text": " the Journal of the American Academy of Pediatrics, the National Institute of Pediatrics (IPCC) found that: The American Academy of Pediatrics (IPCC) found that the patients with diabetes were unable to control their diabetes, and the treatment was more likely to be affected: the diabetes.\n- The American Academy of Pediatrics reported that the American Academy of Pediatrics, which found that the American Academy of Pediatrics also had a positive effect on the cardiovascular system.\n- The American Academy of Pediatrics reported that the American Academy of Pediatrics had a positive effect on the cardiovascular system and the treatment was more likely to be affected.\n- The American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics, and the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics reported that the American Academy of Pediatrics are having a positive effect on the cardiovascular system.\n- The American Academy of",
             "tokens": 256,
             "eos": false,
             "rep4": 0.636,
+            "distinct2": 0.267,
+            "distinct4": 0.364,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -59344,50 +59490,775 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.897,
+            "distinct2": 0.082,
+            "distinct4": 0.103,
             "looped": true,
             "loop_onset": 189,
             "loop_period": 24,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 255
           },
           {
             "text": " 70 meters and the mountain rises to an altitude of about 1.8 kilometers. The mountain is considered to be the closest person, to the highest mountain in the mountain.\nThe mountain ranges are approximately 5,000 meters, which is a distance of about 1,800 meters, with about 1.7 kilometers.\nThe mountain ranges are about 2,800 meters, which is a height of 40 meters, with about 1,800 meters. The mountain ranges are estimated by the mountain of the mountain.\nThe mountain ranges are about 1,800 meters, and approximately 1,800 meters.\nThe mountain ranges are about 11,800 meters, and the mountain ranges are about 1,800 meters.\nThe mountain ranges are about 2,800 meters, while the mountain ranges are about 1,800 meters, and about 1,800 meters.\nThe mountain ranges are about 2,500 meters, with about 1,800 meters and about 1,600 meters.\nThe mountain ranges are about 1,800 meters, and over 1,800 meters, with about 3,500 meters, with about 3,500 meters.\nThe mountain ranges are about 1,500 meters, with about 1,800 meters, with about 1,500 meters, and about 3,000",
             "tokens": 256,
             "eos": false,
             "rep4": 0.451,
+            "distinct2": 0.329,
+            "distinct4": 0.549,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 229
           },
           {
             "text": " 4 meters and is the mountain.\nThe mountain falls in the mountain, which is the main mountain.\nThe mountain is the mountain in the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain.\nThe mountain of the mountain is the mountain of the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain of the mountain, which is the mountain of the mountain of the mountain of the mountain of the mountain.\nThe mountain is the mountain of the mountain of the mountain, which is the mountain of the mountain of the",
             "tokens": 256,
             "eos": false,
             "rep4": 0.854,
+            "distinct2": 0.082,
+            "distinct4": 0.146,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 254
           },
           {
             "text": " 4.5 meters and is also known as the mountain rises to a height of about 1.0 meters. The mountain rises to a height of about 1.6 meters. This mountain rises to a height of about 1.0 meters. A height of about 2.0 meters. A height of about 3.0 meters. A height of about 4.0 meters. A height of about 0.3 meters. A height of about 1.0 meters. A height of about 4.0 meters and an elevation of about 1.2 meters. A height of about 1.0 meters. A height of about 1.0 meters. A height of about 1.0 meters. A height of about 2.5 meters. A height of about 2.0 meters. A height of about 3.0 meters. A height of about 1.2 meters. A height of about 1.0 meters. A height of about 2.0 meters. A height of about 2.0 meters. A height of about 2.0 meters. A height of about 1.0 meters. A height of about 2.0 meters. A height of about 1.2 meters. A height of about 1.2 meters. A height of about 2.0 meters. A",
             "tokens": 256,
             "eos": false,
             "rep4": 0.739,
+            "distinct2": 0.169,
+            "distinct4": 0.261,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 248
           },
           {
             "text": " 1,000 feet in height. It is a mountain range of about 1,000 feet in height. The mountain ranges are roughly 5,250 feet in height, while the mountain ranges are about 11,000 feet in height. The mountain ranges are about 1,200 feet in height, with its top and top, with its top and bottom top. The mountain ranges are about 1,600 feet, and the mountain ranges are about 8.2 meters in height, with its top and top elevation to help guide the mountain ranges, with its top and bottom of its top and top.\nThe mountain ranges are about 2,500 feet in height, with its top and top. The mountain ranges are about 10,200 feet in height, with its top and bottom. The mountain ranges are about 5,600 feet in height and top, with its top and top.\nAt the summit, the mountain ranges are about 1,400 feet in height, with its top and top and top, with its top and top. The mountain ranges are about 1,500 feet in height, with its top and top. This mountain ranges are about 1,600 feet in height, with its top and top. The mountain ranges are about 50 feet in height, with its top and",
             "tokens": 256,
             "eos": false,
             "rep4": 0.466,
+            "distinct2": 0.322,
+            "distinct4": 0.534,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 251
+          }
+        ]
+      },
+      {
+        "label": "agreement_gap",
+        "prompt": "The students who had spent the entire semester preparing for the final examination in organic chemistry",
+        "draws": [
+          {
+            "text": ", I needed to be the first to use the second to use the second to apply the second to the second.\nThe final test is designed to develop an artificial intelligence tool in the process of cutting-edge technologies. The process of the second involves a method of cutting-edge technology that is used to analyze the information about your application and the process of cutting-edge technology.\nThe first step is to apply the second to the third, and then apply the second to the second. This is not a method of cutting-edge technology.\nThe second step is to apply the second to the second, and then apply the second to the second. This then measures the next step.\nThe third step is to apply the second to the third. This is done to apply the second to the third. This is done to apply the second to the second in the second. This is done to apply the second in the second.\nThe third step is called the second step, which is the second step. This is done to apply the second to the fourth. This is done to apply the second.\nThe second step is called the third step. It is done to apply the third to the third. This is done to apply the second to the third. This is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.415,
+            "distinct2": 0.376,
+            "distinct4": 0.585,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 26
+          },
+          {
+            "text": " and chemistry, and they had a higher degree of proficiency.\nThey had three or more courses done on the students\u2019 daily education.\nThe students have a high degree of proficiency within their subjects. They have the skills they have, and they have the ability to work with. They have the ability to work collaboratively with their own abilities.\nThey are able to work with their own interests and make them feel more motivated to work with their peers.\nThey have a high degree of proficiency in their own careers. They have the ability to work with their own interests and pursue their interests and make them feel more motivated to work with their own interests.\nThey have to work with their own interests and become more active in their careers. They have a high degree of proficiency within their field and work with their peers.\nThey have an advanced degree of proficiency in their careers. They have a high degree of proficiency in their careers, which they have a high degree of proficiency in their careers.\nThey have to work with their peers, which they have a high degree of proficiency in their careers. They have a high degree of proficiency within their careers and work with their peers.\nThey have to work with their peers, which they have a high degree of proficiency. They",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.427,
+            "distinct2": 0.373,
+            "distinct4": 0.573,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 31
+          },
+          {
+            "text": ", he found a way to prepare for the journal. They had the opportunity to observe the experiment and to make the journal.\nStudents had the opportunity to observe the work of the journal and to determine the results. They spent the final and the previous work of the journal. They had a very small amount of time and no work. They spent the rest of the journal and asked them to take the time to prepare them for the journal.\nThe research team had undertaken a small amount of time for the journal to study. They spent the semester going to complete the journal. They were then placed on the journal, and then returned to the journal. They were then asked to take the journal. They were then asked to try to find the journal. They then asked their experiment to answer the journal. They were then asked to take the journal. They asked them to ask them to ask them to answer the journal. They asked the journal but they asked them to ask them to answer the journal. They asked them to answer this question. They asked them to answer what they had asked. They asked their experiment and asked them to answer the journal. They asked them to ask them to answer the journal and asked them to answer the journal immediately. They asked them to answer what they asked",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.308,
+            "distinct2": 0.459,
+            "distinct4": 0.692,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 109
+          },
+          {
+            "text": ", and found that a small difference in the experiment was needed to make a final experiment more manageable.\nThe results were similar to the results for each of the students who had been given the final test, and the other students had to be made up the same, and the results were similar to the results when the final test was done. The results were similar to the results, and the results were similar to the results.\n\u201cThe results were identical to the results, but this is also great for the students. However, the results were less clear in the final test, suggesting that the results are similar to the results.\u201d\n\u201cThe results are similar to the results, but when the results were similar to the results, the result is surprising, but the results may be similar.\u201d\nIn addition, the results were similar to the results, which could be more significant for the study as a result of the results.\n\u201cWe believe that the results are more important in our study, but those who have been given the results are more important in our study.\u201d\nThe results were similar to the results which were similar to the results as a result of the results, and the results could be similar to the results, the results",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.241,
+            "distinct2": 0.506,
+            "distinct4": 0.759,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 115
+          },
+          {
+            "text": ".\nThe students also found the students with a variety of problems that were more likely to be involved, including the students. They were given the students\u2019 experience in their own time. They were given the students\u2019 experience in their own writing.\nWhile not only did the students\u2019 experience in the classroom, they were not able to find the students\u2019 experience in their own way of life and not to the students. They were often given the students\u2019 experiences of the school. They were also given the students\u2019 experience in their own writing, and they were asked to do something. They were asked to do something for them.\nStudents were asked to do something in order to think about their own writing. They were asked to do something for them to be a part of the class. They were asked to do something for them to go, then they were asked to do something for them to go, then they asked them to do something. They had asked them to do something for them to do something for them. They also asked them to do something for them. They asked them to do something for them.\nI had the students at the top of the students. They asked them to do something for them to do something for them. They",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.368,
+            "distinct2": 0.435,
+            "distinct4": 0.632,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 240
+          }
+        ]
+      },
+      {
+        "label": "history",
+        "prompt": "The French Revolution began in 1789, when",
+        "draws": [
+          {
+            "text": " the French Revolution moved into the British Empire, and it eventually became an independent, economically.\nThe French Revolution eventually became an independent, economically-rooted country, which was the second largest economy ever ever since. In 1876, the British Empire was the first country to be replaced by the French Empire, which was considered the third most influential. It was a result of the French Revolution, the most advanced nations of European and European nations, who were both physically and emotionally unstable.\nThe French Revolution began in 1789, when the French Revolution began in 1789. Although the French Revolution began in 1789, the French Revolution became one of the greatest French and French forces, and the French Revolution became more widely adopted.\nIn 1789, the French Revolution began in 1791, one of the largest French and the second most advanced countries in the world. The French Revolution began in 1792, when the French Revolution was first called the French Revolution. The French Revolution was a first, but the French Revolution started in 1792, when the French Revolution formed the new French Revolution became more popular.\nThe French Revolution came in 1792, when the French Revolution took a second, but the French Revolution continued: the French Revolution began in 1794, when the French",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.174,
+            "distinct2": 0.584,
+            "distinct4": 0.826,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0,
+            "topic_span": 256
+          },
+          {
+            "text": " the New French Revolution was established, and the French Revolution was the most successful.\nIn 1789 the French Revolution was the first French Revolution in 1789. The French Revolution was the first French Revolution in 1789, when the British Revolution was established. The French Revolution was the first French Revolution to be of the first French Revolution to be of the first French Revolution.\nThe French Revolution was the first French Revolution in 1789, when the French Revolution was first in 1789. The French Revolution was the first French Revolution to be of the first French Revolution and the second French Revolution.\nThe French Revolution was the first French Revolution to be the first French Revolution in 1789, when French Revolution was the first French Revolution to be of the first French Revolution. In 1789, the French Revolution was the second French Revolution to be of the second French Revolution.\nIn 1789 the French Revolution was the second French Revolution in 1789, when French Revolution was the second French Revolution to be of the second French Revolution. The French Revolution was a second French Revolution to be of the first French Revolution to be of the second French Revolution. The French Revolution was the first French Revolution to be of the first French Revolution to be of the second French Revolution.\nThe French Revolution was",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.64,
+            "distinct2": 0.196,
+            "distinct4": 0.36,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 255
+          },
+          {
+            "text": " the Dutch Emperor George III was appointed a French missionary to the French.\nAfter the French Revolution, the French revolution began in 1789. The French Revolution began with the French Revolution to be known as the Spanish Revolution.\nThe French Revolution began with the French Revolution. The French Revolution began with the French Revolution, and the French Revolution began with the French Revolution.\nDuring the French Revolution, the French Revolution began with the French Revolution. The French Revolution began with the French Revolution, the French Revolution began with the French Revolution. After the French Revolution began with the French Revolution, the French Revolution began to work.\nThe French Revolution began with the French Revolution. The French Revolution began with the French Revolution to be known as the French Revolution. The French Revolution began with the French Revolution to be known as the French Revolution.\nIn the French Revolution, the French Revolution began with the French Revolution to be known as the French Revolution. The French Revolution began with the French Revolution to be known as the French Revolution. The French Revolution began with the French Revolution to be known as the French Revolution as the French Revolution.\nThe French Revolution began with the French Revolution to be known as the French Revolution, the French Revolution began with the French Revolution to be known as the French Revolution.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.692,
+            "distinct2": 0.204,
+            "distinct4": 0.308,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0,
+            "topic_span": 255
+          },
+          {
+            "text": " a young French businessman, he spent a long time with his father\u2019s doctor, the first American president of the French Revolution. His father, Henry E. Kennedy, born in 1891, was a very wealthy and prosperous leader of the French Empire. He was a member of the French Revolution and he was a member of the French Revolution. His father also became the first French revolutionaries in the French Revolution, which he succeeded in the French Revolution in 1891. His family founded the French Revolution, including the French Revolution, had the second French Revolution, which he became the first French Revolution in the French revolution.\nThe French Revolution was a member of the French Revolution, which he later became the French Revolution. He was a member of the French Revolution, who played the part of the French Revolution. His father, Henry E. Kennedy, born in 1894, was a member of the French Revolution, which he was the first French Revolution in the French Revolution. His father, Henry E. Kennedy, born in 1891, was a member of the French Revolution. He was one of his first French Revolution and he was a member of the French Revolution, which he was an active member of the French Revolution. His father, Henry E. Kennedy, born in 18",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.411,
+            "distinct2": 0.404,
+            "distinct4": 0.589,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.6666666666666666,
+            "topic_span": 244
+          },
+          {
+            "text": " French Revolutionized by the French Revolution, the French Revolution and the French Revolution that became more socialist and more peaceful.\nThe French Revolution had not only a revolution but also a revolution and a revolution. That was the first French Revolution, the French Revolution. It was not too late in the 17th century or when French Revolution changed.\nThe French Revolution began in 1789 and was a revolution. After the French Revolution came in 1789, when French Revolution was a revolutionary.\nThe French Revolution was the first time in the 20th century. The French Revolution changed, and the Dutch Revolution became a major part of the world\u2019s history.\nThe French Revolution began in 1793 and during the 19th century, when French Revolution began in 1789. The French Revolution and the French Revolution came in 1790 and the French Revolution became a part of the French Revolution.\nThe French Revolution brought the French Revolution to the end of 1793. This was not until the 19th century.",
+            "tokens": 201,
+            "eos": true,
+            "rep4": 0.141,
+            "distinct2": 0.57,
+            "distinct4": 0.859,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0,
+            "topic_span": 185
+          }
+        ]
+      },
+      {
+        "label": "anatomy",
+        "prompt": "The human heart is a muscular organ that",
+        "draws": [
+          {
+            "text": " is a natural organ that receives blood from the blood to the blood.\nThe organ responsible for the functions of the brain\nThe organ responsible for the functioning of the body's organs, is also responsible for the functioning of the body.\nThe organ responsible for the functioning of the body is responsible for the functioning of the body, the body's functioning.\nThe organ responsible for the functioning of the brain is responsible for the functioning of the brain.\nThe organ responsible for the functioning of the body determines the functioning of the brain.\nThe organ responsible for the functioning of the body is responsible for the functioning of the body.\nThe organ responsible for the functioning of the body is responsible for the functioning of the body.\nThe organ responsible for the functioning of the body is responsible for the functioning of the body.\nThe organ responsible for the functioning of the body is responsible for the functioning of the body.\nThe organ responsible for the functioning of the body is responsible for the functioning of the body.\nThe organ responsible for the functioning of the body is responsible for the functioning of the body, the physical structure of the body.\nThe organ responsible for the functioning of the body is responsible for the functioning of the body.\nThe organ responsible for the functioning of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.735,
+            "distinct2": 0.18,
+            "distinct4": 0.265,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 250
+          },
+          {
+            "text": " has a strong role in maintaining and supporting the heart that we can do so much.\nThe heart is a muscular organ that has a strong role in maintaining and supporting the heart. It has a strong role in maintaining and supporting the heart. It has a strong role in maintaining and repairing the heart. It also has a strong role in maintaining and repairing the heart.\nThe heart is an organ that has a strong role in maintaining and supporting the heart. It has a strong role in maintaining and repairing the heart. It has a strong role in maintaining and maintaining and supporting the heart.\nThe heart is also the main organ responsible for supporting the heart. It has a strong role in maintaining and repairing the heart. They are both responsible for maintaining and repairing the heart. It has a strong role in maintaining and repairing the heart.\nThe heart is a strong role in maintaining and repairing the heart. It has a strong role in maintaining and repairing the heart. It has a strong role in maintaining and repairing the heart. It has a strong role in maintaining and repairing the heart. It has a strong role in maintaining and repairing the heart.\nThe heart is an essential organ responsible for maintaining and repairing the heart. It has a strong role in maintaining and repairing the heart. It",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.719,
+            "distinct2": 0.192,
+            "distinct4": 0.281,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 254
+          },
+          {
+            "text": " acts in the air, and its body, and its human body.\nThe organs of the body are known to live in the lungs, the heart, and the body.\nThe heart is responsible for the heart and the muscular system.\nThe heart consists of the body, the body, the body and its body.\nThe heart is responsible for the heart and the body.\nThe heart is responsible for the heart.\nThe heart is responsible for the heart.\nThe heart is responsible for the heart.\nThe heart is responsible for the heart.\nThe heart refers to the heart's body, the body, the body, the body, the body, the body, the body, the body, the body, the body, the body.\nThe heart consists of the heart, the body, the body, the body, the body, and the body.\nThe heart is responsible for the heart.\nThe heart is responsible for the heart.\nThe heart is responsible for the heart.\nThe heart is responsible for the heart.\nThe heart is responsible for the heart, the body and the body.\nThe heart is responsible for the heart.\nThe heart consists of the heart, the body and the body.\nThe heart is responsible",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.68,
+            "distinct2": 0.18,
+            "distinct4": 0.32,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 254
+          },
+          {
+            "text": " has a high capacity to carry its functions on the legs and legs. But it is the first step to remember, it is the organ that we breathe.\nThe body is the organ that has a high capacity to carry its functions on the legs. This is the body that is responsible for the body\u2019s ability to carry its functions on the legs.\nThe body is responsible for the body\u2019s ability to carry its functions on the legs. At the same time, the body is responsible for the body\u2019s ability to carry its functions.\nThe body is responsible for the body\u2019s ability to carry its functions on the legs. The body is responsible for the body\u2019s ability to carry its functions on the legs.\nThe body is responsible for the body\u2019s ability to carry its functions. The body is responsible for the body\u2019s ability to carry its functions on the legs.\nThe body plays an important role in the body\u2019s function, the body is responsible for the body\u2019s ability to carry its functions on the legs and legs.\nThe body is responsible for the body\u2019s ability to carry its functions on the legs. The body is responsible for the body\u2019s ability to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.644,
+            "distinct2": 0.247,
+            "distinct4": 0.356,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 37
+          },
+          {
+            "text": " is composed of a large intestine, and the organs of the body. The cells are the main organ in the body, and the organs. It contains a large proportion of the blood vessels in the brain, and organs. The organs are divided into two categories: the organs of the body, and the blood vessels.\nThe body is composed of two types of organs. The organs were formed by the body and the organs. The organs were composed of two organs. The organs were formed by the body. The organs were formed by the body and the blood vessels. The organs were then divided into three groups: the body, the body and the blood vessels. The organs were formed by the body. The organs were formed by the body. The organs were formed by the body. The organs were formed by the body. The organs were formed by the body. The organs were formed by the body and the blood vessels were formed and formed by the body. The organs were formed by the body and the blood vessels were formed by the body. The organs were formed by the body and the body. The organs were formed by the body. The organs were formed by the body. The organs were formed by the body and the blood vessels were formed by the body. The organs were formed",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.573,
+            "distinct2": 0.263,
+            "distinct4": 0.427,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "geography",
+        "prompt": "The Amazon River flows through",
+        "draws": [
+          {
+            "text": " the river to the east and to the west. It is a very dangerous city that is called the river. The river flows through the river is the water flowing over river.\nThe river is a large river that flows through the river. It is a river flowing through the river that flows through the river. The river flows through the river and river flows through the river.\nThe river flows through the river through the river and river flows through the river. It flows through the river to the river through the river by the river. The river flows through the river.\nIn the river, the river is a river flowing through the river through the river. The river flows through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the river through river through the river through the river through the river through the river through the river through the river through the river through the river through the river through the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.664,
+            "distinct2": 0.2,
+            "distinct4": 0.336,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.75,
+            "topic_span": 255
+          },
+          {
+            "text": " the Gulf of Mexico to the east of Mexico. The islands are small islands, which have been found to be part of the Gulf of Mexico. The region is a small island found in the Gulf of Mexico. The islands are mainly found in Mexico, which are now in the Gulf of Mexico.\nThe islands are the islands of Mexico by the Caribbean Sea. The islands are of the most part of the South Atlantic Ocean. The islands are in the Gulf of Mexico, but the islands are one of them. The islands are the Pacific islands which are located and the coast.\nThe islands are the islands of the United States and the South Pacific, and the islands of the South Pacific, are located in the Gulf of Mexico. The islands are islands of the United States and the Pacific Ocean.\nThe islands are the islands of the United States and the North Atlantic Ocean. The islands are the islands of the United States and the North Atlantic Ocean. The islands are called the Islands of the United States and the United States. The islands are islands of the North Atlantic Ocean. The islands are islands of the United States, and the United States is the islands of the United States. The islands are the islands of the United States and the United States.\nThe islands of the United",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.387,
+            "distinct2": 0.357,
+            "distinct4": 0.613,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the Amazon River. The lake is a forest where the sea is the only place where the sea is the most open water ever recorded on its surface.\nAquake is a species of fish and seafood that is part of the ocean.\nAquake is a species of marine origin, and it is the most popular fish in the world. It is a natural and savour bird that is known for its abundant diversity. It is the most popular fish in the world.\nAquake is a species of fish, which is the most popular fish in the world. It is a species of fish that is the only living place in the world. It is a species of fish that is the most abundant and valuable aquatic species of the planet. The most popular fish in the world is the sea which is the most popular in the world. This is an ancient record of the world.\nAquake is a species of fish that is the most widely used species of fish, and is the least used in the world. It is a common fish in the world, and it is a species of fish that is being used to eat fish. For example, if fish are fish that are fish that are fish, the fish that are fish that are fish that are fish",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.32,
+            "distinct2": 0.463,
+            "distinct4": 0.68,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 3
+          },
+          {
+            "text": " a vast river with a rich tapestry of trees, a vast river with a rich tapestry of trees and a rich tapestry of trees and trees.\nThe city of Gomes is a bustling city with a rich tapestry of trees, a rich tapestry, and a rich tapestry of trees. The city of Gomes is a bustling city with a rich tapestry of trees and a rich tapestry of trees, a rich tapestry of trees, and a rich tapestry of trees.\nThe city of Gomes is a bustling city with a rich tapestry of trees. It is a bustling town bustling with bustling streets and a bustling city with bustling tapestry.\nThe city of Gomes is a bustling city with a rich tapestry of trees, a bustling city with bustling tapestry. The city of Gomes is a bustling city with a bustling tapestry, offering a glimpse into the rich tapestry of trees.\nThe city of Gomes is bustling with bustling tapestry, where Gomes can be bustling, with bustling cafes, and restaurants.\nThe city of Gomes is a bustling city with bustling tapestry. The bustling tapestry, bustling",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.589,
+            "distinct2": 0.239,
+            "distinct4": 0.411,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 15
+          },
+          {
+            "text": " the North Atlantic Ocean and the West. It flows through the Pacific Ocean and the Pacific Ocean.\nThe Ocean is a coastal area between the Atlantic and the Pacific Ocean. The water is used to water and is used to prevent erosion. It is used to reduce the water and the ocean liner.\nThe Ocean is an oceanic and geothermal water that flows through the Pacific Ocean. This is used to reduce the water flow and to reduce the water flow.\nThe ocean liner is used in the North Atlantic Ocean. It is used to raise the vessel and reduce the water flow. It is used in coastal areas and in coastal areas.\nThe ocean liner is used to raise the vessel and reduce the water flow through the sea. This is used in coastal areas, such as the ocean liner, the sea liner, the sea liner, and the sea liner.\nThe ocean liner is an oceanic and geothermal water that flows through the ocean liner. This is used to raise the vessel and reduce the water flow through the ocean liner.\nThe ocean liner is used to raise the vessel and reduce the water flow through the ocean liner. The ocean liner is used to raise the vessel and increase the water flow through the ocean liner.\nThe ocean liner is used to raise",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.407,
+            "distinct2": 0.337,
+            "distinct4": 0.593,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 244
+          }
+        ]
+      },
+      {
+        "label": "math_definition",
+        "prompt": "In mathematics, a prime number is",
+        "draws": [
+          {
+            "text": " not the same. They can also be used to solve the problem, however, to solve the problem, and that the problem is solved with the problem.\nThe solution is not a problem. In the above example, the problem is solved with the problem. So, the problem is solved with the problem. The problem is solved with the problem.\nThe problem is solved with the problem. It is solved with the problem. It is solved with the problem.\nThe problem is solved with the problem. It is solved with the problem. It is solved with the problem.\nThe problem is solved with the problem solving. It is solved with the problem.\nThe problem is solved with the problem. It is solved with the problem solved with the problem. It is solved with the problem solving. It is solved with the problem solving. It is solved with the problem solved with the problem solving. It is solved with the problem solving. It is solved with the problem solved with the problem solved with the problem solved. It is solved with the problem solving. It is solved with the problem solving. It is solved with the problem solved by the problem solved with the problem solved. It is solved with the problem solving. It is solved with the problem solving. It is solved",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.719,
+            "distinct2": 0.196,
+            "distinct4": 0.281,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " not a small number.\nThe mathematical theorem, for example, is the same as the theorem.\nBut some mathematical problems are still a small number.\nThe sum of theorem is a finite number, which is one of the two.\nThe theorem is the first theorem.\nThis theorem is a one and the second.\nThe sum of a theorem is a one.\nThe theorem is an example for the theorem.\nThe sum of the theorem is the same as the sum of the theorem.\nThe sum of a theorem is the one which is two.\nThe sum of a theorem is the one which is the one.\nThe sum of a theorem is the one which is one which is one which is one.\nThe sum of a theorem is the one which is the first one which is one which is one of the two.\nThe sum of a theorem is the one which is the one which is another which is the one which is one.\nThe sum of the theorem is the one which is one which is the one which is one which is one which is one which is one which is one which is one which is one which is one which is one which is one which is one which is one which is one which is one which",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.567,
+            "distinct2": 0.256,
+            "distinct4": 0.433,
+            "looped": true,
+            "loop_onset": 211,
+            "loop_period": 3,
+            "topic": 0.0,
+            "topic_span": 40
+          },
+          {
+            "text": " based on the concept of a good math education program. In addition to the program, the program focuses on all the students and teachers\u2019 needs to make an informed decision.\nThe project is designed to provide students with a clear understanding of the concept of a good math education program. This is a game that has a wide range of skills and skills. It is very easy for students to take this game of study to learn from the lesson plan. It is a good idea to know what you think about and what you think about and what you think about the project. It is a good idea for teaching your students how to work in a classroom.\nIn the story, the program is structured and can be done by the teacher or teacher. It is an easy and straightforward process to do. It is a great time to teach your students how to work. It is a good idea for the student how to work in a classroom. It is a good idea for the students who are learning to have their interests.\nIn the story, the program is based on the concept of a good math education program, and the program is a good idea for the students and teachers. This is a good idea for the students and teachers. It is a good idea for the students and teachers",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.257,
+            "distinct2": 0.58,
+            "distinct4": 0.743,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " a single and complex mathematical model, and is a set of mathematical functions, the value of the same set is the sum of the sum of the sum.\nThe first and third-classes are a single and complex mathematical model. The first and third-classes (the second) work by the third the second and third of the first class are a single and major. The second is a single- and complex mathematical model, which is the sum of the sum of the sum of the sum of the sum of the sum of the sum of the sum of the sum of the sum of the sum of the sum.\nThe second is a set of two, one and two and two. The second is a set of two and three. The fifth becomes a set of two, a set of two. The second is a set of two, one and two. The second is the sum. The second is a set of two, one, one, and two. The third is a set of two. The third is a set of two, one, and one. The second is the sum of two, one, and one. The second is a set of two, one, and one. The second is a set of two, one, and one. The first",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.498,
+            "distinct2": 0.31,
+            "distinct4": 0.502,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 83
+          },
+          {
+            "text": " the number of digits and numbers of the number of digits and numbers. The numbers are digit numbers, and numbers of digits are digit numbers, and numbers are digit numbers. The numbers are digit numbers. The numbers are digit numbers, and numbers are digit numbers, and numbers.\nThe numbers are digit numbers, and numbers represent numbers. Different numbers are digit numbers, and numbers count is digit numbers.\nThe numbers are digit numbers, and numbers are digit numbers.\nThe numbers represent numbers in numbers:\n|Number of numbers||1,2,3,3,6,1,3,2,4,3,3,4,6,7,5,6,6,9,6,9,6,6,6,6,6,6,7,6,9,7,8,7,9,6,7,9,6,6,7,7,5,7|\n|Number of numbers||1,6,7,8,5,7,9,7,9,5,5,9,4,9,9,6,6,5,6,6,7,6,8,6,8,8,5,5,5,8",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.47,
+            "distinct2": 0.22,
+            "distinct4": 0.53,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 196
+          }
+        ]
+      },
+      {
+        "label": "environment",
+        "prompt": "Climate change refers to long-term shifts in",
+        "draws": [
+          {
+            "text": " the development and development of a variety of processes and processes that will transform the development of the model.\nIn this process, we are not always able to analyze the development of a new concept, and it will be a new concept that will transform the growth of a new concept. The new concept is called \u201cunconsciousness\u201d and \u201cunconsciousness\u201d and \u201cunconsciousness\u201d and \u201cunconsciousness\u201d. We are not able to predict the growth of a new concept. We are able to predict the growth of a new concept.\nIn the future, we are able to predict the development of a new concept, and then predict the development of a new concept. We will make the transition of a new concept and then predict the growth of a new concept. We will be able to predict the development of a new concept and then predict the development of a new concept.\nIn the future, we are able to predict the development of a new concept and then predict the development of a new concept. We need to predict the development of a new concept and then predict the development of a new concept.\nWe are able to predict the development of a new concept and then predict the development of a new concept, and then",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.526,
+            "distinct2": 0.306,
+            "distinct4": 0.474,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " climate change, as well as climate change, as climate change impacts and climate change.\nClimate change is a major contributing factor for greenhouse gases such as climate change and climate change. It may be a major contributor to climate change. Climate change can also lead to a climate change that is contributing to the development of climate change. Climate change affects the environment and has a positive impact on climate change.\nClimate change in Climate Change\nClimate change is another important factor for the climate. Climate change is a major contributor to climate change, as climate change affects the environment and affects the environment and its impacts. Climate change is a part of the global climate change.\nClimate change is the major part of the global warming climate. Climate change is the global climate change. Climate change is what we call it as the global climate change. Climate change is the global climate change. Climate change is a form of climate change.\nClimate change is the global climate change climate change. Climate change is a major contributor to climate change. Climate change is the global climate change climate change climate change that affects the environment and its effects on the environment and its affect Earth. Climate change is the global climate change climate change. Climate change is a major contributor to climate change. These changes are not just about climate",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.379,
+            "distinct2": 0.408,
+            "distinct4": 0.621,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          },
+          {
+            "text": " policy and changes in policy and action. The term \u201cenvironmental change\u201d refers to both climate change and policy changes that affect the quality of the environment and the environment.\nThe effects of changing climate change on the environment on the basis of climate change include changes in policy and policy changes.\nClimate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate policy change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change, climate change",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.731,
+            "distinct2": 0.212,
+            "distinct4": 0.269,
+            "looped": true,
+            "loop_onset": 111,
+            "loop_period": 3,
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          },
+          {
+            "text": " temperature, precipitation, and rainfall.\nIn this context, we can explore the role of temperature in climate change in ecosystems. Specifically, the frequency of temperature changes is a significant indicator of climate change, and therefore, the effects of temperature on climate change on the environment.\nIn the event of climate change, the effects of climate change are often associated with temperature, and the effect of climate change on the environment. In the event of climate change, the effects of climate change on the environment on the environment and its impact on the environment on the environment on the environment on the environment on the atmosphere are not conducive to climate change. In this context, we can explore the impact of climate change on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment.\nTo examine the impact of climate change on the environment on the environment on the environment on the environment on the environment on the environment on the environment, we can explore the impact of temperature on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the environment on the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.542,
+            "distinct2": 0.31,
+            "distinct4": 0.458,
+            "looped": true,
+            "loop_onset": 206,
+            "loop_period": 3,
+            "topic": 0.3333333333333333,
+            "topic_span": 177
+          },
+          {
+            "text": " the form of a greenhouse gas, but not to the extent of warming or low-Earth emissions.\nA major challenge is the rise of the \u201cgreen economy\u201d in the United States. The climate change of the Earth, the climate, the climate, the natural gas, the climate, the natural gas, the natural gas and the natural gas.\nA major challenge is the rise of the \u201cgreen economy\u201d, which is the \u201cgreen economy\u201d in the United States. The burning green economy is a major challenge. The \u201cgreen economy\u201d of the United States has been an essential part of the economy.\nA major challenge is the rise of the \u201cgreen economy\u201d and is the major challenge. The \u201cgreen economy\u201d of the United States is a major challenge.\nA key challenge is the rise of global climate change. The global climate change has an impact on the climate, the climate, the natural gas and its climate, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas, the natural gas",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.49,
+            "distinct2": 0.353,
+            "distinct4": 0.51,
+            "looped": true,
+            "loop_onset": 200,
+            "loop_period": 4,
+            "topic": 0.3333333333333333,
+            "topic_span": 200
+          }
+        ]
+      },
+      {
+        "label": "recipe",
+        "prompt": "To make bread at home, you will need",
+        "draws": [
+          {
+            "text": " to buy or sell something that will be a good start.\nYou will be able to buy, use it to buy a new product or buy a new product or buy one.\nIf you want to buy a new product, you should purchase a new product which will be a good start of the product.\nYou will need to buy a new product which will be an excellent start of the product.\nYou will need to buy one of the most profitable products.\nYou will need to buy a new product which will be a good start of the product.\nYou will need to buy a new product which will be a good start of the product.\nYou will need to buy a new product which will be a good start, but you will need to buy a new product which will be a good start.\nYou will need to buy a new product which will be a good start of the product which will be a good start of the product.\nYou will need to buy a new product.\nYou will need to buy a new product which will then be a good start to sell a new product.\nYou will need to buy a new product which will be an ideal start of the product which will be a good start.\nYou will need to buy a",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.625,
+            "distinct2": 0.247,
+            "distinct4": 0.375,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 253
+          },
+          {
+            "text": " to get the most out of the time. This will be the time you are doing.\nDo not let the bread start?\nThe answer is: if you need to get a few friends, your friend or family, you will need to do it. The bread is then you will need to get a couple of friends, friends, etc. As you find yourself and your family, you will need to have your friends.\nDo not let the bread start?\nThe following is the recipe:\nThe first recipe is the first recipe:\n- You will need to have to have to make bread in the kitchen.\n- You will need to have to make bread in the kitchen.\n- You will need to have to have to have to work in your kitchen and to have to pay.\n- You will need to have a good quality of bread.\n- You will need to have to pay for a few friends.\n- You will need to have to have to pay for your family, friends, etc.\n- You will need to have to give you a lot of money.\nThe first recipe is the first recipe, which will be the first recipe for your family. The first recipe is the first recipe for your family.\nThe first",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.316,
+            "distinct2": 0.471,
+            "distinct4": 0.684,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.75,
+            "topic_span": 213
+          },
+          {
+            "text": " to be ready for your child to work with your child to work with our parents.\n- Make a cup of water a day to drink.\n- Make a cup of water to drink.\n- Make a cup of water a day.\n- Make a cup of water a day.\n- Make a cup of water a day.\n- Make a cup of water a day.\n- Drink water.\n- Put them in water.\n- Make a cup of water a day.\n- Make a cup of water an evening.\n- Keep the cup of water a day.\n- Make a cup of water a day.\n- Take a drink or drink a day.\n- Take a drink of water for a day.\n- Have a good breakfast.\n- Make a cup of water a day.\n- Avoid drinking water.\n- Avoid drinking.\n- Add to a cup of water to drink.\n- Make a cup of water a day.\n- Keep a cup of water.\n- Add a cup of water to drink.\n- Have a food group.\n- Drink plenty of water.\n- Make a cup of water a day.\n- Take a cup of water a day.\n- Drink",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.581,
+            "distinct2": 0.263,
+            "distinct4": 0.419,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 236
+          },
+          {
+            "text": " to add more flour in.\n- Make flour pasteable\n- Use flour pasteable\n- Use flour pasteable\n- Use flour pasteable\n- Add flour pasteable\n- Use flour pasteable\n- Use flour pasteable or flour pasteable\n- Use flour pasteable or flour pasteable or flour pasteable for longer periods\n- Use flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or flour pasteable or",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.885,
+            "distinct2": 0.086,
+            "distinct4": 0.115,
+            "looped": true,
+            "loop_onset": 72,
+            "loop_period": 4,
+            "topic": 0.0,
+            "topic_span": 9
+          },
+          {
+            "text": " to know if you have a little salt and water. You need to learn about how you are cooking and what you are cooking and how to cook.\n1. Mix the milk and drink it in between the two.\n2. Mix the milk and drink it in each of the three cups.\n3. Mix the milk in each 2 group.\n4. Mix the milk and drink it in each two cup.\n5. Mix the milk and drink it in each four cups.\n6. Mix the milk and drink it in each three cups.\n7. Mix the milk and drink it in each group.\n8. Mix the milk and drink it in each group.\n9. Mix the milk and drink it:\n9. Mix the milk and drink it in each group.\n10. Mix the milk and drink it in each group.\n8. Mix the milk and drink it in each group.\n9. Mix the milk and drink it in each group.\n10. Mix the milk and drink it in each group.\n10. Mix the milk and drink it in each group.\n12. Mix the milk and drink it in each group.\n13. Mix the milk and drink it in each group.\n15.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.534,
+            "distinct2": 0.325,
+            "distinct4": 0.466,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 13
+          }
+        ]
+      },
+      {
+        "label": "literature",
+        "prompt": "William Shakespeare wrote many plays, including",
+        "draws": [
+          {
+            "text": " Henry II, King of the Age, and Henry II, when his son Philip, was born in 1852. The same time he was William Shakespeare, who had written in Shakespeare, and his plays for the other plays. On the other hand, he was a son of his own, but the plays of his own, as he were the Son of Macpherson, who died and died. While Shakespeare was a boy, Henry VI, King of the Age, his first play is a playwright, and his play is a playwright, and a playwright, he is a playwright, and a playwright. He died of his own, who died in 1852, died of his own, and his play was a playwright, and his plays were a playwright, and his playwright, and his playwright. He was the daughter of William Shakespeare, who was a man, and his plays are a playwright, and his plays are a playwright, one of the greatest plays in the world. Shakespeare plays are one of the most prominent plays in Shakespeare, and their play is the playwright, and his plays are a playwright, and his playwright. Shakespeare is a playwright, and was a playwright, and he is a",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.249,
+            "distinct2": 0.506,
+            "distinct4": 0.751,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 241
+          },
+          {
+            "text": " his plays, the works of all the gods and the angels.\n\u201cThe play, my son, her, and my son,\u201d he wrote many plays as a symbol of the power of his son, and the story in the play in the play, for several years,\u201d he wrote the play \u201chis voice\u201d, \u201cand he is not a man who has his ability to play.\u201d\n\u201cThe play is a symbol of the play, but it is also a symbol of the play, but it is also a symbol of the play.\u201d\n\u201cThe play\u201d, \u201cthe play is a symbol of the play, and the love that is written to play.\u201d\n\u201cThe play is a symbol of the play, and the love that is played in the play.\u201d\n\u201cThe play is a symbol of the play, and the love that is played in the play.\u201d\nThis play was first performed on the play, and it was then performed by the play.\n\u201cThe play is a symbol of the play, and it is a symbol of the play, and it is used for making it a symbol of harmony.\u201d\n\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.383,
+            "distinct2": 0.431,
+            "distinct4": 0.617,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 62
+          },
+          {
+            "text": " the Shakespeare.\nA King, the king\u2019s son, is a great man, but he was the head of the king.\nKing, his son, is the son of King, and is crowned king. King, however, is the name King, and is a king. King, as King, as King, is a king, the king, and king. King, as King, the king, plays the role of King, is a prince, and king is a king. King, as King, is king, and king, as King, the king. King, as King, is king of the great wealth. King, as King, as King, plays his role in King, plays the role of King, and plays the role of King, as king, and king, king, is a king. King, as King, king, plays the role of King, is king of the great variety. King, as king, plays the role of King, plays the role of King, plays the role of King, and plays the role of King, as king of the great wealth. King, as king, plays the role of King, plays the role of King, plays the role of King, plays the role of King, play",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.478,
+            "distinct2": 0.275,
+            "distinct4": 0.522,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666,
+            "topic_span": 250
+          },
+          {
+            "text": " Shakespeare. Shakespeare plays and other plays are influenced by Shakespeare. Shakespeare plays are both playwright and plays while Shakespeare plays are considered Shakespeare\u2019s most beloved playwright. Shakespeare plays are portrayed as a \u201cman\u2019s character\u201d as Shakespeare plays. Shakespeare plays are portrayed as a \u201cman\u2019s character\u201d as Shakespeare plays. Shakespeare plays a novel of Shakespeare, Shakespeare plays, and plays are portrayed as a novel Shakespeare, both among plays and plays. Shakespeare plays play in Shakespeare\u2019s play is both an important playwright and plays. Shakespeare play is a playwright and playswright\u2019s plays. Shakespeare play in Shakespeare play is a playwright and playswright playwright and plays playwright playwright and playswright playwright and playswright playwright. Shakespeare plays are portrayed as a playwright and playwright playwright playwright as a playwright playwright\u2019s plays and playswright playwright playswright\u2019s playwright plays. Shakespeare plays are portrayed as a playwright and playswright playwright playwright playwright and playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright playwright play",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.474,
+            "distinct2": 0.275,
+            "distinct4": 0.526,
+            "looped": true,
+            "loop_onset": 217,
+            "loop_period": 2,
+            "topic": 0.3333333333333333,
+            "topic_span": 209
+          },
+          {
+            "text": " the Shakespeare King of England.\n- Macmillan was an important playwright in Shakespeare\u2019s life. Shakespeare\u2019s plays were Shakespeare\u2019s first play. Shakespeare\u2019s plays also are the playwright, which is a novel and playwright. Shakespeare\u2019s play is a popular playwright in Shakespeare\u2019s play.\n- Shakespeare\u2019s plays are the playwright and playswright. Shakespeare plays are primarily played by the playwright and playswright. Shakespeare\u2019s plays are the playwright and playswright, which is a playwright and playswright. Shakespeare\u2019s play is a playwright and playswright. Shakespeare\u2019s play is a playwright, particularly in Shakespeare\u2019s play. Shakespeare\u2019s plays are the playwright, and playswright plays are the playwright that plays both often. Shakespeare\u2019s play is the playwright. Shakespeare\u2019s plays are a playwright, which is a playwright, known as the playwright and playswright. Shakespeare\u2019s play is a playwright, which is the playwright and playswright. Shakespeare\u2019s play is a playwright, which plays both play and playwright playwrights. Shakespeare\u2019s play",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.49,
+            "distinct2": 0.302,
+            "distinct4": 0.51,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 252
+          }
+        ]
+      },
+      {
+        "label": "technology",
+        "prompt": "The internet began as a research project in",
+        "draws": [
+          {
+            "text": " the United States, and became one of the most popular businesses in the world. In order to be able to share the data, there were also a large network of the internet in the world, where more and more of the information being used to make it easier for the network to become a central bank.\nThe internet was a long and complex system of communication, and it was a branch of technology that was connected to all parts of the world. The internet was an important part of the Internet which was the first of the global internet. For example, the Internet and the Internet were connected to the Internet. In the early 1900s, a network of computers was a major source of connectivity. Today, there were a number of connected networks. The Internet became the first telephone to be connected to the Internet.\nIn the past, the Internet became the first Internet to be connected to the Internet. The Internet was a one-party that was connected to the Internet. The Internet was a one-party that was connected to the Internet and was connected to the Internet. The Internet was a private and it was a network that was connected to the Internet. The Internet was a private and it was a private and it was a digital social trade that was not connected to the Internet.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.198,
+            "distinct2": 0.604,
+            "distinct4": 0.802,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 255
+          },
+          {
+            "text": " the mid-1960s, and the new development of the internet was also a focus of the development of the Internet.\nThe project was created by the new generation of information and the technologies used for Internet-based communication. The new generation of information was developed by the industry and the development of the internet. The use of the technology was developed by the company of the Internet, which was developed by the company of the Internet. The invention of the Internet was an industrial revolution (DOT) which was developed by the company of the Internet.\nThe invention of the Internet was a major part of the Internet. The invention of the Internet was widely used as a digital instrument and the computer was used for telephone processing and processing. The invention of the computer was developed by the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention of the invention:\nThe invention of the invention of the invention of the invention of the invention of the invention",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.486,
+            "distinct2": 0.353,
+            "distinct4": 0.514,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 128
+          },
+          {
+            "text": " the 1980s and 1990s. The results were based on the data. The results were that in the 1990s, the data was collected, and the data was collected on the data. The data was then used to collect data from the data for data. Data and data were collected, and processed, and data was collected.\nData were collected using a data to collect data, and processed, and then processed, and stored. Data were collected using the data as it was collected, and stored in data was collected. Data were collected through data collected, and then processed, and stored in data was collected. Data were collected using the data for data collection. Data were collected and stored in data for data collection. Data was collected in data collection and stored in data was collected using the data as collected. Data were collected through data collection and stored in data collected and stored in data collected. Data collected was collected and stored in data collected and stored in data collected and stored in data collected. Data collected and stored in data collected and stored in data collected and stored in data collected and stored in data collected and stored in data collected and stored in data collected and stored in data collected and stored in data collected and stored in data collected and stored in data collected and stored in data collected",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.451,
+            "distinct2": 0.294,
+            "distinct4": 0.549,
+            "looped": true,
+            "loop_onset": 200,
+            "loop_period": 5,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the US, while in the early 1990s, the agency has become one of the most important industries in the world. The research and research industries are developing in the country through a large number of industries, the industry, industries, and industries.\nThe study was developed by the United Kingdom and Australia. The government is working to develop and implement plans for the development of the country. The study has become a part of the world\u2019s largest economy, with a significant increase in the global economy. The study is the second-largest economy in the world.\nThe study is a broad field of study that focuses on the development of new technologies. The study is the second-largest computer in the world. The study is the third-largest computer in the world, but it is the fifth-largest computer in the world. The study begins with a research project, which will run in the United States. The study of the United States has become a major and most important sector in the world.\nThe study is the first-largest computer in the world to be the second-largest computer in the world. The research is the second-largest computer in the world. The study is the second fastest computer in the world. The study is a large number of computers and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.213,
+            "distinct2": 0.569,
+            "distinct4": 0.787,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 226
+          },
+          {
+            "text": " the region of the country. The research project was made by the University of Waterloo. The project was also carried out by the European Commission on the project of the European Parliament. The project was developed to support the project (to make a donation and to raise funds) and to fund the work. The project was funded by the European Commission on the European Commission on the European Commission, which was funded by the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on the European Commission on",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.731,
+            "distinct2": 0.208,
+            "distinct4": 0.269,
+            "looped": true,
+            "loop_onset": 80,
+            "loop_period": 4,
+            "topic": 0.0,
+            "topic_span": 61
+          }
+        ]
+      },
+      {
+        "label": "economics",
+        "prompt": "Inflation occurs when",
+        "draws": [
+          {
+            "text": " the inflation rate is not as high as the inflation rate is not as high as the recession rate is not as high as the inflation rate is considered.\nThe inflation rate is a major source of the inflation rate, the inflation rate is the lowest. When inflation is rising, inflation is falling short.\nThe inflation rate is the lowest, and the inflation rate is the lowest, and the inflation rate is highest.\nThe inflation rate is not as low as the inflation rate is the lowest.\nThe inflation rate is equal, the inflation rate is the lowest and inflation rate is the lowest.\nThe inflation rate is the lowest.\nThe inflation rate is the lowest and the inflation rate is the lowest.\nThe inflation rate is the lowest.\nThe inflation rates are lower, the inflation rate is the lowest.\nThe inflation rate is the lowest.\nThe inflation rate is the highest.\nThe inflation rate can be the lowest and the inflation rate is the lowest, the inflation rate is higher.\nThe inflation rate is the lowest.\nThe inflation rate is the lowest, the inflation rate is the lowest, the inflation rate is the lowest, the inflation rate is the lowest, the inflation rate is the lowest.\nThe inflation rate is the lowest and the inflation",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.644,
+            "distinct2": 0.216,
+            "distinct4": 0.356,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 256
+          },
+          {
+            "text": " the inflation rate is between 40 and 40. This is not the case because it may not be as if the inflation rate is between 50 and 59.\nThe inflation rate is between 40 and 40. This will increase the rate of the inflation rate over the last month. This will decrease the rate of the inflation rate. If inflation is between 50 and 50, it increases the rate of the inflation rate for both the inflation rate and the inflation rate.\nThe inflation rate is between 60 and 30. This will increase the rate of the inflation rate. If inflation is between 40 and 41, it is only 15, and the inflation rate will decrease the inflation rate at 20. This will increase the rate of the inflation rate for both the inflation rate and the inflation rate.\nThis will help you to get the inflation rate under the next month.\nIf inflation is between 40 and 50, it is important to keep the inflation rate free. If inflation is between 50 and 50, it is recommended that it is a good idea to do some inflation rates with 30.\nThis will help you determine if inflation is between 45 and 40, the inflation rate will increase. For example, you should be able to multiply the inflation rate. This will help you determine if inflation is between 50",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.292,
+            "distinct2": 0.471,
+            "distinct4": 0.708,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 253
+          },
+          {
+            "text": " inflation is more than a year. This can be done without inflation.\nThe inflation rate is lower than the expected inflation rate. This is because the inflation rate is higher than the expected inflation rate.\nThe inflation rate is lower than the expected inflation rate.\nFor inflation, inflation is a result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation in the first year.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation. However, inflation is the result of inflation, which is the result of inflation.\nThe inflation rate is not the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nInflation is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation rate is the result of inflation.\nThe inflation",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.692,
+            "distinct2": 0.208,
+            "distinct4": 0.308,
+            "looped": true,
+            "loop_onset": 207,
+            "loop_period": 10,
+            "topic": 0.5,
+            "topic_span": 256
+          },
+          {
+            "text": " people who are in the middle income category are less likely to be affected by the price, which means they are more likely to be used to buy. If inflation is not regulated, the question is, is that it is not a source of revenue and that is not expected to be used as a substitute for a given income. There is a general need to do this by saying that the price of a given income has been given.\nThe price of a given income is not the amount of a given income that is earned in the income category, and that is it all depends on the price of a given income. The price of a given income is not a given income. This is the cost of a given income. The price of a given income is given for the income of the given income of the given income. Similarly, in many other ways, the given income is not the same as the value of the given income in the given income. Similarly, in the lower income, the given income of the given income of the given income of the given income of the given income of the given income of the given income of the given income of the given income of the given income of the given income of the given income of the given income of the given income of the given income",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.344,
+            "distinct2": 0.482,
+            "distinct4": 0.656,
+            "looped": true,
+            "loop_onset": 197,
+            "loop_period": 4,
+            "topic": 0.0,
+            "topic_span": 32
+          },
+          {
+            "text": " the price of a price is lower than the price of the price and the price of the price of the price increases. This is because the price of the price of the price is less than the price of the price of the price of the price of the price of the price of the market is lower than the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of the price of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.874,
+            "distinct2": 0.082,
+            "distinct4": 0.126,
+            "looped": true,
+            "loop_onset": 61,
+            "loop_period": 3,
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       }

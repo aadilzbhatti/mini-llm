@@ -58817,18 +58817,29 @@
     "peak_mem_kind": "cuda max_memory_allocated"
   },
   "samples": {
-    "protocol": "10 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
+    "protocol": "20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw",
     "temperature": 0.7,
     "top_k": 40,
     "new_tokens": 256,
     "draws": 5,
     "summary": {
-      "n": 50,
-      "rep4": 0.451,
-      "looped": 7,
-      "eos": 10,
-      "topic": 0.383,
-      "tokens": 233.7
+      "n": 100,
+      "rep4": 0.436,
+      "rep4_p90": 0.748,
+      "rep4_mean": 0.434,
+      "distinct2": 0.402,
+      "distinct4": 0.566,
+      "looped": 17,
+      "loop_rate": 0.17,
+      "loop_ci95": [
+        0.109,
+        0.255
+      ],
+      "loop_onset_median": 180.0,
+      "topic": 0.301,
+      "topic_span_median": 180.5,
+      "eos": 13,
+      "tokens": 242.37
     },
     "prompts": [
       {
@@ -58840,50 +58851,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.625,
+            "distinct2": 0.263,
+            "distinct4": 0.375,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " begins in cells, then, in order for the organism to survive. When the cells are free of charge, the cells will convert the cellular energy through the cells.\nIn order to survive, an organism needs to be able to survive, but it needs to be able to survive. For example, if the organism does not use water, the organism will begin to lose weight. In order to survive, the organism needs to be able to survive.\nA new study has found that living cells that have the same energy for survival are not able to survive. This is due to the fact that the organisms may survive, but they do not survive. Humans may not survive, but they have to survive.\nSome of the most common causes of death in humans include:\n- In general, the organism will have to survive, and the organism will have to survive.\n- In general, the organism will survive and survive, and it will eventually survive.\n- In general, the organism will survive, and the organism will survive.\n- In general, the organism will survive.\n- In general, the organism will survive.\n- In general, the organism will survive, and the organism will survive, and the organism will survive.",
             "tokens": 250,
             "eos": true,
             "rep4": 0.308,
+            "distinct2": 0.514,
+            "distinct4": 0.692,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " involves photosynthesis, photosynthesis, and photosynthesis. It provides various activities like photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis, photosynthesis,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.937,
+            "distinct2": 0.051,
+            "distinct4": 0.063,
             "looped": true,
             "loop_onset": 16,
             "loop_period": 3,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 254
           },
           {
             "text": " involves the transformation of the organism into a specific molecule that is not known as the\nnature of the environment. The process is used to create ATP, which is created by the\nenvironment to enable the organism to generate ATP. The process involves the process of the process using the\ndirection of the natural environment.\nThe human body consists of the organism and the organism is the\nnature and the living organism. The organism also consists of the\nenvironment that is a living organism. The animal is the living organism\nthat is the living organism. The body consists of the\nliving organism and the living organism.\nThe human body consists of the\nliving organism and the organisms. The human body consists of the\nliving organism and the living organism.\nThe human body consists of the organism and the living organism\nthe living organism. The living organism consists of the\nliving organism. The living organism consists of the\nliving organism.\nThe human body consists of the organism\nThe living organism consists of the\nliving organism. The living organism consists of the\nliving organism and the living organism\nThe living organism consists of the living organism.\nThe living organism consists of the living organism and the living organism comprises\nliving organism. The living organism consists of the\nliving organism",
             "tokens": 256,
             "eos": false,
             "rep4": 0.423,
+            "distinct2": 0.345,
+            "distinct4": 0.577,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " involves making the cells and cells more resistant to stress. A study published in Nature suggests that the cells could be more resistant to stress than the cells. It is also important to know that a person has a higher chance of being exposed to stress than the cells.\nIn short, the researchers found that some of the cells that were exposed to stress in plants were exposed to stress, or that they could not be able to control them. It was not surprising that a person with an autoimmune disease caused a significant amount of damage to their immune system. It was more likely that the cells were exposed to stress than those with an autoimmune disease.\nThe researchers found that in the brain cells were more resistant to stress than those with the autoimmune disease, and these cells were more resistant to stress, which could lead to more stress.\nThe study also found that the cells in the brain were more resistant to stress than those with the autoimmune disease.\nThe study was published in Nature.\nThe research was published in Nature.",
             "tokens": 203,
             "eos": true,
             "rep4": 0.14,
+            "distinct2": 0.619,
+            "distinct4": 0.86,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       },
@@ -58896,50 +58922,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.13,
+            "distinct2": 0.612,
+            "distinct4": 0.87,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 90
           },
           {
             "text": " was born in Germany, but his father had never been able to explain his father's views. He died in infancy in 1844 and was the first man to study, on April 22, 1855.\nThe first Albert Einstein was born to a young age at the age of eight, and the age of the mother was 16. The first Albert Einstein was born in the age of 5. He was born in the age of 18, and his father was the first of all of the 20 of the five subjects. After a father's death, he was born in the age of 18 to 18. This was the first Albert Einstein.\nThe birth of Albert Einstein was a life-long scientific study, with a focus on how the basic laws of physics influenced the theory of the universe and the principles of relativity and the study of the nature of laws. He wrote some of Einstein's views on the theory of relativity.\nThe first Albert Einstein, born in the age of 18, to be a man of age, was born in the age of 18, and his father was 18, as was Albert Einstein. He went to Cambridge, Cambridge, and became a professor of physics and computer science, and was born in the age of 18, and was one of the first",
             "tokens": 256,
             "eos": false,
             "rep4": 0.123,
+            "distinct2": 0.647,
+            "distinct4": 0.877,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.8333333333333334
+            "topic": 0.8333333333333334,
+            "topic_span": 244
           },
           {
             "text": " believed the universe was a sphere of constant change in a sphere of equilibrium.\n\"We have a way of seeing the universe as a whole, but we have yet to be able to see the universe as a whole. We have a way to see it as a whole, but we have to look at it as an empty-ended, but we have to be able to see the world as a whole, and we have to be able to see the universe as a whole.\n\"There is a way of seeing the world as a whole, and we have to be able to see it as a whole, but we are not able to see it as a whole, or a whole, and we have to be able to see it as a whole, and we have to be able to see it as a whole, and we have to work together to see it as a whole, and we have to be able to see it as a whole, and we have to be able to see it as a whole, and so we have to be able to see it as a whole.\n\"We have to believe that in a matter of seconds we will see it as a whole, and that we have to be able to see it as a whole, and we have to",
             "tokens": 256,
             "eos": false,
             "rep4": 0.542,
+            "distinct2": 0.306,
+            "distinct4": 0.458,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " became the first physicist, born in 1943. Einstein's life was a very simple concept, and his ideas were developed.\nHe was a gifted scientist and physicist who became the first doctor of physics from the 13th-century, who led the discovery of the first atomic bomb. He studied the atomic-bombing of a bomb in 1873. In 1936, he began an experiment called a \"bombing of a bomb\" and he was credited with being a \"bombing of a bomb\" and was a \"bombing of a bomb, and a bomb\" and was a \"bombing of a bomb\".\nIn 1935, Einstein began a work of \"bombing of a bomb\" and, in 1935, a chemical bomb was discovered. He was a physicist and physicist who developed the bomb. \"He was a bomb,\" he wrote, \"but it was a bomb.\"\nIn the late 1940's, Einstein had a bomb that was almost entirely random, but he was \"bombing of a bomb\".\nIn the early 1950s, Einstein was an experimental physicist, who created a \"bombing-bombing-bombing-bombing-bombing-bombing-bombing-bombing-bombing-bombing-bombing-bomb",
             "tokens": 256,
             "eos": false,
             "rep4": 0.241,
+            "distinct2": 0.596,
+            "distinct4": 0.759,
             "looped": true,
             "loop_onset": 222,
             "loop_period": 3,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 217
           },
           {
             "text": " became the first person of the Nobel Prize in Physics. Einstein\u2019s first experimental work was known for his work in the fields of physics and computer science.\nIn 1905, Einstein became the first American to play a game in the sciences. He had been a Fellow of the College of the Humanities and in 1760, to become the first American to play the National Institute of Physics. (The second was the first American to play the National Academy of Sciences and the first to play the National Academy of Sciences of the USA.)",
             "tokens": 107,
             "eos": true,
             "rep4": 0.096,
+            "distinct2": 0.774,
+            "distinct4": 0.904,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.16666666666666666
+            "topic": 0.16666666666666666,
+            "topic_span": 78
           }
         ]
       },
@@ -58952,50 +58993,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.668,
+            "distinct2": 0.239,
+            "distinct4": 0.332,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " a unique element and a very strong molecular structure and a very complex structure. The main element of the molecule is the nucleus.\nThe main element of the molecule is the nucleus. The main element of the molecule is the nucleus. When the main element of the molecule is used as the nucleus, it is the nucleus. When the main element of the molecule is used as the nucleus, the main element of the molecule is the nucleus.\nThe main element of the molecule is the nucleus. The main element of the molecule is the nucleus. The main element of the molecule is the nucleus. The main element of the molecule is the nucleus.\nThe main element of the molecule is the nucleus. The main element of the molecule is the nucleus. The main element of the molecule is the nucleus.\nThe main element of the molecule is the nucleus. The main element of the molecule is the nucleus. The main element of the molecule is the nucleus. The main elements of the molecule are the nucleus.\nThe main element of the molecule is the nucleus. The main element is the nucleus. The main element of the molecule is the nucleus. The main element is the nucleus. The main element of the molecule is the nucleus.\nThe main element of the molecule is the nucleus.",
             "tokens": 256,
             "eos": false,
             "rep4": 0.775,
+            "distinct2": 0.157,
+            "distinct4": 0.225,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 249
           },
           {
             "text": " its name-name and its name, and is responsible for the synthesis of glucose and a type of protein. A specific type of protein has its origins in the liver, and it is usually used in the form of a protein called insulin.\nThe liver\u2019s function is also called insulin-dependent glucose. It is the primary source of glucose, and it is the mainstay of the body. The mainstay of the body is the liver\u2019s primary source of glucose.\nThe primary source of glucose is triglycerides, which are stored in the blood vessels between the blood vessels.\nThe liver is the central part of the body that stores glucose, which is the main source of glucose.\nThe liver stores glucose and is responsible for the production of glucose from the liver.\nThe liver has high blood glucose and is responsible for the production of glucose.\nThe liver\u2019s main source of glucose is glucose.\nThe liver stores glucose, which is the main source of glucose, and the main source of glucose.\nThe liver stores glucose, which is the main source of glucose.\nThe liver stores glucose, which is responsible for the production of glucose.\nThe liver stores glucose and is responsible for the production of glucose.\nThe liver stores",
             "tokens": 256,
             "eos": false,
             "rep4": 0.352,
+            "distinct2": 0.427,
+            "distinct4": 0.648,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " the help of the DNA. It is a chemical element that is essential in the body.\nThe process of determining the chemical elements depends on the number of molecules present in the body. It is the number of molecules present in the body.\nThe process of determining the chemical element is called the reaction of the molecule into the reaction of the molecules.\nThe process of determining the chemical elements depends on the nature of the reaction and the chemical elements.\nThe chemical element is the substance of the molecule that is bound to the reactance of the chemical elements.\nThe reactions of the reaction of the two molecules are called the reactants.\nThe chemical element is the chemical element of the chemical element.\nThe chemical element is the chemical element that is made of.\nThe chemical element is the chemical element that is made of.\nThe chemical element is the chemical element with the help of the chemical element.\nThe chemical element is a chemical element that is made of.\nThe chemical element is the chemical element that is made of.\nAlcohol, the chemical element, and the chemical element are important factors for the reaction.\nThe chemical element is the chemical element that is made of.\nThe chemical element is the chemical element that is made of.\nThe",
             "tokens": 256,
             "eos": false,
             "rep4": 0.443,
+            "distinct2": 0.337,
+            "distinct4": 0.557,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 249
           },
           {
             "text": " a high concentration of beta-carotanide. It is a rare and hard-working material. Its name comes from the name of an enzyme called beta-carotanide. It is a molecule that has been involved in the synthesis of the activity of beta-carotanide and its many applications. Its name is an aromatic chemical compound that is very important in the body. Its name is given to the person, the person, the person, the person, the person, the person, the person and the other. It is known as a \u201cflavor\u201d or \u201cchirro\u201d. The name is used by the name of its name.\nTannine is a chemical compound that has been used in the treatment of the drug. It consists of three main components, a protein, alpha-carotanide, and an amino acid. This compound is used by the body in the treatment of the drug. The drug is also called the \u201cgiant\u201d because it has been used in the treatment of brain cancer, and the drug is called a \u201cchirro\u201d.\nTannine is also an antioxidant that helps the body in the body in the body. It is also called a",
             "tokens": 256,
             "eos": false,
             "rep4": 0.194,
+            "distinct2": 0.584,
+            "distinct4": 0.806,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 146
           }
         ]
       },
@@ -59008,50 +59064,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.68,
+            "distinct2": 0.227,
+            "distinct4": 0.32,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 251
           },
           {
             "text": " make sure they are doing so.\n- Students will also learn about the world as they learn about the Earth and how to grow the world.\n- They will be taught how to make sure they are using the Earth\u2019s atmosphere.\n- Students will be taught how to make sure they are using the Earth\u2019s atmosphere.\n- They will be taught how to make the Earth\u2019s atmosphere warmer.\n- Students will learn about the Earth and how to make it cool.\n- Students will learn about the Earth\u2019s atmosphere.\n- Students will learn how to make the Earth\u2019s atmosphere warmer.\n- Students will learn about the Earth\u2019s atmosphere and how to make the Earth\u2019s atmosphere warmer.\n- Students will learn about the Earth\u2019s atmosphere.\n- Students will learn about the Earth\u2019s atmosphere and how to make the Earth\u2019s atmosphere warmer.\n- Students will learn about the Earth\u2019s atmosphere and how they can help them.\n- Students will learn about the Earth\u2019s atmosphere.\n- Students will learn about the Earth\u2019s atmosphere.\n- Students will learn about the Earth\u2019s atmosphere and how to make the Earth\u2019",
             "tokens": 256,
             "eos": false,
             "rep4": 0.688,
+            "distinct2": 0.204,
+            "distinct4": 0.312,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 241
           },
           {
             "text": " make decisions and how to make decisions.\n- They will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions and how to make choices and make decisions.\n- They will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions based on decision-making.\n- They will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions and how to make decisions.\nStudents will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions and how to make decisions.\nStudents will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions and how to make decisions.\n- They will learn how to make decisions.\n- They will develop skills and understanding skills.\n- They will learn how to make decisions and how to make decisions.\n-",
             "tokens": 256,
             "eos": false,
             "rep4": 0.846,
+            "distinct2": 0.114,
+            "distinct4": 0.154,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 244
           },
           {
             "text": " use a computer and their understanding of the topic.\n- The world is a great place to start learning in 3D and 3D. Use a computer to see what is happening in the world.\n- Create a self-assessment plan where you are going to be able to do more than just learning one idea.\n- To learn something new, you can start learning to use a computer and a computer.\n- To teach a new skill, you can try to use a computer, using a computer, or simply using a computer, a computer, and a computer.\n- To learn a new skill, you can get the knowledge you need.\n- The ability to do more than just learning.\n- To plan and work with a computer.\n- To learn a new skill.\n- To learn a new skill, you can use a computer to see what you\u2019re learning.\n- To learn a new skill, you can create your own learning style.\n- To start the new skill, you can use a computer, a computer, and a computer.\n- To do more than you could have, you can use the computer to learn.\n- To learn in a computer.\n- To learn the skill.\n-",
             "tokens": 256,
             "eos": false,
             "rep4": 0.269,
+            "distinct2": 0.514,
+            "distinct4": 0.731,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 251
           },
           {
             "text": " read and write the text in a sentence.\nThe course should be completed in a class that is taught by a class. Students can learn from a variety of materials and techniques.\nThere are a number of steps that students can take to prepare the texts in a sentence. The focus of this lesson is to teach the concept of a word. Students learn from a variety of texts and are taught the concept of a word.\nStudents should also learn the concept of the word. Students can choose to use the word as a starting point and apply it.\nIt is important to know the meaning of the word.\nStudents should be able to read the words and write the sentence.\nThe word is not the same as the word.",
             "tokens": 148,
             "eos": true,
             "rep4": 0.069,
+            "distinct2": 0.741,
+            "distinct4": 0.931,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 125
           }
         ]
       },
@@ -59064,50 +59135,65 @@
             "tokens": 83,
             "eos": true,
             "rep4": 0.363,
+            "distinct2": 0.402,
+            "distinct4": 0.637,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " Increased energy consumption\n- Reduced energy consumption\n- Improved energy efficiency\n- Increased energy consumption\n- Reduced energy consumption\n- Higher energy consumption\n- Improved energy efficiency\n- Reduced energy consumption\n- Improved energy efficiency\n- Reduced energy consumption\n- Improved energy efficiency\n- Reduced energy consumption\n- Reduced energy consumption\n- Increased energy consumption\n- Increased energy consumption\n- Increased energy consumption\n- Improved energy efficiency\n- Improved energy efficiency\n- Increased energy consumption\n- Increased energy consumption\n- Reduced energy consumption\n- Improved energy efficiency\n- Improved energy efficiency\n- Improved energy efficiency\n- Improved energy efficiency\n- Increased energy consumption\n- Increased flexibility\n- Improved energy efficiency\n- Increased energy consumption\n- Improved energy efficiency\n- Increased energy consumption\n- Improved energy efficiency\n- Improved energy efficiency\n- Increased energy consumption\n- Improved energy efficiency\n- Improved energy efficiency\n- Increased energy consumption\n- Improved energy efficiency\n- Improved energy efficiency\n- Improved energy efficiency\n- Improved energy efficiency",
             "tokens": 202,
             "eos": true,
             "rep4": 0.874,
+            "distinct2": 0.075,
+            "distinct4": 0.126,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": "__________ is a great way to stay active even if you don\u2019t have a lot of exercise too, you\u2019re less likely to have a lot of exercise.\n- __________ is also beneficial for improving your performance.\n- __________ is a great way to stay active and energized.\n- __________ is a great way to stay active.\n- __________ is a great way to stay active and energized.\n- __________ is a great way to stay active while you\u2019re less focused.\n- __________ is a great way to stay active and active while you are more active.\n- __________ is a great way to stay active.\n- __________ is a great way to stay active and active.\n- __________ is a great way to stay active.\n- __________ is a great way to stay active.\n- __________ is a great way to stay active and active.\n- __________ is a great way to stay active.\n- __________ is a great way to stay active and active.\n- __________ is a great way to stay active and active.\n- __________ is a great way to",
             "tokens": 256,
             "eos": false,
             "rep4": 0.711,
+            "distinct2": 0.212,
+            "distinct4": 0.289,
             "looped": true,
             "loop_onset": 214,
             "loop_period": 15,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 44
           },
           {
             "text": "_________ weight\n- __________ weight\n- _________ weight\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\nI am interested in learning and I am able to do a lot of study on various aspects of physical activity. I don't know where to go if you need to make a good day... __________________\n- ___________ long\n- ___________ short\n- ___________ short\n- __________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- __________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n- ___________ short\n",
             "tokens": 256,
             "eos": false,
             "rep4": 0.739,
+            "distinct2": 0.22,
+            "distinct4": 0.261,
             "looped": true,
             "loop_onset": 218,
             "loop_period": 6,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " Proper exercise helps keep you active in the body and improves overall health.\n- Reduced risk of cardiovascular disease, such as diabetes and heart disease, increases the risk of cardiovascular disease, heart disease, and heart attacks.\n- Reduced risk of cardiovascular disease, such as diabetes and heart disease, improves the cardiovascular system.\n- Increased risk of cardiovascular disease, such as stroke and heart disease, improves health and cardiovascular health.\n- Reduced risk of cardiovascular disease and heart disease, such as heart disease, improves cardiovascular health.\n- Improved overall cardiovascular health, such as cardiovascular disease, improves the cardiovascular health, and increases the risk of cardiovascular disease.\n- Increased risk of cardiovascular disease, such as cardiovascular disease, as well as cardiovascular disease, improves the cardiovascular health, and improves the cardiovascular health.\n- Reduced risk of cardiovascular disease, such as heart disease, improves the cardiovascular health, and improves the cardiovascular health.\n- Improved cardiovascular health, such as heart disease, improves the cardiovascular health, and enhances the cardiovascular health.\n- Improved cardiovascular health, such as cardiovascular disease, improves the cardiovascular health, and improve the cardiovascular health.\n- Improved cardiovascular health, such as cardiovascular disease, improving the cardiovascular health, and increasing the risk of cardiovascular disease.\n- Improved cardiovascular health",
             "tokens": 256,
             "eos": false,
             "rep4": 0.53,
+            "distinct2": 0.271,
+            "distinct4": 0.47,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 2
           }
         ]
       },
@@ -59120,50 +59206,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.743,
+            "distinct2": 0.145,
+            "distinct4": 0.257,
             "looped": true,
             "loop_onset": 215,
             "loop_period": 16,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 253
           },
           {
             "text": " If we are not aware of the equation, we need to use the formula and we need to solve it.\n2. If we are not aware of the equation, we need to use the formula and we need to solve the equation and solve it.\n3. If we are not aware of the equation, we need to use the formula and the formula.\n4. If we have an equation, we need to solve the equation.\nNow let's take a look at how we can solve the equation.\n5. If we are not aware of the equation, we can solve the equation:\n1. If we can solve the equation using the formula, we can solve the equation.\n2. If we can solve the equation using the formula and solve the equation using the formula, we can solve the equation using the formula.\n3. If we are not aware of the equation, we can solve the equation using the formula.\n4. If we can solve the equation using the formula, we can solve the equation using the formula.\n5. If we can solve the equation using the formula, we can solve the equation using the formula.\n6. If we can solve the equation using the formula, we can solve the equation using the formula",
             "tokens": 256,
             "eos": false,
             "rep4": 0.625,
+            "distinct2": 0.227,
+            "distinct4": 0.375,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 253
           },
           {
             "text": " How can I calculate the quotient of the equation?\n2. What percentage of the quotient of the equation is the quotient of the equation?\n3. How can I calculate the quotient of the equation?\n4. How can I calculate the quotient of the equation?\n5. What percentage of the quotient of the equation is the quotient of the equation?\nWhat percentage of the quotient of the equation is the quotient of the equation?\n5. How many of the quotient of the equation is the quotient of the equation?\nWhat percentage of the quotient of the equation is the quotient of the equation?\n6. How many of the quotient of the equations are there?\n7. How many of the quotient of the equation is the quotient of the equation?\nThe quotient of the equation is the quotient of the equation.\n8. How many of the quotient of the equation is the quotient of the equation?\nThe quotient of the equation is the quotient of the equation, and it is the quotient of the equation.\n9. How many of the quotient of the equation is the quotient of the equation?\n10. How many of",
             "tokens": 256,
             "eos": false,
             "rep4": 0.684,
+            "distinct2": 0.2,
+            "distinct4": 0.316,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 249
           },
           {
             "text": " Identify the equation in a quadratic equation:\n2. Identify the equation in a quadratic equation:\n3. Identify the equation in a quadratic equation:\n4. Identify the equation in a quadratic equation:\n5. Identify the equation:\n6. Identify the equation:\n7. Identify the equation in a quadratic equation:\n8. Identify the equation:\n9. Identify the equation:\n10. What is the equation in a quadratic equation:\n11. Explain the formula:\n11. What is the equation for a quadratic equation?\n12. What is the equation of a quadratic equation?\n12. What is the relationship between the equations in a quadratic equation and a quadratic equation?\n13. What are the relationships between the equations in a quadratic equation?\n14. What is the relationship between the equations in a quadratic equation and a quadratic equation?\n14. What is the relationship between the equations in a quadratic equation?\n15. What is the relationship between the equation and the equation in a quadratic equation?\n14. What are the relationship between",
             "tokens": 256,
             "eos": false,
             "rep4": 0.561,
+            "distinct2": 0.255,
+            "distinct4": 0.439,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 247
           },
           {
             "text": " The first step is to solve a quadratic equation using the quadratic equation:\n1. Determine the quadratic equation using the quadratic equation using the equation:\n2. Determine the quadratic equation using the quadratic equation using the equation:\n3. Find the quadratic equation using the Equator equation using the Equator equation using the Equator equation:\n4. Define the quadratic equation using the Equator equation using the Equator equation:\n5. The equation using the Equator equation using the Equator equation:\n6. Calculate the quadratic equation using the Equator equation using the Equator equation:\n7. Calculate the quadratic equation using the Equator equation using the Equator equation:\n7. Calculate the quadratic equation using the Equator equation using the Equator equation:\n8. Calculate the quadratic equation using the Equator equation:\n9. Calculate the quadratic equation using the Equator equation using the Equator equation:\n10. Calculate the quadratic equation using the Equator equation using the Equator equation:\n11. Calculate the quadratic equation using the Equator equation",
             "tokens": 256,
             "eos": false,
             "rep4": 0.676,
+            "distinct2": 0.212,
+            "distinct4": 0.324,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 256
           }
         ]
       },
@@ -59176,50 +59277,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.735,
+            "distinct2": 0.176,
+            "distinct4": 0.265,
             "looped": true,
             "loop_onset": 221,
             "loop_period": 13,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " fungi that are called \u201clung fungus\u201d, called the lung fungus, which means spores are an active fungus. The lung fungus, which is found in India, is mainly responsible for the spread of fungi and fungi, and the fungus can cause the fungus to be transmitted to the area where it can spread.\nThe lung fungus is found in the Indian rainforest, which is responsible for spreading the fungus in the rainforest. The fungi are found in the rainforests because they have a large amount of rain. The lung fungus is found in the rainforest. The lichens are found in the rainforests because they have a large number of them.\nThe lung fungus is found in forests of northern India. It is found in the forests of India, in the western part of the country. The lung fungus is found in the forests of the country. It is found in the forest and in the forest area.\nThe lung fungus is found in the forest area. The lung fungus is found in the forest area. It is found in the forests of the country and in the forest area.",
             "tokens": 232,
             "eos": true,
-            "rep4": 0.301,
+            "rep4": 0.281,
+            "distinct2": 0.525,
+            "distinct4": 0.719,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " plant species. The plant species also includes plants, insects, plants, insects, and insects.\nThe plant species have all been known to play a crucial role in determining the plant's health. Some of these include:\n- The plant's diet, which includes plant foods like strawberries and strawberries, which are a great source of protein and amino acids, and in the plant's health benefits.\n- The plant's diet, which includes plant-based foods like lettuce and tomatoes, can be beneficial for both the plant's health and well-being.\n- The plant has its roots in the soil, which can be used to grow into a variety of plant species, including insects and plants.\n- The plant's diet, which includes the plant's diet, includes a variety of plants, such as peas and legumes.\n- The plant's diet consists of plant protein, which is the type of plant that is available in the market.\nThe plant's diet consists of three main components:\n- It's a combination of plant protein, carbohydrates, water, and carbohydrates.\n- It's a combination of plant proteins, carbohydrates, and carbohydrates.\n- It's a combination of plant proteins, carbohydrates, and plant food.\n- It's a combination",
             "tokens": 256,
             "eos": false,
             "rep4": 0.202,
+            "distinct2": 0.588,
+            "distinct4": 0.798,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 199
           },
           {
             "text": " bacteria:\n- Strengthening, or scaling\n- Staining and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated, keeping the water dry and reduce the water\n- Staying hydrated and maintaining the water\n- Avoid handling wet and dry water, as this can cause dehydration and dehydration\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the Water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and maintaining the water\n- Staying hydrated and",
             "tokens": 256,
             "eos": false,
             "rep4": 0.783,
+            "distinct2": 0.176,
+            "distinct4": 0.217,
             "looped": true,
             "loop_onset": 109,
             "loop_period": 10,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " water vapor, which uses different types of water vapor, as well as the type of liquid liquid and the type.\nThe water vapor is basically the same because it does not have a lot of water vapor. A water vapor is an air-conditioned liquid.\nThe water vapor is the most common type of liquid used in this area. The water vapor is a liquid and it is usually used in the most common types of water vapor, especially in the case of the type of gas.\nThe water vapor is a liquid that is present in a liquid and it is composed of liquid and liquid. The mixture of liquid and liquid is usually liquid and liquid which is mainly liquid and liquid.\nThe water vapor is commonly used in the United States and Canada as a source of water vapor. However, in some countries, water vapor is not used in the United States, but it is frequently used in countries such as Canada, Canada, and the United States.\nThe amount of water vapor in a liquid and gas is usually considered as the percent of the amount of water vapor, and the amount of water vapor is typically around two to three times the amount of water vapor.\nWater vapor, often used in the United States, is a type of water vapor that is widely",
             "tokens": 256,
             "eos": false,
             "rep4": 0.126,
+            "distinct2": 0.561,
+            "distinct4": 0.874,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 229
           }
         ]
       },
@@ -59232,50 +59348,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.553,
+            "distinct2": 0.302,
+            "distinct4": 0.447,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 244
           },
           {
             "text": " was ratified by the United Nations Congress to amend the law. During the war, the treaty was signed by the United Nations Congress on the basis of Article 21, which was signed by the United Nations.\nThe article also provides a brief overview of how the treaty could be used in the treaty. The article was written by the United Nations Committee on the Protection of the United Nations Declaration on the Rights of the Nation.\nThe treaty was signed in 1919, when the United Nations Congress passed the ratification of the Convention on the Rights of the Nation. The treaty was signed in 1929, when the United Nations Congress established the Convention on the Rights of the Nation.\nThe treaty was signed by the United Nations Congress on the Rights of the Nation. The treaty was signed on July 1, 1919, before the United Nations President, signed on July 1, 1919. It was signed by the United Nations Committee on the Rights of the Nation.\nThe treaty of the Nation was signed in 1922, when the United Nations Congress decided to draft the treaty. The treaty was signed on July 1, 1920.\nThe treaty was signed on July 1, 1923, when the United Nations Congress passed the Declaration. The treaty was signed on July 1, 1923.\nThe treaty of the Nation was signed",
             "tokens": 256,
             "eos": false,
             "rep4": 0.364,
+            "distinct2": 0.424,
+            "distinct4": 0.636,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 256
           },
           {
             "text": " was ratified in 1921.\nToday the treaty of the United States is a joint treaty of the United States. In the following years, the treaty of the United States has been amended. This treaty has been revised to include the original treaty of the United States.\nThe treaty of the United States is no longer a complete treaty. However, the treaty of the United States is not a complete treaty of the United States.\nThe treaty of the United States is in fact a treaty of the United States. The treaty of the United States is a treaty of the United States. It is a treaty of the United States that is the treaty of the United States.\nThe treaty of the United States is an agreement of the United States with a treaty of the United States with the United States, with the United States and the United States of America.\nThe treaty of the United States is a treaty of the United States with the United States of America. The treaty of the United States is a treaty of the United States with a treaty of the United States with the United States of America with a treaty of the United States with the United States with the United States of America with the United States of America with the United States of America with the United States of America with the United States of",
             "tokens": 256,
             "eos": false,
             "rep4": 0.545,
+            "distinct2": 0.286,
+            "distinct4": 0.455,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 219
           },
           {
             "text": " took on a treaty of great importance to the people of the United States.\nThe treaty was signed in 1919 in France, which was signed by the French government until the end of the war.\nAn important issue was the treaty of great importance to the people of the United States. It was signed in 1919 by the French government, which was signed at the end of the war.\nThe treaty of great importance from the Treaty of Versailles, also called the Treaty of Versailles, was signed in Paris with the French government.",
             "tokens": 109,
             "eos": true,
             "rep4": 0.208,
+            "distinct2": 0.593,
+            "distinct4": 0.792,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 102
           },
           {
             "text": " became known that \u201ca year before the war\u201d did not occur even in the \u201cs\u201d of the \u201cs\u201d of the French Confederation.\nThe Treaty of Versailles\nThe Treaty of Versailles was signed by French President John Keir, who was awarded the oath of allegiance to the French, and signed by the French people in October 1919.\nOn January 24, 1919, the Treaty of Versailles signed on May 25, 1918. The French government approved the treaty of Versailles and signed the treaty of Versailles in December 1919. It was signed on November 13, 1919, after the signing of the treaty of Versailles a treaty signed on November 8, 1918.\nThe treaty was signed by British Prime Minister Charles R. G. G. E.\nOn December 26, 1919, the treaty of Versailles was signed on November 15. The Treaty of Versailles signed on December 30.\nOn December 25, 1920, the Treaty of Versailles was signed on December 30, 1917. The treaty of Versailles signed on November 30, 1918.\nOn December 30, 1921, the Treaty of Versailles signed on November 25, 1918. The treaty of Versa",
             "tokens": 256,
             "eos": false,
             "rep4": 0.221,
+            "distinct2": 0.522,
+            "distinct4": 0.779,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 1.0
+            "topic": 1.0,
+            "topic_span": 253
           }
         ]
       },
@@ -59288,50 +59419,65 @@
             "tokens": 256,
             "eos": false,
             "rep4": 0.755,
+            "distinct2": 0.2,
+            "distinct4": 0.245,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 0
           },
           {
             "text": " the Journal of Infectious Diseases in the Journal of Infection, Journal of Infectious Diseases, 1999.\nClinical studies conducted in the same group in the United States have shown that the prevalence of Clostridium difficile can be explained by a significant reduction in the incidence of Clostridium difficile. Cannins can have an effect on the presence of the Clostridium difficile.\nThe following are some of the most recent studies that have confirmed a reduction in all Clostridium difficile:\n- A reduction in the incidence of Clostridium difficile can lead to the development of Clostridium difficile.\n- The study has shown that Clostridium difficile can have a positive effect on the development of Clostridium difficile.\n- The study found that Clostridium difficile has a negative effect on the development of Clostridium difficile.\n- The study found that Clostridium difficile can have negative effects on the development of Clostridium difficile.\n- The study of the Clostridium difficile has shown that Clostridium difficile can have negative effects",
             "tokens": 256,
             "eos": false,
-            "rep4": 0.443,
+            "rep4": 0.444,
+            "distinct2": 0.406,
+            "distinct4": 0.556,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 232
           },
           {
             "text": " the Journal of the International Association of the American Medical Journal published in the Journal of the American Medical Journal.\nResearchers from the University of Minnesota, the University of Minnesota and the University of Minnesota have found that in the study, the researchers said the data is based on the findings of the study.\nThe researchers also have found that in a study published in the journal, they found that in the study, the researchers found that in the study, the researchers found that the researchers found that the researchers had a negative effect on a person\u2019s brain activity in the study.\nThe study, which researchers found, said this is a result of the study.\n\u201cThis is not the case for the group,\u201d said the researchers. \u201cThe results are similar, but they suggest that the participants could be more likely to experience the same symptoms, including:\n\u201cThe researchers found that the participants were more likely to become the same brain activity in the study,\u201d said the researcher.\nThe researchers found that the participants were more likely to experience the symptoms, which they found, compared to the participants who had an abnormal brain activity in the study.\n\u201cThe results suggest that the researchers found that the participants did not have the same symptoms,",
             "tokens": 256,
             "eos": false,
             "rep4": 0.209,
+            "distinct2": 0.545,
+            "distinct4": 0.791,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 235
           },
           {
             "text": " the journal Science.\nWhile studying quantum mechanics, or quantum mechanics, quantum mechanics often come with a broad, specific field. These fields are characterized by a combination of quantum mechanics, the quantum field, and the ability to perform quantum mechanics while simultaneously addressing quantum mechanics.\nTo answer this question, researchers have developed a computerized quantum field that can solve quantum mechanics in a variety of mathematical and computer applications.\nBy using a quantum field, Quantum mechanics can be used as a computational power for a wide range of applications.\nIn physics, the basic principles governing quantum mechanics are of different types.\nFor quantum mechanics, the fundamental principle governing quantum mechanics with the aim of finding suitable experimental methods is to use quantum mechanics to determine the best possible applications.\nFor quantum mechanics, the fundamental principle governing quantum mechanics is to determine the best possible applications for quantum mechanics.\nTo understand quantum mechanics, we have developed a computerized quantum field model, based on a combination of classical physics, quantum mechanics, quantum mechanics, and other mathematical properties.\nThis is the first-ever study of quantum mechanics in the United States and the United States.\nTo test the validity of quantum mechanics, researchers are using a quantum-detection method that uses a quantum simulator to test the validity of quantum",
             "tokens": 256,
             "eos": false,
             "rep4": 0.099,
+            "distinct2": 0.671,
+            "distinct4": 0.901,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 215
           },
           {
             "text": " the Journal of the American Academy of Pediatrics, American College of Pediatrics has found that the incidence of allergic rhinitis in children is higher in children with children with the most ecologically significant allergic syndrome.\nIn the study, parents and children who smoke children in a second visit to schools are at risk of having a more severe allergic reaction.\nThe study's study found that if children who smoke, there is a significant association between exposure to a substance called IgD, the most common allergy is the allergic reaction.\nThe research is published in the journal Pediatrics, Pediatrics, and others.\nThe study found that more than half of the participants who smoke were allergic compared to those who smoke.\nThe study also found that the prevalence of allergic rhinitis in children was lower in children with the most severe allergic syndrome than the prevalence of allergic rhinitis in the general population.\nIn the study, the researchers found that the prevalence of allergic rhinitis in children was lower in children with the first reported allergic syndrome, the most common allergic syndrome, and the most common allergic syndrome in children.\nThe study also found that children who smoke were allergic to a substance called IgD-sensitive IgD-sensitive IgD-sensitive IgD-sensitive IgD-sensitive",
             "tokens": 256,
             "eos": false,
             "rep4": 0.217,
+            "distinct2": 0.565,
+            "distinct4": 0.783,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.5
+            "topic": 0.5,
+            "topic_span": 224
           }
         ]
       },
@@ -59344,50 +59490,775 @@
             "tokens": 69,
             "eos": true,
             "rep4": 0.061,
+            "distinct2": 0.838,
+            "distinct4": 0.939,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 55
           },
           {
             "text": " 2 meters. The mountain rises to a height of 2 meters.\nDuring the day, the mountain is full and has many branches to the highest branches in the mountain. Some of the stones are made of stone. The stone is used for various purposes such as for building or constructing the mountain. The stone is used for building or repairing the stone.\nThe stone is used for building or repairing the stone, which is used for building or repairing the stone. The stone is not used for building or repairing the stones.\nThe stone is used for building or repairing the stone. It is used for building or repairing the stone.\nThe stone is used for building or repairing the stone. The stone is used for building or repairing the stone, usually for building or repairing the stone.\nThere are various types of stone:\n- Charcoal stone\n- Red stone stone\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stone stones\n- Red stones\n- Red stones\n-",
             "tokens": 256,
             "eos": false,
             "rep4": 0.53,
+            "distinct2": 0.333,
+            "distinct4": 0.47,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.0
+            "topic": 0.0,
+            "topic_span": 58
           },
           {
             "text": " 4 meters.\nThe mountain is the last mountain. The mountain is the tallest and the smallest of a given mountain.\nThe mountain is the only mountain with a total length of 4 meters. It is the highest mountain with a total length of about 4 meters.\nWhat is the mountain?\nThe mountain is an important area where the mountain is located. The mountain is the smallest and most populous mountain are the tallest. The mountain is the richest and most beautiful mountain are the tallest and most beautiful mountain.\nWhere are the mountain?\nThe mountain is the smallest and most beautiful mountain. The mountain is the smallest and most beautiful mountain is the largest and most beautiful mountain. The mountain is the tallest and most beautiful mountain is the smallest and most beautiful mountain.\nThe mountain is the smallest and most pleasant mountain.\n- The mountain is the largest and most beautiful mountain.\n- The mountain is a beautiful mountain.\n- The mountain is a beautiful and beautiful mountain.\n- The mountain is a beautiful and beautiful mountain.\n- The mountain is a beautiful and beautiful, beautiful mountain.\n- The mountain is a beautiful, beautiful mountain.\n- The mountain is a beautiful and beautiful mountain.\n- The mountain is a beautiful and beautiful mountain.\n- The",
             "tokens": 256,
             "eos": false,
             "rep4": 0.522,
+            "distinct2": 0.278,
+            "distinct4": 0.478,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 252
           },
           {
             "text": " 4.5 meters and is an area of 13 meters which is roughly the width of the mountain. The mountain is the smallest mountain in the world. The mountain is the largest mountain in the world.",
             "tokens": 40,
             "eos": true,
             "rep4": 0.108,
+            "distinct2": 0.795,
+            "distinct4": 0.892,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.3333333333333333
+            "topic": 0.3333333333333333,
+            "topic_span": 36
           },
           {
             "text": " 1,000 meters in height. The mountain peaks are approximately 1,000,000 meters in height. The mountain peaks are roughly 5,250 meters in height. The mountain peaks are approximately 3,300 meters in height. The mountain peaks are approximately 2,300 meters in height.\nThe mountain peaks are approximately 5,000 meters in height and are generally measured by the mountain peaks. These peaks are around 5,000 meters in height. The mountain peaks are around 5,000 meters in height. These peaks are approximately 3,500 meters in height.\nThe mountain peaks are approximately 4,000 meters in height. These peaks are about 9,400 meters in height. The mountain peaks are approximately 2,400 meters in height. The mountain peaks are about 2,500 meters in height.\nThe mountain peaks are approximately 1,500 meters in height. The mountain peaks are around 8,000 meters in height. They are about 1,000 meters in height.\nThe mountain peaks are about 4,000 meters in height. They are about 1,500 meters in height. This mountain peaks are from 2,600 meters in height.\nThe mountain peaks are around 2,500 meters in height, with about 6,000 meters in height. The mountain peaks are",
             "tokens": 256,
             "eos": false,
             "rep4": 0.526,
+            "distinct2": 0.267,
+            "distinct4": 0.474,
             "looped": false,
             "loop_onset": null,
             "loop_period": null,
-            "topic": 0.6666666666666666
+            "topic": 0.6666666666666666,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "agreement_gap",
+        "prompt": "The students who had spent the entire semester preparing for the final examination in organic chemistry",
+        "draws": [
+          {
+            "text": ", were at the beginning of a comprehensive review and a final examination inorganic chemistry.\nWhat is the difference between the two groups of students and the students?\nWhat is the difference between the two groups of students and the two groups of students?\nThe two groups of students are the group of students in the class.\nWhat is the difference between the two groups of students?\nThe two groups of students are the two groups that have the following characteristics:\nThe students are the first group of students and the third group of students.\nWhat is the difference between the two groups of students and the two groups of students?\nThe two groups of students of different types of class are the one group of students.\nWhat is the difference between the two groups of students?\nThe difference between the two groups of students is the difference between the two groups of students.\nWhat is the difference between the two groups of students?\nThe difference between the two groups of students is the difference between the two groups of students.\nWhat is the difference between the two groups of students?\nThe difference between the two groups of students is the difference between the two groups of students.\nWhat is the difference between the two groups of students?\nWhich group of students is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.609,
+            "distinct2": 0.263,
+            "distinct4": 0.391,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 255
+          },
+          {
+            "text": " and chemistry, and who had a small degree of students.\nThe students that participated in the study were the students who entered the curriculum in the study. The students who were not given the opportunity to participate in the study were at the level of the students who were able to participate in the study.\nThe students who participated in the study were the students who completed the study. They were given the opportunity to participate in the study in a variety of different ways.\nThe students who participated in the study were the participants who did not participate in the study. They were then asked to participate in the study to participate in the study. The students were asked to participate in the study. The students were asked to participate in the study. They were asked to participate in the study to participate in the study.\nThe students who participated in the study (socially) had a total of 4.5% of the students who participated in the study. The students who participated in the study were asked to participate in the study, who were the participants who did not participate in the study.\nThe students who participated in the study did not participate in the study. The students who participated in the study were the participants who participated in the study. They were asked to participate in the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.494,
+            "distinct2": 0.333,
+            "distinct4": 0.506,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 235
+          },
+          {
+            "text": ", were among the first to be evaluated in this class. The students learned about the results of the results of their study.\nStudents completed the test in organic chemistry to the final exam\nThe students completed a test in organic chemistry. The students completed a test in organic chemistry and completed a test in organic chemistry and then submitted a test in organic chemistry to the students.\nThe students completed a test in a lab using Organic Science.\nThe students completed the test in organic chemistry. The students completed their test in organic chemistry, with their students in the lab.\nThe students completed their test in organic chemistry, and then returned to the school in the lab. After completing the test in the lab, the students returned to their lab, and then returned to the lab.\nThe students completed the test in organic chemistry, and then returned to the lab in the laboratory.\nThe students completed the test in organic chemistry and completed a test in organic chemistry.\nStudents completed the test in organic chemistry and began their laboratory in organic chemistry.\nIn the lab, the students completed the test in organic chemistry and completed a test in organic chemistry. Students complete their test in organic chemistry.\nThe students completed their test in organic chemistry and completed a test in organic chemistry.\nThe",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.447,
+            "distinct2": 0.349,
+            "distinct4": 0.553,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 253
+          },
+          {
+            "text": ", and then the students had the opportunity to submit their findings in this report.\nThe students had the opportunity to do this work. They had to make sure that they had the opportunity to do the same research. They have the opportunity to go to the college, and the opportunity to do this will come when they have already finished their homework.\nThe students had their opportunity to do this work on the lab, and the student\u2019s lab was asked to do this work. They had access to the lab. They had to share some of their knowledge with the students on their own. They had other things in the lab and decided to do this work. They had access to the lab and tried to do it at the university. They had to do this work on the lab to do the work. They had to do this work on their own. They had to wait to see the results of the work.\nThe students had the opportunity to make a decision on their own. They had to do it once they had decided to do this work. They had to do the work. They had to do this work on their own. They had to do this work because they had to do this work on their own. They had to do this work on their own.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.352,
+            "distinct2": 0.435,
+            "distinct4": 0.648,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.1111111111111111,
+            "topic_span": 187
+          },
+          {
+            "text": " before graduating.\nThe students who took the final examination at the start of each course will be asked to complete the examination.\nThe students who were asked to complete the examination at the end of the second semester will be asked to complete a final examination.\nThe student who was asked to complete the examination will be asked to complete the examination.\nThe students who attended the examination will be asked to complete the examination.\nThe students who took the final examination at the end of the session will be asked to complete the examination.\nThe students who attended the exams will be asked to complete the examination.\nThe students who attended the examination will be asked to complete a final examination.\nThe students who attended the examination will be asked to complete the examination.\nThe students who attended the examination will be asked to complete the examination.\nThe students who attended the examination will be asked to complete the examination.\nThe students who attended the examination will be asked to complete the examination.\nThe students who attended the examination will be asked to complete the examination.\nThe students who attended the examination will be asked to complete the examination.\nThe students who attended the examination will be asked to complete the examination.\nThe students who attended the examination will be asked to complete the examination",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.747,
+            "distinct2": 0.176,
+            "distinct4": 0.253,
+            "looped": true,
+            "loop_onset": 135,
+            "loop_period": 15,
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          }
+        ]
+      },
+      {
+        "label": "history",
+        "prompt": "The French Revolution began in 1789, when",
+        "draws": [
+          {
+            "text": " Louis XIV granted the Emperor the Great. The first Emperor of France was the first Emperor. The second Emperor of France was the third Emperor of France. The third Emperor was the third of the first Emperor of France. In 1811, Charles II of France was the first Emperor in France. The second Emperor was the first Emperor of France. The third Emperor was the second Emperor of France. The first Emperor of France was the first Emperor of France. This Emperor was the first Emperor of France. The third Emperor of France was the first Emperor of France. This was the third Emperor of France. The first Emperor was the third Emperor of France.\nThe second Emperor of France was the first to be the first Emperor of France. The second Emperor of France was the first Emperor of France. The second Emperor of France was the first Emperor of France. The third Emperor of France was the third Emperor of France. The second Emperor of France was the first Emperor of France.\nIn 1811, Louis XIV was the second Emperor of France. The first Emperor of France was the first Emperor of France. The first Emperor of France was the second Emperor of France. The second Emperor of France was the second Emperor of France.\nThe second Emperor of France was the second Emperor of France",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.656,
+            "distinct2": 0.188,
+            "distinct4": 0.344,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the New World entered the Atlantic, with the development of a Germanic economy. The Germanic economy was characterized by the social capital of the Netherlands. In 1789 the Dutch revolution began. The colonies merged and had their own colonies. During the French Revolution there were many colonies in the Dutch colonies and the Dutch colonies. Between 1840 and 1880 the Dutch colonies were divided.\nThe German colonies were the first colonies to be settled in the Dutch colonies. The colonies grew in colonies in the Dutch colonies. The colonies were divided into four main colonies in the Dutch colonies. These colonies were divided into two parts, each with 1.\nThe Dutch colonies were divided into two parts. In 1867, the colonies became the first colonies to be settled in the Dutch colonies. In 1867, the French colonies were divided into four parts. The colonies were divided into two parts. The colonies were divided into two parts: the first colonies were divided into two parts. The first part of the colony was the colony. The second part of the colonies was the colony of the colony.\nThe third part of the colonies was the colony of the Dutch colonies. The colonies were divided into two parts. The first part of the colony was the colony of the Dutch colonies. The second part of the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.308,
+            "distinct2": 0.459,
+            "distinct4": 0.692,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 159
+          },
+          {
+            "text": " the Dutch army in England was forced to surrender to the English as the Second World War. They were responsible for the French Revolution, and for war, they were part of the French Revolution. The French, the capital of New York, was a British nation. At the time, the French had not since then, and they were not until their independence.\nThe French were a part of the French society, and the French were a part of the French colonies, and they were a part of the French colonies. The French were a part of the French colonies, and they were part of the Confederation. They were a part of the trade union, but the French did not take on any aspect of the French.\nThe French did not, however, have a role in the French colonies, and they were part of the British colonies. In the French colonies, the French were an important part of the French colonies, and in the 1707 they were part of the French colonies. After the French, they were part of the French colonies and they were part of the French colonies.\nThe French colonies were a part of the French colonies, and they were part of the French colonies. The French colonies were part of the French colonies, and so the French colonies were part of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.3,
+            "distinct2": 0.455,
+            "distinct4": 0.7,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 252
+          },
+          {
+            "text": " a young woman was born, and in 1813, she was born in Belgium, Belgium, Belgium, Belgium, Belgium, Belgium, Belgium, Belgium, Belgium, Belgium, Belgium, Belgium, Belgium, Belgium and Belgium. With her husband she was appointed as the vice-president of the French Revolution. She was the second-president of the French Revolution. She was the first elected member of the French Academy of Arts in the country to earn the title of the French Revolution.\nIn 1829, the French Revolution was a major cause of change. It was the first time that French colonies were not successful.\nThe French Revolution took a large part of the French Revolution. The French Revolution was a major cause of change and the war was a very important factor.\nDuring the war, French Americans were the most feared of the French colonies against the French.\nAs the French began to decline, the French people brought the French colonies against the French. The French colonies were also part of the French colonies.\nIn 1833, French colonies were under the control of French colonies.\nIn 1834, French colonies were under the control of French colonies.\nIn 1833, French colonies were under the control of French colonies.\nIn 1834, French colonies were",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.312,
+            "distinct2": 0.502,
+            "distinct4": 0.688,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 1.0,
+            "topic_span": 254
+          },
+          {
+            "text": " French troops arrived and fought against the French.\nThe French had been at odds with the French, but the French became a German colony.\nAfter the Civil War, French troops landed in France at the end of the war, but the French had to accept the French, and the French had to invade the French.\nThe French had to fight against the French, but the French began to attack the French, and a French was the German.\nThe French was a German, a French, and German.\nThe French were a French, a French, and German, but they were not allied.\nAfter the French was in France, French had to fight from the French.\nThe French had to fight with the French, and the French were to fight against the French and to the French.\nThe French remained at the command of the French, and did not have to fight.\nThe French had to fight the French, and the French could defeat French.\nThe French had to fight the French, and the French would have to fight the French.\nThe French had to fight the French.\nThe French had to fight against the French, but they could not fight the French.\nThe French had to fight the French.\nThe French had to",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.348,
+            "distinct2": 0.384,
+            "distinct4": 0.652,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "anatomy",
+        "prompt": "The human heart is a muscular organ that",
+        "draws": [
+          {
+            "text": " works in balance and function. The muscles, the muscles and the brain are also responsible for the digestion of food and water. They also provide food for the body to function. The heart is also responsible for the release of the body\u2019s enzymes and is also responsible for the release of the hormone-rich food.\nIn the body, the heart is responsible for the production of the various organs, including the liver, spinal cord, and other organs. The heart is also responsible for the release of the hormones, which can be used to help manage the condition.\nThe body is responsible for many organs, including the kidneys and pancreas. The body is responsible for the regulation of the hormones and how they are regulated. These hormones play vital roles in the body\u2019s functions, including regulating the body\u2019s natural body\u2019s internal organs, regulating the blood flow to the heart, and regulating the blood flow to the heart.\nThe human body is responsible for the release of the hormones and the body\u2019s ability to function properly. It can also regulate the blood flow to the brain, which is responsible for regulating the blood flow to the brain, and it acts as a natural gas and also regulates the blood flow to the heart.\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.186,
+            "distinct2": 0.588,
+            "distinct4": 0.814,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.75,
+            "topic_span": 254
+          },
+          {
+            "text": " has a central nervous system that regulates the sympathetic nervous system. This helps in regulating the sympathetic nervous system.\nThe autonomic nervous system is a system that regulates the sympathetic nervous system. The autonomic nervous system is also known as the \u201cbrain axis\u201d that regulates the sympathetic nervous system. The \u201cbrain axis\u201d is used to regulate the sympathetic nervous system.\nThe autonomic nervous system is a system that regulates the sympathetic nervous system. This system is responsible for the sympathetic nervous system, and by controlling the sympathetic nervous system, the nervous system regulates the sympathetic nervous system. The autonomic nervous system is responsible for the sympathetic nervous system. The autonomic nervous system is responsible for the sympathetic nervous system.\nThe autonomic nervous system of the autonomic nervous system is a system that regulates the sympathetic nervous system. The autonomic nervous system regulates the sympathetic nervous system.\nThe autonomic nervous system regulates the sympathetic nervous system. The autonomic nervous system regulates the sympathetic nervous system.\nThe autonomic nervous system regulates the sympathetic nervous system. The autonomic nervous system regulates the sympathetic nervous system.\nThe autonomic nervous system controls the sympathetic nervous system.\nThe autonomic nervous system regulates the sympathetic nervous system.\nThe autonomic nervous system regulates the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.664,
+            "distinct2": 0.231,
+            "distinct4": 0.336,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " acts as a biological organ, and it acts as a conduit, the body\u2019s heart, and it helps to keep the heart\u2019s flow. It is also known as a \u201cheart attack\u201d because it is the result of the heart\u2019s energy.\nThe heart can be a barrier to a cell\u2019s energy system, and it can be a barrier to an electrification. It can also be used as a barrier to a cell\u2019s electrical system, which can be used to protect cells from the outside.\nWhat Are Some of the Benefits Of A Heart Attack\nA heart attack is a type of physical injury that occurs when a person is injured, improperly inflated or malfunctioning. It can also result in severe and unpredictable events. The heart attack can also be a way to keep the heart healthy and prevent the symptoms of a heart attack.\nHow Are Heart Attacks Different From The Role of Heart Attack\nThe heart attack can be a result of various factors, such as physical activity, physical activity, or environmental factors. These factors contribute to the heart\u2019s overall health and well-being.\nOne of the key benefits of heart attack is its ability to fight off harmful and harmful behaviors. It helps in fighting off",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.055,
+            "distinct2": 0.741,
+            "distinct4": 0.945,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 239
+          },
+          {
+            "text": " enables the muscles to perform tasks such as walking, swallowing, and eating. This enables the muscles to perform tasks such as running, jumping, and jumping.\nThe primary goal of this study is to identify and classify the various types of muscle, including the muscle, the brain, and the brain. It is a specialized technique that allows the muscles to perform tasks such as walking, jumping, and walking.\nThe brain is a complex system that can be divided into four parts:\n- Body & Body\n- Body & Body\n- Body & Body\n- Body & Soul\n- Body & Body\n- Body & Body\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Body\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul\n- Body & Soul",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.632,
+            "distinct2": 0.306,
+            "distinct4": 0.368,
+            "looped": true,
+            "loop_onset": 166,
+            "loop_period": 5,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " allows the body to produce energy more efficiently and efficiently.\nAs a result, several studies have shown that the brain can be damaged by trauma. In a study done to determine whether a man\u2019s heart is damaged by trauma, a person may have a stroke, or that a person may have a stroke.\nAn estimated 600 people in the UK were diagnosed with anorexia.\nThe study found that the body is at an increased risk of developing heart disease.\nIn a study, the researchers used a variety of tests to determine if an individual will have an impaired ability to reduce the risk of developing heart disease.\nResearchers used a combination of computer vision and computed tomography (CT) scans to measure the heart\u2019s ability to perform tasks and perform tasks.\nThey used a computer vision test to measure the heart\u2019s ability to absorb the heart\u2019s amount of blood sugar.\nThey then used a computer vision test to measure how much blood sugar in the brain can be used to determine if a person is affected by anorexia.\nThey then used a computer vision test to determine if a person\u2019s heart is affected by anorexic acid.\nThey also used a computer vision test to measure the heart\u2019",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.17,
+            "distinct2": 0.639,
+            "distinct4": 0.83,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "geography",
+        "prompt": "The Amazon River flows through",
+        "draws": [
+          {
+            "text": " the Pacific Ocean through the Caribbean Sea.\nThe Pacific Ocean is a hotspot that is expected to reach 5,000 feet of oceanic surface at a time. The ocean\u2019s surface is about 1.5 miles (13.7 km) south. This is the average average sea level in the Pacific Ocean near the coast of the United States. The average sea level in the Pacific Ocean shows the largest surface area in the world, although the ocean has more than 1,800 feet, in the Pacific Ocean. The ocean of the ocean has a population of around 1.5 million people, making it one of the most important regions in the world and is now the largest in the world.\nAnother great example of oceanic oceanic oceanic oceanic oceanic oceanic oceanic oceanic oceanic oceanic oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of ocean",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.399,
+            "distinct2": 0.478,
+            "distinct4": 0.601,
+            "looped": true,
+            "loop_onset": 220,
+            "loop_period": 5,
+            "topic": 0.0,
+            "topic_span": 4
+          },
+          {
+            "text": " the northern border of the Amazon. In addition to dry and wetland ecosystems, the population of the Brazilian Amazon has increased by nearly half that year. The Amazon is also home to a total of approximately 1,000 people per year.\nThe Amazon also has many recreational activities, including the Amazon, the Amazon and the Amazon. The Amazon is also home to one of the largest commercial and educational resources available, including the Amazon and the Amazon. The Amazon is also home to a wide range of educational activities, such as the Amazon, the Amazon, the Amazon, the Amazon, the Amazon and the Amazon. The Amazon is also home to a number of educational activities, including the Amazon, the Amazon and the Amazon.\nThe Amazon is also home to a number of educational activities. The Amazon also provides educational activities and educational resources. The Amazon also provides educational activities, such as a book, a reading of books, and a variety of educational activities. The Amazon also offers the educational services, such as the Amazon and the Amazon. The Amazon also works with parents, teachers, and other professionals working in the Amazon, and the Amazon.\nThe Amazon is also home to many educational activities, including the Amazon, the Amazon, the Amazon and the Amazon. The Amazon is also",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.383,
+            "distinct2": 0.439,
+            "distinct4": 0.617,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 254
+          },
+          {
+            "text": " the Amazon River. The lake is a complex mixture of the lake and the river. The lake is a fertile valley, with its salt and rich water, as well as the fertile soil. The lake is a fertile, fertile place, with its rich water and rich and fertile soils. The lake is rich and fertile.\nThe lake is divided into two types:\n- The lake is rich and fertile, with a rich and fertile soils. The lake is rich and fertile, with the fertile soils of the Mississippi River.\nThe lake is rich and fertile, with a rich and fertile soils, with a rich and fertile fertile soil. The river is rich and fertile, with a rich fertile soil and a fertile soil, with the fertile soil and fertile soil. The lake is rich and fertile, with a rich soil and fertile soils.\nThe lake is rich and fertile, with a rich water and fertile soil. The lake is rich and fertile, with a rich soils and fertile soils and fertile soils.\nThe lake is rich and fertile, with a rich soil and fertile soil and fertile soil.\nThe lake is rich and fertile, with a rich soil and fertile and fertile fertile soil, with a rich soil, with a rich soil and fertile soils.\nThe lake",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.462,
+            "distinct2": 0.29,
+            "distinct4": 0.538,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 130
+          },
+          {
+            "text": " a high-resolution ocean-level, water-rich, and hydrocarbon-rich reservoir, in which the Earth has been expanding. Over-watering water is typically water-rich, with the ability to move water into a lake, and it is more likely to be transported to the reservoir, and the ability to use it in a lake.\nHow to Measure A Water Supply in a Water Supply in a Water Supply\nIn the event of a water supply, the water supply is a critical component of the water supply. By using a water supply, the water supply is an essential component of the water supply. When water is flowing, it is transported through the reservoir, which is the source of water for the water.\nThe water supply is typically water-rich, where it flows through the reservoir, and the water is transported through the reservoir. The water supply is typically water-rich, which carries the water, and the water is transported through the reservoir. Water-rich reservoirs are typically water-rich, which carries the water, making it suitable for irrigation purposes.\nHow to Measure A Water Supply in a Water Supply\nOne of the primary methods used to measure a water supply is the use of a water supply. The water supply is typically water-rich",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.221,
+            "distinct2": 0.561,
+            "distinct4": 0.779,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 192
+          },
+          {
+            "text": " a state of flow and rivers and waterways. The stream is also known as the \u2018Lamb\u2019 and the \u2018Lamb\u2019 is a watershed of the water. Although the water is relatively high, it is difficult to see the river in a river, and we must tell if it is on a river, and if there is anything in it, we have a question about it, and what is the \u2018Lamb\u2019.\nThe land and water of the rivers and rivers, the rivers and river flows through the river is an important part of the ecosystem. This is a major part of the ecosystem and affects the overall ecosystem. It is a key resource for the people and the communities in the world, and is responsible for the development of the ecosystem.\nThe water is available in the form of a river or river. If there is any river or water flowing, there is no water flowing out of streams. The water flowing from the river is mainly used in the form of rivers and streams, and the rivers are often used for the movement of the rivers. It is also often used for the movement of people and people in the world.\nThe river is composed of a water flowing through the river and its waters. The rivers are used",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.059,
+            "distinct2": 0.682,
+            "distinct4": 0.941,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 254
+          }
+        ]
+      },
+      {
+        "label": "math_definition",
+        "prompt": "In mathematics, a prime number is",
+        "draws": [
+          {
+            "text": " not the same as the corresponding point value. Therefore, in mathematics, a prime number is the area of the equation. Thus, if the value in a given equation is equal to the area of the equation, then the equation is equal to the area of the equation. For every vertex of the equation, the formula is equal to the area of the equation. Therefore, the equation can be estimated using the formula.\nIn mathematics, we have to calculate the formula. In mathematics, the sum of the equation is equal to the area of the equation. Now, the formula is equal to the area of the equation, in the formula, the relationship between the number of the equation. Therefore, the formula is equal to the area of the equation. Now, then, we have to calculate the area of the equation. Now, let\u2019s assume that a given area of the equation is equal to the area of the equation. Now, let\u2019s assume that the area of the equation is equal to the area of the equation, and then we have to calculate the area of the equation. Now, we have to multiply the area of the equation by a point. Now, in this case, we have to multiply the area of the equation by a point value.",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.423,
+            "distinct2": 0.373,
+            "distinct4": 0.577,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 133
+          },
+          {
+            "text": " not a perfect number.\nThe problem is, for example, the following mathematical formula is:\nThe formula is the function of a theorem that is the function of a theorem:\nThe property of a theorem is the function of a theorem:\nThe theorem is the function of a theorem:\nThe formula is the function of the theorem:\nThe function of an theorem is the function of the argument:\nThe function of the theorem is the function of a theorem:\nThe function of a theorem is the function of a theorem:\nThe function of a theorem is the function of a theorem:\nThe function of a function of a theorem is the function of a theorem:\nThe function of a theorem is the function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nthe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\nThe function of a theorem:\n",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.735,
+            "distinct2": 0.165,
+            "distinct4": 0.265,
+            "looped": true,
+            "loop_onset": 180,
+            "loop_period": 7,
+            "topic": 0.0,
+            "topic_span": 16
+          },
+          {
+            "text": " calculated by the amount of numbers, and the number of times each of the following figures. In addition, all these digits also have the same number if we have the same number as the number of times, and the number of times each of them has the same number of times.\nFor example, in my example, there are 3 digits in the decimal number of times. The number of digits is the number of times each of the following digits.\nAnd so, this is a decimal number. In my example, for example, in the following example, in the following example, a digit is the number of times the number of times each of the following digits.\nFor example, in the following example, all of the digits are two digits that are all numbers in the same number of times.\nThis is also true for the decimal number of times.\nThe number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number of times the number",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.474,
+            "distinct2": 0.369,
+            "distinct4": 0.526,
+            "looped": true,
+            "loop_onset": 175,
+            "loop_period": 4,
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          },
+          {
+            "text": " a single point, a single point, and a set of integers. This is the standard of the equation. This can be used to create a new state of the equation or the equation.\nSo, the next time you multiply the numbers of integers, you can multiply the number of integers. This helps to determine the relative number of integers.\nHere's a great way to solve the equations:\nThe first step in solving the equation:\nIn our calculator, we'll show how many numbers we can multiply by the number of digits.\nSo, you can multiply the number of integers.\nThen, we have to multiply the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the number of times we can multiply by the",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.53,
+            "distinct2": 0.365,
+            "distinct4": 0.47,
+            "looped": true,
+            "loop_onset": 127,
+            "loop_period": 8,
+            "topic": 0.3333333333333333,
+            "topic_span": 249
+          },
+          {
+            "text": " the number of digits, and a decimal number is the number of digits.\nIt is the number of digits in brackets. A prime number is the number of digits in parentheses.\nThe number of digits in brackets depends on the number of digits, and the number of the digits in parentheses is the number of digits.\nThe number of digits in brackets\nThis type of count is called the number of digits in brackets.\nWhat are a decimal number?\nA decimal number is a number of digits that includes the number of digits in brackets.\nA decimal number is a set of numbers that contain the number of digits in brackets.\nWhat is a decod?\nA decod is a decod that contains the number of digits in brackets.\nWhat is a decod?\nA decod is a decod that contains the number of digits in brackets.\nWhat is decod?\nA decod is a decod that contains the number of letters in brackets.\nWhat is decod?\nA decod is a decod that contains the number of letters in brackets.\nWhat is decod?\nA decod is a decod that contains the number of letters in brackets.\nWhat is decod?\nA decod that",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.553,
+            "distinct2": 0.271,
+            "distinct4": 0.447,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 240
+          }
+        ]
+      },
+      {
+        "label": "environment",
+        "prompt": "Climate change refers to long-term shifts in",
+        "draws": [
+          {
+            "text": " the timing and intensity of a response to a stimulus. The response is called the \u201cstress-stress.\u201d In response to a stimulus, the response is called the \u201cfight.\u201d The response is called the \u201cfight.\u201d\nThe \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d\nThe \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\u201d The \u201cfight.\ufffd",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.817,
+            "distinct2": 0.142,
+            "distinct4": 0.183,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " climate change, as well as rapid and high-priority shifts in urban planning, and extreme weather-related changes.\nThe role of water and water\nWater is a central component of water. Water is a crucial part of all freshwater ecosystems because of the large volume of water that flows through the sea. Water is the most important source for freshwater and river water. Water flows at different altitudes and troughs in the form of rivers, rivers, and lakes. Water is a natural and natural freshwater.\nWater is a vital part of the water system, which contributes to the overall water balance of rivers and lakes. Water is the source of water in the water of rivers, rivers, lakes, rivers, rivers, streams, lakes, rivers, lakes, rivers, rivers, and rivers. Water is the most important part of the water system.\nThe water is the main source of water and is the water system of the water. It is the natural source of water. It is the water that flows through water and is the water that flows through the sea. The water is the source of water and is the water that flows through the sea.\nWater is the main source of water and is the water from the water. Water is the primary source of water and is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.225,
+            "distinct2": 0.514,
+            "distinct4": 0.775,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 22
+          },
+          {
+            "text": " the world's population.\nThe Global Positioning System is a set of challenges that need to be addressed through its own right to adapt to changing global environments. The global positioning system is a set of systems that help to ensure that the landscape itself is interconnected and that is a key element of the global landscape.\nFor a comprehensive assessment of the global positioning system, the world's first comprehensive assessment of the role of the global position is a critical tool in shaping the way we interact with the world.",
+            "tokens": 100,
+            "eos": true,
+            "rep4": 0.021,
+            "distinct2": 0.818,
+            "distinct4": 0.979,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 29
+          },
+          {
+            "text": " temperature, precipitation, and rainfall.\nIn this article we will explore the importance of solar energy in the home of solar-powered cars.\n- Solar energy production\n- Solar energy generation\n- solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar power generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar power generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar energy generation\n- Solar",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.822,
+            "distinct2": 0.141,
+            "distinct4": 0.178,
+            "looped": true,
+            "loop_onset": 97,
+            "loop_period": 5,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the energy supply and demand of energy.\nEnergy demand is the term used to describe the energy demand and demand for energy. Energy demand is the use of energy and demand for energy to generate electricity. Energy demand is the use of energy to generate energy.\nEnergy demand refers to the use of energy to generate electricity. It is the use of energy for generating electricity. Energy demand energy is the use of energy for generating electricity. The power generated by energy is derived from the heat generated through heat and electricity generated by heat.\nThe term energy demand refers to the use of renewable energy to generate electricity. It refers to the use of renewable energy or renewable energy for generating electricity. It refers to the use of renewable energy to generate energy. For this reason, renewable energy is the use of energy to generate electricity.\nEnergy demand refers to the use of energy in generating electricity. This refers to the use of renewable energy to generate electricity. It is the use of renewable energy in generating electricity. This refers to the use of energy to generate electricity.\nEnergy demand refers to the use of energy in generating electricity. It refers to the use of renewable energy in generating electricity. It refers specifically to the use of renewable energy in generating electricity. It refers to the use of renewable energy",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.51,
+            "distinct2": 0.302,
+            "distinct4": 0.49,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.16666666666666666,
+            "topic_span": 250
+          }
+        ]
+      },
+      {
+        "label": "recipe",
+        "prompt": "To make bread at home, you will need",
+        "draws": [
+          {
+            "text": " to buy an egg. This will provide a quick start.\nYou will need to choose an egg. For example, if your child will be about a good size, you will need to have extra food. Once you have your child has enough food, it will be a great idea to have that child. So you will need to have a little more food, and you will need to have more food in your head.\nOnce you have your child, you can begin to cook in the kitchen. Once you have your child have a food, you will need to have enough food. This will help your child get a fresh look.\nThis will help your child to get a good nutrition and build a healthy diet.\nIt will also help your child grow and develop a healthy lifestyle. You will need to be more creative and have fun.\nYou will need to have a good nutrition and healthy eating plan.",
+            "tokens": 184,
+            "eos": true,
+            "rep4": 0.099,
+            "distinct2": 0.667,
+            "distinct4": 0.901,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.25,
+            "topic_span": 174
+          },
+          {
+            "text": " to get out of school, or go to school.\nThe most important is to have a clean oven or oven. However, it is important to pay attention to the temperature of a stove. This is because a stove thermometer is not required to heat a stove, or it only requires a lot of heat.\nIt is important to have a cool home in your house if they are not on the stove. If you do not have a stove, you will need to set a fire station and make a full fire kit.\nIt is also important to have a cool home in the house. If you use a stove that is close to the stove, you will need to use a good stove.\nIt is important to have a cool home in your house that is close to the stove. This is because a stove is good for your house. If you have a stove that is close to the stove, you will need to provide a fire to the stove.\nOnce you have a fire station and have a smoke detector, your fire station will be in the garage. If you smoke the fire station, you will need to set fire station to the fire station where you will need to set fire station.\nA fire station will contain smoke. If your fire station has",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.178,
+            "distinct2": 0.569,
+            "distinct4": 0.822,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 238
+          },
+          {
+            "text": " to be careful to have the water in place.\n- This is the best way to use a variety of different cooking methods.\n- This is also useful when you are using a variety of cooking methods.\n- This is a great way to make bread at home.\n- This is also useful when you are using a variety of baking techniques.\n- This is also useful when you are using a variety of baking techniques.\n- This is also useful when you are using a variety of baking techniques.\n- This is useful when you are using a variety of baking techniques.\n- This is also useful when you are using a variety of baking techniques.\n- This is also useful when you are using a variety of baking techniques.\n- This is also helpful when you are using a variety of baking techniques.\n- This is useful when you are using a variety of baking methods.\n- This is also useful when you are using a variety of baking techniques.\n- This is useful when you are using a variety of baking techniques.\n- This method is also useful when you are using a variety of baking techniques.\n- This is beneficial when you are using a variety of baking techniques.\n- This is useful when you are using a variety of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.719,
+            "distinct2": 0.204,
+            "distinct4": 0.281,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 54
+          },
+          {
+            "text": " to add a small amount.\n- Make a big meal\n- Use a simple sandwich\n- Don\u2019t store your bread at least once a day.\n- Make a small meal\n- Use a good fork\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal to make a small meal\n- Use a small, medium-sized meal\n- Use the smallest meal\n- Use a large, medium-sized meal\n- Use a low-sized meal\n- Use a small dinner\n- Use a small meal\n- Place a large, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small meal\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small meal\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small, medium-sized meal\n- Use a small meal\n-",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.7,
+            "distinct2": 0.208,
+            "distinct4": 0.3,
+            "looped": true,
+            "loop_onset": 121,
+            "loop_period": 46,
+            "topic": 0.0,
+            "topic_span": 67
+          },
+          {
+            "text": " to know what foods or beverages should you eat. In general, there are certain foods that are not properly processed and are very likely to cause problems with your daily meals.\nOne of the main foods is bread. It is a safe choice. It is a great way to break down food into smaller pieces. You can also use a variety of different types of bread, such as bread, pizza, baked goods, and bread. You can use a variety of different types of bread, and make it a good choice for bread.\nIt is important to note that a particular food is not properly processed and may be harmful to your health, as it is a good choice for those who are allergic to the foods that cause this condition.\nFoods that contain a certain type of food are known to trigger a certain reaction to food allergies, and they can be easily absorbed by your body and cause your health and wellness to be controlled.\nIt is also important to monitor your body\u2019s activity and monitor your symptoms.\nIt is important to monitor your health and wellness regularly.\nA diet that is good for your health can help support your wellbeing and keep your health healthy.\nTo keep your health healthy, you should keep your eyes at bay.\nIt is recommended",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.067,
+            "distinct2": 0.776,
+            "distinct4": 0.933,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 105
+          }
+        ]
+      },
+      {
+        "label": "literature",
+        "prompt": "William Shakespeare wrote many plays, including",
+        "draws": [
+          {
+            "text": " Henry II and Henry II, in Shakespeare's play, to the extent of which Shakespeare's plays are considered.\nThe following are some of Shakespeare's plays, including Shakespeare in Shakespeare's plays, and for Shakespeare's plays.\nRead Also: Shakespeare's plays are very common in Shakespeare's plays such as Shakespeare's plays, as well as in the plays in Shakespeare's plays.\nRead Also: Shakespeare's Plays\nEssay on Shakespeare's plays\nEssay on Shakespeare's plays\nEssay on Shakespeare's plays\n- Shakespeare's plays, including Shakespeare's plays, are notable for certain plays such as Shakespeare's play, and Shakespeare's plays have also played by Shakespeare's plays, as well as the play's play.\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's Plays\n- Shakespeare's play\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's play\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's plays\n- Shakespeare's play\n- Shakespeare's plays\n- Shakespeare's Plays\n- Shakespeare's plays\n- Shakespeare's plays",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.534,
+            "distinct2": 0.298,
+            "distinct4": 0.466,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 256
+          },
+          {
+            "text": " his famous play, King Arthur, and his famous play The Tempest, which had been around for a long time.\nThe following are the famous and famous plays of Shakespeare. They include the king of King David, the king of England, and the king of England.\nThe English King of England is also the most famous plays of Shakespeare.\nThe English King of England is King King and the King of England. King Arthur is also the King of England.\nThe English King of England is King of England. King Arthur is also the King of England. King Arthur is the king of the Kingdom of England.\nThe English King of England is King of England. King Arthur is the king of England.\nThe English King of England is King of England. King Arthur is King of England.\nThe English King of England is King of England. King Arthur is King of England. King Arthur is King of England. King Arthur is King of England. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is King Arthur. King Arthur is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.621,
+            "distinct2": 0.251,
+            "distinct4": 0.379,
+            "looped": true,
+            "loop_onset": 192,
+            "loop_period": 6,
+            "topic": 0.0,
+            "topic_span": 68
+          },
+          {
+            "text": " The Merry Poems of King Henry III, and The Tempest, for example, the first English king and the second English king.\nThese are the most famous of Shakespeare's plays and the most famous plays of the time. The Prince's plays are the most famous plays, and the most famous plays, as they are written in the name of the Lord. The Prince's plays are also the most famous plays, as they are mainly composed of dramatic figures, such as the Prince's King, The Great Prince, and the Prince's plays.\nThe Prince's plays are the most famous plays in Shakespeare's plays. The Prince's plays are the most famous plays in Shakespeare's play, and his plays are often the most famous plays of the time. The Prince's plays are the most famous plays in Shakespeare's plays, and the most famous plays, such as The Tempest, The Tempest, and the Prince's plays.\nThe Prince's plays are the most famous plays in Shakespeare's plays, and the most famous plays are the most famous plays in Shakespeare's plays. The Prince's plays are the most famous plays in the play, and the most famous plays in Shakespeare's plays.",
+            "tokens": 238,
+            "eos": true,
+            "rep4": 0.43,
+            "distinct2": 0.363,
+            "distinct4": 0.57,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.3333333333333333,
+            "topic_span": 237
+          },
+          {
+            "text": " Shakespeare's play; and, in many ways, Shakespeare was a much more ambitious playwright.\nKing Arthur, by his love of the Prince, was born in 1610, he was a young man who had had a family in his family. This day, when he met Arthur, he was a young boy and a young man, and he was a young man. Arthur was a young man, also known as the Prince of Wales, and the only one of England, is a young man who was a great king. Arthur, who was a young man of the age of the king, was a young man, and himself was a great man. Arthur, a young man, and of all other people, was a child of the age of the king, and was a great man. Arthur, on the other hand, was a young man who was a young man and a young man, was a young man, and the young man was a young man, and he was a young man. Arthur was a young man, and of all the young men he was a young man, and of all the boys. Arthur, on the other hand, was a young man of the same age, and of all the boys he was a young man, and of all",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.312,
+            "distinct2": 0.463,
+            "distinct4": 0.688,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 11
+          },
+          {
+            "text": " the Shakespearean play, the son of a father, the daughter of a wealthy man, the Son of God, the son of a wealthy man, in the family of his father, the son of a wealthy man, in the family of his father.\nThe play opens with the novel The Hobbit, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Rings, The King of the Ring, The King of",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.783,
+            "distinct2": 0.173,
+            "distinct4": 0.217,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 2
+          }
+        ]
+      },
+      {
+        "label": "technology",
+        "prompt": "The internet began as a research project in",
+        "draws": [
+          {
+            "text": " the United States, and the study, it was carried out by researchers in the field of research. The paper is published in the USA, published in the journal Biotechnology, in the journal Cell Biology, and in the journal Cell Biology, the journal Cell Biology, and the journal Cell Biology, which are published in the journal Cell Biology.\nIn the paper, we discussed the effect of the technology on cell biology, but the use of the technology to produce it was not yet allowed. The paper also had a chance to develop a new technology, and to help the scientists and scientists. It was also the first book to be published in the journal Cell Biology.\nThe paper also received a detailed review of the literature, including the most recent research project, published in the journal Cell Biology, and the journal Cell Biology, which is published in the journal Cell Biology. The paper was written in the Journal Cell Biology, published in the journal Cell Biology, and was published in the journal Cell Biology, published in the journal Cell Biology, and the journal Cell Biology.\nThe paper also received a brief review of the literature, published in the Journal Cell Biology, and published in the journal Cell Biology.\nThe paper also received a brief review of the literature, published in the journal",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.352,
+            "distinct2": 0.475,
+            "distinct4": 0.648,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 151
+          },
+          {
+            "text": " the mid-1960s, where the researchers were able to identify the most important demographic features of the internet.\nThe researchers were able to analyze the findings from the research projects and investigate the impact of the internet on the internet. The findings of the research project were used by the researchers in the study, which showed that the study was mainly a result of the study, in the case of the study, which was due to the lack of information about the internet.\n\"The results are interesting and that the research project is the first to gain a better understanding of the internet. This is especially useful as it is interesting and interesting because it can be used as a way to make the data and research project possible.\"\n\"The research project was not designed to be done in the early days of the research project, but rather to provide a better understanding of the nature of the internet. This study was carried out in a research project where researchers collected data from the internet. This was done in a variety of ways, and it was used to give them some information about the internet.\n\"As the researchers were able to look at the data and research projects they were able to use in the research projects, and this is how they could be used in the research projects. This can",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.075,
+            "distinct2": 0.694,
+            "distinct4": 0.925,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.75,
+            "topic_span": 253
+          },
+          {
+            "text": " the 1980s and with the new coronavirus pandemic in the early 1990s.\nThe current pandemic is a growing population of the virus. The virus is characterized by the small population of the virus, which is responsible for the spread of people. With an increasing population of people, the virus is spread quickly and spread quickly.\nThe virus is spread to other countries, including Hong Kong, Taiwan, and Taiwan. The spread of the virus is also spread across the country, including Hong Kong, Thailand, and the Philippines.\nThe virus is spread across the country, particularly in the provinces of Hong Kong, Taiwan, and Taiwan. The virus is spread across the country, especially in the central part of the country, in the province of Singapore.\nThe spread of the virus is spread across the country, but there is a significant amount of people are not exposed to the virus.\nThe virus spreads throughout the country and affects people in the central and central region. It is also the most common type of virus that is transmitted through other people.\nThe spread of the virus can be spread through different countries, including the Philippines, South Asia, and the United States.\nThe spread of the virus can be spread across the country, especially in the South and",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.17,
+            "distinct2": 0.596,
+            "distinct4": 0.83,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the US, and in the early 1980s, the federal government provided $100 million to make it their home.\nIn the 1950s, the Bureau of Labor Statistics was a $100 million loan that the first time a bank issued $200 million in the US. The first half of the world\u2019s gross revenue was $2,000.\nThere were over 10,000 people in the United States, and nearly 50,000 Americans made their home in the United States. That number is roughly $3,000, and now the U.S. government was nearly $1,000.\nIn a decade, the federal government was also a relatively new force in the United States. The federal government had already adopted a system based on the state\u2019s gross revenue, and it was the first federal government to run its own net in the United States. The federal government had already established a system that would allow the federal government to run its own net out of control over their own net.\nThe federal government had a single agency to control the system, and the federal government had a plan for it. As it did, it had to build up its own net, and it was just a move to reduce the number of people who have the federal government",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.079,
+            "distinct2": 0.722,
+            "distinct4": 0.921,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the late 1800s, but the research project was not funded until the end of the school year.\nA number of research projects funded by the University of Michigan are funded by the University of Michigan State University. The research projects include a graduate and master\u2019s and doctoral students.\nIn addition to the research project, researchers have worked with scientists to develop a team of researchers to develop a new field of research that allows the research to be done in two phases of a work of science.\nThe research project is funded by the University of Michigan State University and is funded by the University of Michigan State University.\nThe research project is funded by the University of Michigan State University. The research project is funded by the University of Michigan State University.\nAccording to the research project, the research project is funded by the University of Michigan State University.\n\u201cThis research project is funded by the University of Michigan State University and by the University of Michigan State University and the University of Michigan State University, the research research project is funded by the University of Michigan State University,\u201d the researchers said.\nThe research project is funded by the University of Michigan State University.\n\u201cWe found that the research project is funded by the University of Michigan State University,\u201d",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.411,
+            "distinct2": 0.439,
+            "distinct4": 0.589,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 244
+          }
+        ]
+      },
+      {
+        "label": "economics",
+        "prompt": "Inflation occurs when",
+        "draws": [
+          {
+            "text": " a person is traveling in a city or a city and a person has a condition in which a person is unable to travel.\nThis can lead to a crisis where a person stays in a city, or if someone is in a city or a city.\nThere are no more than 100 different types of people who need a certain type of service, such as a pension or a pension.\nPeople who are physically or physically are at risk of a disaster and are at risk of having a disaster.\nIt is a big idea to reduce the risk of disaster if you are at a crisis.\nThe government and the government are responsible for making a difference in the world and the government.\nThe government has a duty to take steps to reduce the risk of a disaster and to reduce the risk of a future disaster.\nThe government is responsible for protecting the environment and preventing it from having a disaster.\nThe government can help the people and the people who are at risk of a disaster.\nThere are several types of people with a weakened or weakened area.\nThe government has a duty to protect the environment and the people who need a proper plan.\nIt is important for people to protect themselves and the people who need to take steps to reduce the risk of a disaster",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.154,
+            "distinct2": 0.608,
+            "distinct4": 0.846,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the amount of money is over 2 percent of the dollar.\nInflation is the result of inflation.\nThe amount of money to pay is the amount of money or the amount of money that can pay.\nInflation is the result of inflation.\nInflation has the effect of inflation.\nInflation is the result of inflation.\nInflation is the result of inflation.\nInflation is the result of inflation.\nInflation tends to occur in the first year.\nInflation causes the amount of money that can be used by a person.\nInflation is the result of inflation.\nInflation is the result of inflation.\nInflation is the result of the inflation.\nInflation causes the amount of money that can be used to pay the person.\nInflation refers to the amount of money that can be used to pay the person.\nInflation is the result of inflation.\nInflation is the result of inflation.\nInflation is the result of inflation.\nInflation is the result of inflation.\nInflation is the result of inflation.\nInflation is the result of changes in the future.\nInflation is the result of inflation.\nInflation is the result of inflation.\nInflation is",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.644,
+            "distinct2": 0.243,
+            "distinct4": 0.356,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.5,
+            "topic_span": 254
+          },
+          {
+            "text": " inflation is more than a dollar. This can be offset by inflation.\nThe inflation rate is lower than inflation, where the government has more power to use up to $0.5 trillion in federal dollars.\nThe government has less power to use up to $2.5 trillion in federal dollars compared to the average U.S. dollar in the US.\nThe average U.S. dollar is $1.3 trillion.\nThe government has a $1.5 trillion budget for the United States.\nThe government has also a $1.7 trillion budget for the United States.\nThe government has a $1.5 trillion budget for the United States.\nThe government has a $1.6 trillion budget for the United States.\nThe budget is a $1.5 trillion budget, with a $2.6 trillion budget for the United States.\nThe government has an $1 trillion budget, and an $1.5 trillion budget for the United States.\nThe government has three-year-olds.\nThe government has nine-year-olds.\nThe government has eight-year-olds.\nThe federal government has two-year-olds.\nThe government has two-year-olds.\nThe government",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.397,
+            "distinct2": 0.417,
+            "distinct4": 0.603,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 22
+          },
+          {
+            "text": " people are hungry and the people are hungry. The government\u2019s economy is also influenced by different factors. There are different reasons, but this is not a problem.\n- If people are hungry, they may lose their own food, or they may lose their own food.\n- If they are hungry, they are hungry.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food, or they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food, or they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are hungry, they may lose their own food.\n- If they are",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.759,
+            "distinct2": 0.188,
+            "distinct4": 0.241,
+            "looped": true,
+            "loop_onset": 188,
+            "loop_period": 14,
+            "topic": 0.0,
+            "topic_span": 0
+          },
+          {
+            "text": " the amount of a dollar is more than the amount of money the government pays for, the government is paying for, or the government is paying for, that\u2019s the amount of money that you pay for, that\u2019s the amount of money you pay for, and that\u2019s why you pay for, what you pay for, what you pay for, what you pay for, and what you pay for, where you pay for, and what you pay for, what you pay for, what you pay for, what you pay for, what you pay for, what you pay for and what your money for, and what you pay for, and what you pay for.\nWhat is the difference between the amount of money that a government pays for and a government if it does not pay for, what the government pays for, and where it goes for. It\u2019s the amount that a government pays for, whether it\u2019s a government or a government, and what you pay for, what you pay for. There are some things that people pay for, and the amount of money you pay for, what they pay for, and what you pay for, what you pay for, what you pay for, and what you pay for, what",
+            "tokens": 256,
+            "eos": false,
+            "rep4": 0.466,
+            "distinct2": 0.329,
+            "distinct4": 0.534,
+            "looped": false,
+            "loop_onset": null,
+            "loop_period": null,
+            "topic": 0.0,
+            "topic_span": 0
           }
         ]
       }
