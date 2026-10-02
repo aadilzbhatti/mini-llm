@@ -199,7 +199,7 @@ def generate_until_eos(
                 if use_cache:
                     model.clear_cache()
                 idx_cond = idx[:, -block_size:]
-            logits, _ = model(idx_cond)
+            logits, _ = model(idx_cond, last_only=True)
             logits = logits[:, -1, :]
             if temperature is not None:
                 logits = logits / temperature

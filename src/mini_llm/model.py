@@ -28,12 +28,16 @@ class Head(nn.Module):
         self.key = nn.Linear(n_embd, head_size, bias=False)
         self.query = nn.Linear(n_embd, head_size, bias=False)
         self.value = nn.Linear(n_embd, head_size, bias=False)
+        self.scale = head_size ** -0.5
         self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))
         self.dropout = nn.Dropout(dropout)
 
         self.use_cache = use_cache
-        self.register_buffer('cached_keys', None, persistent=False)
-        self.register_buffer('cached_values', None, persistent=False)
+        # Allocated once at (B, block_size, head_size) and written in place; cache_len says how
+        # many positions are filled. Not saved with the model.
+        self.register_buffer('k_cache', None, persistent=False)
+        self.register_buffer('v_cache', None, persistent=False)
+        self.cache_len = 0
 
         # Initialize linear layers
         self.init_weights()
@@ -50,22 +54,22 @@ class Head(nn.Module):
         q = self.query(x)
 
         if self.use_cache and not self.training:
-            if self.cached_keys is None or self.cached_values is None:
-                self.cached_keys = k_new
-                self.cached_values = v_new
-            else:
-                self.cached_keys = torch.cat([self.cached_keys, k_new], dim=1)
-                self.cached_values = torch.cat([self.cached_values, v_new], dim=1)
-
-            k = self.cached_keys
-            v = self.cached_values
+            if self.k_cache is None or self.k_cache.size(0) != B or self.k_cache.dtype != k_new.dtype:
+                self.k_cache = k_new.new_empty(B, self.tril.size(0), k_new.size(-1))
+                self.v_cache = torch.empty_like(self.k_cache)
+            start, self.cache_len = self.cache_len, self.cache_len + T
+            self.k_cache[:, start:self.cache_len] = k_new
+            self.v_cache[:, start:self.cache_len] = v_new
+            k = self.k_cache[:, :self.cache_len]
+            v = self.v_cache[:, :self.cache_len]
         else:
             k = k_new
             v = v_new
 
         T_total = k.shape[1] # k.shape != q.shape if we are using the cache
-        wei = q @ k.transpose(-2, -1) / torch.sqrt(torch.tensor(k.shape[-1], dtype=torch.float32, device=k.device))
-        wei = wei.masked_fill(self.tril[T_total-T:T_total, :T_total] == 0, float('-inf'))
+        wei = (q @ k.transpose(-2, -1)) * self.scale
+        if T > 1:  # a single new token attends to the whole cache: its mask row is all ones
+            wei = wei.masked_fill(self.tril[T_total-T:T_total, :T_total] == 0, float('-inf'))
 
         wei = F.softmax(wei, dim=-1)
         wei = self.dropout(wei)
@@ -78,8 +82,7 @@ class Head(nn.Module):
         return out
 
     def clear_cache(self):
-        self.cached_keys = None
-        self.cached_values = None
+        self.cache_len = 0  # keep the buffers: the next generation reuses them
 
 class MultiHeadAttention(nn.Module):
     """ multiple heads of self-attention in parallel """
@@ -176,7 +179,7 @@ class ModelCustomTransformer(nn.Module):
             if module is not self and hasattr(module, "init_weights"):
                 module.init_weights()
 
-    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None):
+    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None, last_only: bool = False):
         B, T = idx.shape
 
         # idx and targets are both (B, T) tensor of integers
@@ -197,6 +200,8 @@ class ModelCustomTransformer(nn.Module):
         x = self.dropout(x)
         for block in self.blocks:
             x = block(x)
+        if last_only and targets is None:
+            x = x[:, -1:]  # generation only needs the next-token distribution
         x = self.ln_f(x)  # (B, T, C)
         logits = self.lm_head(x)  # (B, T, vocab_size)
 
@@ -226,7 +231,7 @@ class ModelCustomTransformer(nn.Module):
                 self.clear_cache()  # Clear cache if we are not using it or if it's full
                 # crop idx to the last block_size tokens
                 idx_cond = idx[:, -block_size:]
-            logits, _ = self(idx_cond)
+            logits, _ = self(idx_cond, last_only=True)
             # focus only on the last time step
             logits = logits[:, -1, :] # becomes (B, C)
             # apply softmax to get probabilities
@@ -242,22 +247,10 @@ class ModelCustomTransformer(nn.Module):
         return idx
 
     def cache_len(self) -> int:
-        any_head = None
-        for m in self.modules():
-            if isinstance(m, Block):
-                any_head = m.sa.heads[0]
-                break
-        if any_head is None:
-            return 0
-
-        if not getattr(any_head, 'use_cache', False) or any_head.cached_keys is None:
-            return 0
-        if isinstance(any_head, Head):
-            return int(any_head.cached_keys.shape[1])
-        return 0
+        # every head in every layer holds the same number of positions
+        return self.blocks[0].sa.heads[0].cache_len if self.use_cache else 0
 
     def clear_cache(self):
         if self.use_cache:
-            for m in self.modules():
-                if isinstance(m, Block):
-                    m.clear_cache()
+            for block in self.blocks:
+                block.clear_cache()

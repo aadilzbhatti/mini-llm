@@ -249,3 +249,31 @@ def test_sampled_model_generate_matches_uncached_per_seed(models, block_size: in
             torch.manual_seed(seed)
             out_cached = cached.generate(idx, max_new_tokens=32, block_size=block_size)
             assert torch.equal(out_plain, out_cached), f"seed={seed} diverged for {prompt!r}"
+
+
+@torch.no_grad()
+def test_last_only_logits_match_full_forward(models):
+    uncached, _ = models
+    idx = encode(PROMPTS[0], get_tokenizer()).unsqueeze(0)
+    full, _ = uncached(idx)
+    last, _ = uncached(idx, last_only=True)
+    assert last.shape == (1, 1, full.size(-1))
+    torch.testing.assert_close(last[:, -1], full[:, -1])
+
+
+@torch.no_grad()
+def test_cache_buffers_are_allocated_once_and_reused(models):
+    _, cached = models
+    head = cached.blocks[0].sa.heads[0]
+    block_size = head.tril.size(0)
+    idx = encode(PROMPTS[1], get_tokenizer()).unsqueeze(0)
+    cached.clear_cache()
+    cached(idx)
+    buf = head.k_cache
+    assert buf.shape == (1, block_size, head.key.out_features)  # full window, filled in place
+    cached(idx[:, -1:])
+    assert head.k_cache is buf and cached.cache_len() == idx.size(1) + 1
+    cached.clear_cache()
+    cached(idx)  # a new generation reuses the same storage
+    assert head.k_cache is buf and cached.cache_len() == idx.size(1)
+    cached.clear_cache()
