@@ -53,18 +53,21 @@ The same loss split by position in the window (0–15, 16–63, …). Early posi
 
 ## Generation samples
 
-**What:** free-running text. 10 prompts that begin the kind of web pages the model was trained on (a definition, a biography, a list, …), 5 draws each, 256 new tokens, temperature 0.7, top-k 40, stopping at end-of-document. Draw *j* of prompt *i* uses the same random seed for every model, so models are compared on identical draws and no sample is cherry-picked.
+**What:** free-running text. 20 frozen prompts that begin the kind of web pages the model was trained on (a definition, a biography, a list, a recipe, …), 5 draws each, so **100 generations per model**. Each is 256 new tokens at temperature 0.7, top-k 40, stopping at end-of-document. Draw *j* of prompt *i* uses the same random seed for every model, so models are compared on identical draws and nothing is cherry-picked.
 
-**Why:** every eval above is *teacher-forced*: each prediction sees the real preceding text. Generation feeds the model its own output back hundreds of times, so small errors compound. A model can improve on every other eval and still write degenerate text. These are base models, not instruction-tuned, so the question is whether the continuation reads like a coherent document, not whether its facts are right.
+**Why:** every eval above is *teacher-forced*: each prediction sees the real preceding text. Generation feeds the model its own output back hundreds of times, so small errors compound, and a model can improve on every other eval and still write degenerate text. These are base models, not instruction-tuned, so the question is whether the continuation reads like a coherent document, not whether its facts are right. One sample shows what kinds of failure occur; a hundred show whether a model actually got better.
 
-**The numbers** (per sample; the tables average them):
+**Per-sample numbers** (each model's table aggregates its 100):
 
-- **rep4**: share of 4-token phrases that repeat an earlier one. 0 means no repetition; above ~0.5 the text is mostly recycling itself. Lower is better, up to a point: very high temperatures also get low rep4 by producing word salad, so read it together with the text.
-- **looping**: whether the sample *ends* stuck in an exact cycle (the same 1–64-token span repeated to the end, at least 32 tokens), and the token where the loop starts. "…see it as a whole, see it as a whole, …" is a loop. Fewer is better, and a later onset is better.
-- **topic held**: share of the prompt's content words (e.g. "einstein", "german", "physicist") still used in the second half of the continuation. It answers whether the model is still writing about what it was given. Higher is better.
-- **stopped at EOS**: samples where the model ended the document before 256 tokens. Neither good nor bad by itself.
+- **rep4**: share of 4-token phrases that repeat an earlier one. 0 means no repetition; above ~0.5 the text is mostly recycling itself. Reported as the **median** (a typical sample) and **p90** (the worst 10%). Lower is better, up to a point: very high temperatures also get low rep4 by producing word salad, so read it with the text.
+- **distinct-2 / distinct-4**: unique 2- and 4-token phrases as a share of all of them. 1.0 means nothing repeats. It's the complement of rep4 and is less dominated by one long loop. Higher is better, with the same caveat.
+- **loops**: samples that *end* stuck in an exact cycle (the same 1–64-token span repeated to the end, at least 32 tokens), shown with a 95% interval. "…see it as a whole, see it as a whole, …" is a loop. Fewer is better. With 100 samples, two models whose intervals don't overlap really differ.
+- **first loop at**: the median token where loops start, among the samples that loop. Later is better: the model writes longer before collapsing.
+- **topic held**: share of the prompt's content words (e.g. "einstein", "german", "physicist") still used in the second half of the continuation. Higher is better.
+- **topic span**: the median token position of the last mention of any of those words, i.e. how long the model stays on the subject before drifting for good. 256 means it was still on topic at the end; 0 means it never mentioned it. Higher is better.
+- **EOS**: samples where the model ended the document before 256 tokens. Neither good nor bad by itself.
 
-**What progress looks like:** degenerate text (loops, high rep4, low topic) → coherent but wrong (low rep4, no loops, topic held, wrong facts) → coherent and plausible. The per-prompt table shows where a model is on that path for each kind of text, since averages hide prompts that improve while others get worse.
+**What progress looks like:** degenerate text (frequent loops starting early, high rep4, short topic span) → coherent but wrong (few or late loops, low rep4, long topic span, wrong facts) → coherent and plausible. The **rep4 by prompt** table shows where a model is on that path for each kind of text, since averages hide prompts that improve while others get worse. The **reading set** in evals/samples.md (draw 1 of every prompt, every model side by side) is the fixed subset to read by eye; a model's Samples page has all 100.
 
 ## Cost
 

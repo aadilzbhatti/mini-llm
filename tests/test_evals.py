@@ -75,3 +75,33 @@ def test_sample_metrics():
     p = "Albert Einstein was a German-born theoretical physicist who"
     assert topic_retention(p, "Einstein studied physics in Germany") == 3 / 6  # einst, germa, physi of 6 stems
     assert topic_retention(p, "the cat sat on the mat") == 0
+
+
+def test_more_sample_metrics_and_summary():
+    from mini_llm.data import get_tokenizer
+    from mini_llm.samples import distinct, summarize, topic_span
+    assert distinct([1, 2, 1, 2, 1, 2], 2) == 2 / 5 and distinct(list(range(10)), 4) == 1.0
+    tok = get_tokenizer()
+    ids = tok.encode(" Einstein was born in Ulm. Later he moved away. The weather was nice and the food was good.")
+    span = topic_span("Albert Einstein was a German-born theoretical physicist who", ids, tok)
+    assert span == 3  # " Einstein was born": "born" (from "German-born") is the last mention, token 3
+    assert topic_span("Photosynthesis is a process that", ids, tok) == 0
+    s = summarize([{"rep4": r, "distinct2": 0.9, "distinct4": 0.95, "looped": r > 0.5, "loop_onset": 100 if r > 0.5 else None,
+                    "topic": 0.5, "topic_span": 120, "eos": False, "tokens": 256} for r in (0.1, 0.2, 0.3, 0.6, 0.9)])
+    assert s["rep4"] == 0.3 and s["looped"] == 2 and s["loop_onset_median"] == 100 and s["topic_span_median"] == 120
+    assert s["loop_ci95"][0] < 0.4 < s["loop_ci95"][1]
+
+
+def test_generate_samples_reuses_existing_draws(monkeypatch):
+    from mini_llm import samples
+    from mini_llm.data import get_tokenizer
+    prev = {"temperature": samples.TEMPERATURE, "top_k": samples.TOP_K, "new_tokens": samples.NEW_TOKENS,
+            "prompts": [{"prompt": p, "draws": [{"text": " the same text again", "tokens": 4, "eos": False}] * samples.DRAWS}
+                        for _, p in samples.GEN_PROMPTS[:-1]]}  # all but the last prompt already generated
+    calls = []
+    monkeypatch.setattr(samples, "complete", lambda *a, **k: calls.append(a[4]) or {
+        "text": " new", "tokens": 1, "eos": True, **samples.score(a[4], " new", a[1])})
+    out = samples.generate_samples(None, get_tokenizer(), 128, "cpu", previous=prev)
+    assert calls == [samples.GEN_PROMPTS[-1][1]] * samples.DRAWS  # only the missing prompt is generated
+    assert out["summary"]["n"] == len(samples.GEN_PROMPTS) * samples.DRAWS
+    assert out["prompts"][0]["draws"][0]["text"] == " the same text again" and "distinct2" in out["prompts"][0]["draws"][0]

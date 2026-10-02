@@ -42,9 +42,10 @@ checkpoint along several axes so models can be compared on a Pareto table:
               (this model has no KV cache, so each new token re-runs the
               cropped window), peak memory.
 
-  samples     10 prompts x 5 draws of free-running generation at T=0.7 /
-              top-k 40, identical seeds for every model, scored for
-              repetition, exact loops and topic retention (mini_llm.samples).
+  samples     20 frozen prompts x 5 draws = 100 free-running generations at
+              T=0.7 / top-k 40, identical seeds for every model, scored for
+              repetition, diversity, exact loops and topic retention
+              (mini_llm.samples).
 
 Everything is seeded; run all models on the same device before comparing the
 inference numbers.
@@ -277,8 +278,8 @@ def evaluate_checkpoint(path: str | Path, val_path: str | Path = DEFAULT_VAL, de
     tokenizer = get_tokenizer()
     if only:
         r = dict(previous or {})
-        if "samples" in only:
-            r["samples"] = generate_samples(model, tokenizer, cfg.block_size, device)
+        if "samples" in only:  # reuses draws already in the report, generates the rest
+            r["samples"] = generate_samples(model, tokenizer, cfg.block_size, device, previous=r.get("samples"))
         return r
     val = load_tokens(val_path)
     T = cfg.block_size
@@ -359,15 +360,16 @@ def render_markdown(r: dict) -> str:
               f"- memory: {inf['memory_gb']} GB", ""]
     sm = r.get("samples")
     if sm:
-        from mini_llm.samples import _summary_cells
+        from mini_llm.samples import _head, _quantile, _summary_cells
         lines += ["## Generation samples", "", f"{sm['protocol']}. The samples themselves: this run's Samples "
                   "button, or evals/samples.md next to every other model.", "",
-                  "| rep4 | looping | topic held | stopped at EOS |", "|---|---|---|---|",
-                  f"| {_summary_cells(sm['summary'])} |", "", "| prompt | rep4 | looping |", "|---|---|---|"]
+                  *_head(), f"| {_summary_cells(sm['summary'])} |", "",
+                  "| prompt | rep4 median | loops | topic span (median) |", "|---|---|---|---|"]
         for p in sm["prompts"]:
             ds = p["draws"]
-            lines.append(f"| {p['label']} | {sum(x['rep4'] for x in ds) / len(ds):.2f} | "
-                         f"{sum(bool(x.get('looped')) for x in ds)}/{len(ds)} |")
+            span = _quantile([x["topic_span"] for x in ds if "topic_span" in x], 0.5)
+            lines.append(f"| {p['label']} | {_quantile([x['rep4'] for x in ds], 0.5):.2f} | "
+                         f"{sum(bool(x.get('looped')) for x in ds)}/{len(ds)} | {'–' if span is None else f'{span:.0f}'} |")
         lines.append("")
     lines += ["## Training systems (recorded by the run)", ""]
     lines += [f"- {k}: {v}" for k, v in ts.items()] if ts else ["- not recorded (run predates mini_llm.systems)"]
@@ -416,14 +418,14 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
     from mini_llm.samples import label
     name = lambda r: Path(r["checkpoint"]).stem
     bench = (bench or {}).get("models", {})
-    head = ["model", "ctx", "val@ctx", "rep4", "looping", "topic held"] + [f"L(c={c})" for c in ctxs] + cbs + [f"ret@{d}" for d in dists] + \
+    head = ["model", "ctx", "val@ctx", "rep4 median", "loops", "topic held"] + [f"L(c={c})" for c in ctxs] + cbs + [f"ret@{d}" for d in dists] + \
            ["train tok/s", "train peak GB", "prefill@ctx ms", "decode tok/s"]
     lines = ["# Evals summary", "",
              "One row per checkpoint. **L(c)**: loss on the same 8,000 target tokens given exactly c tokens of "
              "history (compare models at equal c; this is the fair context comparison, not val@ctx). "
              "**cb@W**: context benefit in nats ± SE on identical windows, only for models with context ≥ W. "
              "**ret@d**: forced-choice retrieval at distance d (chance 10%), identical trials. "
-             "**rep4 / looping / topic held**: generation samples (see evals/samples.md). "
+             "**rep4 median / loops / topic held**: generation samples (see evals/samples.md, evals/GUIDE.md). "
              "Inference columns come from `mini-llm-bench` (all models in one session, interleaved rounds; "
              "median, p10–p90) when available.", "",
              "| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
@@ -434,7 +436,7 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
         bm = bench.get(name(r))
         ss = (r.get("samples") or {}).get("summary")
         cells = [label(r), str(T), f"{q[f'full_val@{T}']:.4f}" if f"full_val@{T}" in q else "–"]
-        cells += ([f"{ss['rep4']:.3f}", f"{ss['looped']}/{ss['n']}", "–" if ss["topic"] is None else f"{ss['topic']:.0%}"]
+        cells += ([f"{ss['rep4']:.3f}", f"{ss['looped']}/{ss['n']}", "–" if ss.get("topic") is None else f"{ss['topic']:.0%}"]
                   if ss else ["–", "–", "–"])
         cells += [f"{curve[c]['loss']:.4f}" if c in curve else "–" for c in ctxs]
         cells += [_cb_line(cb[k]) if k in cb and "benefit_se" in cb[k] else "–" for k in cbs]
