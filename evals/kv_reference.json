@@ -1,0 +1,225 @@
+{
+  "device": "mps",
+  "host": "Aadils-MacBook-Air.local",
+  "torch": "2.14.0",
+  "at": "2026-10-02T17:22:55Z",
+  "protocol": "absolute position embeddings; 15 interleaved rounds (order rotated); prefill = one forward over c tokens filling the cache (last-position logits); decode@c = 64 greedy tokens from a (c - 64)-token prompt, without / with the KV cache; past the window = 64 tokens from a full window (the cache is refilled every step); fp32; median (p10-p90)",
+  "models": {
+    "modal_data320k-b8-t1024-e512h8-80k-lr6e-4-wu256k_steps80000_seed42": {
+      "n_embd": 512,
+      "n_layer": 4,
+      "n_head": 8,
+      "block_size": 1024,
+      "cache_bytes_per_token": 16384,
+      "cache_bytes_allocated": 16777216,
+      "by_context": {
+        "128": {
+          "prefill_ms": {
+            "median": 31.834,
+            "p10": 29.004,
+            "p90": 35.196,
+            "n": 15
+          },
+          "decode_tok_s": {
+            "median": 90.747,
+            "p10": 84.046,
+            "p90": 105.154,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 84.053,
+            "p10": 78.254,
+            "p90": 100.463,
+            "n": 15
+          },
+          "cache_bytes_used": 2097152
+        },
+        "256": {
+          "prefill_ms": {
+            "median": 27.093,
+            "p10": 25.019,
+            "p90": 28.032,
+            "n": 15
+          },
+          "decode_tok_s": {
+            "median": 82.169,
+            "p10": 76.372,
+            "p90": 94.654,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 85.973,
+            "p10": 80.195,
+            "p90": 102.931,
+            "n": 15
+          },
+          "cache_bytes_used": 4194304
+        },
+        "512": {
+          "prefill_ms": {
+            "median": 35.125,
+            "p10": 29.035,
+            "p90": 40.593,
+            "n": 15
+          },
+          "decode_tok_s": {
+            "median": 60.398,
+            "p10": 58.411,
+            "p90": 62.479,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 90.989,
+            "p10": 82.854,
+            "p90": 107.81,
+            "n": 15
+          },
+          "cache_bytes_used": 8388608
+        },
+        "1024": {
+          "prefill_ms": {
+            "median": 54.082,
+            "p10": 45.436,
+            "p90": 57.826,
+            "n": 15
+          },
+          "decode_tok_s": {
+            "median": 19.913,
+            "p10": 17.738,
+            "p90": 22.184,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 89.345,
+            "p10": 82.494,
+            "p90": 103.387,
+            "n": 15
+          },
+          "cache_bytes_used": 16777216
+        },
+        "past_window": {
+          "decode_tok_s": {
+            "median": 23.292,
+            "p10": 21.449,
+            "p90": 25.876,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 21.804,
+            "p10": 19.527,
+            "p90": 24.723,
+            "n": 15
+          }
+        }
+      }
+    },
+    "modal_data160k-b8-t1024-40k-lr1.2e-3-wu256k_steps40000_seed42": {
+      "n_embd": 256,
+      "n_layer": 4,
+      "n_head": 4,
+      "block_size": 1024,
+      "cache_bytes_per_token": 8192,
+      "cache_bytes_allocated": 8388608,
+      "by_context": {
+        "128": {
+          "prefill_ms": {
+            "median": 27.861,
+            "p10": 26.741,
+            "p90": 34.493,
+            "n": 15
+          },
+          "decode_tok_s": {
+            "median": 129.915,
+            "p10": 121.155,
+            "p90": 148.018,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 120.359,
+            "p10": 107.495,
+            "p90": 133.938,
+            "n": 15
+          },
+          "cache_bytes_used": 1048576
+        },
+        "256": {
+          "prefill_ms": {
+            "median": 14.134,
+            "p10": 13.676,
+            "p90": 14.659,
+            "n": 15
+          },
+          "decode_tok_s": {
+            "median": 114.627,
+            "p10": 98.923,
+            "p90": 125.75,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 120.326,
+            "p10": 113.52,
+            "p90": 135.104,
+            "n": 15
+          },
+          "cache_bytes_used": 2097152
+        },
+        "512": {
+          "prefill_ms": {
+            "median": 21.13,
+            "p10": 20.523,
+            "p90": 21.619,
+            "n": 15
+          },
+          "decode_tok_s": {
+            "median": 118.807,
+            "p10": 109.89,
+            "p90": 127.885,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 128.344,
+            "p10": 119.92,
+            "p90": 135.168,
+            "n": 15
+          },
+          "cache_bytes_used": 4194304
+        },
+        "1024": {
+          "prefill_ms": {
+            "median": 32.299,
+            "p10": 28.355,
+            "p90": 33.606,
+            "n": 15
+          },
+          "decode_tok_s": {
+            "median": 54.144,
+            "p10": 53.261,
+            "p90": 54.736,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 131.914,
+            "p10": 117.065,
+            "p90": 139.89,
+            "n": 15
+          },
+          "cache_bytes_used": 8388608
+        },
+        "past_window": {
+          "decode_tok_s": {
+            "median": 63.863,
+            "p10": 62.258,
+            "p90": 65.561,
+            "n": 15
+          },
+          "decode_cached_tok_s": {
+            "median": 60.771,
+            "p10": 58.043,
+            "p90": 62.354,
+            "n": 15
+          }
+        }
+      }
+    }
+  }
+}

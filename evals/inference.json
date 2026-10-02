@@ -2,195 +2,249 @@
   "device": "mps",
   "host": "Aadils-MacBook-Air.local",
   "torch": "2.14.0",
-  "at": "2026-10-02T04:57:27Z",
-  "protocol": "7 interleaved rounds (order rotated), 5 prefills per model per round, decode 64 greedy tokens from a (block_size - 64)-token prompt, no KV cache, synchronized timing, warmed up",
+  "at": "2026-10-02T17:16:48Z",
+  "protocol": "7 interleaved rounds (order rotated), 5 prefills per model per round, decode 64 greedy tokens from a (block_size - 64)-token prompt, without and with the KV cache, synchronized timing, warmed up",
   "models": {
     "modal_data160k-b16-t512-40k-lr1.2e-3-wu256k_steps40000_seed42": {
       "block_size": 512,
       "prefill_full_ms": {
-        "median": 20.751,
-        "p10": 20.473,
-        "p90": 45.955,
+        "median": 14.005,
+        "p10": 13.639,
+        "p90": 46.301,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 12.248,
-        "p10": 11.874,
-        "p90": 16.807,
+        "median": 7.238,
+        "p10": 6.981,
+        "p90": 11.813,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 39.134,
-        "p10": 38.259,
-        "p90": 39.688,
+        "median": 67.705,
+        "p10": 66.615,
+        "p90": 67.971,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 132.429,
+        "p10": 119.029,
+        "p90": 135.584,
         "n": 7
       }
     },
     "modal_data160k-b32-t256-40k-lr1.2e-3-wu256k_steps40000_seed42": {
       "block_size": 256,
       "prefill_full_ms": {
-        "median": 14.918,
-        "p10": 14.552,
-        "p90": 19.099,
+        "median": 10.667,
+        "p10": 10.25,
+        "p90": 22.44,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 12.502,
-        "p10": 12.248,
-        "p90": 17.264,
+        "median": 8.393,
+        "p10": 7.972,
+        "p90": 12.18,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 54.425,
-        "p10": 53.118,
-        "p90": 55.23,
+        "median": 122.412,
+        "p10": 109.274,
+        "p90": 122.803,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 121.704,
+        "p10": 115.285,
+        "p90": 130.499,
         "n": 7
       }
     },
     "modal_data160k-b8-t1024-40k-lr1.2e-3-wu256k_steps40000_seed42": {
       "block_size": 1024,
       "prefill_full_ms": {
-        "median": 39.738,
-        "p10": 39.213,
-        "p90": 44.436,
+        "median": 32.246,
+        "p10": 31.894,
+        "p90": 51.341,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 12.54,
-        "p10": 12.045,
-        "p90": 17.191,
+        "median": 7.348,
+        "p10": 7.216,
+        "p90": 11.89,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 19.51,
-        "p10": 18.764,
-        "p90": 19.752,
+        "median": 23.355,
+        "p10": 22.946,
+        "p90": 24.242,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 132.421,
+        "p10": 105.824,
+        "p90": 141.833,
         "n": 7
       }
     },
     "modal_data160k-b8-t1024-e512h8-40k-lr6e-4-wu256k_steps40000_seed42": {
       "block_size": 1024,
       "prefill_full_ms": {
-        "median": 92.588,
-        "p10": 75.832,
-        "p90": 111.894,
+        "median": 74.234,
+        "p10": 62.421,
+        "p90": 84.306,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 28.931,
-        "p10": 25.506,
-        "p90": 33.002,
+        "median": 15.098,
+        "p10": 14.593,
+        "p90": 28.112,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 9.157,
-        "p10": 8.726,
-        "p90": 9.327,
+        "median": 10.371,
+        "p10": 10.127,
+        "p90": 10.983,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 98.225,
+        "p10": 97.918,
+        "p90": 100.201,
         "n": 7
       }
     },
     "modal_data160k-bs64-15k-lr1.2e-3-wu256k-v4_steps40000_seed42": {
       "block_size": 128,
       "prefill_full_ms": {
-        "median": 13.487,
-        "p10": 13.136,
-        "p90": 19.947,
+        "median": 10.71,
+        "p10": 7.669,
+        "p90": 15.218,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 13.422,
-        "p10": 12.945,
-        "p90": 14.812,
+        "median": 7.884,
+        "p10": 7.595,
+        "p90": 8.122,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 59.334,
-        "p10": 56.419,
-        "p90": 60.488,
+        "median": 120.357,
+        "p10": 109.446,
+        "p90": 123.445,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 126.35,
+        "p10": 103.359,
+        "p90": 128.202,
         "n": 7
       }
     },
     "modal_data320k-b8-t1024-e512h8-40k-lr6e-4-wu256k_steps40000_seed42": {
       "block_size": 1024,
       "prefill_full_ms": {
-        "median": 81.151,
-        "p10": 78.84,
-        "p90": 102.969,
+        "median": 63.02,
+        "p10": 60.496,
+        "p90": 81.992,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 26.694,
-        "p10": 25.51,
-        "p90": 31.258,
+        "median": 16.971,
+        "p10": 13.063,
+        "p90": 25.982,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 9.452,
-        "p10": 9.125,
-        "p90": 9.555,
+        "median": 11.018,
+        "p10": 10.443,
+        "p90": 11.147,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 96.88,
+        "p10": 94.088,
+        "p90": 97.861,
         "n": 7
       }
     },
     "modal_data320k-b8-t1024-e512h8-80k-lr6e-4-wu256k_steps80000_seed42": {
       "block_size": 1024,
       "prefill_full_ms": {
-        "median": 94.208,
-        "p10": 79.728,
-        "p90": 100.471,
+        "median": 73.082,
+        "p10": 63.583,
+        "p90": 84.411,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 28.613,
-        "p10": 25.953,
-        "p90": 33.606,
+        "median": 15.338,
+        "p10": 14.105,
+        "p90": 27.701,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 9.251,
-        "p10": 8.88,
-        "p90": 9.647,
+        "median": 10.544,
+        "p10": 10.414,
+        "p90": 11.082,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 96.81,
+        "p10": 89.198,
+        "p90": 97.847,
         "n": 7
       }
     },
     "modal_data80k-b32-t256-15k-lr1.2e-3-wu256k_steps15000_seed42": {
       "block_size": 256,
       "prefill_full_ms": {
-        "median": 16.829,
-        "p10": 16.413,
-        "p90": 22.423,
+        "median": 10.653,
+        "p10": 10.262,
+        "p90": 22.722,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 13.713,
-        "p10": 13.026,
-        "p90": 18.36,
+        "median": 8.301,
+        "p10": 7.881,
+        "p90": 12.287,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 50.203,
-        "p10": 48.96,
-        "p90": 50.575,
+        "median": 112.962,
+        "p10": 112.142,
+        "p90": 114.451,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 119.801,
+        "p10": 111.821,
+        "p90": 121.68,
         "n": 7
       }
     },
     "modal_data80k-bs64-15k-lr1.2e-3-wu256k_steps15000_seed42": {
       "block_size": 128,
       "prefill_full_ms": {
-        "median": 12.904,
-        "p10": 12.359,
-        "p90": 17.835,
+        "median": 9.843,
+        "p10": 7.784,
+        "p90": 15.471,
         "n": 35
       },
       "prefill_128_ms": {
-        "median": 12.631,
-        "p10": 12.005,
-        "p90": 13.008,
+        "median": 8.036,
+        "p10": 7.716,
+        "p90": 11.415,
         "n": 35
       },
       "decode_tok_s": {
-        "median": 60.665,
-        "p10": 60.351,
-        "p90": 61.26,
+        "median": 116.376,
+        "p10": 106.06,
+        "p90": 120.677,
+        "n": 7
+      },
+      "decode_cached_tok_s": {
+        "median": 126.302,
+        "p10": 115.515,
+        "p90": 127.543,
         "n": 7
       }
     }
