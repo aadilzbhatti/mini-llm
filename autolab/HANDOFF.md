@@ -20,6 +20,8 @@ the "Decision log" at the bottom.
   Standard, not Background (Background throttled MPS ~7x); edit plists as text, never with PlistBuddy.
 - Dashboard: https://aadils-mac-mini.taile67486.ts.net/autolab (tailnet; `tailscale serve` on the mini). The Live
   tab shows what's running, blocked/ceiling banners with one-click raises, and the pipeline.
+- **Pause:** the Live tab's "Pause autolab" button (or `uv run autolab pause` / `unpause`) freezes everything but
+  collecting finished Modal runs; see the 2026-10-04 decision-log entry.
 - Logs/state: `autolab/state/{daemon,dashboard,research,data_build}.log`, `autolab/state/daemon.json` (heartbeat;
   `last_error.trace` holds the last cycle's traceback), `autolab/state/controller.json` (controller flows),
   `autolab/state/evolve/<session>/` (session.json + programs/), `autolab/notebook.jsonl` (every event).
@@ -795,3 +797,10 @@ Build this first; everything else hill-climbs on it.
   `submit_blocked` (the refusal); `advance_data_checks` retries them each cycle (an already-submitted run counts as
   submitted), gives no verdict until every seed has run, and the data/ladder flows hold the unsubmitted seeds' cost
   from proposals. `start_data_check` is idempotent per check id; that's how the 184M check was recovered.
+- 2026-10-04 (owner: "a pause button to temporarily stop autolab from progressing"): `controller.json` `hold`, set by
+  the Live tab's Pause button (`POST /api/budget {"action": "pause"|"unpause"}`) or `autolab pause|unpause`. While
+  held, a daemon cycle only collects finished Modal runs and live progress (paid for already, so nothing is lost):
+  no cascade (no CPU gates, no judging, no submits), no data checks, controller step, proposals, Claude calls, data
+  builds or ladder. Runs already on Modal keep training; on resume the cascade judges whatever finished meanwhile.
+  It's separate from `autolab stop` (proposals only; in-flight programs keep advancing) and from the automatic
+  usage-limit pause (`paused_until`). Notebook events `held` / `released`.

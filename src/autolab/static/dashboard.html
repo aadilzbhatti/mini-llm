@@ -587,7 +587,8 @@ async function openProgram(id, session) {
 
 function controllerTile(C) {
   let kind = "serious", text = "off";
-  if (C.enabled && C.paused_until && Date.parse(C.paused_until) > Date.now()) { kind = "warning"; text = "paused"; }
+  if (C.hold) { kind = "warning"; text = "paused by you"; }
+  else if (C.enabled && C.paused_until && Date.parse(C.paused_until) > Date.now()) { kind = "warning"; text = "paused"; }
   else if (C.enabled) { kind = "good"; text = "running"; }
   const sub = [C.enabled && C.paused_until && Date.parse(C.paused_until) > Date.now() ? `until ${fmt.time(C.paused_until)}: ${C.pause_reason || ""}` : "",
     `24h spend ${fmt.usd(C.spend_24h)} of ${fmt.usd(C.daily_usd)}` + (C.override ? ` (raised until ${fmt.time(C.override.until)})` : ""),
@@ -598,7 +599,8 @@ function controllerTile(C) {
   return tile("Controller", h("span", {}, statusEl(kind, text)), sub || (C.enabled ? "" : "autolab start to enable"), meter);
 }
 const EVENT_KIND = {accepted: "good", program_done: "serious", proposed: "warning", paused: "critical", data_limited: "warning",
-  data_check_done: "good", session_switched: "good", started: "good", resumed: "good", stopped: "serious"};
+  data_check_done: "good", session_switched: "good", started: "good", resumed: "good", stopped: "serious",
+  held: "warning", released: "good"};
 function renderNotebook(D) {
   const el = document.getElementById("notebook"); el.replaceChildren();
   el.append(h("p", {class: "muted"}, "Every action the controller took, newest first (autolab/notebook.jsonl; NOTEBOOK.md is regenerated from it)."));
@@ -648,7 +650,7 @@ function renderLive(L) {
   const el = document.getElementById("live"); el.replaceChildren();
   const cur = L.current, C = L.controller;
   const busy = cur && cur.kind !== "idle";
-  const ctlText = !C.enabled ? "controller off (autolab start)" :
+  const ctlText = C.hold ? `paused by you since ${fmt.time(C.hold.at)}` : !C.enabled ? "controller off (autolab start)" :
     (C.paused_until && Date.parse(C.paused_until) > Date.now()) ? `paused until ${fmt.time(C.paused_until)}: ${C.pause_reason || ""}` :
     `proposing up to ${C.max_in_flight} at once · 24h spend ${fmt.usd(C.spend_24h)} of ${fmt.usd(C.daily_usd)}` + (C.override ? ` (raised until ${fmt.time(C.override.until)})` : "");
   el.append(h("div", {class: "card now"}, h("i", {class: "pulse", style: busy ? "" : "animation:none;background:var(--muted)"}),
@@ -656,9 +658,19 @@ function renderLive(L) {
       h("div", {class: "muted"}, `${cur ? "for " + fmt.dur(cur.age_s) + " · " : ""}session ${L.active_session} · ${L.pending_runs} run${L.pending_runs === 1 ? "" : "s"} on Modal · ${ctlText}`),
       C.research && C.research.state ? h("div", {class: "muted"}, `research: ${C.research.state}${C.research.program ? " (" + C.research.program + ")" : ""}${C.research.waiting ? " · waiting: " + C.research.waiting : ""}`) : null,
       C.data_flow && C.data_flow.state ? h("div", {class: "muted"}, `data policy: ${C.data_flow.state}${C.data_flow.target ? " (" + C.data_flow.target + ")" : ""} · compute ladder: ${C.ladder && C.ladder.state || "idle"}` +
-        (C.ladder && C.ladder.waiting && C.ladder.waiting.stalled !== undefined ? ` (${C.ladder.waiting.stalled} stalled of 4 needed)` : "")) : null)));
+        (C.ladder && C.ladder.waiting && C.ladder.waiting.stalled !== undefined ? ` (${C.ladder.waiting.stalled} stalled of 4 needed)` : "")) : null),
+    C.hold ? null : h("button", {class: "btn", style: "margin-left:auto;align-self:center;flex:none", title: "Freeze autolab until you resume it",
+      onclick: () => postBudget({action: "pause"}, "Pause autolab?\n\nRuns already on Modal keep training and their results are collected, " +
+        "but nothing is judged, submitted, built or proposed (no new Modal or Claude spend) until you resume.")}, "⏸ Pause autolab")));
+  if (C.hold) el.append(h("div", {class: "card", style: "border-color:var(--warning);border-width:2px"},
+    h("div", {style: "display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap"}, statusEl("warning", "Paused"),
+      h("div", {style: "flex:1;min-width:240px"}, `You paused autolab at ${fmt.time(C.hold.at)}${C.hold.by ? " (from the " + C.hold.by + ")" : ""}. ` +
+        `${L.pending_runs} run${L.pending_runs === 1 ? "" : "s"} already on Modal keep training and their results are collected; ` +
+        "nothing is judged, submitted, built or proposed until you resume."),
+      h("div", {class: "row", style: "display:flex;gap:8px"},
+        h("button", {class: "pri", onclick: () => postBudget({action: "unpause"}, "Resume autolab? It picks up on the next daemon cycle (≤ 1 min).")}, "▶ Resume autolab")))));
   const B = L.blocked;
-  if (B && C.enabled) {
+  if (B && C.enabled && !C.hold) {
     let msg, actions = [];
     if (B.kind === "daily") {
       const suggest = Math.ceil(Math.max(B.unblock_at_limit, B.spend_24h + (B.reserved || 0) + 4 * B.need));

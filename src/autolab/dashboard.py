@@ -322,7 +322,7 @@ def controller_view(calls: dict) -> dict:
     modal_cap = settings().get("config", {}).get("modal", {}).get("max_usd")
     modal_spent = sum(c.get("usd") or 0 for c in calls.values() if c["state"] != "pending")
     modal_pending = sum(c.get("usd_estimate") or 0 for c in calls.values() if c["state"] == "pending")
-    return {"enabled": ctl.get("enabled", False), "paused_until": ctl.get("paused_until"),
+    return {"enabled": ctl.get("enabled", False), "paused_until": ctl.get("paused_until"), "hold": ctl.get("hold"),
             "base_daily_usd": cfg.get("daily_usd"), "modal_cap": modal_cap,
             "modal_spent": round(modal_spent, 2), "modal_pending": round(modal_pending, 2),
             "override": ov if daily == ov.get("usd") else None,
@@ -552,6 +552,12 @@ async def api_budget(request: Request) -> JSONResponse:
         ctl.save_control(c)
         ctl.note("resumed", by="dashboard")
         return JSONResponse({"ok": True, "message": "resumed: proposals continue on the next cycle"})
+    if action == "pause":
+        held = ctl.hold("dashboard", str(body.get("reason") or "")[:200])
+        return JSONResponse({"ok": True, "message": f"paused since {held['at']}: runs on Modal finish, nothing new starts"})
+    if action == "unpause":
+        ctl.release("dashboard")
+        return JSONResponse({"ok": True, "message": "unpaused: autolab continues on the next cycle"})
     if action == "clear_override":
         c = ctl.load_control()
         c.pop("daily_usd_override", None)

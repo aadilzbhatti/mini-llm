@@ -4,6 +4,8 @@
 
 Each cycle, after the cascade has advanced (autolab.evaluate.advance_all), `step()`:
 
+0. Held? `autolab pause` (or the dashboard's Pause button) freezes everything: the daemon only collects
+   finished Modal runs until `autolab unpause`; it runs neither the cascade nor this step.
 1. Enabled? `autolab stop` sets it off (state in autolab/state/controller.json); in-flight
    programs still finish unless --cancel-running.
 2. Paused? A Claude usage limit (HTTP 429) pauses proposing until the reset time in the
@@ -91,6 +93,26 @@ def save_control(ctl: dict, path: Path | None = None) -> None:
     tmp = path.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(ctl, indent=2))
     tmp.replace(path)
+
+
+def hold(by: str, reason: str = "") -> dict:
+    """Pause all of autolab (owner's button): the daemon keeps collecting finished Modal runs but advances, judges,
+    submits and proposes nothing until release(). Runs already on Modal keep training."""
+    ctl = load_control()
+    if not ctl.get("hold"):
+        ctl["hold"] = {"at": iso(now()), "by": by, "reason": reason}
+        save_control(ctl)
+        note("held", by=by, reason=reason)
+    return ctl["hold"]
+
+
+def release(by: str) -> dict | None:
+    ctl = load_control()
+    was = ctl.pop("hold", None)
+    if was:
+        save_control(ctl)
+        note("released", by=by, held_since=was.get("at"))
+    return was
 
 
 # --- notebook -----------------------------------------------------------------------------------

@@ -32,6 +32,9 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("modal", help="Modal backend commands (see autolab.modal_backend)")
     sub.add_parser("start", help="Enable the controller: the daemon proposes and evaluates on its own")
     sub.add_parser("resume", help="Clear a pause (usage limit / early rejects) and keep going")
+    pz = sub.add_parser("pause", help="Freeze everything (cascade, checks, proposals); runs on Modal finish and are collected")
+    pz.add_argument("--reason", default="")
+    sub.add_parser("unpause", help="Undo `autolab pause`")
     stp = sub.add_parser("stop", help="Stop proposing (in-flight programs finish)")
     stp.add_argument("--cancel-running", action="store_true", help="Also cancel running Modal trials")
     sub.add_parser("status", help="Controller, budget and session summary")
@@ -153,7 +156,7 @@ def main(argv: list[str] | None = None) -> None:
         from autolab.session_report import build
 
         print(build())
-    elif args.cmd in ("start", "resume", "stop", "status"):
+    elif args.cmd in ("start", "resume", "stop", "status", "pause", "unpause"):
         control_main(args)
     elif args.cmd == "data":
         data_main(args)
@@ -189,8 +192,14 @@ def control_main(args) -> None:
     from autolab import controller as c
     from autolab import evaluate as ev
 
+    if args.cmd == "pause":
+        c.hold("cli", args.reason)
+    elif args.cmd == "unpause":
+        c.release("cli")
     ctl = c.load_control()
-    if args.cmd == "start":
+    if args.cmd in ("pause", "unpause", "status"):
+        pass
+    elif args.cmd == "start":
         ctl.update(enabled=True, started=c.iso(c.now()))
         c.note("started")
     elif args.cmd == "resume":
@@ -208,7 +217,7 @@ def control_main(args) -> None:
                 if call["state"] == "pending":
                     modal.FunctionCall.from_id(call["call_id"]).cancel()
                     print(f"cancelled {rid}")
-    if args.cmd != "status":
+    if args.cmd not in ("status", "pause", "unpause"):
         c.save_control(ctl)
     session = ev.load_session()
     print(json.dumps({"controller": {k: v for k, v in ctl.items() if k != "recorded"},

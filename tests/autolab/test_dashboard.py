@@ -112,6 +112,17 @@ def test_budget_controls(client, tmp_path, monkeypatch):
     events = [json.loads(x)["event"] for x in (tmp_path / "notebook.jsonl").read_text().splitlines()]
     assert events == ["budget_override", "budget_override_cleared", "settings_changed"]
 
+    # pause / unpause: a hold the daemon obeys, idempotent, noted once each
+    assert client.post("/api/budget", json={"action": "pause"}).status_code == 403
+    assert client.post("/api/budget", json={"action": "pause"}, headers=h).status_code == 200
+    at = ctl.load_control()["hold"]["at"]
+    assert client.post("/api/budget", json={"action": "pause"}, headers=h).status_code == 200
+    assert ctl.load_control()["hold"] == {"at": at, "by": "dashboard", "reason": ""}
+    assert client.post("/api/budget", json={"action": "unpause"}, headers=h).status_code == 200
+    assert "hold" not in ctl.load_control()
+    events = [json.loads(x)["event"] for x in (tmp_path / "notebook.jsonl").read_text().splitlines()]
+    assert events[-2:] == ["held", "released"]
+
     # ceilings: the token cap and the parameter cap can be raised from the page, within bounds
     cfg.write_text("[evolve]\nparam_cap_mult = 2.0   # cap\n\n[controller]\nmax_full_tokens = 184320000\n")
     r = client.post("/api/budget", json={"action": "permanent", "max_full_tokens": 276480000, "param_cap_mult": 2.5},

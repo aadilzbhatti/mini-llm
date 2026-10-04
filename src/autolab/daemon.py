@@ -10,6 +10,7 @@ Every `interval` seconds:
      the daily budget, pauses, the data policy, the notebook, accepted-program commits);
   4. write a heartbeat to autolab/state/daemon.json, which the dashboard shows.
 
+While held (`autolab pause` / the dashboard's Pause button) a cycle does only 1-2 and the heartbeat.
 A failed cycle is logged and retried next cycle. It never takes the daemon down.
 The M5 controller loop will run from here too, so the whole system keeps going
 with nobody at the keyboard.
@@ -48,6 +49,14 @@ def cycle(log=print) -> dict:
     set_activity("collect", "collecting finished Modal runs and live progress")
     finished = mb.collect(log=log)
     live = mb.fetch_live()
+    from autolab.controller import load_control
+
+    if (held := load_control().get("hold")):  # owner's pause: collect only; nothing advances, submits or proposes
+        pending = sum(c["state"] == "pending" for c in mb.load_calls().values())
+        set_activity("idle", f"paused by {held.get('by', 'owner')} since {held.get('at', '?')} "
+                             f"({pending} run{'s' if pending != 1 else ''} still training on Modal)")
+        return {"finished_this_cycle": finished, "live_files": live, "programs_advanced": [], "held": held,
+                "pending": pending, "cycle_s": round(time.time() - t0, 2)}
     from autolab.evaluate import advance_everything
 
     # evaluation cascade + data-check verdicts, in every session (an old one may still have work)
