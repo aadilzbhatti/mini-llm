@@ -1,4 +1,4 @@
-# Autolab handoff (for Claude Code on the Mac)
+# Autolab handoff (for Claude Code on the Mac mini)
 
 Read this first, then `autolab/BRIEF.md` (the spec) and `autolab/REPO_NOTES.md`
 (discovery results). This file holds the decisions and standing rules that
@@ -6,44 +6,72 @@ override the brief where they conflict, plus implementation guidance per
 milestone. Keep it up to date: when you make a design decision, add it to
 the "Decision log" at the bottom.
 
-## Where things stand
+## Where things stand (2026-10-04)
 
-- Repo: `~/dev/wiki-llm-autolab`, branch `autolab`, cloned from
-  `~/dev/wiki-llm` (branch `minimal`, commit d4257f0). `origin` is the GitHub
-  repo (github.com/aadilzbhatti/mini-llm). Pushing the `autolab` branch there is
-  allowed (see standing rules).
-- Milestone 1 (discovery) is done: `autolab/REPO_NOTES.md`.
-- Setup on the Mac is done: `uv sync`; baseline suite 47 passed; data copied
-  into `autolab/data/` (gitignored); frozen val sha256 in `autolab/config.toml`.
-- Milestone 2 (reports + diagnosis) code and tests are done: `src/autolab/`
-  {config, gpu, trainer, report, diagnose}.py + `thresholds.toml`; tests in
-  `tests/autolab/`. Run the suite with `AUTOLAB_FORCE_CPU=1 uv run pytest`
-  while the owner's runner is training.
-- 2026-09-27: merged the owner's `modal-ddp` branch (DDP training, Modal
-  launcher, volume mirror) into `autolab`, and added a Modal backend for
-  autolab trials (`src/autolab/modal_backend.py`). The local Mac GPU waiter was
-  stopped; the M2 real check runs on Modal instead.
-- 2026-09-27: autolab runs without a chat session. `autolab daemon` (launchd
-  `com.aadil.autolab-daemon`) collects Modal results and live progress every
-  60 s. `autolab dashboard` (launchd `com.aadil.autolab-dashboard`, port 8766)
-  serves the dashboard, mounted on the tailnet at `/autolab` next to the
-  owner's control page. Plists are in `autolab/launchd/`. The M5 controller loop
-  will run inside the daemon.
-- M3 (evaluator + cascade) is built and running live: `src/autolab/{program,evaluate}.py`,
-  the `EVOLVE-BLOCK` markers (commit 7a7e0e7, the base of every program), and the protected
-  `tests/autolab/test_causal_leak.py`. The daemon advances programs every cycle, and the
-  dashboard has a Programs tab. `autolab evolve propose --diff FILE` adds a candidate by hand.
-  M4 (LLM proposer) will call the same `propose()`.
-- M4 (proposer) is built: `src/autolab/{database,prompt,llm,generate}.py`, `prompts/`.
-  `autolab evolve generate -n N` makes children (Claude, falling back to mutation), and the daemon
-  evaluates them. The next step (M5) is the daemon generating on its own within a nightly budget.
-- M5 (controller) is built: `src/autolab/controller.py`, run by the daemon every cycle.
-  `autolab start|stop [--cancel-running]|resume|status`. It is OFF until `autolab start`.
-- M6 (real session) is running: the controller has been on since 2026-09-27 19:35 UTC.
-  `autolab/SESSION_1.md` is regenerated hourly by the daemon (`autolab session-report`).
-  M3–M6 were re-planned on 2026-09-26 around
-  AlphaEvolve (see "Design pivot" under Milestone guidance), which overrides
-  BRIEF §4–§5 and parts of §6–§9.
+### Machine and services
+
+- **Everything runs on the Mac mini** (`ssh mini`, user aadil, M4 16 GB) since 2026-10-04. The MacBook Air's
+  checkouts are a stale snapshot and its agents are disabled; never restart services there.
+- This repo on the mini: `~/dev/wiki-llm-autolab`, branch `autolab` (origin = github.com/aadilzbhatti/mini-llm).
+  The owner's repo is `~/dev/wiki-llm` (branch `main`): read/copy only, never write there.
+- launchd agents: `com.aadil.autolab-daemon` (controller + cascade, every 60 s) and `com.aadil.autolab-dashboard`
+  (port 8766), next to the owner's `com.aadil.mini-llm-{control,modal-mirror,runner,tensorboard}`. Restart with
+  `launchctl kickstart -k gui/$(id -u)/com.aadil.autolab-daemon`. Agents doing compute must be `ProcessType`
+  Standard, not Background (Background throttled MPS ~7x); edit plists as text, never with PlistBuddy.
+- Dashboard: https://aadils-mac-mini.taile67486.ts.net/autolab (tailnet; `tailscale serve` on the mini). The Live
+  tab shows what's running, blocked/ceiling banners with one-click raises, and the pipeline.
+- Logs/state: `autolab/state/{daemon,dashboard,research,data_build}.log`, `autolab/state/daemon.json` (heartbeat;
+  `last_error.trace` holds the last cycle's traceback), `autolab/state/controller.json` (controller flows),
+  `autolab/state/evolve/<session>/` (session.json + programs/), `autolab/notebook.jsonl` (every event).
+- Training runs on Modal (app `autolab-train`, volumes `autolab-runs` / `autolab-data`), 1x L4 per run.
+
+### Search state
+
+- Milestones M1–M8 are built, plus (2026-09-29…10-01): regime-scoped rejection memory and near-miss retests
+  (`autolab.memory`), instruction bandit, pooled seed noise, the no-evolution ablation (`autolab ablation`, built,
+  never started), capacity/context probes, `data_limited` while val still falls, ceiling banner, budget held for
+  waiting data/ladder checks. Details in the decision log below.
+- Champion path (full val loss, 3-seed means): p0 4.7522 (data20k, 82M tokens) → 4.6636 → data40k 4.5793 →
+  4.3754 → 122.88M tokens 4.3942 → … → s2+data40k@122M/p41 4.0763 (context 512 via a probe, Canon layers, ...) →
+  **data80k: 4.0129** (`s2+data40k@122M+data80k/p0`, the active session, data80k @ 122.88M tokens).
+- In the active session: p6 = capacity probe (n_layer 6 → 9), full 3.9676, confirm seeds pending; p7 = context
+  probe (512 → 1024), full 3.9873, waiting to confirm; p5 (port of p41) evaluated 4.0171; ports p1–p4 rejected at
+  the screen; p8–p11 waiting for budget at full (p8–p10 are mutation fallbacks from a DNS outage on the mini
+  around 2026-10-04 02:00 UTC, not a Claude problem).
+- **Compute ladder: 184.32M-token check half-submitted (bug, see 1 below).** Runs
+  `ev-s2+data40k@122M+data80k-data-data80k@184M-p0-s{1,2}` finished at 3.9516 / 3.9440 (vs p0 4.0129, likely a
+  clear win); s3 was refused by the Modal cap and no check was recorded in session.json.
+- Budget: Modal total $99.77 of `[modal] max_usd` = $100, so **every new run is blocked** until the owner raises it
+  (dashboard banner). Daily budget $10 (rolling 24 h). `max_full_tokens` = 184.32M, `param_cap_mult` = 2.0.
+
+### Open items, in order
+
+1. **Fix `evaluate.start_data_check` partial submission.** It submits the seeds one by one and records the check
+   only after all succeed; a refusal mid-loop (cost cap, network) leaves orphaned runs, no check, and a retry hits
+   FileExistsError on seed 1. Fix: price all seeds before the first submit (or record the check with the runs that
+   were submitted, then submit the rest on later cycles). Then recover the 184M check: record it with s1/s2 and
+   submit s3 once the cap allows (or judge on the 2 finished seeds, if the owner agrees).
+2. **`autolab-accepted` doesn't exist on the mini** (only `origin/autolab-accepted`), and `gh` is logged out there.
+   The next acceptance's commit would fail. Fix: `git branch autolab-accepted origin/autolab-accepted && git worktree
+   add ../wiki-llm-autolab-wt/accepted autolab-accepted`; the owner runs `gh auth login` for pushes.
+3. After the 184M switch, the next ladder rung (276M) is above `max_full_tokens`: the ceiling banner will ask the
+   owner. Data: data160k would be the next build (~1.2 GB; `[datasets] max_total_gb` = 5, ~1.1 GB used).
+4. Owner decisions pending: `noise_floor` 0.02 (pooled σ is ~0.008–0.015, so the floor sets the accept bar);
+   starting the no-evolution ablation (~$12–20); a one-off GPU benchmark (L4 vs faster GPUs per candidate).
+
+### Working rules that bit before
+
+- The daemon runs from this checkout, and the cascade runs the **working tree's** tests against every candidate.
+  Develop in a separate worktree/branch, run the full suite (`AUTOLAB_FORCE_CPU=1 uv run pytest tests -q`, ~10 min;
+  the tests need `autolab/data/`, which is only in this checkout), then fast-forward `autolab` and restart the
+  daemon. A broken test in the working tree rejects real candidates.
+- Commit only your own files. `autolab/{NOTEBOOK.md,SESSION_1.md,notebook.jsonl}` and `autolab/research/cards.jsonl`
+  are written by the daemon; `autolab/config.toml` is also changed by the owner from the dashboard.
+- Redeploy Modal (`uv run python -m autolab.modal_backend deploy`) after changing code that runs in the container
+  (modal_backend, evalsuite, trainer, report, diagnose). Candidate `mini_llm` code ships with each call.
+- Push only `autolab` (and the daemon pushes `autolab-accepted`); never force-push; never touch `~/dev/wiki-llm`.
+- Every spend goes through the budget checks; raising `daily_usd`, `max_usd`, `max_full_tokens` or
+  `param_cap_mult` is the owner's call.
 
 ## Decisions (override the brief where they conflict)
 
