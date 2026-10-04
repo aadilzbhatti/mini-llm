@@ -1,0 +1,50 @@
+{
+  "program": "p6",
+  "session": "s2+data40k@122M+data80k",
+  "hparams": {
+    "n_embd": 256,
+    "n_head": 4,
+    "n_layer": 9,
+    "dropout": 0.0,
+    "batch_size": 16,
+    "lr": 0.003,
+    "min_lr": 2e-06,
+    "warmup_steps": 400,
+    "weight_decay": 0.1,
+    "block_size": 512
+  },
+  "scores": {
+    "params": 20166993,
+    "screen_loss": 4.848673,
+    "full_losses": [
+      3.967556,
+      3.968176
+    ],
+    "tokens_per_sec": 26943.2,
+    "neg_params": -20166993,
+    "full_mean": 3.967866,
+    "n_seeds": 2,
+    "full_std": 0.0004384062043357054,
+    "neg_full_val_loss": -3.967866,
+    "metrics": {
+      "prefill_ms": 26.09,
+      "train_wall_s": 4565.37,
+      "fwd_flops_per_token": 42431138,
+      "decode_tokens_per_s": 37.1,
+      "long_range_score": 0.7692901234567902,
+      "context_benefit_nats": 0.5585827827453613,
+      "decode_ms_per_token": 26.96122960648232,
+      "params": 20166993,
+      "peak_train_mem_bytes": 8584565882.88,
+      "short_context_loss": 4.173652617958689,
+      "effective_context": 448,
+      "peak_inference_mem_bytes": 298500227.072,
+      "context": 512,
+      "train_tokens_per_sec": 30360.75,
+      "n_runs": 2
+    }
+  },
+  "rationale": "Probe (capacity): n_layer 6 \u2192 9 (~20.2M params, cap 35.6M). The search has stalled since p0; this tests whether more capacity pays at this budget.",
+  "parent": "p0",
+  "created_by": "probe:capacity"
+}
