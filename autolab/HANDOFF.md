@@ -38,22 +38,20 @@ the "Decision log" at the bottom.
   probe (512 → 1024), full 3.9873, waiting to confirm; p5 (port of p41) evaluated 4.0171; ports p1–p4 rejected at
   the screen; p8–p11 waiting for budget at full (p8–p10 are mutation fallbacks from a DNS outage on the mini
   around 2026-10-04 02:00 UTC, not a Claude problem).
-- **Compute ladder: 184.32M-token check half-submitted (bug, see 1 below).** Runs
-  `ev-s2+data40k@122M+data80k-data-data80k@184M-p0-s{1,2}` finished at 3.9516 / 3.9440 (vs p0 4.0129, likely a
-  clear win); s3 was refused by the Modal cap and no check was recorded in session.json.
+- **Compute ladder: 184.32M-token check `data80k@184M-p0` recorded (2026-10-04, recovered after the fix in 1 below).**
+  s1/s2 finished at 3.9516 / 3.9440 (vs p0 4.0129, likely a clear win); s3 sits in the check's `unsubmitted` and the
+  daemon submits it as soon as the Modal cap has room (~$3.66). The ladder flow is `checking` and holds s3's cost
+  (`reserve_usd`). Judging on the 2 finished seeds instead is the owner's call.
 - Budget: Modal total $99.77 of `[modal] max_usd` = $100, so **every new run is blocked** until the owner raises it
   (dashboard banner). Daily budget $10 (rolling 24 h). `max_full_tokens` = 184.32M, `param_cap_mult` = 2.0.
 
 ### Open items, in order
 
-1. **Fix `evaluate.start_data_check` partial submission.** It submits the seeds one by one and records the check
-   only after all succeed; a refusal mid-loop (cost cap, network) leaves orphaned runs, no check, and a retry hits
-   FileExistsError on seed 1. Fix: price all seeds before the first submit (or record the check with the runs that
-   were submitted, then submit the rest on later cycles). Then recover the 184M check: record it with s1/s2 and
-   submit s3 once the cap allows (or judge on the 2 finished seeds, if the owner agrees).
-2. **`autolab-accepted` doesn't exist on the mini** (only `origin/autolab-accepted`), and `gh` is logged out there.
-   The next acceptance's commit would fail. Fix: `git branch autolab-accepted origin/autolab-accepted && git worktree
-   add ../wiki-llm-autolab-wt/accepted autolab-accepted`; the owner runs `gh auth login` for pushes.
+1. ~~Fix `evaluate.start_data_check` partial submission~~ done 2026-10-04 (see decision log); the 184M check is
+   recorded and waits on the Modal cap for s3.
+2. ~~`autolab-accepted` missing on the mini~~ done 2026-10-04: local branch tracks `origin/autolab-accepted` (4fdf0b6),
+   worktree at `../wiki-llm-autolab-wt/accepted`. Still needed from the owner: `gh auth login` (or git credentials)
+   on the mini so the daemon's push of `autolab-accepted` succeeds.
 3. After the 184M switch, the next ladder rung (276M) is above `max_full_tokens`: the ceiling banner will ask the
    owner. Data: data160k would be the next build (~1.2 GB; `[datasets] max_total_gb` = 5, ~1.1 GB used).
 4. Owner decisions pending: `noise_floor` 0.02 (pooled σ is ~0.008–0.015, so the floor sets the accept bar);
@@ -791,3 +789,9 @@ Build this first; everything else hill-climbs on it.
   submitted its cost is **held back** from proposals, probes and the ablation arm (`reserved_usd`; the ladder does
   the same). The daily-budget banner shows the held amount. Also: p34–p36 were the three retests sent a third time
   (stale queue entries from the crash fixed in b462680); the queue is empty now.
+- 2026-10-04: data/ladder checks are **recorded before the first submit**. `start_data_check` used to submit seeds one
+  by one and record the check only after all succeeded, so the Modal cap refusing s3 of the 184M ladder check left
+  s1/s2 orphaned with no check and every retry died on FileExistsError. Now the check carries `unsubmitted` seeds and
+  `submit_blocked` (the refusal); `advance_data_checks` retries them each cycle (an already-submitted run counts as
+  submitted), gives no verdict until every seed has run, and the data/ladder flows hold the unsubmitted seeds' cost
+  from proposals. `start_data_check` is idempotent per check id; that's how the 184M check was recovered.
