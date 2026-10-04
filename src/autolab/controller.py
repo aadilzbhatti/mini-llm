@@ -390,8 +390,11 @@ def check_usd(session: dict, tokens_factor: float = 1.0) -> float:
 
 def hold_for_data_check(flow: dict, session: dict) -> None:
     """While the data policy is committed to a check (building, built, uploading), hold its cost from proposals."""
+    chk = next((c for c in session.get("data_checks", []) if c["id"] == flow.get("check")), None)
     if flow.get("state") in ("building", "built", "uploading"):
         flow["reserve_usd"] = round(check_usd(session), 2)
+    elif flow.get("state") == "checking" and chk and chk.get("unsubmitted"):  # seeds refused at submit, retried later
+        flow["reserve_usd"] = round(check_usd(session) * len(chk["unsubmitted"]) / 3, 2)
     else:
         flow.pop("reserve_usd", None)
 
@@ -703,6 +706,10 @@ def ladder_step(ctl: dict, session: dict, progs: dict, calls: dict, cfg: dict, p
         log(f"ladder: {stalled} children stalled; testing {session['incumbent']} at {nxt:,} tokens")
     elif flow["state"] == "checking":
         chk = next((c for c in ev.load_session(paths).get("data_checks", []) if c["id"] == flow["check"]), None)
+        if chk and chk.get("unsubmitted"):  # hold the refused seeds' cost from proposals until they're submitted
+            flow["reserve_usd"] = round(check_usd(session, flow["tokens"] / cur) * len(chk["unsubmitted"]) / 3, 2)
+        else:
+            flow.pop("reserve_usd", None)
         if not chk or chk["status"] == "running":
             return
         note("ladder_check_done", session=sname, tokens=flow["tokens"], verdict=chk.get("verdict"),

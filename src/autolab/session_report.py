@@ -104,7 +104,9 @@ def build(out: Path = OUT) -> str:
             L.append(f"- {h['at'][:16]} incumbent **{h['program']}** {h['full_mean']:.4f}"
                      + (f" — {' '.join(p.rationale.split())[:160]}" if p and p.parent_id else ""))
         for c in s.get("data_checks", []):
-            L.append(f"- data check `{c['dataset']}` on {c['program']}: {c.get('verdict', c['status'])}")
+            L.append(f"- data check `{c['dataset']}` on {c['program']}: {c.get('verdict', c['status'])}"
+                     + (f" (seeds {c['unsubmitted']} not submitted yet: {c.get('submit_blocked', '')})"
+                        if c.get("unsubmitted") else ""))
         L.append("")
 
     # --- best-so-far vs evaluations -----------------------------------------------------------------

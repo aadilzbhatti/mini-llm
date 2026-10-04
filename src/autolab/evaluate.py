@@ -710,30 +710,56 @@ def start_data_check(program_id: str, dataset_id: str, seeds: list[int] | None =
 
     The daemon (advance_data_checks) judges it when the runs finish: more data "helped" iff the mean
     beats the program's own mean on the session's data by more than accept_sigma x the full seed std.
+    Idempotent: called again for a recorded check, it only submits the seeds still unsubmitted.
     """
     from autolab.config import load_config
 
     paths = paths or Paths()
-    cfg, session = evolve_cfg(), load_session(paths)
+    session = load_session(paths)
     p = load(paths.programs / f"{program_id}.json")
     if p.scores.get("full_mean") is None:
         raise ValueError(f"{program_id} has no full-budget score to compare against")
     if not (load_config().datasets_dir / dataset_id / "train.pt").exists():
         raise FileNotFoundError(f"dataset {dataset_id} not built")
+    seeds = seeds or [1, 2, 3]
+    kind = "budget" if tokens else "data"
+    tag = f"{dataset_id}@{tokens // 1_000_000}M" if tokens else dataset_id
+    check_id = f"{tag}-{p.id}"
+    check = next((c for c in session.get("data_checks", []) if c["id"] == check_id), None)
+    if check is None:  # recorded before the first submit, so a refusal mid-loop leaves no orphaned runs
+        check = {"id": check_id, "kind": kind, "program": p.id, "dataset": dataset_id, "tokens": tokens,
+                 "runs": [], "unsubmitted": list(seeds), "baseline_mean": p.scores["full_mean"], "status": "running",
+                 "started": now_iso()}
+        session.setdefault("data_checks", []).append(check)
+        save_session(session, paths)
+        shutil.rmtree(paths.work(f"data-{dataset_id}-{p.id}"), ignore_errors=True)
+    _submit_check(check, session, paths, submit=submit, repo=repo)
+    return check
+
+
+def _submit_check(chk: dict, session: dict, paths: Paths, submit=None, repo: Path = REPO_ROOT) -> bool:
+    """Submit a data check's unsubmitted seeds. A refusal (cost cap, network) stops the loop and leaves the rest
+    in chk["unsubmitted"] for a later cycle; a run already on Modal (FileExistsError) counts as submitted.
+    Saves the session; True when every seed is submitted."""
+    from autolab.config import load_config
+
+    if not chk.get("unsubmitted"):
+        return True
     if submit is None:
         from autolab.modal_backend import submit as modal_submit
 
         def submit(req, gpu, src):
             return modal_submit(req, gpu, src_root=src)
 
-    work = paths.work(f"data-{dataset_id}-{program_id}")
-    shutil.rmtree(work, ignore_errors=True)
-    src = materialize(render(base_sources(repo, p.base_commit), p.blocks), work)
-    seeds = seeds or [1, 2, 3]
-    run_ids = []
-    kind = "budget" if tokens else "data"
+    cfg = evolve_cfg()
+    p = load(paths.programs / f"{chk['program']}.json")
+    dataset_id, tokens = chk["dataset"], chk.get("tokens")
     tag = f"{dataset_id}@{tokens // 1_000_000}M" if tokens else dataset_id
-    for seed in seeds:
+    work = paths.work(f"data-{dataset_id}-{p.id}")
+    src = work / "src"
+    if not src.exists():
+        src = materialize(render(base_sources(repo, p.base_commit), p.blocks), work)
+    for seed in list(chk["unsubmitted"]):
         req = _request(p, "full", seed, cfg, session)
         req.run_id = f"ev-{session.get('name', 's')}-data-{tag}-{p.id}-s{seed}"
         req.dataset_id = dataset_id
@@ -741,16 +767,23 @@ def start_data_check(program_id: str, dataset_id: str, seeds: list[int] | None =
         if tokens:  # compute ladder: longer run, wall cap scaled with it
             scale = tokens / session["budgets"]["full_tokens"]
             req.budget.tokens, req.budget.wall_clock_s = tokens, round(req.budget.wall_clock_s * scale)
-        submit(req, cfg["gpu"], src)
-        run_ids.append(req.run_id)
-    check = {"id": f"{tag}-{p.id}", "kind": kind, "program": p.id, "dataset": dataset_id, "tokens": tokens,
-             "runs": run_ids, "baseline_mean": p.scores["full_mean"], "status": "running", "started": now_iso()}
-    session.setdefault("data_checks", []).append(check)
+        try:
+            submit(req, cfg["gpu"], src)
+        except FileExistsError:
+            pass  # already on Modal (a restart, or a check recorded after the fact)
+        except Exception as exc:  # noqa: BLE001 - cost cap or network: retry the rest next cycle
+            chk["submit_blocked"] = f"{type(exc).__name__}: {exc}"[:300]
+            break
+        chk["runs"].append(req.run_id)
+        chk["unsubmitted"].remove(seed)
+    if not chk["unsubmitted"]:
+        chk.pop("submit_blocked", None)
     save_session(session, paths)
-    return check
+    return not chk["unsubmitted"]
 
 
-def advance_data_checks(calls: dict, paths: Paths | None = None, runs_dir: Path | None = None, log=print) -> list[str]:
+def advance_data_checks(calls: dict, paths: Paths | None = None, runs_dir: Path | None = None, log=print,
+                        submit=None) -> list[str]:
     paths = paths or Paths()
     runs_dir = runs_dir or REPO_ROOT / "autolab" / "runs"
     session = load_session(paths)
@@ -760,6 +793,8 @@ def advance_data_checks(calls: dict, paths: Paths | None = None, runs_dir: Path 
     for chk in session["data_checks"]:
         if chk["status"] != "running":
             continue
+        if chk.get("unsubmitted") and not _submit_check(chk, session, paths, submit=submit):
+            continue  # judged only once every seed has run
         if any(calls.get(r, {}).get("state", "pending") == "pending" for r in chk["runs"]):
             continue
         losses = [rep["summary"]["final_full_val_loss"] for r in chk["runs"]

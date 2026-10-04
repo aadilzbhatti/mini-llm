@@ -235,3 +235,50 @@ def test_suite_failing_on_incumbent_requeues_instead_of_rejecting(lab, tmp_path,
     assert (p.stage, p.status) == ("static", "queued") and p.reason.startswith("infra:"), p.reason
     assert json.loads((tmp_path / "infra_alert.json").read_text())["reason"].startswith("infra:")
     assert not lab["submitted"]
+
+
+def test_data_check_refused_mid_loop_records_and_resumes(lab, monkeypatch):
+    """A cost-cap refusal on seed 3 must not orphan seeds 1-2: the check is recorded with the runs that went out,
+    a retry treats already-submitted runs as submitted, and the verdict waits until every seed has run."""
+    from autolab import config as acfg
+
+    class FakeCfg:
+        datasets_dir = lab["runs"].parent / "datasets"
+    (FakeCfg.datasets_dir / "data40k").mkdir(parents=True)
+    (FakeCfg.datasets_dir / "data40k" / "train.pt").write_bytes(b"x")
+    monkeypatch.setattr(acfg, "load_config", lambda: FakeCfg)
+    on_modal, cap = [], {"room": 2}
+
+    def submit(req, gpu, src):
+        if req.run_id in on_modal:
+            raise FileExistsError(req.run_id)
+        if len(on_modal) >= cap["room"]:
+            raise RuntimeError("cost cap: spent $99 > max_usd $100")
+        on_modal.append(req.run_id)
+
+    chk = ev.start_data_check("p0", "data40k", paths=lab["paths"], submit=submit, tokens=8192)
+    assert chk["unsubmitted"] == [3] and len(chk["runs"]) == 2 and "cost cap" in chk["submit_blocked"]
+    s = ev.load_session(lab["paths"])
+    assert [c["id"] for c in s["data_checks"]] == [chk["id"]] and s["data_checks"][0]["runs"] == on_modal
+
+    again = ev.start_data_check("p0", "data40k", paths=lab["paths"], submit=submit, tokens=8192)  # no FileExistsError
+    assert again["runs"] == on_modal and again["unsubmitted"] == [3]
+    assert len(ev.load_session(lab["paths"])["data_checks"]) == 1
+
+    calls = {}
+    for r in on_modal:
+        (lab["runs"] / r).mkdir(parents=True)
+        (lab["runs"] / r / "report.json").write_text(json.dumps(fake_report(5.2)))
+        calls[r] = {"state": "finished"}
+    quiet = dict(paths=lab["paths"], runs_dir=lab["runs"], log=lambda m: None, submit=submit)
+    assert ev.advance_data_checks(calls, **quiet) == []  # seed 3 still refused: no verdict on 2 seeds
+    cap["room"] = 3
+    assert ev.advance_data_checks(calls, **quiet) == []  # seed 3 submitted, now running
+    s = ev.load_session(lab["paths"])["data_checks"][0]
+    assert s["unsubmitted"] == [] and len(s["runs"]) == 3 and "submit_blocked" not in s
+    r3 = s["runs"][2]
+    (lab["runs"] / r3).mkdir(parents=True)
+    (lab["runs"] / r3 / "report.json").write_text(json.dumps(fake_report(5.21)))
+    calls[r3] = {"state": "finished"}
+    assert ev.advance_data_checks(calls, **quiet) == [chk["id"]]
+    assert ev.load_session(lab["paths"])["data_checks"][0]["status"] == "done"
