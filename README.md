@@ -57,6 +57,12 @@ What got here (all in `baselines.md`):
   train/val gap 0.51 → 0.22 → 0.12 → 0.05. The gain stops at data80k
   (~1.5 passes over it costs nothing measurable at this budget), so at
   122.88M tokens the model is now limited by size or compute, not data.
+- Decoding (39M d512-L4, `evals/sweep_*.md`): the 80K-step model (3.7476)
+  looped in 26/100 eval samples vs 17/100 for data160k 40K, but a
+  temperature × top-k sweep shows no over-sharpening. The two models track
+  each other at every setting (T=0.7 k=40: 1/20 vs 3/20 loops; T=0.8 k=40:
+  0/20 vs 1/20; greedy: 19/20 for both), so the gap is within noise. The eval
+  stays frozen at T=0.7, k=40; T=0.8, k=40 is the better setting for use.
 
 Datasets and how they were built: `data/*/MANIFEST.md`.
 
