@@ -72,9 +72,25 @@ def _load_runner(repo: Path):
 
 # Which flags the phone form shows up front; everything else sits under "More options".
 COMMON_FLAGS = {
-    "train": ["tokens", "val-tokens", "resume", "restart-lr", "steps", "n-embd", "n-head", "n-layer",
-              "block-size", "lr", "min-lr", "warmup-steps", "full-eval-interval", "save", "save-name",
-              "sample-report", "plot-suffix"],
+    "train": [
+        "tokens",
+        "val-tokens",
+        "resume",
+        "restart-lr",
+        "steps",
+        "n-embd",
+        "n-head",
+        "n-layer",
+        "block-size",
+        "lr",
+        "min-lr",
+        "warmup-steps",
+        "full-eval-interval",
+        "save",
+        "save-name",
+        "sample-report",
+        "plot-suffix",
+    ],
     "prepare-data": ["out-dir", "num-examples", "val-examples", "dataset", "config"],
 }
 # Free-text fields get suggestions, not a closed list (any HF id is allowed).
@@ -113,8 +129,9 @@ def _read_json(path: Path) -> Any:
         return None
 
 
-def create_app(repo: Path | str | None = None, token: str | None = None,
-               tensorboard_url: str | None = None, uv: str | None = None) -> FastAPI:
+def create_app(
+    repo: Path | str | None = None, token: str | None = None, tensorboard_url: str | None = None, uv: str | None = None
+) -> FastAPI:
     repo = Path(repo or os.environ.get("MINI_LLM_REPO") or Path.cwd()).resolve()
     token = token if token is not None else os.environ.get("MINI_LLM_TOKEN") or None
     tensorboard_url = tensorboard_url or os.environ.get("MINI_LLM_TENSORBOARD_URL") or ""
@@ -143,7 +160,9 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         for st in running:
             if st.get("job_file") == path.name:
                 return True
-            if "job_file" not in st and st.get("args") == job.get("args", {k: v for k, v in job.items() if k not in ("name", "kind")}):
+            if "job_file" not in st and st.get("args") == job.get(
+                "args", {k: v for k, v in job.items() if k not in ("name", "kind")}
+            ):
                 return True
         return False
 
@@ -151,7 +170,9 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         """Checkpoints that queued or running jobs will save: valid resume targets
         for a continuation queued behind them."""
         out = set()
-        arg_sets = [job.get("args") or {} for _, job in queued_jobs()] + [st.get("args") or {} for st in running_statuses()]
+        arg_sets = [job.get("args") or {} for _, job in queued_jobs()] + [
+            st.get("args") or {} for st in running_statuses()
+        ]
         for args in arg_sets:
             if args.get("save") and args.get("save-name"):
                 out.add(f"checkpoints/{args['save-name']}")
@@ -168,7 +189,11 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             return [rel(f) for f in sorted(data.rglob("*.txt"))] if data.exists() else []
         if flag == "resume":
             ckpts = repo / "checkpoints"
-            have = [rel(f) for f in sorted(ckpts.glob("*.pt"), key=lambda f: f.stat().st_mtime, reverse=True)] if ckpts.exists() else []
+            have = (
+                [rel(f) for f in sorted(ckpts.glob("*.pt"), key=lambda f: f.stat().st_mtime, reverse=True)]
+                if ckpts.exists()
+                else []
+            )
             return sorted(pending - set(have)) + have
         return []
 
@@ -176,20 +201,32 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         pending = pending_outputs()
         kinds: dict[str, list[dict]] = {}
         for kind, groups in {
-            "train": [("int", runner.INT_FLAGS), ("float", runner.FLOAT_FLAGS),
-                      ("path", {f: None for f in runner.PATH_FLAGS}), ("name", {f: None for f in runner.NAME_FLAGS}),
-                      ("bool", {f: None for f in runner.BOOL_FLAGS})],
-            "prepare-data": [("int", runner.PREP_INT_FLAGS), ("float", runner.PREP_FLOAT_FLAGS),
-                             ("str", {f: None for f in runner.PREP_STR_FLAGS}), ("outdir", {"out-dir": None})],
+            "train": [
+                ("int", runner.INT_FLAGS),
+                ("float", runner.FLOAT_FLAGS),
+                ("path", {f: None for f in runner.PATH_FLAGS}),
+                ("name", {f: None for f in runner.NAME_FLAGS}),
+                ("bool", {f: None for f in runner.BOOL_FLAGS}),
+            ],
+            "prepare-data": [
+                ("int", runner.PREP_INT_FLAGS),
+                ("float", runner.PREP_FLOAT_FLAGS),
+                ("str", {f: None for f in runner.PREP_STR_FLAGS}),
+                ("outdir", {"out-dir": None}),
+            ],
         }.items():
             fields = []
             info = parser_info.get(kind, {})
             defaults = runner.DEFAULT_ARGS if kind == "train" else {}
             for ftype, flags in groups:
                 for flag, bounds in flags.items():
-                    field = {"flag": flag, "type": ftype, "help": info.get(flag, {}).get("help", ""),
-                             "default": defaults.get(flag, info.get(flag, {}).get("default")),
-                             "common": flag in COMMON_FLAGS[kind]}
+                    field = {
+                        "flag": flag,
+                        "type": ftype,
+                        "help": info.get(flag, {}).get("help", ""),
+                        "default": defaults.get(flag, info.get(flag, {}).get("default")),
+                        "common": flag in COMMON_FLAGS[kind],
+                    }
                     if bounds:
                         field["min"], field["max"] = bounds
                     if ftype == "path":
@@ -216,12 +253,20 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
     @app.exception_handler(StarletteHTTPException)
     async def log_http_error(request: Request, exc: StarletteHTTPException):
         if 400 <= exc.status_code < 500 and exc.status_code != 404:
-            print(f"[api] {request.method} {request.url.path} -> {exc.status_code}: {exc.detail}", file=sys.stderr, flush=True)
+            print(
+                f"[api] {request.method} {request.url.path} -> {exc.status_code}: {exc.detail}",
+                file=sys.stderr,
+                flush=True,
+            )
         return await http_exception_handler(request, exc)
 
     @app.exception_handler(RequestValidationError)
     async def log_validation_error(request: Request, exc: RequestValidationError):
-        print(f"[api] {request.method} {request.url.path} -> 422 (request body): {exc.errors()}", file=sys.stderr, flush=True)
+        print(
+            f"[api] {request.method} {request.url.path} -> 422 (request body): {exc.errors()}",
+            file=sys.stderr,
+            flush=True,
+        )
         return await request_validation_exception_handler(request, exc)
 
     def auth(request: Request) -> None:
@@ -270,22 +315,29 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             "tensorboard_url": tensorboard_url,
             "job_kinds": {
                 "train": {
-                    "int": runner.INT_FLAGS, "float": runner.FLOAT_FLAGS,
-                    "path": sorted(runner.PATH_FLAGS), "name": sorted(runner.NAME_FLAGS),
-                    "bool": sorted(runner.BOOL_FLAGS), "defaults": runner.DEFAULT_ARGS,
+                    "int": runner.INT_FLAGS,
+                    "float": runner.FLOAT_FLAGS,
+                    "path": sorted(runner.PATH_FLAGS),
+                    "name": sorted(runner.NAME_FLAGS),
+                    "bool": sorted(runner.BOOL_FLAGS),
+                    "defaults": runner.DEFAULT_ARGS,
                 },
                 "prepare-data": {
-                    "int": runner.PREP_INT_FLAGS, "float": runner.PREP_FLOAT_FLAGS,
-                    "str": sorted(runner.PREP_STR_FLAGS), "path": ["out-dir"],
+                    "int": runner.PREP_INT_FLAGS,
+                    "float": runner.PREP_FLOAT_FLAGS,
+                    "str": sorted(runner.PREP_STR_FLAGS),
+                    "path": ["out-dir"],
                 },
             },
             "knobs": {k: {"type": t.__name__, "min": lo, "max": hi} for k, (t, lo, hi) in KNOBS.items()},
             "commands": sorted(COMMAND_TYPES),
             "sampling": {k: {"min": lo, "max": hi, "default": d} for k, (lo, hi, d) in SAMPLING.items()},
             "form": job_schema(),
-            "datasets": sorted(
-                str(p.parent.relative_to(repo)) for p in (repo / "data").rglob("train.pt")
-            ) if (repo / "data").exists() else [],
+            "datasets": (
+                sorted(str(p.parent.relative_to(repo)) for p in (repo / "data").rglob("train.pt"))
+                if (repo / "data").exists()
+                else []
+            ),
         }
 
     # --- runs ----------------------------------------------------------------
@@ -297,8 +349,21 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         for path in sorted(runs_dir.glob("*.status.json"), reverse=True)[: max(1, min(limit, 500))]:
             status = _read_json(path) or {}
             run_id = status.get("run_id") or path.name.removesuffix(".status.json")
-            row = {k: status.get(k) for k in
-                   ("run_id", "name", "kind", "status", "started", "finished", "duration_sec", "error", "remote", "eval")}
+            row = {
+                k: status.get(k)
+                for k in (
+                    "run_id",
+                    "name",
+                    "kind",
+                    "status",
+                    "started",
+                    "finished",
+                    "duration_sec",
+                    "error",
+                    "remote",
+                    "eval",
+                )
+            }
             row["run_id"] = run_id
             met = status.get("metrics") or {}
             row["full_val_loss"] = met.get("full_val_loss")
@@ -318,7 +383,7 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         if not path.exists():
             raise HTTPException(404, "no log")
         lines = path.read_text(errors="replace").splitlines()
-        return "\n".join(lines[-max(1, min(tail, 5000)):])
+        return "\n".join(lines[-max(1, min(tail, 5000)) :])
 
     @app.get("/api/runs/{run_id}/events", dependencies=[Depends(auth)])
     def get_events(run_id: str) -> dict:
@@ -334,6 +399,7 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             ev = _read_json(repo / "evals" / f"{Path(save_name).stem}.json")
             if isinstance(ev, dict) and ev.get("samples"):
                 from mini_llm.samples import render_model
+
                 return render_model(ev)
         candidates = []
         if save_name:
@@ -349,20 +415,40 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         raise HTTPException(404, "no sample report for this run (was sample-report set?)")
 
     def make_continuation(args: dict, name: str, ckpt: str, done: int | None, steps: int) -> dict:
-        keep = ["n-embd", "n-head", "n-layer", "block-size", "dropout", "batch-size", "tokens", "val-tokens",
-                "weight-decay", "seed", "eval-interval", "eval-batches", "eval-seed", "full-eval-interval", "min-lr"]
+        keep = [
+            "n-embd",
+            "n-head",
+            "n-layer",
+            "block-size",
+            "dropout",
+            "batch-size",
+            "tokens",
+            "val-tokens",
+            "weight-decay",
+            "seed",
+            "eval-interval",
+            "eval-batches",
+            "eval-seed",
+            "full-eval-interval",
+            "min-lr",
+        ]
         new = {k: args[k] for k in keep if k in args}
         lr = float(args.get("restart-lr") or args.get("lr") or 1e-3)
         stem = Path(ckpt).stem
         renamed = re.sub(r"_(\d+)k_", f"_{(done + steps) // 1000}k_", stem, count=1) if done else stem
         save_name = (renamed if renamed != stem else f"{stem}_cont") + "_resume.pt"
-        new.update({
-            "resume": ckpt, "steps": steps,
-            # its own cosine from a tenth of the previous peak: the anneal recipe used so far
-            "restart-lr": float(f"{lr / 10:.3g}"),
-            "save": True, "save-name": save_name, "sample-report": True,
-            "plot-suffix": (str(args.get("plot-suffix") or "run") + "-resume")[:60],
-        })
+        new.update(
+            {
+                "resume": ckpt,
+                "steps": steps,
+                # its own cosine from a tenth of the previous peak: the anneal recipe used so far
+                "restart-lr": float(f"{lr / 10:.3g}"),
+                "save": True,
+                "save-name": save_name,
+                "sample-report": True,
+                "plot-suffix": (str(args.get("plot-suffix") or "run") + "-resume")[:60],
+            }
+        )
         where = f"at step {done:,}, {steps:,} more to {done + steps:,}" if done else f"for {steps:,} more steps"
         return {"name": (name + "-resume")[:80], "kind": "train", "args": new, "note": f"resumes {ckpt} {where}"}
 
@@ -371,7 +457,9 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             return f"checkpoints/{args['save-name']}"
         if run_id:
             log_path = runs_dir / f"{run_id}.log"
-            found = re.findall(r"^Saved to (\S+)$", log_path.read_text(errors="replace"), re.M) if log_path.exists() else []
+            found = (
+                re.findall(r"^Saved to (\S+)$", log_path.read_text(errors="replace"), re.M) if log_path.exists() else []
+            )
             return found[-1] if found else None
         return None
 
@@ -447,8 +535,10 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
     @app.get("/api/queue", dependencies=[Depends(auth)])
     def list_queue() -> list[dict]:
         running = running_statuses()
-        return [{"file": path.name, "job": job, "running": job_is_running(path, job, running)}
-                for path, job in queued_jobs()]
+        return [
+            {"file": path.name, "job": job, "running": job_is_running(path, job, running)}
+            for path, job in queued_jobs()
+        ]
 
     @app.post("/api/jobs", dependencies=[Depends(auth)])
     def submit_job(body: dict, dry_run: bool = False) -> dict:
@@ -502,17 +592,26 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         effective = {k: v for k, v in {**runner.DEFAULT_ARGS, **args}.items() if k != "baseline"}
         batch = int(effective.get("batch-size", 4))
         if batch % nproc:
-            raise HTTPException(422, f"batch-size {batch} is the global batch; it must divide evenly across {nproc} GPUs")
+            raise HTTPException(
+                422, f"batch-size {batch} is the global batch; it must divide evenly across {nproc} GPUs"
+            )
         if importlib.util.find_spec("modal") is None:
             raise HTTPException(503, "the modal package isn't installed here: run `uv sync --group modal`")
         from mini_llm.remote.launch import launching_status, write_status
         from mini_llm.remote.modal_train import config_to_argv, make_run_id
 
         run_id = make_run_id(name)
-        preview = {"target": "modal", "name": name, "kind": kind, "gpus": gpus, "nproc": nproc,
-                   "timeout_hours": timeout_hours, "run_id": run_id,
-                   # What torchrun will actually run on Modal (not the local queue's argv).
-                   "argv": ["mini-llm-train", *config_to_argv({"args": effective})]}
+        preview = {
+            "target": "modal",
+            "name": name,
+            "kind": kind,
+            "gpus": gpus,
+            "nproc": nproc,
+            "timeout_hours": timeout_hours,
+            "run_id": run_id,
+            # What torchrun will actually run on Modal (not the local queue's argv).
+            "argv": ["mini-llm-train", *config_to_argv({"args": effective})],
+        }
         if dry_run:
             return {"ok": True, **preview}
         job = {"run_id": run_id, "name": name, "args": effective, "gpus": gpus, "timeout_hours": timeout_hours}
@@ -522,7 +621,10 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         write_status(repo, run_id, launching_status(run_id, job))  # visible before this returns
         subprocess.Popen(
             [sys.executable, "-m", "mini_llm.remote.launch", str(job_file), "--repo", str(repo), "--uv", uv],
-            cwd=repo, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            cwd=repo,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
             start_new_session=True,  # survives a server restart mid-launch
         )
         return preview
@@ -549,22 +651,27 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         key = (path.name, path.stat().st_mtime)
         if key not in meta_cache:
             import torch
+
             ck = torch.load(path, map_location="cpu", mmap=True, weights_only=False)
             fv = ck.get("full_val_history") or []
-            meta_cache[key] = {"config": ck.get("config"), "step": ck.get("step"),
-                               "full_val_loss": fv[-1][1] if fv else None, "systems": ck.get("systems")}
+            meta_cache[key] = {
+                "config": ck.get("config"),
+                "step": ck.get("step"),
+                "full_val_loss": fv[-1][1] if fv else None,
+                "systems": ck.get("systems"),
+            }
         return meta_cache[key]
 
     def load_for_inference(path: Path, device: str):
         import torch
         from mini_llm.config import ModelConfig, build_model
+
         key = (path.name, path.stat().st_mtime, device)
         if key in model_cache:
             model_cache.move_to_end(key)
             return model_cache[key]
         ck = torch.load(path, map_location="cpu", weights_only=False)
-        cfg = ModelConfig(**ck["config"])
-        cfg.use_cache = True
+        cfg = ModelConfig.from_dict(ck["config"])
         model = build_model(cfg)
         model.load_state_dict(ck["model_state_dict"])
         model.to(device).eval()
@@ -579,8 +686,11 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         for path in sorted(ckpt_dir.glob("*.pt"), key=lambda q: q.stat().st_mtime, reverse=True):
             if not CKPT_NAME.match(path.name):
                 continue
-            row = {"name": path.name, "size_mb": round(path.stat().st_size / 2**20, 1),
-                   "modified": datetime.fromtimestamp(path.stat().st_mtime).isoformat(timespec="minutes")}
+            row = {
+                "name": path.name,
+                "size_mb": round(path.stat().st_size / 2**20, 1),
+                "modified": datetime.fromtimestamp(path.stat().st_mtime).isoformat(timespec="minutes"),
+            }
             try:
                 row.update(ckpt_meta(path))
             except Exception as exc:  # noqa: BLE001 - one unreadable file shouldn't hide the rest
@@ -611,6 +721,7 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
     def prompt_ids(prompt: str, tokenizer):
         import torch
         from mini_llm.data import encode
+
         return encode(prompt, tokenizer) if prompt else torch.tensor([EOS_TOKEN_ID])
 
     @app.post("/api/generate", dependencies=[Depends(auth)])
@@ -629,7 +740,9 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             if isinstance(lo, int) and v is not None and v.is_integer():
                 v = int(v)
             if v is None or (isinstance(lo, int) and not isinstance(v, int)) or not lo <= v <= hi:
-                raise HTTPException(422, f"{k} must be {'an integer' if isinstance(lo, int) else 'a number'} from {lo} to {hi}")
+                raise HTTPException(
+                    422, f"{k} must be {'an integer' if isinstance(lo, int) else 'a number'} from {lo} to {hi}"
+                )
             knobs[k] = v
         try:
             seed = None if body.get("seed") in (None, "") else int(body["seed"])
@@ -638,8 +751,11 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         path, prompt, device, tokenizer = inference_request(body)
         temperature, top_k, top_p = knobs["temperature"], knobs["top_k"], knobs["top_p"]
         greedy = temperature == 0
-        kwargs = {"greedy": True} if greedy else {
-            "temperature": temperature, "top_k": top_k or None, "top_p": top_p if top_p < 1 else None}
+        kwargs = (
+            {"greedy": True}
+            if greedy
+            else {"temperature": temperature, "top_k": top_k or None, "top_p": top_p if top_p < 1 else None}
+        )
         with gen_lock:
             model, cfg = load_for_inference(path, device)
             idx = prompt_ids(prompt, tokenizer).unsqueeze(0).to(device)
@@ -647,18 +763,32 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
                 torch.manual_seed(seed)
             t = time.perf_counter()
             out, hit_eos = generate_until_eos(
-                model, idx, knobs["max_new_tokens"], cfg.block_size,
-                eos_token_id=EOS_TOKEN_ID if body.get("stop_at_eos", True) else None, **kwargs)
+                model,
+                idx,
+                knobs["max_new_tokens"],
+                cfg.block_size,
+                eos_token_id=EOS_TOKEN_ID if body.get("stop_at_eos", True) else None,
+                **kwargs,
+            )
             seconds = time.perf_counter() - t
         n_prompt, n_new = idx.size(1), out.size(1) - idx.size(1)
         return {
-            "checkpoint": path.name, "device": device, "greedy": greedy,
-            "temperature": temperature, "top_k": None if greedy else top_k or None,
-            "top_p": None if greedy or top_p >= 1 else top_p, "seed": seed,
-            "prompt": prompt, "completion": decode(out[0, n_prompt:], tokenizer),
-            "prompt_tokens": n_prompt, "new_tokens": n_new, "hit_eos": hit_eos,
-            "block_size": cfg.block_size, "prompt_truncated": n_prompt > cfg.block_size,
-            "seconds": round(seconds, 3), "tokens_per_sec": round(n_new / seconds, 1) if seconds > 0 else None,
+            "checkpoint": path.name,
+            "device": device,
+            "greedy": greedy,
+            "temperature": temperature,
+            "top_k": None if greedy else top_k or None,
+            "top_p": None if greedy or top_p >= 1 else top_p,
+            "seed": seed,
+            "prompt": prompt,
+            "completion": decode(out[0, n_prompt:], tokenizer),
+            "prompt_tokens": n_prompt,
+            "new_tokens": n_new,
+            "hit_eos": hit_eos,
+            "block_size": cfg.block_size,
+            "prompt_truncated": n_prompt > cfg.block_size,
+            "seconds": round(seconds, 3),
+            "tokens_per_sec": round(n_new / seconds, 1) if seconds > 0 else None,
         }
 
     @app.post("/api/next_token", dependencies=[Depends(auth)])
@@ -677,13 +807,13 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
         ids = prompt_ids(prompt, tokenizer)
         with gen_lock, torch.no_grad():
             model, cfg = load_for_inference(path, device)
-            model.clear_cache()
-            logits, _ = model(ids[-cfg.block_size:].unsqueeze(0).to(device))
-            model.clear_cache()
+            logits, _ = model(ids[-cfg.block_size :].unsqueeze(0).to(device))
         z = logits[0, -1].float().cpu()
         top = torch.topk(z, 200)
         return {
-            "checkpoint": path.name, "prompt_tokens": ids.numel(), "block_size": cfg.block_size,
+            "checkpoint": path.name,
+            "prompt_tokens": ids.numel(),
+            "block_size": cfg.block_size,
             "logits": base64.b64encode(z.numpy().astype("<f4").tobytes()).decode(),
             "top": [{"id": i, "text": tokenizer.decode([i])} for i in top.indices.tolist()],
         }
@@ -699,15 +829,25 @@ def create_app(repo: Path | str | None = None, token: str | None = None,
             if md.stem in ("summary", "GUIDE", *shared) or md.stem.startswith("sweep"):
                 continue
             ev = _read_json(md.with_suffix(".json"))
-            row = {"name": md.stem, "label": md.stem, "val": None, "ctx": None, "params": None,
-                   "date": datetime.fromtimestamp((repo / "checkpoints" / f"{md.stem}.pt").stat().st_mtime
-                                                  if (repo / "checkpoints" / f"{md.stem}.pt").exists()
-                                                  else md.stat().st_mtime).isoformat(timespec="minutes")}
+            row = {
+                "name": md.stem,
+                "label": md.stem,
+                "val": None,
+                "ctx": None,
+                "params": None,
+                "date": datetime.fromtimestamp(
+                    (repo / "checkpoints" / f"{md.stem}.pt").stat().st_mtime
+                    if (repo / "checkpoints" / f"{md.stem}.pt").exists()
+                    else md.stat().st_mtime
+                ).isoformat(timespec="minutes"),
+            }
             if isinstance(ev, dict) and "config" in ev:
                 from mini_llm.samples import label
+
                 T = ev["config"]["block_size"]
-                row.update(label=label(ev), ctx=T, params=ev.get("params"),
-                           val=(ev.get("quality") or {}).get(f"full_val@{T}"))
+                row.update(
+                    label=label(ev), ctx=T, params=ev.get("params"), val=(ev.get("quality") or {}).get(f"full_val@{T}")
+                )
             rows.append(row)
         return {"summary": text("summary"), "guide": text("GUIDE"), "shared": shared, "reports": rows}
 

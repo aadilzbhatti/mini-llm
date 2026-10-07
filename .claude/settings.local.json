@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git rev-parse *)",
+      "Bash(echo \"branch:$?\")",
+      "Bash(echo \"tag:$?\")",
+      "Read(//Users/aadil/dev/**)",
+      "Bash(date && ls -lt /private/tmp/claude-501/-Users-aadil-dev-wiki-llm/*/scratchpad 2>/dev/null | head -30; ls -lt logs runs 2>/dev/null | head -20; grep -l \"context_curve\" evals/*.json; cat pyproject.toml | grep -A15 scripts)"
+    ]
+  }
+}

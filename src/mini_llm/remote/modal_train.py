@@ -136,10 +136,16 @@ def environment_info() -> dict:
         "modal_task_id": os.environ.get("MODAL_TASK_ID"),
     }
     try:
-        info["nvidia_smi"] = subprocess.run(
-            ["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"],
-            capture_output=True, text=True, timeout=30,
-        ).stdout.strip().splitlines()
+        info["nvidia_smi"] = (
+            subprocess.run(
+                ["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            .stdout.strip()
+            .splitlines()
+        )
     except (OSError, subprocess.TimeoutExpired):
         info["nvidia_smi"] = None
     return info
@@ -154,11 +160,26 @@ def train_remote(run_id: str, train_argv: list[str], nproc: int, meta: dict) -> 
     argv = resolve_args(train_argv)
     # One container = one node, so rendezvous over loopback. (Not --standalone,
     # which resolves the hostname and can hang where that doesn't resolve.)
-    cmd = ["torchrun", "--nnodes=1", f"--nproc_per_node={nproc}", "--master-addr=127.0.0.1",
-           "--master-port=29500", "-m", "mini_llm.train", *argv]
+    cmd = [
+        "torchrun",
+        "--nnodes=1",
+        f"--nproc_per_node={nproc}",
+        "--master-addr=127.0.0.1",
+        "--master-port=29500",
+        "-m",
+        "mini_llm.train",
+        *argv,
+    ]
 
-    record = {**meta, "run_id": run_id, "nproc": nproc, "resolved_argv": argv, "command": shlex.join(cmd),
-              "environment": environment_info(), "started_at": datetime.now(timezone.utc).isoformat()}
+    record = {
+        **meta,
+        "run_id": run_id,
+        "nproc": nproc,
+        "resolved_argv": argv,
+        "command": shlex.join(cmd),
+        "environment": environment_info(),
+        "started_at": datetime.now(timezone.utc).isoformat(),
+    }
     if meta.get("git_diff"):
         # Uncommitted changes were part of what ran; keep them as a patch.
         (run_dir / "git.diff").write_text(record.pop("git_diff"))
@@ -195,8 +216,11 @@ def train_remote(run_id: str, train_argv: list[str], nproc: int, meta: dict) -> 
     stop.set()
     committer.join()
 
-    record.update(returncode=returncode, finished_at=datetime.now(timezone.utc).isoformat(),
-                  duration_sec=round(time.time() - start, 1))
+    record.update(
+        returncode=returncode,
+        finished_at=datetime.now(timezone.utc).isoformat(),
+        duration_sec=round(time.time() - start, 1),
+    )
     (run_dir / "run.json").write_text(json.dumps(record, indent=2))
     runs_volume.commit()
     if returncode != 0:
@@ -239,13 +263,23 @@ def make_run_id(name: str = "") -> str:
     """<UTC timestamp>-<short sha>[-dirty][-name]. Shared with mini_llm.remote.launch,
     which needs the id before the launch so the web page can show the run at once."""
     sha, dirty = git_state()
-    return "-".join(filter(None, [datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S"),
-                                  sha[:7] + ("-dirty" if dirty else ""), name]))
+    return "-".join(
+        filter(
+            None, [datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S"), sha[:7] + ("-dirty" if dirty else ""), name]
+        )
+    )
 
 
 @app.local_entrypoint()
-def main(config: str = "", gpus: str = "H100:2", args: str = "", name: str = "", timeout_hours: float = 24.0,
-         run_id: str = "", wait: bool = True):
+def main(
+    config: str = "",
+    gpus: str = "H100:2",
+    args: str = "",
+    name: str = "",
+    timeout_hours: float = 24.0,
+    run_id: str = "",
+    wait: bool = True,
+):
     """--run-id: use this id instead of making one. --no-wait: submit and exit
     without streaming the run (with --detach the run carries on in Modal)."""
     cfg = json.loads(Path(config).read_text()) if config else {}

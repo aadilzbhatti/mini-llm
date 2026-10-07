@@ -78,8 +78,9 @@ def load_runner(repo: Path):
     return mod
 
 
-def mirror_run(vol: VolumeLike, run_id: str, repo: Path, runner: Any, stale_after: float = 900,
-               now: float | None = None) -> dict | None:
+def mirror_run(
+    vol: VolumeLike, run_id: str, repo: Path, runner: Any, stale_after: float = 900, now: float | None = None
+) -> dict | None:
     """Bring one run's status/live/log files up to date. Returns the status written."""
     now = time.time() if now is None else now
     runs = repo / "runs"
@@ -144,8 +145,11 @@ def mirror_run(vol: VolumeLike, run_id: str, repo: Path, runner: Any, stale_afte
         "log": str(log_path.relative_to(repo)),
         "started": started,
         "finished": _iso_z(record.get("finished_at")),
-        "duration_sec": record.get("duration_sec") if returncode is not None
-        else round(now - (_epoch(record.get("started_at")) or now), 1),
+        "duration_sec": (
+            record.get("duration_sec")
+            if returncode is not None
+            else round(now - (_epoch(record.get("started_at")) or now), 1)
+        ),
         "returncode": returncode,
         "metrics": runner.summarize(log_path) if log_path.exists() else {},
         "error": error,
@@ -181,7 +185,10 @@ def mirror_all(vol: VolumeLike, repo: Path, runner: Any, stale_after: float = 90
             continue
         try:
             status = mirror_run(vol, entry.path, repo, runner, stale_after)
-        except (Exception, SystemExit) as exc:  # noqa: BLE001 - one bad run must not stop the others (import_run exits on errors)
+        except (
+            Exception,
+            SystemExit,
+        ) as exc:  # noqa: BLE001 - one bad run must not stop the others (import_run exits on errors)
             print(f"[mirror] {entry.path}: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
             continue
         if status:
@@ -193,11 +200,14 @@ def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(description="Mirror Modal runs into runs/ for the control web app.")
     p.add_argument("--repo", type=Path, default=Path("."), help="Checkout whose runs/ the web app reads.")
     p.add_argument("--interval", type=float, default=30.0, help="Seconds between polls.")
-    p.add_argument("--stale-after", type=float, default=900.0,
-                   help="Seconds without a heartbeat before a run shows as interrupted.")
+    p.add_argument(
+        "--stale-after",
+        type=float,
+        default=900.0,
+        help="Seconds without a heartbeat before a run shows as interrupted.",
+    )
     p.add_argument("--once", action="store_true", help="Sync once and exit.")
-    p.add_argument("--no-auto-eval", action="store_true",
-                   help="Don't evaluate finished runs (see mini_llm.auto_eval).")
+    p.add_argument("--no-auto-eval", action="store_true", help="Don't evaluate finished runs (see mini_llm.auto_eval).")
     args = p.parse_args(argv)
 
     import modal
@@ -210,6 +220,7 @@ def main(argv: list[str] | None = None) -> None:
     evaluator = None
     if not (args.once or args.no_auto_eval):
         from mini_llm.auto_eval import AutoEvaluator
+
         evaluator = AutoEvaluator(repo)
         print(f"[auto-eval] on: evaluating runs that complete after {evaluator.since}", flush=True)
     failures = 0

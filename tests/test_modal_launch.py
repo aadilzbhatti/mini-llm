@@ -56,12 +56,15 @@ def test_dry_run_previews_without_launching(repo, spawned):
     assert spawned == [] and not list((repo / "runs").glob("*.status.json"))
 
 
-@pytest.mark.parametrize("extra, message", [
-    ({"gpus": "L4;rm -rf"}, "gpus must look like"),
-    ({"gpus": "L4:3"}, "divide evenly across 3"),
-    ({"timeout_hours": 48}, "between 0.1 and 24"),
-    ({"kind": "prepare-data", "args": {"out-dir": "data/x"}}, "only train jobs"),
-])
+@pytest.mark.parametrize(
+    "extra, message",
+    [
+        ({"gpus": "L4;rm -rf"}, "gpus must look like"),
+        ({"gpus": "L4:3"}, "divide evenly across 3"),
+        ({"timeout_hours": 48}, "between 0.1 and 24"),
+        ({"kind": "prepare-data", "args": {"out-dir": "data/x"}}, "only train jobs"),
+    ],
+)
 def test_rejects_bad_modal_jobs(repo, spawned, extra, message):
     r = post(repo, {**JOB, "target": "modal", **extra})
     assert r.status_code == 422 and message in r.text
@@ -74,11 +77,15 @@ def test_launch_shows_run_at_once_and_skips_queue(repo, spawned):
     run_id = r.json()["run_id"]
 
     status = json.loads((repo / "runs" / f"{run_id}.status.json").read_text())
-    assert status["status"] == "running" and status["remote"] == {"provider": "modal", "gpus": "H100:4", "phase": "launching"}
+    assert status["status"] == "running" and status["remote"] == {
+        "provider": "modal",
+        "gpus": "H100:4",
+        "phase": "launching",
+    }
     job = json.loads((repo / "runs" / f"{run_id}.modal-job.json").read_text())
-    assert job["args"]["plot-loss"] is True and "baseline" not in job["args"]   # runner defaults, minus baseline
+    assert job["args"]["plot-loss"] is True and "baseline" not in job["args"]  # runner defaults, minus baseline
     assert job["timeout_hours"] == 2.0
-    assert not list((repo / "queue").glob("*.json"))                            # never queued locally
+    assert not list((repo / "queue").glob("*.json"))  # never queued locally
     [cmd] = spawned
     assert cmd[1:3] == ["-m", "mini_llm.remote.launch"]
     # ...and it's on the page, as a live run.
@@ -95,8 +102,9 @@ def fake_uv(tmp_path, exit_code, output):
 
 def job_file(repo, run_id="20260101-000000-abc1234-web"):
     path = repo / "runs" / f"{run_id}.modal-job.json"
-    path.write_text(json.dumps({"run_id": run_id, "name": "web", "args": {"steps": 10}, "gpus": "L4:2",
-                                "timeout_hours": 1.0}))
+    path.write_text(
+        json.dumps({"run_id": run_id, "name": "web", "args": {"steps": 10}, "gpus": "L4:2", "timeout_hours": 1.0})
+    )
     return path
 
 

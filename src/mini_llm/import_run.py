@@ -56,7 +56,7 @@ def import_run(run_dir: Path, repo: Path, name: str | None = None) -> dict[str, 
     args = build_parser().parse_args(record["resolved_argv"])
     src_ckpt = final_checkpoint(run_dir)
     ckpt = torch.load(src_ckpt, map_location="cpu", weights_only=False)
-    cfg = ModelConfig(**ckpt["config"])
+    cfg = ModelConfig.from_dict(ckpt["config"])
     # parameters() dedups the tied embedding/lm_head weight; the state_dict would count it twice.
     n_params = sum(p.numel() for p in build_model(cfg).parameters())
 

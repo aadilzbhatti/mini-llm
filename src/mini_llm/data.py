@@ -19,8 +19,7 @@ DEFAULT_TEXT_PATH = Path("data/tiny.txt")
 
 # Fallback so the package works even if the data file is missing.
 FALLBACK_TEXT = (
-    "the quick brown fox jumps over the lazy dog. "
-    "the lazy dog sleeps while the quick brown fox runs on. "
+    "the quick brown fox jumps over the lazy dog. " "the lazy dog sleeps while the quick brown fox runs on. "
 )
 
 
@@ -88,9 +87,7 @@ def make_batch(
     you build the one fixed batch for an overfit run.
     """
     if tokens.numel() < block_size + 1:
-        raise ValueError(
-            f"need at least block_size + 1 = {block_size + 1} tokens, got {tokens.numel()}"
-        )
+        raise ValueError(f"need at least block_size + 1 = {block_size + 1} tokens, got {tokens.numel()}")
     high = tokens.numel() - block_size
     ix = torch.randint(0, high, (batch_size,), generator=generator)
     x = torch.stack([tokens[i : i + block_size] for i in ix])

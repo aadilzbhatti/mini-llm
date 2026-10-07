@@ -46,9 +46,22 @@ from mini_llm.report import EOS_TOKEN_ID, PROMPTS, generate_until_eos
 
 # Frozen: never reorder or edit (seeds are per index). Append only, with a new protocol version.
 _BY_LABEL = dict(PROMPTS)
-GEN_PROMPTS: tuple[tuple[str, str], ...] = tuple((lab, _BY_LABEL[lab]) for lab in (
-    "definition", "biography", "science_explainer", "instructional", "bullet_list",
-    "numbered_list", "enumeration", "long_dependency", "attribution", "numeric_units", "agreement_gap")) + (
+GEN_PROMPTS: tuple[tuple[str, str], ...] = tuple(
+    (lab, _BY_LABEL[lab])
+    for lab in (
+        "definition",
+        "biography",
+        "science_explainer",
+        "instructional",
+        "bullet_list",
+        "numbered_list",
+        "enumeration",
+        "long_dependency",
+        "attribution",
+        "numeric_units",
+        "agreement_gap",
+    )
+) + (
     ("history", "The French Revolution began in 1789, when"),
     ("anatomy", "The human heart is a muscular organ that"),
     ("geography", "The Amazon River flows through"),
@@ -65,11 +78,54 @@ NEW_TOKENS = 256
 TEMPERATURE, TOP_K = 0.7, 40
 BASE_SEED = 20260929
 SWEEP: tuple[tuple[float, int | None], ...] = (  # (temperature, top_k); 0 = greedy. Manual: --sweep
-    (0.0, None), (0.5, 20), (0.6, 20), (0.6, 40), (0.7, 20), (0.7, 40), (0.7, 50), (0.8, 40), (0.8, 50), (0.9, 50),
+    (0.0, None),
+    (0.5, 20),
+    (0.6, 20),
+    (0.6, 40),
+    (0.7, 20),
+    (0.7, 40),
+    (0.7, 50),
+    (0.8, 40),
+    (0.8, 50),
+    (0.9, 50),
 )
-_STOP = {"that", "this", "with", "from", "have", "were", "will", "there", "their", "which", "about", "these",
-         "those", "into", "than", "then", "them", "they", "what", "when", "where", "while", "also", "been",
-         "being", "some", "such", "several", "follow", "steps", "main", "types", "according", "although", "process"}
+_STOP = {
+    "that",
+    "this",
+    "with",
+    "from",
+    "have",
+    "were",
+    "will",
+    "there",
+    "their",
+    "which",
+    "about",
+    "these",
+    "those",
+    "into",
+    "than",
+    "then",
+    "them",
+    "they",
+    "what",
+    "when",
+    "where",
+    "while",
+    "also",
+    "been",
+    "being",
+    "some",
+    "such",
+    "several",
+    "follow",
+    "steps",
+    "main",
+    "types",
+    "according",
+    "although",
+    "process",
+}
 
 
 def seed_for(prompt_index: int, draw: int) -> int:
@@ -78,12 +134,12 @@ def seed_for(prompt_index: int, draw: int) -> int:
 
 
 def rep4(ids: list[int]) -> float:
-    grams = [tuple(ids[i:i + 4]) for i in range(len(ids) - 3)]
+    grams = [tuple(ids[i : i + 4]) for i in range(len(ids) - 3)]
     return 0.0 if not grams else 1 - len(set(grams)) / len(grams)
 
 
 def distinct(ids: list[int], n: int) -> float:
-    grams = [tuple(ids[i:i + n]) for i in range(len(ids) - n + 1)]
+    grams = [tuple(ids[i : i + n]) for i in range(len(ids) - n + 1)]
     return 1.0 if not grams else len(set(grams)) / len(grams)
 
 
@@ -135,49 +191,75 @@ def score(prompt: str, text: str, tokenizer) -> dict:
     """Every per-sample metric, from the text alone."""
     ids = encode(text, tokenizer).tolist() if text else []
     loop = loop_info(ids)
-    return {"rep4": round(rep4(ids), 3), "distinct2": round(distinct(ids, 2), 3), "distinct4": round(distinct(ids, 4), 3),
-            "looped": loop["looped"], "loop_onset": loop["onset"], "loop_period": loop["period"],
-            "topic": topic_retention(prompt, decode(torch.tensor(ids[len(ids) // 2:]), tokenizer) if ids else ""),
-            "topic_span": topic_span(prompt, ids, tokenizer)}
+    return {
+        "rep4": round(rep4(ids), 3),
+        "distinct2": round(distinct(ids, 2), 3),
+        "distinct4": round(distinct(ids, 4), 3),
+        "looped": loop["looped"],
+        "loop_onset": loop["onset"],
+        "loop_period": loop["period"],
+        "topic": topic_retention(prompt, decode(torch.tensor(ids[len(ids) // 2 :]), tokenizer) if ids else ""),
+        "topic_span": topic_span(prompt, ids, tokenizer),
+    }
 
 
-def complete(model, tokenizer, block_size: int, device, prompt: str, seed: int,
-             temperature: float = TEMPERATURE, top_k: int | None = TOP_K, new_tokens: int = NEW_TOKENS) -> dict:
+def complete(
+    model,
+    tokenizer,
+    block_size: int,
+    device,
+    prompt: str,
+    seed: int,
+    temperature: float = TEMPERATURE,
+    top_k: int | None = TOP_K,
+    new_tokens: int = NEW_TOKENS,
+) -> dict:
     idx = encode(prompt, tokenizer).unsqueeze(0).to(device)
     torch.manual_seed(seed)
     kw = {"greedy": True} if temperature == 0 else {"temperature": temperature, "top_k": top_k}
     out, hit_eos = generate_until_eos(model, idx, new_tokens, block_size, eos_token_id=EOS_TOKEN_ID, **kw)
-    text = decode(out[0, idx.size(1):], tokenizer)
+    text = decode(out[0, idx.size(1) :], tokenizer)
     return {"text": text, "tokens": out.size(1) - idx.size(1), "eos": hit_eos, **score(prompt, text, tokenizer)}
 
 
 @torch.no_grad()
-def generate_samples(model, tokenizer, block_size: int, device, draws: int = DRAWS, previous: dict | None = None) -> dict:
+def generate_samples(
+    model, tokenizer, block_size: int, device, draws: int = DRAWS, previous: dict | None = None
+) -> dict:
     """The samples section of a model's eval. Draws already in `previous` (same prompt, seed and
     decoding) are reused, so growing the prompt set only generates what's new; every draw is re-scored."""
-    model.set_use_cache(True)  # same tokens as uncached (verified on all frozen samples), several times faster
-    try:
-        return _generate_samples(model, tokenizer, block_size, device, draws, previous)
-    finally:
-        model.set_use_cache(False)  # the other evals score losses: they need a stateless forward
+    return _generate_samples(model, tokenizer, block_size, device, draws, previous)
 
 
 def _generate_samples(model, tokenizer, block_size: int, device, draws: int, previous: dict | None) -> dict:
     old = {}
-    if previous and (previous.get("temperature"), previous.get("top_k"), previous.get("new_tokens")) == (TEMPERATURE, TOP_K, NEW_TOKENS):
+    if previous and (previous.get("temperature"), previous.get("top_k"), previous.get("new_tokens")) == (
+        TEMPERATURE,
+        TOP_K,
+        NEW_TOKENS,
+    ):
         old = {(p["prompt"], j): d for p in previous.get("prompts", []) for j, d in enumerate(p["draws"])}
     prompts = []
     for i, (lab, prompt) in enumerate(GEN_PROMPTS):
         ds = []
         for j in range(draws):
             d = old.get((prompt, j))
-            ds.append({"text": d["text"], "tokens": d["tokens"], "eos": d["eos"], **score(prompt, d["text"], tokenizer)}
-                      if d else complete(model, tokenizer, block_size, device, prompt, seed_for(i, j)))
+            ds.append(
+                {"text": d["text"], "tokens": d["tokens"], "eos": d["eos"], **score(prompt, d["text"], tokenizer)}
+                if d
+                else complete(model, tokenizer, block_size, device, prompt, seed_for(i, j))
+            )
         prompts.append({"label": lab, "prompt": prompt, "draws": ds})
-    return {"protocol": f"{len(prompts)} prompts x {draws} draws, {NEW_TOKENS} new tokens, T={TEMPERATURE}, "
-                        f"top-k {TOP_K}, stop at EOS, seeds {BASE_SEED} + 1000*prompt + draw",
-            "temperature": TEMPERATURE, "top_k": TOP_K, "new_tokens": NEW_TOKENS, "draws": draws,
-            "summary": summarize([d for p in prompts for d in p["draws"]]), "prompts": prompts}
+    return {
+        "protocol": f"{len(prompts)} prompts x {draws} draws, {NEW_TOKENS} new tokens, T={TEMPERATURE}, "
+        f"top-k {TOP_K}, stop at EOS, seeds {BASE_SEED} + 1000*prompt + draw",
+        "temperature": TEMPERATURE,
+        "top_k": TOP_K,
+        "new_tokens": NEW_TOKENS,
+        "draws": draws,
+        "summary": summarize([d for p in prompts for d in p["draws"]]),
+        "prompts": prompts,
+    }
 
 
 def _quantile(xs: list[float], q: float) -> float | None:
@@ -204,31 +286,44 @@ def summarize(ss: list[dict]) -> dict:
     topics = [s["topic"] for s in ss if s.get("topic") is not None]
     onsets = [s["loop_onset"] for s in ss if s.get("looped")]
     looped = len(onsets)
-    return {"n": len(ss), "rep4": round(_quantile(r4, 0.5), 3), "rep4_p90": round(_quantile(r4, 0.9), 3),
-            "rep4_mean": mean(r4),
-            "distinct2": mean([s["distinct2"] for s in ss if "distinct2" in s]),
-            "distinct4": mean([s["distinct4"] for s in ss if "distinct4" in s]),
-            "looped": looped, "loop_rate": round(looped / len(ss), 3), "loop_ci95": _wilson(looped, len(ss)),
-            "loop_onset_median": _quantile(onsets, 0.5),
-            "topic": mean(topics),
-            "topic_span_median": _quantile([s["topic_span"] for s in ss if "topic_span" in s], 0.5),
-            "eos": sum(s["eos"] for s in ss), "tokens": mean([s["tokens"] for s in ss])}
+    return {
+        "n": len(ss),
+        "rep4": round(_quantile(r4, 0.5), 3),
+        "rep4_p90": round(_quantile(r4, 0.9), 3),
+        "rep4_mean": mean(r4),
+        "distinct2": mean([s["distinct2"] for s in ss if "distinct2" in s]),
+        "distinct4": mean([s["distinct4"] for s in ss if "distinct4" in s]),
+        "looped": looped,
+        "loop_rate": round(looped / len(ss), 3),
+        "loop_ci95": _wilson(looped, len(ss)),
+        "loop_onset_median": _quantile(onsets, 0.5),
+        "topic": mean(topics),
+        "topic_span_median": _quantile([s["topic_span"] for s in ss if "topic_span" in s], 0.5),
+        "eos": sum(s["eos"] for s in ss),
+        "tokens": mean([s["tokens"] for s in ss]),
+    }
 
 
 # --- labels and rendering --------------------------------------------------------------
+
 
 def label(r: dict) -> str:
     """data320k · d512-L4 · 38.9M · T1024 · 80K steps -- what a model IS, not just its context."""
     stem, cfg = Path(r["checkpoint"]).stem, r["config"]
     data = re.search(r"data\d+k", stem)
     steps = r.get("step")
-    return " · ".join([data.group(0) if data else "data?", f"d{cfg['n_embd']}-L{cfg['n_layer']}",
-                       f"{r['params'] / 1e6:.1f}M", f"T{cfg['block_size']}",
-                       f"{steps / 1000:g}K steps" if steps else "steps?"])
+    return " · ".join(
+        [
+            data.group(0) if data else "data?",
+            f"d{cfg['n_embd']}-L{cfg['n_layer']}",
+            f"{r['params'] / 1e6:.1f}M",
+            f"T{cfg['block_size']}",
+            f"{steps / 1000:g}K steps" if steps else "steps?",
+        ]
+    )
 
 
-SUMMARY_HEAD = ("rep4 median / p90 | loops (95% CI) | first loop at | distinct-2 / -4 | topic held | "
-                "topic span | EOS")
+SUMMARY_HEAD = "rep4 median / p90 | loops (95% CI) | first loop at | distinct-2 / -4 | topic held | " "topic span | EOS"
 
 
 def _summary_cells(s: dict) -> str:
@@ -237,13 +332,17 @@ def _summary_cells(s: dict) -> str:
     lo, hi = s.get("loop_ci95") or (None, None)
     loops = f"{s['looped']}/{s['n']}" + (f" ({lo:.0%}–{hi:.0%})" if lo is not None else "")
     onset = s.get("loop_onset_median")
-    return " | ".join([
-        f"{f(s.get('rep4'), '.3f')} / {f(s.get('rep4_p90'), '.3f')}", loops,
-        "–" if onset is None else f"token {onset:.0f}",
-        f"{f(s.get('distinct2'), '.3f')} / {f(s.get('distinct4'), '.3f')}",
-        f(s.get("topic"), ".0%"),
-        "–" if s.get("topic_span_median") is None else f"{s['topic_span_median']:.0f} tokens",
-        f"{s['eos']}/{s['n']}"])
+    return " | ".join(
+        [
+            f"{f(s.get('rep4'), '.3f')} / {f(s.get('rep4_p90'), '.3f')}",
+            loops,
+            "–" if onset is None else f"token {onset:.0f}",
+            f"{f(s.get('distinct2'), '.3f')} / {f(s.get('distinct4'), '.3f')}",
+            f(s.get("topic"), ".0%"),
+            "–" if s.get("topic_span_median") is None else f"{s['topic_span_median']:.0f} tokens",
+            f"{s['eos']}/{s['n']}",
+        ]
+    )
 
 
 def _head(*first: str) -> list[str]:
@@ -253,17 +352,34 @@ def _head(*first: str) -> list[str]:
 
 def _sample_block(head: str, prompt: str, s: dict) -> list[str]:
     loop = f" · loops from token {s['loop_onset']} (period {s['loop_period']})" if s.get("looped") else ""
-    topic = "" if s.get("topic") is None else f" · topic {s['topic']:.0%}, last mention at token {s.get('topic_span', '?')}"
-    return [f"{head} · {s['tokens']} tokens{' · EOS' if s['eos'] else ''} · rep4 {s['rep4']}{loop}{topic}", "",
-            "```", prompt + s["text"], "```", ""]
+    topic = (
+        "" if s.get("topic") is None else f" · topic {s['topic']:.0%}, last mention at token {s.get('topic_span', '?')}"
+    )
+    return [
+        f"{head} · {s['tokens']} tokens{' · EOS' if s['eos'] else ''} · rep4 {s['rep4']}{loop}{topic}",
+        "",
+        "```",
+        prompt + s["text"],
+        "```",
+        "",
+    ]
 
 
 def render_model(r: dict) -> str:
     """One model's samples (the run's Samples button, and the samples part of its eval report)."""
     sm = r["samples"]
-    lines = [f"# Samples: {label(r)}", "", f"- checkpoint: {Path(r['checkpoint']).stem}", f"- {sm['protocol']}", "",
-             *_head(), f"| {_summary_cells(sm['summary'])} |", "",
-             "What each column means: evals/GUIDE.md (How to read the evals).", ""]
+    lines = [
+        f"# Samples: {label(r)}",
+        "",
+        f"- checkpoint: {Path(r['checkpoint']).stem}",
+        f"- {sm['protocol']}",
+        "",
+        *_head(),
+        f"| {_summary_cells(sm['summary'])} |",
+        "",
+        "What each column means: evals/GUIDE.md (How to read the evals).",
+        "",
+    ]
     for p in sm["prompts"]:
         lines += [f"## {p['label']}", "", f"prompt: {p['prompt']!r}", ""]
         for j, s in enumerate(p["draws"]):
@@ -279,20 +395,35 @@ def render_comparison(results: list[dict]) -> str:
     rs.sort(key=lambda r: (r["config"]["block_size"], -r["quality"].get(f"full_val@{r['config']['block_size']}", 0)))
     keys = {id(r): f"M{i + 1}" for i, r in enumerate(rs)}
     sm0 = max((r["samples"] for r in rs), key=lambda sm: len(sm["prompts"]))
-    lines = ["# Samples", "",
-             f"Every evaluated model on the same {len(sm0['prompts'])} prompts × {sm0['draws']} draws, "
-             f"{sm0['new_tokens']} new tokens, T={sm0['temperature']}, top-k {sm0['top_k']}. Draw j of prompt i uses "
-             "the same seed for every model. Base LMs, not instruction-tuned: judge whether the text stays a "
-             "coherent document, not whether its facts are right. What each column means: evals/GUIDE.md.", "",
-             "## Models", "", *_head("", "model", "val@ctx")]
+    lines = [
+        "# Samples",
+        "",
+        f"Every evaluated model on the same {len(sm0['prompts'])} prompts × {sm0['draws']} draws, "
+        f"{sm0['new_tokens']} new tokens, T={sm0['temperature']}, top-k {sm0['top_k']}. Draw j of prompt i uses "
+        "the same seed for every model. Base LMs, not instruction-tuned: judge whether the text stays a "
+        "coherent document, not whether its facts are right. What each column means: evals/GUIDE.md.",
+        "",
+        "## Models",
+        "",
+        *_head("", "model", "val@ctx"),
+    ]
     for r in rs:
         T = r["config"]["block_size"]
-        lines.append(f"| {keys[id(r)]} | {label(r)} | {r['quality'].get(f'full_val@{T}', float('nan')):.4f} | "
-                     f"{_summary_cells(r['samples']['summary'])} |")
+        lines.append(
+            f"| {keys[id(r)]} | {label(r)} | {r['quality'].get(f'full_val@{T}', float('nan')):.4f} | "
+            f"{_summary_cells(r['samples']['summary'])} |"
+        )
     labels = [p["label"] for p in sm0["prompts"]]
     by = lambda r: {p["label"]: p for p in r["samples"]["prompts"]}
-    lines += ["", "## rep4 by prompt", "", "Median over draws; (n) = draws that end in an exact loop.", "",
-              "| prompt | " + " | ".join(keys[id(r)] for r in rs) + " |", "|" + "---|" * (len(rs) + 1)]
+    lines += [
+        "",
+        "## rep4 by prompt",
+        "",
+        "Median over draws; (n) = draws that end in an exact loop.",
+        "",
+        "| prompt | " + " | ".join(keys[id(r)] for r in rs) + " |",
+        "|" + "---|" * (len(rs) + 1),
+    ]
     for lab in labels:
         cells = []
         for r in rs:
@@ -303,8 +434,14 @@ def render_comparison(results: list[dict]) -> str:
             n = sum(bool(s.get("looped")) for s in p["draws"])
             cells.append(f"{_quantile([s['rep4'] for s in p['draws']], 0.5):.2f}{f' ({n})' if n else ''}")
         lines.append(f"| {lab} | " + " | ".join(cells) + " |")
-    lines += ["", "## Reading set", "", "A fixed subset to read: draw 1 of every prompt, every model. All "
-              f"{sm0['draws']} draws of a model: its run's Samples button.", ""]
+    lines += [
+        "",
+        "## Reading set",
+        "",
+        "A fixed subset to read: draw 1 of every prompt, every model. All "
+        f"{sm0['draws']} draws of a model: its run's Samples button.",
+        "",
+    ]
     for lab in labels:
         p0 = next(p for p in sm0["prompts"] if p["label"] == lab)
         lines += [f"### {lab}", "", f"prompt: {p0['prompt']!r}", ""]
@@ -316,6 +453,7 @@ def render_comparison(results: list[dict]) -> str:
 
 
 # --- manual decoding sweep on one model --------------------------------------------------
+
 
 def main(argv: list[str] | None = None) -> None:
     """Decoding sweep (temperature x top-k, plus greedy) on one checkpoint -> evals/sweep.md.
@@ -333,11 +471,14 @@ def main(argv: list[str] | None = None) -> None:
     args = p.parse_args(argv)
     device = torch.device(args.device) if args.device else select_device()
     model, cfg, _ = load_model(args.checkpoint, device)
-    model.set_use_cache(True)
     tok, by_label = get_tokenizer(), dict(GEN_PROMPTS)
     settings = {("greedy" if t == 0 else f"T={t}, k={k}"): (t, k) for t, k in SWEEP}
-    lines = [f"# Decoding sweep: {Path(args.checkpoint).stem}", "",
-             "Each prompt once (draw 1's seed), every setting. Same model throughout: only decoding varies.", ""]
+    lines = [
+        f"# Decoding sweep: {Path(args.checkpoint).stem}",
+        "",
+        "Each prompt once (draw 1's seed), every setting. Same model throughout: only decoding varies.",
+        "",
+    ]
     rows = {key: [] for key in settings}
     blocks = []
     for i, lab in enumerate(PROMPT_LABELS):

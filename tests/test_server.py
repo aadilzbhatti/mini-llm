@@ -32,7 +32,8 @@ def client(repo, token=None):
 
 def running(repo, run_id="r1", **extra):
     (repo / "runs" / f"{run_id}.status.json").write_text(
-        json.dumps({"run_id": run_id, "name": run_id, "status": "running", "kind": "train", **extra}))
+        json.dumps({"run_id": run_id, "name": run_id, "status": "running", "kind": "train", **extra})
+    )
 
 
 def test_token_required_when_set(repo):
@@ -89,7 +90,9 @@ def test_runs_list_includes_live(repo):
 def test_report_found_by_save_name(repo):
     (repo / "checkpoints").mkdir()
     (repo / "checkpoints" / "m.md").write_text("# samples")
-    (repo / "runs" / "r2.status.json").write_text(json.dumps({"run_id": "r2", "status": "completed", "args": {"save-name": "m.pt"}}))
+    (repo / "runs" / "r2.status.json").write_text(
+        json.dumps({"run_id": "r2", "status": "completed", "args": {"save-name": "m.pt"}})
+    )
     assert client(repo).get("/api/runs/r2/report").text == "# samples"
 
 
@@ -102,8 +105,12 @@ def test_plot_served_from_plots_dir_only(repo):
     (repo / "plots").mkdir()
     (repo / "plots" / "p.png").write_bytes(b"\x89PNG fake")
     (repo / "secret.png").write_bytes(b"nope")
-    (repo / "runs" / "r3.status.json").write_text(json.dumps({"run_id": "r3", "status": "completed", "metrics": {"plot": "plots/p.png"}}))
-    (repo / "runs" / "r4.status.json").write_text(json.dumps({"run_id": "r4", "status": "completed", "metrics": {"plot": "plots/../secret.png"}}))
+    (repo / "runs" / "r3.status.json").write_text(
+        json.dumps({"run_id": "r3", "status": "completed", "metrics": {"plot": "plots/p.png"}})
+    )
+    (repo / "runs" / "r4.status.json").write_text(
+        json.dumps({"run_id": "r4", "status": "completed", "metrics": {"plot": "plots/../secret.png"}})
+    )
     c = client(repo)
     r = c.get("/api/runs/r3/plot")
     assert r.status_code == 200 and r.headers["content-type"] == "image/png"
@@ -122,11 +129,21 @@ def test_dry_run_validates_without_queueing(repo):
 
 def test_continuation_of_running_run_validates_against_pending_checkpoint(repo):
     c = client(repo)
-    (repo / "queue" / "j.json").write_text(json.dumps({"name": "big", "args": {"steps": 160000, "save": True, "save-name": "big_160k_x.pt", "n-embd": 256}}))
-    running(repo, "r9", name="big", job_file="j.json", args={"steps": 160000, "save": True, "save-name": "big_160k_x.pt", "n-embd": 256})
+    (repo / "queue" / "j.json").write_text(
+        json.dumps(
+            {"name": "big", "args": {"steps": 160000, "save": True, "save-name": "big_160k_x.pt", "n-embd": 256}}
+        )
+    )
+    running(
+        repo,
+        "r9",
+        name="big",
+        job_file="j.json",
+        args={"steps": 160000, "save": True, "save-name": "big_160k_x.pt", "n-embd": 256},
+    )
     q = c.get("/api/queue").json()
     assert q[0]["running"] is True
-    assert c.delete("/api/queue/j.json").status_code == 409          # can't cancel what's running
+    assert c.delete("/api/queue/j.json").status_code == 409  # can't cancel what's running
     job = c.get("/api/runs/r9/continuation").json()
     assert job["args"]["resume"] == "checkpoints/big_160k_x.pt"
     assert job["args"]["n-embd"] == 256 and job["args"]["save-name"] == "big_200k_x_resume.pt"
@@ -152,6 +169,7 @@ def test_meta_form_schema(repo):
 def test_api_responses_carry_the_page_version(repo):  # noqa: F811
     from fastapi.testclient import TestClient
     from mini_llm.server import STATIC, create_app
+
     c = TestClient(create_app(repo=repo, uv="uv"))
     assert c.get("/api/meta").headers["x-ui-version"] == str(int((STATIC / "index.html").stat().st_mtime))
     assert c.get("/").headers["cache-control"] == "no-cache"

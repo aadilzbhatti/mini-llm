@@ -29,5 +29,22 @@ def test_train_refuses_identical_data_under_another_name(tmp_path, monkeypatch):
     torch.save(torch.randint(0, 64, (600,), generator=torch.Generator().manual_seed(0)), tmp_path / "val.pt")
     shutil.copy(tmp_path / "val.pt", tmp_path / "train.pt")  # same data, different path
     with pytest.raises(SystemExit, match="identical data"):
-        train.main(["--tokens", "train.pt", "--val-tokens", "val.pt", "--block-size", "8", "--n-embd", "16",
-                    "--n-head", "2", "--n-layer", "1", "--steps", "2", "--no-tensorboard"])
+        train.main(
+            [
+                "--tokens",
+                "train.pt",
+                "--val-tokens",
+                "val.pt",
+                "--block-size",
+                "8",
+                "--n-embd",
+                "16",
+                "--n-head",
+                "2",
+                "--n-layer",
+                "1",
+                "--steps",
+                "2",
+                "--no-tensorboard",
+            ]
+        )

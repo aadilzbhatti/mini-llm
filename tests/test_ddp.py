@@ -40,10 +40,40 @@ def test_single_process_matches_plain_loop(workdir):
     """Without torchrun, train.main must be exactly the plain loop:
     same seed -> same batches -> same weights, bit for bit, dropout included."""
     steps, lr = 30, 1e-3
-    train.main(["--tokens", "train.pt", "--block-size", "8", "--n-embd", "16", "--n-head", "2",
-                "--n-layer", "1", "--dropout", "0.1", "--batch-size", "4", "--steps", str(steps),
-                "--lr", str(lr), "--min-lr", str(lr), "--warmup-steps", "0", "--eval-interval", "10",
-                "--eval-batches", "2", "--no-tensorboard", "--save", "--save-name", "m.pt"])
+    train.main(
+        [
+            "--tokens",
+            "train.pt",
+            "--block-size",
+            "8",
+            "--n-embd",
+            "16",
+            "--n-head",
+            "2",
+            "--n-layer",
+            "1",
+            "--dropout",
+            "0.1",
+            "--batch-size",
+            "4",
+            "--steps",
+            str(steps),
+            "--lr",
+            str(lr),
+            "--min-lr",
+            str(lr),
+            "--warmup-steps",
+            "0",
+            "--eval-interval",
+            "10",
+            "--eval-batches",
+            "2",
+            "--no-tensorboard",
+            "--save",
+            "--save-name",
+            "m.pt",
+        ]
+    )
     assert not dist.is_initialized()
     ckpt = torch.load(workdir / "checkpoints" / "m.pt", weights_only=False)
     assert "batch_rng_states" not in ckpt  # DDP-only key
@@ -79,9 +109,23 @@ def torchrun(*args: str, cwd: Path) -> subprocess.CompletedProcess:
     # --standalone resolves the hostname to an ip6.arpa name getaddrinfo
     # can't resolve, and the ranks hang waiting for each other.
     proc = subprocess.run(
-        [sys.executable, "-m", "torch.distributed.run", "--nproc_per_node=2",
-         "--master-addr", "127.0.0.1", "--master-port", str(free_port()), str(WORKER), *args],
-        cwd=cwd, env=env, capture_output=True, text=True, timeout=300,
+        [
+            sys.executable,
+            "-m",
+            "torch.distributed.run",
+            "--nproc_per_node=2",
+            "--master-addr",
+            "127.0.0.1",
+            "--master-port",
+            str(free_port()),
+            str(WORKER),
+            *args,
+        ],
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=300,
     )
     assert proc.returncode == 0, f"torchrun failed\n--- stdout\n{proc.stdout}\n--- stderr\n{proc.stderr}"
     return proc
@@ -96,11 +140,38 @@ def test_ddp_training_run(tmp_path):
     torch.save(torch.arange(n_tokens), tmp_path / "train.pt")  # token id == position in the stream
     torch.save(torch.arange(n_tokens, 4096), tmp_path / "val.pt")  # disjoint from train, within the vocab
     proc = torchrun(
-        "train", str(tmp_path),
-        "--tokens", "train.pt", "--val-tokens", "val.pt", "--block-size", "8", "--n-embd", "16",
-        "--n-head", "2", "--n-layer", "1", "--batch-size", "8", "--steps", "20", "--warmup-steps", "0",
-        "--eval-interval", "10", "--eval-batches", "2", "--full-eval-interval", "0",
-        "--save", "--save-name", "m.pt", "--plot-loss", "--plot-name", "p.png",
+        "train",
+        str(tmp_path),
+        "--tokens",
+        "train.pt",
+        "--val-tokens",
+        "val.pt",
+        "--block-size",
+        "8",
+        "--n-embd",
+        "16",
+        "--n-head",
+        "2",
+        "--n-layer",
+        "1",
+        "--batch-size",
+        "8",
+        "--steps",
+        "20",
+        "--warmup-steps",
+        "0",
+        "--eval-interval",
+        "10",
+        "--eval-batches",
+        "2",
+        "--full-eval-interval",
+        "0",
+        "--save",
+        "--save-name",
+        "m.pt",
+        "--plot-loss",
+        "--plot-name",
+        "p.png",
         cwd=tmp_path,
     )
 
@@ -117,7 +188,7 @@ def test_ddp_training_run(tmp_path):
     # Checkpoint loads into a plain (non-DDP) model, e.g. on the Mac.
     ckpt = torch.load(tmp_path / "checkpoints" / "m.pt", weights_only=False)
     assert not any(k.startswith("module.") for k in ckpt["model_state_dict"])
-    build_model(ModelConfig(**ckpt["config"])).load_state_dict(ckpt["model_state_dict"])
+    build_model(ModelConfig.from_dict(ckpt["config"])).load_state_dict(ckpt["model_state_dict"])
     assert len(ckpt["batch_rng_states"]) == 2
     assert ckpt["step"] == 20
     assert [s for s, _ in ckpt["train_history"]] == [0, 10, 19]

@@ -16,7 +16,11 @@ def test_config_to_argv_accepts_runner_jobs():
     argv = modal_train.config_to_argv(job)
     assert argv[:3] == ["--save", "--plot-loss", "--tokens-in-ram"]  # remote defaults
     assert argv[argv.index("--n-embd") + 1] == "192"
-    assert modal_train.config_to_argv({"save": False, "bf16": True, "name": "x"}) == ["--plot-loss", "--tokens-in-ram", "--bf16"]
+    assert modal_train.config_to_argv({"save": False, "bf16": True, "name": "x"}) == [
+        "--plot-loss",
+        "--tokens-in-ram",
+        "--bf16",
+    ]
 
 
 def test_parse_gpus():

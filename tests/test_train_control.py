@@ -30,9 +30,32 @@ def workdir(tmp_path, monkeypatch):
     return tmp_path
 
 
-ARGS = ["--tokens", "train.pt", "--val-tokens", "val.pt", "--block-size", "8", "--n-embd", "16",
-        "--n-head", "2", "--n-layer", "1", "--eval-interval", "10", "--eval-batches", "2",
-        "--full-eval-interval", "0", "--log-interval", "5", "--control-poll", "1", "--warmup-steps", "0"]
+ARGS = [
+    "--tokens",
+    "train.pt",
+    "--val-tokens",
+    "val.pt",
+    "--block-size",
+    "8",
+    "--n-embd",
+    "16",
+    "--n-head",
+    "2",
+    "--n-layer",
+    "1",
+    "--eval-interval",
+    "10",
+    "--eval-batches",
+    "2",
+    "--full-eval-interval",
+    "0",
+    "--log-interval",
+    "5",
+    "--control-poll",
+    "1",
+    "--warmup-steps",
+    "0",
+]
 
 
 def test_lr_scale_checkpoint_and_stop(workdir):
@@ -55,10 +78,10 @@ def test_lr_scale_checkpoint_and_stop(workdir):
 
     ckpt = torch.load(workdir / "checkpoints" / "m.pt", map_location="cpu", weights_only=False)
     stopped = events[-1]["step"]
-    assert ckpt["step"] == stopped + 1 < 100000          # named/recorded by the training it got
+    assert ckpt["step"] == stopped + 1 < 100000  # named/recorded by the training it got
     assert all(abs(lr - 5e-4) < 1e-12 for _, lr in ckpt["lr_history"])  # constant lr, halved
-    assert (workdir / "checkpoints" / "m.step1.pt").exists()             # mid-run checkpoint
-    assert ckpt["val_history"][-1][0] == stopped                         # final eval ran at the stop
+    assert (workdir / "checkpoints" / "m.step1.pt").exists()  # mid-run checkpoint
+    assert ckpt["val_history"][-1][0] == stopped  # final eval ran at the stop
 
     live = json.loads((workdir / "runs" / "t1.live.json").read_text())
     assert live["finished"] is True

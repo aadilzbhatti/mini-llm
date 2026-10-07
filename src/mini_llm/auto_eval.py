@@ -126,14 +126,21 @@ class AutoEvaluator:
             log = self.runs / f"{run_id}.eval.log"
             contended = training_running()
             self._set(status_path, state="running", started=_now(), gpu_shared_with_training=contended)
-            print(f"[auto-eval] {run_id}: evaluating {ckpt.name}"
-                  f"{' (a local training job is running: timings will be skewed)' if contended else ''}", flush=True)
+            print(
+                f"[auto-eval] {run_id}: evaluating {ckpt.name}"
+                f"{' (a local training job is running: timings will be skewed)' if contended else ''}",
+                flush=True,
+            )
             with log.open("w") as fh:
                 # One task: this model's evals and samples, then every cross-model report
                 # (benchmark, summary, side-by-side samples). See mini_llm.evals.
                 cmd = [self.python, "-m", "mini_llm.evals", str(ckpt)] + (["--gpu-shared"] if contended else [])
                 rc = subprocess.run(cmd, cwd=self.repo, stdout=fh, stderr=subprocess.STDOUT).returncode
-            self._set(status_path, state="done" if rc == 0 else "failed", finished=_now(),
-                      **({} if rc == 0 else {"error": f"mini-llm-eval exited {rc}; see runs/{run_id}.eval.log"}))
+            self._set(
+                status_path,
+                state="done" if rc == 0 else "failed",
+                finished=_now(),
+                **({} if rc == 0 else {"error": f"mini-llm-eval exited {rc}; see runs/{run_id}.eval.log"}),
+            )
             print(f"[auto-eval] {run_id}: {'done' if rc == 0 else f'FAILED ({rc})'}", flush=True)
             self.jobs.task_done()

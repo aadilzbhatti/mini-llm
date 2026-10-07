@@ -19,24 +19,50 @@ exit 0
 
 
 def run(repo, run_id, finished, **extra):
-    status = {"run_id": run_id, "kind": "train", "status": "completed", "finished": finished,
-              "args": {"val-tokens": "data/v.pt"}, "log": f"runs/{run_id}.log", **extra}
+    status = {
+        "run_id": run_id,
+        "kind": "train",
+        "status": "completed",
+        "finished": finished,
+        "args": {"val-tokens": "data/v.pt"},
+        "log": f"runs/{run_id}.log",
+        **extra,
+    }
     (repo / "runs" / f"{run_id}.status.json").write_text(json.dumps(status))
 
 
 def test_evaluates_new_finished_runs_once(tmp_path):
     repo = tmp_path / "repo"
-    (repo / "runs").mkdir(parents=True); (repo / "checkpoints").mkdir()
+    (repo / "runs").mkdir(parents=True)
+    (repo / "checkpoints").mkdir()
     (repo / "runs" / "auto_eval.json").write_text(json.dumps({"since": "2026-09-28T00:00:00Z"}))
     for name in ("local.pt", "modal_x.pt", "bad.pt"):
         (repo / "checkpoints" / name).write_bytes(b"")
     run(repo, "local", "2026-09-28T01:00:00Z")
     (repo / "runs" / "local.log").write_text("step 1 | loss 1\nSaved to checkpoints/local.pt\n")
-    run(repo, "modal", "2026-09-28T01:00:00Z", remote={"provider": "modal"}, args={"val-tokens": "v", "save-name": "modal_x.pt"})
-    run(repo, "bad", "2026-09-28T01:00:00Z", remote={"provider": "modal"}, args={"val-tokens": "v", "save-name": "bad.pt"})
-    run(repo, "old", "2026-09-27T23:00:00Z")                                        # before auto-eval was on
-    run(repo, "noval", "2026-09-28T01:00:00Z", args={})                             # no val set
-    run(repo, "pending", "2026-09-28T01:00:00Z", remote={"provider": "modal"}, args={"val-tokens": "v", "save-name": "not_imported.pt"})
+    run(
+        repo,
+        "modal",
+        "2026-09-28T01:00:00Z",
+        remote={"provider": "modal"},
+        args={"val-tokens": "v", "save-name": "modal_x.pt"},
+    )
+    run(
+        repo,
+        "bad",
+        "2026-09-28T01:00:00Z",
+        remote={"provider": "modal"},
+        args={"val-tokens": "v", "save-name": "bad.pt"},
+    )
+    run(repo, "old", "2026-09-27T23:00:00Z")  # before auto-eval was on
+    run(repo, "noval", "2026-09-28T01:00:00Z", args={})  # no val set
+    run(
+        repo,
+        "pending",
+        "2026-09-28T01:00:00Z",
+        remote={"provider": "modal"},
+        args={"val-tokens": "v", "save-name": "not_imported.pt"},
+    )
 
     ev = AutoEvaluator(repo, python=fake_eval(tmp_path, fail_for="bad.pt"))
     assert sorted(ev.scan()) == ["bad", "local", "modal"]
@@ -54,16 +80,24 @@ def test_evaluates_new_finished_runs_once(tmp_path):
 
 def test_one_eval_task_per_model(tmp_path):
     repo = tmp_path / "repo"
-    (repo / "runs").mkdir(parents=True); (repo / "checkpoints").mkdir()
+    (repo / "runs").mkdir(parents=True)
+    (repo / "checkpoints").mkdir()
     (repo / "runs" / "auto_eval.json").write_text(json.dumps({"since": "2026-09-28T00:00:00Z"}))
     (repo / "checkpoints" / "modal_a.pt").write_bytes(b"")
-    run(repo, "a", "2026-09-28T01:00:00Z", remote={"provider": "modal"},
-        args={"val-tokens": "v", "save-name": "modal_a.pt", "sample-report": True})
+    run(
+        repo,
+        "a",
+        "2026-09-28T01:00:00Z",
+        remote={"provider": "modal"},
+        args={"val-tokens": "v", "save-name": "modal_a.pt", "sample-report": True},
+    )
     script = tmp_path / "python"
     script.write_text(f'#!/bin/sh\necho "$*" >> "{tmp_path}/calls.txt"\nexit 0\n')
     script.chmod(script.stat().st_mode | stat.S_IEXEC)
     ev = AutoEvaluator(repo, python=str(script))
-    ev.scan(); ev.jobs.join()
+    ev.scan()
+    ev.jobs.join()
     # evals, samples, benchmark and summaries are all one `mini_llm.evals` run
-    assert (tmp_path / "calls.txt").read_text().splitlines() == [f"-m mini_llm.evals {repo / 'checkpoints' / 'modal_a.pt'}"]
-
+    assert (tmp_path / "calls.txt").read_text().splitlines() == [
+        f"-m mini_llm.evals {repo / 'checkpoints' / 'modal_a.pt'}"
+    ]

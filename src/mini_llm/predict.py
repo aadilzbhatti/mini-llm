@@ -23,8 +23,16 @@ import math
 from pathlib import Path
 
 RUNS_DIR = Path("runs")
-DEFAULTS = {"block-size": 64, "batch-size": 4, "n-embd": 128, "n-layer": 4,
-            "lr": 1e-3, "min-lr": 2e-6, "warmup-steps": 500, "seed": 42}
+DEFAULTS = {
+    "block-size": 64,
+    "batch-size": 4,
+    "n-embd": 128,
+    "n-layer": 4,
+    "lr": 1e-3,
+    "min-lr": 2e-6,
+    "warmup-steps": 500,
+    "seed": 42,
+}
 DATA10K = "data/data10k/train.pt"
 
 
@@ -79,18 +87,29 @@ def load_runs(runs_dir=RUNS_DIR):
             continue
         # a --resume leg's own cosine horizon is its own; otherwise it is the run
         total = steps
-        out.append(dict(
-            run=m["run_id"], params=int(met["params"]), block=int(g("block-size")),
-            batch=int(g("batch-size")), steps=steps, total_steps=total,
-            lr=float(g("lr")), min_lr=float(g("min-lr")), warmup=int(g("warmup-steps")),
-            dur=float(m.get("duration_sec") or 0), loss=float(met["full_val_loss"]),
-            curve=[(int(s), float(v)) for s, v in met.get("full_val_curve", [])],
-            data=a.get("tokens", "data/train.pt"), resumed="resume" in a,
-        ))
+        out.append(
+            dict(
+                run=m["run_id"],
+                params=int(met["params"]),
+                block=int(g("block-size")),
+                batch=int(g("batch-size")),
+                steps=steps,
+                total_steps=total,
+                lr=float(g("lr")),
+                min_lr=float(g("min-lr")),
+                warmup=int(g("warmup-steps")),
+                dur=float(m.get("duration_sec") or 0),
+                loss=float(met["full_val_loss"]),
+                curve=[(int(s), float(v)) for s, v in met.get("full_val_curve", [])],
+                data=a.get("tokens", "data/train.pt"),
+                resumed="resume" in a,
+            )
+        )
     return out
 
 
 # --------------------------------------------------------------- time
+
 
 def fit_time(runs):
     """sec = c * params * block * steps. One parameter, fit as a median ratio."""
@@ -99,8 +118,7 @@ def fit_time(runs):
     c = cs[len(cs) // 2] if len(cs) % 2 else 0.5 * (cs[len(cs) // 2 - 1] + cs[len(cs) // 2])
     errs = [abs(c * r["params"] * r["block"] * r["steps"] - r["dur"]) / r["dur"] for r in rs]
     errs.sort()
-    return c, {"n": len(rs), "median_abs_pct": 100 * errs[len(errs) // 2],
-               "worst_pct": 100 * errs[-1]}
+    return c, {"n": len(rs), "median_abs_pct": 100 * errs[len(errs) // 2], "worst_pct": 100 * errs[-1]}
 
 
 def predict_time(c, params, block, steps):
@@ -108,6 +126,7 @@ def predict_time(c, params, block, steps):
 
 
 # --------------------------------------------------------------- loss
+
 
 def _fit_powerlaw(xs, ys, e_lo, e_hi):
     """y = E + A*x^-a. Grid over E, closed-form log-linear fit for A and a."""
@@ -119,13 +138,15 @@ def _fit_powerlaw(xs, ys, e_lo, e_hi):
             continue
         lx = [math.log(x) for x in xs]
         ly = [math.log(y - E) for y in ys]
-        n = len(lx); mx = sum(lx) / n; my = sum(ly) / n
+        n = len(lx)
+        mx = sum(lx) / n
+        my = sum(ly) / n
         den = sum((v - mx) ** 2 for v in lx)
         if den <= 0:
             continue
         a = -sum((u - mx) * (v - my) for u, v in zip(lx, ly)) / den
         A = math.exp(my + a * mx)
-        rss = sum((E + A * x ** -a - y) ** 2 for x, y in zip(xs, ys))
+        rss = sum((E + A * x**-a - y) ** 2 for x, y in zip(xs, ys))
         if best is None or rss < best[0]:
             best = (rss, E, A, a)
     return best
@@ -151,7 +172,8 @@ def loss_families(runs, data=DATA10K):
         for step, loss in r["curve"]:
             if step > 0:
                 fam.setdefault((r["params"], r["block"], r["lr"]), []).append(
-                    (step * r["batch"] * r["block"], loss, r["run"]))
+                    (step * r["batch"] * r["block"], loss, r["run"])
+                )
     return fam
 
 
@@ -159,35 +181,38 @@ def fit_family(pts):
     """L = E + A * D^-a over one family's checkpoints. Returns (fit, stats)."""
     if len(pts) < 4:
         return None, {"n": len(pts), "note": "need >=4 checkpoints"}
-    xs = [p[0] for p in pts]; ys = [p[1] for p in pts]
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
     f = _fit_powerlaw(xs, ys, 0.5, min(ys) - 0.01)
     if f is None:
         return None, {"n": len(pts), "note": "no fit"}
     _, E, A, a = f
-    res = sorted(abs(E + A * x ** -a - y) for x, y in zip(xs, ys))
+    res = sorted(abs(E + A * x**-a - y) for x, y in zip(xs, ys))
     runs_in = sorted({p[2] for p in pts})
     loo = []
     if len(runs_in) > 1:
         for held in runs_in:
             tr = [p for p in pts if p[2] != held]
             te = [p for p in pts if p[2] == held]
-            f2 = _fit_powerlaw([q[0] for q in tr], [q[1] for q in tr], 0.5,
-                               min(q[1] for q in tr) - 0.01)
+            f2 = _fit_powerlaw([q[0] for q in tr], [q[1] for q in tr], 0.5, min(q[1] for q in tr) - 0.01)
             if f2:
                 _, E2, A2, a2 = f2
-                loo += [abs(E2 + A2 * x ** -a2 - y) for x, y, _ in te]
+                loo += [abs(E2 + A2 * x**-a2 - y) for x, y, _ in te]
         loo.sort()
-    return (E, A, a), {"n": len(pts), "runs": len(runs_in),
-                       "median_resid": res[len(res) // 2], "max_resid": res[-1],
-                       "loo_median": loo[len(loo) // 2] if loo else None}
+    return (E, A, a), {
+        "n": len(pts),
+        "runs": len(runs_in),
+        "median_resid": res[len(res) // 2],
+        "max_resid": res[-1],
+        "loo_median": loo[len(loo) // 2] if loo else None,
+    }
 
 
 def estimate_params(n_embd, n_head, n_layer, block_size, vocab_size=50257):
     """Parameter count for the tied-embedding model, without building it."""
     d, V, L, T = n_embd, vocab_size, n_layer, block_size
     head = d // n_head
-    per_block = (n_head * 3 * (d * head + head) + (d * d + d)
-                 + (d * 4 * d + 4 * d) + (4 * d * d + d) + 4 * d)
+    per_block = n_head * 3 * (d * head + head) + (d * d + d) + (d * 4 * d + 4 * d) + (4 * d * d + d) + 4 * d
     return V * d + T * d + L * per_block + 2 * d + V
 
 
@@ -199,27 +224,35 @@ def forecast(cfg, runs):
     does not support a prediction -- deliberately, rather than guessing.
     """
     params = cfg.get("params") or estimate_params(
-        cfg["n_embd"], cfg["n_head"], cfg["n_layer"], cfg["block_size"],
-        cfg.get("vocab_size", 50257))
+        cfg["n_embd"], cfg["n_head"], cfg["n_layer"], cfg["block_size"], cfg.get("vocab_size", 50257)
+    )
     T, steps = cfg["block_size"], cfg["steps"]
     tokens = steps * cfg["batch_size"] * T
 
     c, tstat = fit_time(runs)
     sec = predict_time(c, params, T, steps)
 
-    out = {"params_est": params, "tokens": tokens,
-           "time_sec": round(sec, 1), "time_hours": round(sec / 3600, 2),
-           "time_fit": {"runs": tstat["n"], "median_abs_pct": round(tstat["median_abs_pct"], 1)},
-           "loss": None, "loss_basis": None}
+    out = {
+        "params_est": params,
+        "tokens": tokens,
+        "time_sec": round(sec, 1),
+        "time_hours": round(sec / 3600, 2),
+        "time_fit": {"runs": tstat["n"], "median_abs_pct": round(tstat["median_abs_pct"], 1)},
+        "loss": None,
+        "loss_basis": None,
+    }
 
     fams = loss_families(runs)
-    match = next((k for k in fams
-                  if k[1] == T and abs(k[2] - cfg["lr"]) < 1e-12
-                  and abs(k[0] - params) / params < 0.01), None)
+    match = next(
+        (k for k in fams if k[1] == T and abs(k[2] - cfg["lr"]) < 1e-12 and abs(k[0] - params) / params < 0.01), None
+    )
     if match is None:
-        out["loss_basis"] = {"status": "no data for this (params, block, lr) family",
-                             "families": [{"params": k[0], "block": k[1], "lr": k[2],
-                                           "points": len(v)} for k, v in sorted(fams.items())]}
+        out["loss_basis"] = {
+            "status": "no data for this (params, block, lr) family",
+            "families": [
+                {"params": k[0], "block": k[1], "lr": k[2], "points": len(v)} for k, v in sorted(fams.items())
+            ],
+        }
         return out
     fit, st = fit_family(fams[match])
     if fit is None:
@@ -227,16 +260,23 @@ def forecast(cfg, runs):
         return out
     E, A, a = fit
     hi = max(x for x, _, _ in fams[match])
-    out["loss"] = round(E + A * tokens ** -a, 4)
-    out["loss_basis"] = {"status": "ok", "E": round(E, 4), "A": round(A, 4), "alpha": round(a, 4),
-                         "points": st["n"], "runs": st["runs"],
-                         "median_resid": round(st["median_resid"], 4),
-                         "loo_median": round(st["loo_median"], 4) if st["loo_median"] else None,
-                         "extrapolation_x": round(tokens / hi, 2)}
+    out["loss"] = round(E + A * tokens**-a, 4)
+    out["loss_basis"] = {
+        "status": "ok",
+        "E": round(E, 4),
+        "A": round(A, 4),
+        "alpha": round(a, 4),
+        "points": st["n"],
+        "runs": st["runs"],
+        "median_resid": round(st["median_resid"], 4),
+        "loo_median": round(st["loo_median"], 4) if st["loo_median"] else None,
+        "extrapolation_x": round(tokens / hi, 2),
+    }
     return out
 
 
 # --------------------------------------------------------------- cli
+
 
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -266,16 +306,22 @@ def main(argv=None):
     c, tstat = fit_time(runs)
     sec = predict_time(c, params, T, args.steps)
     print(f"runs used: {len(runs)} completed\n")
-    print(f"config: emb{d} head{args.n_head} layer{L} blk{T} bs{args.batch_size} "
-          f"steps{args.steps} lr{args.lr:g} minlr{args.min_lr:g}")
+    print(
+        f"config: emb{d} head{args.n_head} layer{L} blk{T} bs{args.batch_size} "
+        f"steps{args.steps} lr{args.lr:g} minlr{args.min_lr:g}"
+    )
     print(f"  params (estimated)   {params:,}")
     print(f"  tokens processed     {args.steps * args.batch_size * T:,}")
     print()
     print(f"TIME   {sec/3600:.1f}h  ({sec:,.0f}s)")
-    print(f"       fit on {tstat['n']} runs; median |err| {tstat['median_abs_pct']:.0f}%, "
-          f"worst {tstat['worst_pct']:.0f}%")
-    print(f"       -> plan for {sec/3600*0.8:.1f}-{sec/3600*1.35:.1f}h "
-          f"(identical configs vary 10-25% from thermal throttling alone)")
+    print(
+        f"       fit on {tstat['n']} runs; median |err| {tstat['median_abs_pct']:.0f}%, "
+        f"worst {tstat['worst_pct']:.0f}%"
+    )
+    print(
+        f"       -> plan for {sec/3600*0.8:.1f}-{sec/3600*1.35:.1f}h "
+        f"(identical configs vary 10-25% from thermal throttling alone)"
+    )
     print()
     fams = loss_families(runs)
     key = (params, T, args.lr)
@@ -298,18 +344,21 @@ def main(argv=None):
             print(f"LOSS   family found but not fittable ({st})")
         else:
             E, A, a = fit
-            loss = E + A * tokens ** -a
+            loss = E + A * tokens**-a
             print(f"LOSS   {loss:.4f} full_val")
             print(f"       L = {E:.3f} + {A:.4g} * D^-{a:.3f}   (D = {tokens:,} tokens)")
             print(f"       fit on {st['n']} checkpoints from {st['runs']} run(s) in this exact family")
             print(f"       in-sample residual: median {st['median_resid']:.4f}, max {st['max_resid']:.4f} nats")
             if st["loo_median"] is not None:
                 print(f"       leave-one-run-out: median {st['loo_median']:.4f} nats")
-            lo = min(x for x, _, _ in fams[exact]); hi = max(x for x, _, _ in fams[exact])
+            lo = min(x for x, _, _ in fams[exact])
+            hi = max(x for x, _, _ in fams[exact])
             if tokens > hi * 1.05:
-                print(f"       NOTE extrapolating {tokens/hi:.1f}x beyond the largest observed "
-                      f"budget ({hi:,} tokens) -- the irreducible term E is the least "
-                      f"constrained parameter and dominates out here.")
+                print(
+                    f"       NOTE extrapolating {tokens/hi:.1f}x beyond the largest observed "
+                    f"budget ({hi:,} tokens) -- the irreducible term E is the least "
+                    f"constrained parameter and dominates out here."
+                )
             elif tokens < lo:
                 print(f"       NOTE below the smallest observed budget ({lo:,} tokens).")
 

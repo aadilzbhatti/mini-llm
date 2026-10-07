@@ -276,8 +276,14 @@ class RunControl:
             try:
                 cmd = validate_command(raw)
                 result = self._apply(cmd, step)
-                ev = self._event(step, id=cmd["id"], type=cmd["type"], ok=True, result=result,
-                                 **({"knob": cmd["knob"], "value": cmd["value"]} if cmd["type"] == "set" else {}))
+                ev = self._event(
+                    step,
+                    id=cmd["id"],
+                    type=cmd["type"],
+                    ok=True,
+                    result=result,
+                    **({"knob": cmd["knob"], "value": cmd["value"]} if cmd["type"] == "set" else {}),
+                )
                 print(f"step {step:5d} | control: {result}", flush=True)
                 self.text("control/events", f"step {step}: {result}", step)
             except CommandError as exc:
@@ -298,8 +304,9 @@ class RunControl:
 
     # --- heartbeat ---------------------------------------------------------
 
-    def heartbeat(self, step: int, total_steps: int | None = None, extra: dict | None = None,
-                  force: bool = False) -> None:
+    def heartbeat(
+        self, step: int, total_steps: int | None = None, extra: dict | None = None, force: bool = False
+    ) -> None:
         t = time.time()
         if not force and t - self._last_write < self.heartbeat_every:
             return

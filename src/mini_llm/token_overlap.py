@@ -115,7 +115,9 @@ def main(argv: list[str] | None = None) -> None:
         shared = hash_set & other
         excluded |= shared
         pct = 100 * len(shared) / len(spans) if spans else 0.0
-        print(f"  overlap with {path}: {len(shared)} docs ({pct:.1f}% of {Path(args.tokens).parent.name}/{Path(args.tokens).name})")
+        print(
+            f"  overlap with {path}: {len(shared)} docs ({pct:.1f}% of {Path(args.tokens).parent.name}/{Path(args.tokens).name})"
+        )
 
     keep = [span for span, h in zip(spans, hashes) if h not in excluded]
     removed = len(spans) - len(keep)

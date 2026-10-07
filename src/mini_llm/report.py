@@ -94,32 +94,25 @@ PROMPTS: list[tuple[str, str]] = [
     ("biography", "Albert Einstein was a German-born theoretical physicist who"),
     ("science_explainer", "Oxygen is a chemical element with"),
     ("instructional", "In this lesson, students will learn how to"),
-
     # --- structure: lists are the most distinctive formatting the model sees ---
     ("bullet_list", "There are several benefits to regular exercise:\n- "),
     ("numbered_list", "To solve a quadratic equation, follow these steps:\n1."),
     ("enumeration", "There are three main types of"),
-
     # --- long-range dependency: can the continuation resolve a distant head? ---
     ("long_dependency", "Although the treaty was signed in 1919, it"),
     (
         "agreement_gap",
-        "The students who had spent the entire semester preparing for the "
-        "final examination in organic chemistry",
+        "The students who had spent the entire semester preparing for the " "final examination in organic chemistry",
     ),
-
     # --- attribution, quotation, dialogue (present but comparatively rare) ---
     ("attribution", "According to a study published in"),
     ("dialogue", '"I do not think that is correct," she said, "because'),
-
     # --- facts and numbers ---
     ("factual", "The capital of France is"),
     ("numeric_units", "The mountain rises to a height of"),
-
     # --- out-of-distribution control: ~0.1 code occurrences per 100k chars, so
     #     this should fail. It is here to show WHETHER it fails, and how. ---
     ("code_ood", "def fibonacci(n):"),
-
     # --- long-range retrieval: the answer (3817) is only in the first sentence.
     #     Distances from the key to the end of the prompt are 32 / 97 / 171 GPT-2
     #     tokens, so a 128-context model can still see it in the first two and has
@@ -149,10 +142,7 @@ def context_note(n_prompt: int, block_size: int, max_new_tokens: int) -> str:
         return f"{n_prompt} tokens, fully in context throughout"
     if max_new_tokens < block_size:
         return f"{n_prompt} tokens, starts scrolling out at generated token {first_evicted}"
-    return (
-        f"{n_prompt} tokens, starts scrolling out at generated token {first_evicted}, "
-        f"fully gone by {block_size}"
-    )
+    return f"{n_prompt} tokens, starts scrolling out at generated token {first_evicted}, " f"fully gone by {block_size}"
 
 
 @torch.no_grad()
@@ -182,24 +172,21 @@ def generate_until_eos(
     judging whether the model held the prompt's subject measures the wrong
     thing entirely. The EOS token itself is not appended to the output.
 
-    With a KV-cached model (use_cache=True) only the newest token is fed once
+    Decoding uses the KV cache: only the newest token is fed once
     the cache holds the context; when the cache fills the window it is
     cleared and the cropped window re-run, so the output is unchanged.
     """
     was_training = model.training
     model.eval()
-    use_cache = getattr(model, "use_cache", False)
-    if use_cache:
-        model.clear_cache()
+    model.clear_cache()
     try:
         for _ in range(max_new_tokens):
-            if use_cache and 0 < model.cache_len() < block_size:
+            if 0 < model.cache_len() < block_size:
                 idx_cond = idx[:, -1:]
             else:
-                if use_cache:
-                    model.clear_cache()
+                model.clear_cache()
                 idx_cond = idx[:, -block_size:]
-            logits, _ = model(idx_cond, last_only=True)
+            logits, _ = model(idx_cond, last_only=True, use_cache=True)
             logits = logits[:, -1, :]
             if temperature is not None:
                 logits = logits / temperature
@@ -216,8 +203,7 @@ def generate_until_eos(
             idx = torch.cat((idx, nxt), dim=1)
         return idx, False
     finally:
-        if use_cache:
-            model.clear_cache()
+        model.clear_cache()
         model.train(was_training)
 
 
@@ -294,8 +280,14 @@ def sample_report(
         ]
         for i in range(samples_per_prompt):
             text, n, eos = generate_sample(
-                model, tokenizer, prompt, max_new_tokens, block_size, device,
-                temperature=temperature, top_k=top_k,
+                model,
+                tokenizer,
+                prompt,
+                max_new_tokens,
+                block_size,
+                device,
+                temperature=temperature,
+                top_k=top_k,
             )
             lines += [f"draw {i + 1}:", "", "```", text, "```", _footer(n, eos, max_new_tokens), ""]
 
@@ -325,7 +317,7 @@ def write_sample_report(
 def main(argv: list[str] | None = None) -> None:
     """Regenerate a report from a checkpoint, without retraining.
 
-        python -m mini_llm.report --checkpoint checkpoints/foo.pt
+    python -m mini_llm.report --checkpoint checkpoints/foo.pt
     """
     import argparse
 
@@ -335,8 +327,7 @@ def main(argv: list[str] | None = None) -> None:
 
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--checkpoint", required=True)
-    p.add_argument("--max-new-tokens", type=int, default=None,
-                   help="Default: 2 x block_size.")
+    p.add_argument("--max-new-tokens", type=int, default=None, help="Default: 2 x block_size.")
     p.add_argument("--seed", type=int, default=REPORT_SEED)
     p.add_argument("--device", default=None, help="Override the auto-selected device.")
     args = p.parse_args(argv)
@@ -344,7 +335,7 @@ def main(argv: list[str] | None = None) -> None:
     device = args.device or select_device()
     tokenizer = get_tokenizer()
     ckpt = torch.load(args.checkpoint, map_location=device, weights_only=False)
-    cfg = ModelConfig(**ckpt["config"])
+    cfg = ModelConfig.from_dict(ckpt["config"])
     model = build_model(cfg).to(device)
     model.load_state_dict(ckpt["model_state_dict"])
 
@@ -355,8 +346,14 @@ def main(argv: list[str] | None = None) -> None:
         "config": cfg.to_dict(),
     }
     path = write_sample_report(
-        model, tokenizer, cfg.block_size, device, args.checkpoint,
-        meta=meta, max_new_tokens=args.max_new_tokens, seed=args.seed,
+        model,
+        tokenizer,
+        cfg.block_size,
+        device,
+        args.checkpoint,
+        meta=meta,
+        max_new_tokens=args.max_new_tokens,
+        seed=args.seed,
     )
     print(f"Wrote sample report to {path}")
 

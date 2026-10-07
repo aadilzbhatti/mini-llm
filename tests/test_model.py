@@ -37,12 +37,6 @@ def model(cfg: ModelConfig) -> ModelCustomTransformer:
 
 
 @pytest.fixture
-def model_with_cache(cfg: ModelConfig) -> ModelCustomTransformer:
-    """A model with caching enabled for testing."""
-    cfg.use_cache = True
-    return build_model(cfg)
-
-@pytest.fixture
 def tokens() -> torch.Tensor:
     """A deterministic 1-D stream of ids, standing in for tokenized text."""
     g = torch.Generator().manual_seed(0)
@@ -74,7 +68,10 @@ def test_output_shapes(model: ModelCustomTransformer):
     tokens = torch.randint(0, LARGE_VOCAB_SIZE, (256,))
     x, y = make_batch(tokens, batch_size=4, block_size=BLOCK_SIZE)
     logits, loss = model(x, y)
-    assert logits.shape == (32, LARGE_VOCAB_SIZE), f"Expected logits shape {(4, BLOCK_SIZE, LARGE_VOCAB_SIZE)}, but got {logits.shape}"
+    assert logits.shape == (
+        32,
+        LARGE_VOCAB_SIZE,
+    ), f"Expected logits shape {(4, BLOCK_SIZE, LARGE_VOCAB_SIZE)}, but got {logits.shape}"
     assert loss.shape == (), f"Expected loss to be a scalar tensor, but got shape {loss.shape}"
 
 
@@ -101,7 +98,9 @@ def test_causal_isolation(model: ModelCustomTransformer):
     # t is the position that the sequences match through
     diff_positions = (x1 != x2).nonzero()
     t = diff_positions[0, 1].item()
-    assert torch.allclose(logits_a[:, :t, :], logits_b[:, :t, :], atol=1e-5, rtol=1e-5), f"Logits differ before position {t}"
+    assert torch.allclose(
+        logits_a[:, :t, :], logits_b[:, :t, :], atol=1e-5, rtol=1e-5
+    ), f"Logits differ before position {t}"
 
 
 def test_overfits_one_batch(model: ModelCustomTransformer):
@@ -139,7 +138,7 @@ def test_weight_tying_appears_once_in_named_parameters(model: ModelCustomTransfo
     assert matches == ["token_embedding_table.weight"]
 
 
-def test_inference_with_cache(model: ModelCustomTransformer, model_with_cache: ModelCustomTransformer):
+def test_inference_with_cache(model: ModelCustomTransformer):
     def train_model(model: ModelCustomTransformer, tokens: torch.Tensor, device: torch.device) -> None:
         """Train the model on the given tokens for a few steps."""
         model = model.to(device)
@@ -152,7 +151,7 @@ def test_inference_with_cache(model: ModelCustomTransformer, model_with_cache: M
             _, loss = model(x, y)
             loss.backward()
             optimizer.step()
-    
+
     def inference(model: ModelCustomTransformer, tokens: torch.Tensor, device: torch.device) -> str | list[str]:
         """Run inference on the model and return the decoded output."""
         model = model.to(device)
@@ -161,19 +160,19 @@ def test_inference_with_cache(model: ModelCustomTransformer, model_with_cache: M
             out = model.generate(tokens, max_new_tokens=10, block_size=BLOCK_SIZE)
         decoded = tokenizer.decode(out[0])
         return decoded
-    
+
     # load data/tiny.txt, encode, and train a small model on it
     text = load_text("data/tiny.txt")
     tokenizer = get_tokenizer()
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-    model_with_cache = model_with_cache.to(device)  # the fixture builds on CPU; the data goes to MPS when available
+    model = model.to(device)  # the fixture builds on CPU; the data goes to MPS when available
     tokens = encode(text, tokenizer).unsqueeze(0).to(device)
     # train the model on this data for a few steps
-    train_model(model_with_cache, tokens, device)
+    train_model(model, tokens, device)
 
     test_seq = "The lighthouse keeper watched the ships"
     tokenizer = get_tokenizer()
     tokens = encode(test_seq, tokenizer).unsqueeze(0).to(device)
-    inference_output = inference(model_with_cache, tokens, device)
+    inference_output = inference(model, tokens, device)
     print(f"Inference output: {inference_output}")
-    print(model_with_cache.cache_len())
+    print(model.cache_len())

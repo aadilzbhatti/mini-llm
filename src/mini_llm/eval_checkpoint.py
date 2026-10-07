@@ -34,7 +34,7 @@ REPRODUCE_TOLERANCE = 1e-3
 
 def load_model(path: str | Path, device: torch.device):
     ckpt = torch.load(path, map_location=device, weights_only=False)
-    cfg = ModelConfig(**ckpt["config"])
+    cfg = ModelConfig.from_dict(ckpt["config"])
     model = build_model(cfg).to(device)
     model.load_state_dict(ckpt["model_state_dict"])
     model.eval()
@@ -51,8 +51,12 @@ def main(argv: list[str] | None = None) -> None:
         help="The val file each run originally used. Its recomputed loss is checked "
         "against the checkpoint's own last logged full_val; a mismatch is fatal.",
     )
-    p.add_argument("--batch-size", type=int, default=32, help="Eval batch size. evaluate_full weights "
-                   "by window count, so this changes speed, not the result.")
+    p.add_argument(
+        "--batch-size",
+        type=int,
+        default=32,
+        help="Eval batch size. evaluate_full weights " "by window count, so this changes speed, not the result.",
+    )
     p.add_argument("--device", default=None, help="Override device (default: MPS, then CUDA, then CPU).")
     args = p.parse_args(argv)
 
@@ -88,10 +92,19 @@ def main(argv: list[str] | None = None) -> None:
                     "number in this run."
                 )
         else:
-            print(f"{name}: no reproduction check ({'no --reproduce' if args.reproduce is None else 'no logged full_val'})")
+            print(
+                f"{name}: no reproduction check ({'no --reproduce' if args.reproduce is None else 'no logged full_val'})"
+            )
 
-        rows.append({"run": name, "params": n_params, "block": cfg.block_size,
-                     "step": ckpt.get("step"), **{q: losses[q] for q in paths}})
+        rows.append(
+            {
+                "run": name,
+                "params": n_params,
+                "block": cfg.block_size,
+                "step": ckpt.get("step"),
+                **{q: losses[q] for q in paths},
+            }
+        )
         del model
         if device.type == "mps":
             torch.mps.empty_cache()

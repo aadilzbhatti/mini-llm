@@ -228,8 +228,7 @@ def prepare(
         seen[side] += 1
         if progress_every and side == "train" and seen["train"] % progress_every == 0:
             print(
-                f"train {seen['train']:,}/{num_examples:,} docs, "
-                f"{streams['train'].num_tokens:,} tokens so far",
+                f"train {seen['train']:,}/{num_examples:,} docs, " f"{streams['train'].num_tokens:,} tokens so far",
                 flush=True,
             )
 

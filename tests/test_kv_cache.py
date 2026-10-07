@@ -15,6 +15,7 @@ from pathlib import Path
 
 import pytest
 import torch
+import torch.nn.functional as F
 
 from mini_llm.config import ModelConfig, build_model
 from mini_llm.data import encode, get_tokenizer
@@ -46,24 +47,64 @@ pytestmark = pytest.mark.skipif(CHECKPOINT is None, reason="no baseline checkpoi
 
 @pytest.fixture(scope="module")
 def models() -> tuple[ModelCustomTransformer, ModelCustomTransformer]:
-    """(uncached, cached) copies of the best baseline, same weights."""
+    """(plain, cached) copies of the best baseline, same weights. The cache is requested per call
+    (use_cache=True, or any generate), so both are the same kind of model; `plain` is only ever
+    called statelessly, and generation through it is checked against `reference_*` below."""
     assert CHECKPOINT is not None
     ckpt = torch.load(CHECKPOINT, map_location="cpu", weights_only=False)
     out = []
-    for use_cache in (False, True):
-        cfg = ModelConfig(**ckpt["config"])
-        cfg.use_cache = use_cache
-        model = build_model(cfg)
+    for _ in range(2):
+        model = build_model(ModelConfig.from_dict(ckpt["config"]))
         model.load_state_dict(ckpt["model_state_dict"])
         model.eval()
         out.append(model)
     return out[0], out[1]
 
 
-def time_generate(model: ModelCustomTransformer, idx: torch.Tensor, max_new_tokens: int, block_size: int, greedy: bool=False) -> tuple[torch.Tensor, float]:
+@torch.no_grad()
+def reference_generate(model, idx, max_new_tokens, block_size, greedy=False):
+    """model.generate without the cache: re-run the cropped window every step."""
+    for _ in range(max_new_tokens):
+        logits, _ = model(idx[:, -block_size:], last_only=True)
+        probs = F.softmax(logits[:, -1, :], dim=-1)
+        nxt = torch.argmax(probs, dim=-1, keepdim=True) if greedy else torch.multinomial(probs, num_samples=1)
+        idx = torch.cat((idx, nxt), dim=1)
+    return idx
+
+
+@torch.no_grad()
+def reference_until_eos(model, idx, max_new_tokens, block_size, greedy=False, temperature=None, top_k=None, top_p=None):
+    """report.generate_until_eos without the cache."""
+    from mini_llm.report import EOS_TOKEN_ID, nucleus
+
+    for _ in range(max_new_tokens):
+        logits, _ = model(idx[:, -block_size:], last_only=True)
+        logits = logits[:, -1, :]
+        if temperature is not None:
+            logits = logits / temperature
+        if top_k:
+            kth = torch.topk(logits, min(top_k, logits.size(-1)), dim=-1).values[:, -1:]
+            logits = logits.masked_fill(logits < kth, float("-inf"))
+        probs = F.softmax(logits, dim=-1)
+        if top_p is not None and top_p < 1:
+            probs = nucleus(probs, top_p)
+        nxt = torch.argmax(probs, dim=-1, keepdim=True) if greedy else torch.multinomial(probs, num_samples=1)
+        if int(nxt.item()) == EOS_TOKEN_ID:
+            return idx, True
+        idx = torch.cat((idx, nxt), dim=1)
+    return idx, False
+
+
+def time_generate(
+    model: ModelCustomTransformer, idx: torch.Tensor, max_new_tokens: int, block_size: int, greedy: bool = False,
+    reference: bool = False,
+) -> tuple[torch.Tensor, float]:
     t0 = time.perf_counter()
     torch.manual_seed(0)
-    out = model.generate(idx, max_new_tokens=max_new_tokens, block_size=block_size, greedy=greedy)
+    if reference:  # no cache
+        out = reference_generate(model, idx, max_new_tokens, block_size, greedy)
+    else:
+        out = model.generate(idx, max_new_tokens=max_new_tokens, block_size=block_size, greedy=greedy)
     return out, time.perf_counter() - t0
 
 
@@ -75,13 +116,13 @@ def test_cached_multistep_logits_match_full_forward(models, prompt: str):
     idx = encode(prompt, tokenizer).unsqueeze(0)
     prompt_len = idx.size(1)
     cached.clear_cache()
-    cached(idx) # prefill
+    cached(idx, use_cache=True)  # prefill
     assert cached.cache_len() == prompt_len
 
     continuation = encode(" the cat in the hat", tokenizer)
     for i, token in enumerate(continuation):
         next_tok = token.view(1, 1)
-        step_logits, _ = cached(next_tok)
+        step_logits, _ = cached(next_tok, use_cache=True)
         full_idx = torch.cat([idx, next_tok], dim=1)
         full_logits, _ = plain(full_idx)
         diff = (step_logits[:, -1] - full_logits[:, -1]).abs().max()
@@ -95,7 +136,7 @@ def test_cached_multistep_logits_match_full_forward(models, prompt: str):
         idx = full_idx
     cached.clear_cache()
     assert cached.cache_len() == 0
-    
+
 
 @torch.no_grad()
 @pytest.mark.parametrize("prompt", PROMPTS)
@@ -118,7 +159,7 @@ def test_cached_logits_match_full_forward_through_window_overflow(models, prompt
     refills = 0
     step_input = history[:, -block_size:]  # prefill
     for i in range(len(continuation) + 1):
-        step_logits, _ = cached(step_input)
+        step_logits, _ = cached(step_input, use_cache=True)
         full_logits, _ = plain(history[:, -block_size:])
         diff = (step_logits[:, -1] - full_logits[:, -1]).abs().max()
         assert torch.allclose(
@@ -146,12 +187,13 @@ def test_prefill_with_and_without_cache_gives_same_logits(models, prompt: str):
     tokenizer = get_tokenizer()
     idx = encode(prompt, tokenizer).unsqueeze(0)
     cached.clear_cache()
-    logits_cached, _ = cached(idx)
+    logits_cached, _ = cached(idx, use_cache=True)
     logits_plain, _ = plain(idx)
     assert torch.allclose(logits_cached, logits_plain, atol=1e-4, rtol=1e-4)
     assert cached.cache_len() == idx.size(1)
     cached.clear_cache()
     assert cached.cache_len() == 0
+
 
 @torch.no_grad()
 @pytest.mark.parametrize("block_size", [1024, 32], ids=["full-window", "window-overflow"])
@@ -165,7 +207,7 @@ def test_cached_greedy_generation_matches_uncached(models, block_size: int):
     total_plain = total_cached = 0.0
     for prompt in PROMPTS:
         idx = encode(prompt, tokenizer).unsqueeze(0)
-        out_plain, t_plain = time_generate(plain, idx, max_new_tokens, block_size, greedy=True)
+        out_plain, t_plain = time_generate(plain, idx, max_new_tokens, block_size, greedy=True, reference=True)
         out_cached, t_cached = time_generate(cached, idx, max_new_tokens, block_size, greedy=True)
         total_plain += t_plain
         total_cached += t_cached
@@ -178,8 +220,10 @@ def test_cached_greedy_generation_matches_uncached(models, block_size: int):
             f"  cached: {tokenizer.decode(out_cached[0])!r}"
         )
 
-    print(f"\nblock_size={block_size}: no cache {total_plain:.2f} s, cache {total_cached:.2f} s, "
-          f"speedup {total_plain/total_cached:.2f}x")
+    print(
+        f"\nblock_size={block_size}: no cache {total_plain:.2f} s, cache {total_cached:.2f} s, "
+        f"speedup {total_plain/total_cached:.2f}x"
+    )
 
 
 @torch.no_grad()
@@ -194,7 +238,7 @@ def test_generate_until_eos_cached_matches_uncached(models, block_size: int):
     tokenizer = get_tokenizer()
     for prompt in PROMPTS:
         idx = encode(prompt, tokenizer).unsqueeze(0)
-        out_plain, eos_plain = generate_until_eos(plain, idx, 48, block_size, greedy=True)
+        out_plain, eos_plain = reference_until_eos(plain, idx, 48, block_size, greedy=True)
         out_cached, eos_cached = generate_until_eos(cached, idx, 48, block_size, greedy=True)
         assert torch.equal(out_plain, out_cached) and eos_plain == eos_cached, prompt
         assert cached.cache_len() == 0
@@ -225,7 +269,7 @@ def test_sampled_generate_until_eos_matches_uncached_per_seed(models, setting: s
         idx = encode(prompt, tokenizer).unsqueeze(0)
         for seed in SEEDS:
             torch.manual_seed(seed)
-            out_plain, eos_plain = generate_until_eos(plain, idx, 32, block_size, **kwargs)
+            out_plain, eos_plain = reference_until_eos(plain, idx, 32, block_size, **kwargs)
             torch.manual_seed(seed)
             out_cached, eos_cached = generate_until_eos(cached, idx, 32, block_size, **kwargs)
             assert torch.equal(out_plain, out_cached) and eos_plain == eos_cached, (
@@ -245,7 +289,7 @@ def test_sampled_model_generate_matches_uncached_per_seed(models, block_size: in
         idx = encode(prompt, tokenizer).unsqueeze(0)
         for seed in SEEDS:
             torch.manual_seed(seed)
-            out_plain = plain.generate(idx, max_new_tokens=32, block_size=block_size)
+            out_plain = reference_generate(plain, idx, 32, block_size)
             torch.manual_seed(seed)
             out_cached = cached.generate(idx, max_new_tokens=32, block_size=block_size)
             assert torch.equal(out_plain, out_cached), f"seed={seed} diverged for {prompt!r}"
@@ -268,12 +312,12 @@ def test_cache_buffers_are_allocated_once_and_reused(models):
     block_size = head.tril.size(0)
     idx = encode(PROMPTS[1], get_tokenizer()).unsqueeze(0)
     cached.clear_cache()
-    cached(idx)
+    cached(idx, use_cache=True)
     buf = head.k_cache
     assert buf.shape == (1, block_size, head.key.out_features)  # full window, filled in place
-    cached(idx[:, -1:])
+    cached(idx[:, -1:], use_cache=True)
     assert head.k_cache is buf and cached.cache_len() == idx.size(1) + 1
     cached.clear_cache()
-    cached(idx)  # a new generation reuses the same storage
+    cached(idx, use_cache=True)  # a new generation reuses the same storage
     assert head.k_cache is buf and cached.cache_len() == idx.size(1)
     cached.clear_cache()

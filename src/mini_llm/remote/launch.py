@@ -103,10 +103,31 @@ def launch(job_file: Path, repo: Path, uv: str = "uv") -> int:
                 log.write(f"uploaded to {DATA_VOLUME}: {', '.join(uploaded)}\n")
                 log.flush()
             proc = subprocess.run(
-                [uv, "run", "--project", str(repo), "--group", "modal", "modal", "run", "--detach",
-                 str(repo / MODAL_TRAIN), "--config", str(config_path), "--gpus", job["gpus"],
-                 "--timeout-hours", str(job["timeout_hours"]), "--run-id", run_id, "--no-wait"],
-                cwd=repo, stdout=log, stderr=subprocess.STDOUT, check=False,
+                [
+                    uv,
+                    "run",
+                    "--project",
+                    str(repo),
+                    "--group",
+                    "modal",
+                    "modal",
+                    "run",
+                    "--detach",
+                    str(repo / MODAL_TRAIN),
+                    "--config",
+                    str(config_path),
+                    "--gpus",
+                    job["gpus"],
+                    "--timeout-hours",
+                    str(job["timeout_hours"]),
+                    "--run-id",
+                    run_id,
+                    "--no-wait",
+                ],
+                cwd=repo,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                check=False,
             )
             returncode = proc.returncode
         except Exception as exc:  # noqa: BLE001 - want the message on the page
@@ -118,8 +139,12 @@ def launch(job_file: Path, repo: Path, uv: str = "uv") -> int:
         # which a failed launch never does -- so this is the run's final word.
         lines = [line.strip() for line in log_path.read_text(errors="replace").splitlines() if line.strip()]
         errors = [line for line in lines if "error" in line.lower()] or lines
-        status.update(status="failed", finished=now_z(), returncode=returncode,
-                      error=f"Modal launch failed: {errors[-1] if errors else f'exit {returncode}'}"[:500])
+        status.update(
+            status="failed",
+            finished=now_z(),
+            returncode=returncode,
+            error=f"Modal launch failed: {errors[-1] if errors else f'exit {returncode}'}"[:500],
+        )
         status["remote"]["phase"] = "launch-failed"
         write_status(repo, run_id, status)
     return returncode

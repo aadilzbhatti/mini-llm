@@ -28,9 +28,15 @@ class FakeVolume:
     def listdir(self, path, recursive=False):
         base = self.root / path.strip("/")
         entries = base.rglob("*") if recursive else base.iterdir()
-        return [SimpleNamespace(path=str(p.relative_to(self.root)), type=1 if p.is_file() else 2,
-                                size=p.stat().st_size if p.is_file() else 0, mtime=int(p.stat().st_mtime))
-                for p in entries]
+        return [
+            SimpleNamespace(
+                path=str(p.relative_to(self.root)),
+                type=1 if p.is_file() else 2,
+                size=p.stat().st_size if p.is_file() else 0,
+                mtime=int(p.stat().st_mtime),
+            )
+            for p in entries
+        ]
 
     def read_file(self, path):
         self.reads.append(path)
@@ -53,17 +59,26 @@ def remote_run(vol_root: Path, run_id: str, *, finished: bool, heartbeat: float 
     """A run directory as modal_train.py leaves it on the volume."""
     run = vol_root / run_id
     (run / "runs").mkdir(parents=True)
-    record = {"run_id": run_id, "config": {"name": "tiny", "args": {"steps": 20}}, "gpus": "L4:2", "nproc": 2,
-              "git_sha": "abc1234", "resolved_argv": argv or ["--steps", "20"], "command": "torchrun ...",
-              "started_at": iso(time.time() - 60)}
+    record = {
+        "run_id": run_id,
+        "config": {"name": "tiny", "args": {"steps": 20}},
+        "gpus": "L4:2",
+        "nproc": 2,
+        "git_sha": "abc1234",
+        "resolved_argv": argv or ["--steps", "20"],
+        "command": "torchrun ...",
+        "started_at": iso(time.time() - 60),
+    }
     if finished:
         record.update(returncode=0, finished_at=iso(time.time()), duration_sec=60.0)
     (run / "run.json").write_text(json.dumps(record))
-    (run / "train.log").write_text("Model: 1,234 parameters\nstep     0 | loss 4.0000 | lr 1.00e-03\n"
-                                   "step    10 | loss 3.5000 | lr 1.00e-03\n")
+    (run / "train.log").write_text(
+        "Model: 1,234 parameters\nstep     0 | loss 4.0000 | lr 1.00e-03\n" "step    10 | loss 3.5000 | lr 1.00e-03\n"
+    )
     if heartbeat is not None:
         (run / "runs" / f"{run_id}.live.json").write_text(
-            json.dumps({"run_id": run_id, "step": 10, "total_steps": 20, "updated": iso(heartbeat)}))
+            json.dumps({"run_id": run_id, "step": 10, "total_steps": 20, "updated": iso(heartbeat)})
+        )
     return run
 
 
@@ -96,10 +111,35 @@ def test_silent_run_shows_interrupted(tmp_path, repo):
 
 def test_finished_run_is_imported_once(tmp_path, repo, monkeypatch):
     vol = FakeVolume(tmp_path / "vol")
-    argv = ["--tokens", "/data/train.pt", "--val-tokens", "/data/val.pt", "--block-size", "8", "--n-embd", "16",
-            "--n-head", "2", "--n-layer", "1", "--batch-size", "4", "--steps", "20", "--warmup-steps", "0",
-            "--eval-interval", "10", "--eval-batches", "2", "--full-eval-interval", "0", "--save",
-            "--plot-loss", "--no-tensorboard"]
+    argv = [
+        "--tokens",
+        "/data/train.pt",
+        "--val-tokens",
+        "/data/val.pt",
+        "--block-size",
+        "8",
+        "--n-embd",
+        "16",
+        "--n-head",
+        "2",
+        "--n-layer",
+        "1",
+        "--batch-size",
+        "4",
+        "--steps",
+        "20",
+        "--warmup-steps",
+        "0",
+        "--eval-interval",
+        "10",
+        "--eval-batches",
+        "2",
+        "--full-eval-interval",
+        "0",
+        "--save",
+        "--plot-loss",
+        "--no-tensorboard",
+    ]
     run = remote_run(vol.root, "r-done", finished=True, argv=argv)
 
     # Real outputs in the run dir, as the container would have written them.
@@ -121,10 +161,10 @@ def test_finished_run_is_imported_once(tmp_path, repo, monkeypatch):
     assert st["status"] == "completed" and st["remote"]["imported"] and st["remote"]["synced"]
     rows = json.loads((repo / "baselines.json").read_text())
     assert [r["run"] for r in rows] == ["modal_tiny_steps20_seed42.pt"]
-    assert (repo / st["metrics"]["plot"]).exists()                      # the page's Plot button path
+    assert (repo / st["metrics"]["plot"]).exists()  # the page's Plot button path
 
     vol.reads.clear()
-    mirror_run(vol, "r-done", repo, load_runner(repo))                  # finished + synced: no more reads
+    mirror_run(vol, "r-done", repo, load_runner(repo))  # finished + synced: no more reads
     assert vol.reads == []
 
 

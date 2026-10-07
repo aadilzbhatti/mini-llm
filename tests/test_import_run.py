@@ -16,10 +16,37 @@ class StubTokenizer:
         return 64
 
 
-ARGV = ["--tokens", "/data/train.pt", "--val-tokens", "/data/val.pt", "--block-size", "8", "--n-embd", "16",
-        "--n-head", "2", "--n-layer", "1", "--batch-size", "4", "--steps", "20", "--lr", "2e-3",
-        "--warmup-steps", "0", "--eval-interval", "10", "--eval-batches", "2", "--full-eval-interval", "0",
-        "--save", "--plot-loss", "--no-tensorboard"]
+ARGV = [
+    "--tokens",
+    "/data/train.pt",
+    "--val-tokens",
+    "/data/val.pt",
+    "--block-size",
+    "8",
+    "--n-embd",
+    "16",
+    "--n-head",
+    "2",
+    "--n-layer",
+    "1",
+    "--batch-size",
+    "4",
+    "--steps",
+    "20",
+    "--lr",
+    "2e-3",
+    "--warmup-steps",
+    "0",
+    "--eval-interval",
+    "10",
+    "--eval-batches",
+    "2",
+    "--full-eval-interval",
+    "0",
+    "--save",
+    "--plot-loss",
+    "--no-tensorboard",
+]
 
 
 @pytest.fixture
@@ -36,12 +63,23 @@ def run_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(train, "select_device", lambda: torch.device("cpu"))
     monkeypatch.setenv("MINI_LLM_RUN_ID", run.name)
     monkeypatch.chdir(run)  # remote runs write relative to their run dir
-    local_argv = [str(data / a[len("/data/"):]) if a.startswith("/data/") else a for a in ARGV]
+    local_argv = [str(data / a[len("/data/") :]) if a.startswith("/data/") else a for a in ARGV]
     train.main(local_argv)
-    (run / "run.json").write_text(json.dumps({
-        "run_id": run.name, "config": {"name": "tiny"}, "gpus": "L4:2", "nproc": 2, "git_sha": "abc1234",
-        "resolved_argv": ARGV, "returncode": 0, "finished_at": "2026-01-01T00:05:00+00:00", "duration_sec": 300.0,
-    }))
+    (run / "run.json").write_text(
+        json.dumps(
+            {
+                "run_id": run.name,
+                "config": {"name": "tiny"},
+                "gpus": "L4:2",
+                "nproc": 2,
+                "git_sha": "abc1234",
+                "resolved_argv": ARGV,
+                "returncode": 0,
+                "finished_at": "2026-01-01T00:05:00+00:00",
+                "duration_sec": 300.0,
+            }
+        )
+    )
     monkeypatch.chdir(tmp_path)
     return run
 
@@ -54,15 +92,19 @@ def test_import_lands_files_and_one_row(run_dir, tmp_path):
     assert row["plot"] and (repo / row["plot"]).exists()
     assert row["batch_size"] == 4 and row["lr"] == 2e-3 and row["min_lr"] == 2e-6  # parser default resolved
     assert row["steps"] == 20 and row["full_val_loss"] is not None
-    assert row["params"] == sum(p.numel() for p in train.build_model(
-        train.ModelConfig(vocab_size=64, block_size=8, n_embd=16, n_head=2, n_layer=1)).parameters())
+    assert row["params"] == sum(
+        p.numel()
+        for p in train.build_model(
+            train.ModelConfig(vocab_size=64, block_size=8, n_embd=16, n_head=2, n_layer=1)
+        ).parameters()
+    )
 
     import_run(run_dir, repo)  # re-import replaces, never duplicates
     rows = json.loads((repo / "baselines.json").read_text())
     assert [r["run"] for r in rows] == ["modal_tiny_steps20_seed42.pt"]
-    assert rows[0]["gpus"] == "L4:2"                                    # JSON-only detail kept
+    assert rows[0]["gpus"] == "L4:2"  # JSON-only detail kept
     assert "modal_tiny_steps20_seed42.pt" in (repo / "baselines.md").read_text()
-    assert "L4:2" not in (repo / "baselines.md").read_text()           # table columns unchanged
+    assert "L4:2" not in (repo / "baselines.md").read_text()  # table columns unchanged
 
 
 def test_unfinished_run_is_refused(run_dir, tmp_path):

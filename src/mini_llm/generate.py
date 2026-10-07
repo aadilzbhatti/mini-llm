@@ -53,7 +53,6 @@ def parse_args(argv: list[str] | None = None):
     return p.parse_args(argv)
 
 
-
 def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
     device = select_device()
@@ -63,8 +62,7 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.checkpoint:
         ckpt = torch.load(args.checkpoint, map_location=device)
-        cfg = ModelConfig(**ckpt["config"])
-        cfg.use_cache = True
+        cfg = ModelConfig.from_dict(ckpt["config"])
         print(f"Config: {cfg.to_dict()}")
         model = build_model(cfg).to(device)
         model.load_state_dict(ckpt["model_state_dict"])
@@ -76,7 +74,6 @@ def main(argv: list[str] | None = None) -> None:
             n_head=args.n_head,
             n_layer=args.n_layer,
             dropout=args.dropout,
-            use_cache=True,
         )
         print(f"Config: {cfg.to_dict()}")
         model = build_model(cfg).to(device)
@@ -90,9 +87,15 @@ def main(argv: list[str] | None = None) -> None:
                 break
             if prompt == "quit":
                 break
-            print(generate_text(model, tokenizer, prompt, args.max_new_tokens, cfg.block_size, device, greedy=args.greedy))
+            print(
+                generate_text(model, tokenizer, prompt, args.max_new_tokens, cfg.block_size, device, greedy=args.greedy)
+            )
     else:
-        print(generate_text(model, tokenizer, args.prompt, args.max_new_tokens, cfg.block_size, device, greedy=args.greedy))
+        print(
+            generate_text(
+                model, tokenizer, args.prompt, args.max_new_tokens, cfg.block_size, device, greedy=args.greedy
+            )
+        )
 
 
 if __name__ == "__main__":

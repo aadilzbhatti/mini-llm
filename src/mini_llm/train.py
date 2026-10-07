@@ -131,10 +131,7 @@ def sample_eval_batches(
     sequence, so building this set never perturbs training.
     """
     generator = torch.Generator().manual_seed(seed)
-    return [
-        make_batch(tokens, batch_size, block_size, device=device, generator=generator)
-        for _ in range(num_batches)
-    ]
+    return [make_batch(tokens, batch_size, block_size, device=device, generator=generator) for _ in range(num_batches)]
 
 
 @torch.no_grad()
@@ -195,9 +192,7 @@ def evaluate_full(
     """
     n_windows = (tokens.numel() - 1) // block_size
     if n_windows == 0:
-        raise ValueError(
-            f"need at least block_size + 1 = {block_size + 1} tokens, got {tokens.numel()}"
-        )
+        raise ValueError(f"need at least block_size + 1 = {block_size + 1} tokens, got {tokens.numel()}")
 
     model.eval()
     total_loss, total_windows = 0.0, 0
@@ -414,7 +409,11 @@ def plot_loss(
         floor = (hyperparams or {}).get("min_lr")
         floor_txt = f"floor {float(floor):.2e}" if floor is not None else f"min {min(lrs):.2e}"
         (line_lr,) = ax2.plot(
-            steps, lrs, color="gray", alpha=0.6, linestyle=":",
+            steps,
+            lrs,
+            color="gray",
+            alpha=0.6,
+            linestyle=":",
             label=f"lr (peak {max(lrs):.2e}, {floor_txt})",
         )
         ax2.set_ylabel("learning rate")
@@ -443,8 +442,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--tokens",
         default=None,
-        help="Path to a pre-tokenized token tensor (.pt), e.g. from `mini-llm-prepare-data`. "
-        "Overrides --text.",
+        help="Path to a pre-tokenized token tensor (.pt), e.g. from `mini-llm-prepare-data`. " "Overrides --text.",
     )
     p.add_argument(
         "--val-tokens",
@@ -774,7 +772,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         # load_state_dict both copy onto the existing (already-on-device)
         # tensors, so this doesn't block GPU/MPS training.
         ckpt = torch.load(args.resume, map_location="cpu")
-        ckpt_cfg = ModelConfig(**ckpt["config"])
+        ckpt_cfg = ModelConfig.from_dict(ckpt["config"])
         if ckpt_cfg.to_dict() != cfg.to_dict():
             raise ValueError(
                 f"--resume checkpoint was trained with config {ckpt_cfg.to_dict()}, but "
@@ -794,7 +792,9 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             # The checkpoint came from a different world size (e.g. a Mac run),
             # so there's no saved stream for this rank: it keeps its fresh
             # seed + rank one.
-            print("resume: no saved batch generator for this rank; using a fresh one", force=True)  # pyright: ignore[reportCallIssue]
+            print(
+                "resume: no saved batch generator for this rank; using a fresh one", force=True
+            )  # pyright: ignore[reportCallIssue]
         start_step = ckpt["step"]
         train_history = ckpt["train_history"]
         val_history = ckpt["val_history"]
@@ -889,9 +889,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     # use it directly, so they trigger no DDP collectives, and saved
     # state_dicts have no "module." key prefix.
     train_model = (
-        DDP(model, device_ids=[device.index] if device.type == "cuda" else None)
-        if dist_info.enabled
-        else model
+        DDP(model, device_ids=[device.index] if device.type == "cuda" else None) if dist_info.enabled else model
     )
 
     # Throughput / memory / wall-clock for this run (see mini_llm.systems).
@@ -922,8 +920,10 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             param_group["lr"] = current_lr
         lr_history.append((step, current_lr))
 
-        x, y = batch if batch is not None else make_batch(
-            train_tokens, per_rank_batch, cfg.block_size, device=device, generator=batch_rng
+        x, y = (
+            batch
+            if batch is not None
+            else make_batch(train_tokens, per_rank_batch, cfg.block_size, device=device, generator=batch_rng)
         )
 
         # Autocast wraps the forward pass only. backward() then runs each op
@@ -942,9 +942,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         log_now = step % ctl.log_interval == 0 or is_last_step
         eval_now = step % ctl.eval_interval == 0 or is_last_step or forced_eval
         full_eval_now = val_tokens is not None and (
-            is_last_step
-            or forced_eval
-            or (ctl.full_eval_interval > 0 and step % ctl.full_eval_interval == 0)
+            is_last_step or forced_eval or (ctl.full_eval_interval > 0 and step % ctl.full_eval_interval == 0)
         )
 
         if log_now:
@@ -986,8 +984,16 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
             ctl.checkpoint_now = False
             stem = Path(args.save_name).stem if args.save_name else f"ckpt_{run_id}"
             mid_path = save_checkpoint(
-                CHECKPOINTS_DIR / f"{stem}.step{step + 1}.pt", cfg, model, optimizer, batch_rng,
-                step + 1, train_history, val_history, full_val_history, lr_history,
+                CHECKPOINTS_DIR / f"{stem}.step{step + 1}.pt",
+                cfg,
+                model,
+                optimizer,
+                batch_rng,
+                step + 1,
+                train_history,
+                val_history,
+                full_val_history,
+                lr_history,
             )
             print(f"step {step:5d} | saved mid-run checkpoint to {mid_path}", flush=True)
             control.text("control/events", f"step {step}: checkpoint -> {mid_path}", step)
@@ -1023,9 +1029,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     # one thing rank 0 needs from the others is their batch generator states
     # for the checkpoint, and gathering them is a collective, so every rank
     # takes part before the others leave.
-    batch_rng_states = (
-        gather_objects(batch_rng.get_state(), dist_info) if args.save and dist_info.enabled else None
-    )
+    batch_rng_states = gather_objects(batch_rng.get_state(), dist_info) if args.save and dist_info.enabled else None
     if not dist_info.is_main:
         return
     print(
@@ -1056,8 +1060,15 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     if args.save:
         save_path = save_checkpoint(
             CHECKPOINTS_DIR / (args.save_name or default_checkpoint_name(cfg, optim_cfg, total_steps)),
-            cfg, model, optimizer, batch_rng, total_steps,
-            train_history, val_history, full_val_history, lr_history,
+            cfg,
+            model,
+            optimizer,
+            batch_rng,
+            total_steps,
+            train_history,
+            val_history,
+            full_val_history,
+            lr_history,
             batch_rng_states=batch_rng_states,
             systems=systems,
         )
@@ -1066,9 +1077,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
     if args.sample_report:
         # Same name as the checkpoint so the two stay paired, whether or not
         # --save was passed (without it, the report is still named for the run).
-        report_target = CHECKPOINTS_DIR / (
-            args.save_name or default_checkpoint_name(cfg, optim_cfg, total_steps)
-        )
+        report_target = CHECKPOINTS_DIR / (args.save_name or default_checkpoint_name(cfg, optim_cfg, total_steps))
         report_file = write_sample_report(
             model,
             tokenizer,
@@ -1122,10 +1131,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         print(generate_text(model, tokenizer, "\n", args.sample_tokens, cfg.block_size, device))
 
     if control.tb is not None:
-        hparams = {
-            k: v for k, v in {**cfg.to_dict(), **optim_cfg}.items()
-            if isinstance(v, (int, float, str, bool))
-        }
+        hparams = {k: v for k, v in {**cfg.to_dict(), **optim_cfg}.items() if isinstance(v, (int, float, str, bool))}
         metrics = {
             "hparam/eval_train_loss": train_history[-1][1] if train_history else float("nan"),
             "hparam/eval_val_loss": val_history[-1][1] if val_history else float("nan"),

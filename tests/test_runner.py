@@ -26,9 +26,13 @@ def test_train_is_default_kind(rq, tmp_path):
 
 def test_prepare_data_job(rq, tmp_path):
     _, kind, cmd, _ = rq.validate_job(
-        {"name": "d", "kind": "prepare-data",
-         "args": {"num-examples": 20000, "out-dir": "data/data20k", "dataset": "HuggingFaceTB/smollm-corpus"}},
-        tmp_path, "uv",
+        {
+            "name": "d",
+            "kind": "prepare-data",
+            "args": {"num-examples": 20000, "out-dir": "data/data20k", "dataset": "HuggingFaceTB/smollm-corpus"},
+        },
+        tmp_path,
+        "uv",
     )
     assert kind == "prepare-data" and "mini-llm-prepare-data" in cmd
     assert cmd[cmd.index("--out-dir") + 1] == "data/data20k"
@@ -49,6 +53,7 @@ def test_prepare_data_rejects_train_flags_and_unknown_kind(rq, tmp_path):
 
 def test_mark_interrupted_skips_live_owner(rq, tmp_path):
     import json, os
+
     runs = tmp_path / "runs"
     runs.mkdir()
     (runs / "dead.status.json").write_text(json.dumps({"status": "running", "runner_pid": 999999}))
