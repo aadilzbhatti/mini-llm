@@ -36,7 +36,7 @@ class Head(nn.Module):
         self.register_buffer("tril", torch.tril(torch.ones(config.block_size, config.block_size)))
         self.dropout = nn.Dropout(config.dropout)
 
-        # Allocated once at (B, block_size, head_size) and written in place; pos % block_size says how
+        # Allocated once at (B, block_size, head_size) and written in place; min(pos, block_size) says how
         # many positions are filled. Not saved with the model.
         self.register_buffer("k_cache", None, persistent=False)
         self.register_buffer("v_cache", None, persistent=False)
@@ -194,6 +194,7 @@ class ModelCustomTransformer(nn.Module):
     def __init__(self, config: ModelConfig):
         super().__init__()
         self.use_rope_embeddings = config.use_rope_embeddings
+        self.block_size = config.block_size
         dynamic_config = DynamicModelConfig.from_config(config)  # derived values, not saved in checkpoints
 
         self.token_embedding_table = nn.Embedding(config.vocab_size, config.n_embd)
@@ -289,16 +290,19 @@ class ModelCustomTransformer(nn.Module):
         place that decides what the cache sees, shared by every generation path so they cannot differ.
 
         Only the newest token is fed once the cache holds the context. When the window is full:
-        RoPE keeps feeding single tokens through the wrapped cache (positions are relative, so the
-        window rolls; with more than one layer this drifts slightly from a windowed recompute).
-        Absolute-PE models (older checkpoints) have no position past block_size, so they clear the
-        cache and re-run the cropped window, which is exact. Callers clear the cache before the
-        first call."""
+        a RoPE model run at its full block_size keeps feeding single tokens through the wrapped cache
+        (positions are relative, so the window rolls; with more than one layer this drifts slightly
+        from a windowed recompute). Every other case clears the cache and re-runs the cropped window,
+        which is exact: absolute-PE models (older checkpoints) have no position past block_size, and
+        a window smaller than the model's would not match where the cache ring wraps. Callers clear
+        the cache before the first call."""
+        assert block_size <= self.block_size, f"window {block_size} exceeds the model's block_size {self.block_size}"
         cache_len = self.cache_len()
-        if 0 < cache_len < block_size or (self.use_rope_embeddings and cache_len >= block_size):
+        rolls = self.use_rope_embeddings and block_size == self.block_size
+        if 0 < cache_len < block_size or (rolls and cache_len >= block_size):
             idx_cond = idx[:, -1:]
         else:
-            self.clear_cache()  # nothing cached yet, or the window is full for absolute PE
+            self.clear_cache()  # nothing cached yet, or the window is full and this model can't roll
             idx_cond = idx[:, -block_size:]
         logits, _ = self(idx_cond, last_only=True, use_cache=True)
         return logits[:, -1, :]

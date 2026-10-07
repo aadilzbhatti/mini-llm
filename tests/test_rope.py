@@ -241,3 +241,23 @@ def test_generate_until_eos_matches_generate_past_window(model: ModelCustomTrans
     )
     assert not hit_eos
     assert torch.equal(got, expected)
+
+
+def test_smaller_window_than_model_refills_exactly(model: ModelCustomTransformer):
+    """A window smaller than the model's block_size can't use the rolling cache (the ring wraps at the
+    model's size), so it refills the cropped window and must match the uncached reference exactly,
+    even on a deep model. A window larger than the model supports is rejected."""
+    window = BLOCK_SIZE // 2
+    prompt = torch.randint(0, model.token_embedding_table.num_embeddings, (1, 6))
+    new_tokens = 2 * window
+
+    expected = prompt
+    with torch.no_grad():
+        for _ in range(new_tokens):
+            logits, _ = model(expected[:, -window:], last_only=True)
+            expected = torch.cat((expected, logits[:, -1].argmax(dim=-1, keepdim=True)), dim=1)
+        got = model.generate(prompt, max_new_tokens=new_tokens, block_size=window, greedy=True)
+    assert torch.equal(got, expected)
+
+    with pytest.raises(AssertionError, match="exceeds"):
+        model.generate(prompt, max_new_tokens=1, block_size=BLOCK_SIZE + 1)

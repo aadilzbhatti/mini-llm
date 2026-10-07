@@ -38,7 +38,8 @@
   - What each eval means: evals/GUIDE.md (linked from the Best tab).
 - Decoding sweep: `uv run mini-llm-samples checkpoints/<ckpt>.pt --out evals/sweep_<name>.md` (temperature × top-k plus greedy, 20 prompts once each). Without `--out` it overwrites evals/sweep.md, so always name the output.
 - KV cache: per-head and preallocated. No config flag: generate() and report.generate_until_eos always use it, and model(x, use_cache=True) opts a single forward in. A plain forward is stateless, so loss evals and training are unaffected.
-  - evals/kv_reference.md is the fixed "absolute PE + KV cache" baseline at T=128–1024. Regenerate with `uv run mini-llm-bench --kv-reference`. Its "past the window" row (0.9–1.0×) is what RoPE should improve.
+  - Both generation paths go through `ModelCustomTransformer.next_token_logits`, the one place that decides what the cache sees. A RoPE model at its full block_size rolls the cache once the window fills (one token per step; with more than one layer this drifts slightly from a windowed recompute, bounded by a loose test only). Absolute-PE checkpoints, and any window smaller than the model's, refill the cropped window instead, which is exact.
+  - evals/kv_reference.md is the fixed "absolute PE + KV cache" baseline at T=128–1024. Regenerate with `uv run mini-llm-bench --kv-reference`. Its "past the window" row (0.9–1.0×, refilled every step) is what the rolling RoPE cache should improve; it was measured with absolute PE and has not been re-run.
 - Tests: `uv run pytest -q` (~140 tests, ~6 min). Commit messages end with `Co-Authored-By: Claude <noreply@anthropic.com>`.
 
 ## Results so far (same val set, 327.68M tokens unless noted; full_val)
