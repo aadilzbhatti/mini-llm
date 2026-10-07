@@ -161,9 +161,9 @@ def generate_until_eos(
 
     Implemented here, NOT in the model: ModelCustomTransformer.generate() is
     the preserved original and runs a fixed token budget with no stop
-    condition. The context cropping and the greedy/multinomial arithmetic
-    mirror it exactly, so a generation that never emits EOS is identical to
-    what generate() would have produced.
+    condition. The context handling is shared (model.next_token_logits) and the
+    greedy/multinomial arithmetic mirrors it exactly, so a generation that never
+    emits EOS is identical to what generate() would have produced.
 
     Why stopping matters: EOS is a document boundary. The corpus is an
     EOS-separated stream of documents, so once the model emits it, it has
@@ -172,22 +172,15 @@ def generate_until_eos(
     judging whether the model held the prompt's subject measures the wrong
     thing entirely. The EOS token itself is not appended to the output.
 
-    Decoding uses the KV cache: only the newest token is fed once
-    the cache holds the context; when the cache fills the window it is
-    cleared and the cropped window re-run, so the output is unchanged.
+    Decoding goes through model.next_token_logits, the same cached window policy
+    model.generate() uses, so the two produce identical tokens for the same seed.
     """
     was_training = model.training
     model.eval()
     model.clear_cache()
     try:
         for _ in range(max_new_tokens):
-            if 0 < model.cache_len() < block_size:
-                idx_cond = idx[:, -1:]
-            else:
-                model.clear_cache()
-                idx_cond = idx[:, -block_size:]
-            logits, _ = model(idx_cond, last_only=True, use_cache=True)
-            logits = logits[:, -1, :]
+            logits = model.next_token_logits(idx, block_size)
             if temperature is not None:
                 logits = logits / temperature
             if top_k:

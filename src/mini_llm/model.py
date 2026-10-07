@@ -26,8 +26,9 @@ class Head(nn.Module):
 
     tril: torch.Tensor
 
-    def __init__(self, config: ModelConfig, head_size: int):
+    def __init__(self, config: ModelConfig, dynamic_config: DynamicModelConfig):
         super().__init__()
+        head_size = dynamic_config.head_size
         self.key = nn.Linear(config.n_embd, head_size, bias=False)
         self.query = nn.Linear(config.n_embd, head_size, bias=False)
         self.value = nn.Linear(config.n_embd, head_size, bias=False)
@@ -35,19 +36,19 @@ class Head(nn.Module):
         self.register_buffer("tril", torch.tril(torch.ones(config.block_size, config.block_size)))
         self.dropout = nn.Dropout(config.dropout)
 
-        # Allocated once at (B, block_size, head_size) and written in place; cache_len says how
+        # Allocated once at (B, block_size, head_size) and written in place; pos % block_size says how
         # many positions are filled. Not saved with the model.
         self.register_buffer("k_cache", None, persistent=False)
         self.register_buffer("v_cache", None, persistent=False)
-        self.cache_len = 0
+
+        # absolute position of next token, only ever grows
+        self.pos = 0
 
         self.head_size = head_size
+        self.block_size = config.block_size
         self.use_rope_embeddings = config.use_rope_embeddings
         if self.use_rope_embeddings:
-            self.block_size = config.block_size
-            assert config.dynamic_model_config is not None
-            self.register_buffer("cosine", config.dynamic_model_config.cosine, persistent=False)
-            self.register_buffer("sine", config.dynamic_model_config.sine, persistent=False)
+            self.register_buffer("speeds", dynamic_config.speeds, persistent=False)
 
         # Initialize linear layers
         self.init_weights()
@@ -63,7 +64,7 @@ class Head(nn.Module):
         v_new = self.value(x)
         q = self.query(x)
 
-        start = self.cache_len if use_cache else 0
+        start = self.pos if use_cache else 0  # uncached passes (training, loss evals) always start at 0
         if self.use_rope_embeddings:
             k_new, q = self.rotate(k_new, start), self.rotate(q, start)
 
@@ -72,11 +73,19 @@ class Head(nn.Module):
                 # cache is uninitialized or batch size changed; allocate it
                 self.k_cache = k_new.new_empty(B, self.tril.size(0), k_new.size(-1))
                 self.v_cache = torch.empty_like(self.k_cache)
-            start, self.cache_len = self.cache_len, self.cache_len + T
-            self.k_cache[:, start : self.cache_len] = k_new
-            self.v_cache[:, start : self.cache_len] = v_new
-            k = self.k_cache[:, : self.cache_len]
-            v = self.v_cache[:, : self.cache_len]
+            start, end = self.pos % self.block_size, (self.pos % self.block_size) + T
+            assert end <= self.block_size, f"Cache overflow: pos={self.pos}, T={T}, block_size={self.block_size}"
+            # once the buffer has wrapped, slots are out of position order, so only single tokens may be written
+            assert (
+                T == 1 or self.pos < self.block_size
+            ), f"Multi-token write after the cache wrapped: pos={self.pos}, T={T}, block_size={self.block_size}"
+            self.k_cache[:, start:end] = k_new
+            self.v_cache[:, start:end] = v_new
+            self.pos += T
+
+            filled = min(self.pos, self.block_size)
+            k = self.k_cache[:, :filled]
+            v = self.v_cache[:, :filled]
         else:
             k = k_new
             v = v_new
@@ -97,16 +106,17 @@ class Head(nn.Module):
         return out
 
     def clear_cache(self):
-        self.cache_len = 0  # keep the buffers: the next generation reuses them
+        self.pos = 0  # keep the buffers: the next generation reuses them
 
     def rotate(self, x: torch.Tensor, start: int) -> torch.Tensor:
         T = x.shape[1]
-        assert isinstance(self.cosine, torch.Tensor)
-        assert isinstance(self.sine, torch.Tensor)
+        assert isinstance(self.speeds, torch.Tensor)
+        positions = torch.arange(start, start + T, device=x.device, dtype=torch.float32)
+        angles = torch.outer(positions, self.speeds)
+        cosines = torch.cos(angles)
+        sines = torch.sin(angles)
         ret = torch.empty_like(x)
         # for each row, rotate each pair
-        cosines = self.cosine[start : start + T]
-        sines = self.sine[start : start + T]
         ret[..., 0::2] = x[..., 0::2] * cosines - x[..., 1::2] * sines
         ret[..., 1::2] = x[..., 0::2] * sines + x[..., 1::2] * cosines
         return ret
@@ -115,10 +125,10 @@ class Head(nn.Module):
 class MultiHeadAttention(nn.Module):
     """multiple heads of self-attention in parallel"""
 
-    def __init__(self, config: ModelConfig, head_size: int):
+    def __init__(self, config: ModelConfig, dynamic_config: DynamicModelConfig):
         super().__init__()
-        self.heads = nn.ModuleList([Head(config, head_size) for _ in range(config.n_head)])
-        self.proj = nn.Linear(head_size * config.n_head, config.n_embd)
+        self.heads = nn.ModuleList([Head(config, dynamic_config) for _ in range(config.n_head)])
+        self.proj = nn.Linear(dynamic_config.head_size * config.n_head, config.n_embd)
         self.dropout = nn.Dropout(config.dropout)
 
         self.init_weights()
@@ -163,11 +173,10 @@ class FeedForward(nn.Module):
 class Block(nn.Module):
     """Transformer block: communication followed by computation"""
 
-    def __init__(self, config: ModelConfig):
+    def __init__(self, config: ModelConfig, dynamic_config: DynamicModelConfig):
         # n_embd: embedding dimension, n_head: the number of heads we'd like
         super().__init__()
-        head_size = config.n_embd // config.n_head
-        self.sa = MultiHeadAttention(config, head_size)
+        self.sa = MultiHeadAttention(config, dynamic_config)
         self.ffwd = FeedForward(config.n_embd, config.dropout)
         self.ln1 = nn.LayerNorm(config.n_embd)
         self.ln2 = nn.LayerNorm(config.n_embd)
@@ -185,20 +194,12 @@ class ModelCustomTransformer(nn.Module):
     def __init__(self, config: ModelConfig):
         super().__init__()
         self.use_rope_embeddings = config.use_rope_embeddings
-        head_size = config.n_embd // config.n_head
-        pair_indices = torch.arange(0, head_size // 2, 1)
-        speeds = 10000 ** (-2 * pair_indices / head_size)
-        angles = torch.outer(torch.arange(0, config.block_size, 1, dtype=torch.float32), speeds)
-
-        config.dynamic_model_config = DynamicModelConfig(
-            cosine=torch.cos(angles),
-            sine=torch.sin(angles),
-        )
+        dynamic_config = DynamicModelConfig.from_config(config)  # derived values, not saved in checkpoints
 
         self.token_embedding_table = nn.Embedding(config.vocab_size, config.n_embd)
         if not self.use_rope_embeddings:
             self.position_embedding_table = nn.Embedding(config.block_size, config.n_embd)
-        self.blocks = nn.ModuleList([Block(config) for _ in range(config.n_layer)])
+        self.blocks = nn.ModuleList([Block(config, dynamic_config) for _ in range(config.n_layer)])
         self.ln_f = nn.LayerNorm(config.n_embd)  # final layer norm
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size)
         self.dropout = nn.Dropout(config.dropout)
@@ -256,7 +257,7 @@ class ModelCustomTransformer(nn.Module):
 
         x = tok_emb  # (B, T, C)
         if not self.use_rope_embeddings:
-            x += pos_emb
+            x = tok_emb + pos_emb
         x = self.dropout(x)
         for block in self.blocks:
             x = block(x, use_cache)
@@ -283,17 +284,28 @@ class ModelCustomTransformer(nn.Module):
         finally:
             self.train(was_training)
 
+    def next_token_logits(self, idx: torch.Tensor, block_size: int) -> torch.Tensor:
+        """(B, vocab) logits for the token after `idx`, decoding through the KV cache. The single
+        place that decides what the cache sees, shared by every generation path so they cannot differ.
+
+        Only the newest token is fed once the cache holds the context. When the window is full:
+        RoPE keeps feeding single tokens through the wrapped cache (positions are relative, so the
+        window rolls; with more than one layer this drifts slightly from a windowed recompute).
+        Absolute-PE models (older checkpoints) have no position past block_size, so they clear the
+        cache and re-run the cropped window, which is exact. Callers clear the cache before the
+        first call."""
+        cache_len = self.cache_len()
+        if 0 < cache_len < block_size or (self.use_rope_embeddings and cache_len >= block_size):
+            idx_cond = idx[:, -1:]
+        else:
+            self.clear_cache()  # nothing cached yet, or the window is full for absolute PE
+            idx_cond = idx[:, -block_size:]
+        logits, _ = self(idx_cond, last_only=True, use_cache=True)
+        return logits[:, -1, :]
+
     def _generate(self, idx: torch.Tensor, max_new_tokens: int, block_size: int, greedy: bool) -> torch.Tensor:
         for _ in range(max_new_tokens):
-            if 0 < self.cache_len() < block_size:
-                idx_cond = idx[:, -1:]
-            else:
-                self.clear_cache()  # nothing cached yet, or the window is full: re-run the cropped window
-                # crop idx to the last block_size tokens
-                idx_cond = idx[:, -block_size:]
-            logits, _ = self(idx_cond, last_only=True, use_cache=True)
-            # focus only on the last time step
-            logits = logits[:, -1, :]  # becomes (B, C)
+            logits = self.next_token_logits(idx, block_size)  # (B, C)
             # apply softmax to get probabilities
             probs = F.softmax(logits, dim=-1)  # (B, C)
             if greedy:
@@ -308,7 +320,7 @@ class ModelCustomTransformer(nn.Module):
 
     def cache_len(self) -> int:
         # every head in every layer holds the same number of positions
-        return self.blocks[0].sa.heads[0].cache_len
+        return self.blocks[0].sa.heads[0].pos
 
     def clear_cache(self):
         for block in self.blocks:

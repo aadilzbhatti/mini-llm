@@ -321,3 +321,15 @@ def test_cache_buffers_are_allocated_once_and_reused(models):
     cached(idx, use_cache=True)  # a new generation reuses the same storage
     assert head.k_cache is buf and cached.cache_len() == idx.size(1)
     cached.clear_cache()
+
+
+def test_multi_token_write_after_wrap_is_rejected():
+    """Once pos reaches block_size the buffer is a ring; a T > 1 write would land out of order."""
+    torch.manual_seed(0)
+    cfg = ModelConfig(vocab_size=len(get_tokenizer()), block_size=8, n_embd=16, n_head=2, n_layer=1)
+    model = build_model(cfg).eval()
+    idx = torch.randint(0, cfg.vocab_size, (1, 8))
+    model(idx, use_cache=True)  # fills the buffer exactly
+    model(idx[:, :1], use_cache=True)  # single-token writes keep working after the wrap
+    with pytest.raises(AssertionError, match="wrapped"):
+        model(idx[:, :3], use_cache=True)

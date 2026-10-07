@@ -4,7 +4,7 @@ Deliberately small defaults: fast correctness experiments on a laptop, not
 quality. Change the numbers here (or pass CLI flags) to scale up.
 """
 
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, fields
 from typing import TYPE_CHECKING
 
 import torch
@@ -15,10 +15,18 @@ if TYPE_CHECKING:
 
 @dataclass
 class DynamicModelConfig:
-    """Tensors derived from the config by the model (RoPE tables); never serialized."""
+    """Values derived from a ModelConfig (head size, RoPE frequencies). Built by the model and passed
+    to its submodules next to the config; never part of ModelConfig, so never serialized."""
 
-    cosine: torch.Tensor
-    sine: torch.Tensor
+    head_size: int
+    speeds: torch.Tensor
+
+    @classmethod
+    def from_config(cls, config: "ModelConfig") -> "DynamicModelConfig":
+        head_size = config.n_embd // config.n_head
+        pair_indices = torch.arange(0, head_size // 2, 1)
+        speeds = 10000 ** (-2 * pair_indices / head_size)
+        return cls(head_size=head_size, speeds=speeds)
 
 
 @dataclass
@@ -30,9 +38,6 @@ class ModelConfig:
     n_layer: int = 2
     dropout: float = 0.0
     use_rope_embeddings: bool = True
-    # Filled in by ModelCustomTransformer.__init__; excluded from to_dict() so checkpoints
-    # stay plain numbers and ModelConfig.from_dict(ckpt["config"]) keeps working.
-    dynamic_model_config: DynamicModelConfig | None = field(default=None, repr=False, compare=False)
 
     @classmethod
     def from_dict(cls, d: dict) -> "ModelConfig":
@@ -45,7 +50,7 @@ class ModelConfig:
         return cls(**d)
 
     def to_dict(self) -> dict[str, int | float | bool]:
-        return {f.name: getattr(self, f.name) for f in fields(self) if f.name != "dynamic_model_config"}
+        return {f.name: getattr(self, f.name) for f in fields(self)}
 
 
 def build_model(cfg: ModelConfig) -> "ModelCustomTransformer":
