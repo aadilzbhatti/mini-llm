@@ -170,7 +170,9 @@ def mirror_run(
     if importable and not status["remote"]["imported"]:
         local = runs / run_id  # same layout scripts/fetch_modal_run.sh produces
         for rel, entry in files.items():
-            if entry.type == 1 and (rel == "run.json" or rel.startswith(("checkpoints/", "plots/"))):
+            # Not the rolling --checkpoint-every file: it's for resuming on Modal, ~1 GB, and stale here.
+            wanted = rel == "run.json" or rel.startswith(("checkpoints/", "plots/"))
+            if entry.type == 1 and wanted and not rel.endswith(".latest.pt"):
                 dest = local / rel
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 _write_atomic(dest, _read(vol, f"{run_id}/{rel}"))

@@ -51,6 +51,7 @@ INT_FLAGS: dict[str, tuple[int, int]] = {
     "batch-size": (1, 512),
     "steps": (1, 1_000_000),
     "stop-after": (1, 1_000_000),
+    "checkpoint-every": (1, 1_000_000),
     "warmup-steps": (0, 100_000),
     "warmup-tokens": (0, 10_000_000_000),
     "seed": (0, 2**31 - 1),

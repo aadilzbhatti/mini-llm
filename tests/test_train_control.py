@@ -120,3 +120,19 @@ def test_stop_after_ends_early_on_the_long_schedule(workdir, capsys):
     assert lrs[29] > 0.99e-3
     live = json.loads((workdir / "runs" / "t1.live.json").read_text())
     assert live["total_steps"] == 30  # the page's ETA runs to the stop, not to step 1000
+
+
+def test_checkpoint_every_keeps_one_resumable_rolling_file(workdir):
+    train.main(ARGS + ["--steps", "25", "--checkpoint-every", "10", "--save", "--save-name", "c.pt"])
+    ckpts = sorted(p.name for p in (workdir / "checkpoints").iterdir())
+    assert ckpts == ["c.latest.pt", "c.pt"]  # one rolling file (no tmp left behind), plus the final save
+    latest = torch.load(workdir / "checkpoints" / "c.latest.pt", map_location="cpu", weights_only=False)
+    assert latest["step"] == 20 and "optimizer_state_dict" in latest and "batch_rng_state" in latest
+
+    # it resumes: 5 more steps from step 20 land where the uninterrupted run ended
+    train.main(ARGS + ["--steps", "5", "--resume", "checkpoints/c.latest.pt", "--save", "--save-name", "r.pt"])
+    resumed = torch.load(workdir / "checkpoints" / "r.pt", map_location="cpu", weights_only=False)
+    final = torch.load(workdir / "checkpoints" / "c.pt", map_location="cpu", weights_only=False)
+    assert resumed["step"] == final["step"] == 25
+    for k, v in final["model_state_dict"].items():  # same batches, same LRs, same optimizer state
+        assert torch.allclose(resumed["model_state_dict"][k], v, atol=1e-6), k

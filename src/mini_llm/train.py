@@ -306,8 +306,9 @@ def save_checkpoint(
             "lr_history": lr_history,
             **extra,
         },
-        path,
+        tmp := path.with_name(f".{path.name}.tmp"),
     )
+    tmp.replace(path)  # atomic: a machine lost mid-save never leaves a half-written checkpoint at `path`
     return path
 
 
@@ -563,6 +564,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--sample-tokens", type=int, default=0, help="Generate N tokens after training.")
     p.add_argument("--save", action="store_true", help="Save a checkpoint after training.")
+    p.add_argument(
+        "--checkpoint-every",
+        type=int,
+        default=None,
+        help="Every N steps, save a resumable checkpoint (model, optimizer, batch RNG) to "
+        "checkpoints/<name>.latest.pt, overwriting the previous one, so a long run that loses its "
+        "machine can --resume from it instead of starting over.",
+    )
     p.add_argument(
         "--sample-report-tokens",
         type=int,
@@ -1000,11 +1009,19 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
                 print(f"step {step:5d} | full_val_loss {full_val_loss:.4f} (all {val_tokens.numel():,} val tokens)")
                 control.scalar("eval/full_val_loss", full_val_loss, step)
 
-        if ctl.checkpoint_now:
+        periodic = (  # rank 0 only: under DDP every rank reaches this step, and all hold the same weights
+            args.checkpoint_every is not None
+            and (step + 1) % args.checkpoint_every == 0
+            and not is_last_step
+            and dist_info.is_main
+        )
+        if ctl.checkpoint_now or periodic:
             ctl.checkpoint_now = False
             stem = Path(args.save_name).stem if args.save_name else f"ckpt_{run_id}"
+            # On request: one file per step. Periodic: one rolling file, so disk stays at one checkpoint.
+            name = f"{stem}.latest.pt" if periodic else f"{stem}.step{step + 1}.pt"
             mid_path = save_checkpoint(
-                CHECKPOINTS_DIR / f"{stem}.step{step + 1}.pt",
+                CHECKPOINTS_DIR / name,
                 cfg,
                 model,
                 optimizer,
