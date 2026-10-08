@@ -299,6 +299,8 @@ def main(
         "git_branch": git("rev-parse", "--abbrev-ref", "HEAD"),
         "git_dirty": dirty,
         "git_diff": git("diff", "HEAD") if dirty else "",
+        # Modal bills per App; the mirror looks the run's cost up by this id (mini_llm.remote.costs).
+        "modal_app_id": app.app_id,
     }
 
     options: dict = {"timeout": int(timeout_hours * 3600)}

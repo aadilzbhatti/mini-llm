@@ -36,6 +36,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from mini_llm.import_run import default_stem, import_run
+from mini_llm.remote import costs
 
 RUNS_VOLUME = "wiki-llm-runs"
 FINAL = {"completed", "failed"}
@@ -158,10 +159,13 @@ def mirror_run(
             "provider": "modal",
             "gpus": record.get("gpus"),
             "git_sha": record.get("git_sha"),
+            "app_id": record.get("modal_app_id") or prev.get("remote", {}).get("app_id"),
             "log_sig": log_sig,
             "imported": prev.get("remote", {}).get("imported", False),
         },
     }
+    if prev.get("remote", {}).get("cost"):
+        status["remote"]["cost"] = prev["remote"]["cost"]  # written by costs.update_costs
 
     if importable and not status["remote"]["imported"]:
         local = runs / run_id  # same layout scripts/fetch_modal_run.sh produces
@@ -196,6 +200,25 @@ def mirror_all(vol: VolumeLike, repo: Path, runner: Any, stale_after: float = 90
     return out
 
 
+def refresh_costs(repo: Path, interval: float, last_cost: float, last_rates: float) -> tuple[float, float]:
+    """Billing for runs whose cost can still change every `interval` s; list prices daily.
+    A billing failure is logged and retried next interval: it never stops mirroring."""
+    now = time.time()
+    if now - last_rates >= 24 * 3600:
+        try:
+            costs.write_rates(repo, costs.fetch_rates())
+            last_rates = now
+        except Exception as exc:  # noqa: BLE001
+            print(f"[cost] rates failed ({type(exc).__name__}: {exc})", file=sys.stderr, flush=True)
+    if now - last_cost >= interval:
+        last_cost = now
+        try:
+            costs.update_costs(repo)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[cost] billing report failed ({type(exc).__name__}: {exc})", file=sys.stderr, flush=True)
+    return last_cost, last_rates
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(description="Mirror Modal runs into runs/ for the control web app.")
     p.add_argument("--repo", type=Path, default=Path("."), help="Checkout whose runs/ the web app reads.")
@@ -208,6 +231,12 @@ def main(argv: list[str] | None = None) -> None:
     )
     p.add_argument("--once", action="store_true", help="Sync once and exit.")
     p.add_argument("--no-auto-eval", action="store_true", help="Don't evaluate finished runs (see mini_llm.auto_eval).")
+    p.add_argument(
+        "--cost-interval",
+        type=float,
+        default=300.0,
+        help="Seconds between billing checks for running and recently finished runs (mini_llm.remote.costs).",
+    )
     args = p.parse_args(argv)
 
     import modal
@@ -224,6 +253,7 @@ def main(argv: list[str] | None = None) -> None:
         evaluator = AutoEvaluator(repo)
         print(f"[auto-eval] on: evaluating runs that complete after {evaluator.since}", flush=True)
     failures = 0
+    last_cost = last_rates = 0.0
     while True:
         try:
             for st in mirror_all(vol, repo, runner, args.stale_after):
@@ -231,6 +261,7 @@ def main(argv: list[str] | None = None) -> None:
                     print(f"[mirror] {st['run_id']}: {st['status']}", flush=True)
                     seen[st["run_id"]] = st["status"]
             failures = 0
+            last_cost, last_rates = refresh_costs(repo, args.cost_interval, last_cost, last_rates)
         except Exception as exc:  # noqa: BLE001 - e.g. Modal unreachable: retry, don't exit
             # Exiting would also kill an eval the auto-eval worker has running, and launchd's
             # restart re-queues it. Local runs don't need Modal, so keep scanning them below.

@@ -40,6 +40,7 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, PlainTextResponse
 
 from mini_llm.control import KNOBS, COMMAND_TYPES, CommandError, append_command, read_jsonl, run_paths
+from mini_llm.remote import costs
 
 RUN_ID = re.compile(r"^[A-Za-z0-9._-]{1,200}$")
 # Modal GPU spec as modal_train.py takes it: "L4:2", "A100-80GB:4", "H100", or "cpu".
@@ -285,6 +286,9 @@ def create_app(
         live = _read_json(run_paths(runs_dir, run_id)["live"])
         if live:
             status["live"] = live
+        cost = costs.run_cost(status, live, costs.load_rates(runs_dir), time.time())
+        if cost:
+            status["cost"] = cost
         return status
 
     # --- pages ---------------------------------------------------------------
@@ -346,6 +350,7 @@ def create_app(
     def list_runs(limit: int = 50) -> list[dict]:
         """Newest first. Status files are the source of truth (index.jsonl only has finished runs)."""
         out = []
+        rates, now = costs.load_rates(runs_dir), time.time()
         for path in sorted(runs_dir.glob("*.status.json"), reverse=True)[: max(1, min(limit, 500))]:
             status = _read_json(path) or {}
             run_id = status.get("run_id") or path.name.removesuffix(".status.json")
@@ -370,6 +375,10 @@ def create_app(
             row["eval_val_loss"] = met.get("eval_val_loss")
             if status.get("status") == "running":
                 row["live"] = _read_json(run_paths(runs_dir, run_id)["live"])
+            live = row.get("live")
+            if status.get("status") == "interrupted":  # its cost ends at the last heartbeat
+                live = _read_json(run_paths(runs_dir, run_id)["live"])
+            row["cost"] = costs.run_cost(status, live, rates, now)
             out.append(row)
         return out
 
@@ -610,6 +619,7 @@ def create_app(
             "nproc": nproc,
             "timeout_hours": timeout_hours,
             "run_id": run_id,
+            "hourly_usd": costs.list_hourly(gpus, costs.load_rates(runs_dir)),
             # What torchrun will actually run on Modal (not the local queue's argv).
             "argv": ["mini-llm-train", *config_to_argv({"args": effective})],
         }

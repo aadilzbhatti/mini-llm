@@ -209,6 +209,14 @@ function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.ad
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const f4 = v => v == null ? '–' : Number(v).toFixed(4);
 function dur(sec) { if (sec == null) return '–'; sec = Math.round(sec); const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60); return h ? `${h}h ${m}m` : `${m}m ${sec%60}s`; }
+const usd = v => v == null ? '–' : '$' + Number(v).toFixed(2);
+// Modal cost (server: mini_llm.remote.costs.run_cost). "≈" marks an estimate; the billed figure lags.
+function costLive(c) {
+  if (!c) return '';
+  const billed = c.billed_usd != null ? ` · billed ${usd(c.billed_usd)} <span class="mut">(checked ${ago(c.billed_updated)})</span>` : '';
+  return `<div class="mut">cost</div><div>≈${usd(c.usd)} <span class="mut">${usd(c.hourly_usd)}/h${c.rate_source === 'list' ? ' list' : ''}${c.projected_usd != null ? ` · ≈${usd(c.projected_usd)} total` : ''}</span>${billed}</div>`;
+}
+function costHist(c) { return c && c.usd != null ? ` · ${c.source === 'billed' ? '' : '≈'}${usd(c.usd)}` : ''; }
 function ago(iso) { if (!iso) return ''; const s = (Date.now() - Date.parse(iso)) / 1000; return s < 90 ? `${Math.round(s)}s ago` : s < 5400 ? `${Math.round(s/60)}m ago` : s < 129600 ? `${Math.round(s/3600)}h ago` : `${Math.round(s/86400)}d ago`; }
 
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
@@ -240,7 +248,7 @@ function liveCard(r) {
   const stale = L.updated && (Date.now() - Date.parse(L.updated)) > 120000;
   const id = esc(r.run_id);
   if (r.remote?.phase === 'launching') return `<div class="card" data-run="${id}"><div class="row"><strong style="flex:1">${esc(r.name)}</strong>${remoteTag(r)}<span class="pill s-running">launching</span></div>
-    <div class="mut">building the image and starting ${esc(r.remote.gpus)} on Modal · started ${ago(r.started)}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
+    <div class="mut">building the image and starting ${esc(r.remote.gpus)} on Modal · started ${ago(r.started)}${r.cost?.hourly_usd != null ? ` · ${usd(r.cost.hourly_usd)}/h once running` : ''}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
   if (r.kind === 'prepare-data') return `<div class="card" data-run="${id}"><div class="row"><strong style="flex:1">${esc(r.name)}</strong><span class="pill s-running">building data</span></div>
     <div class="mut">started ${ago(r.started)}</div><div class="row" style="margin-top:8px"><button onclick="showLog('${id}', this)">Log</button></div><pre class="hidden"></pre></div>`;
   return `<div class="card" data-run="${id}">
@@ -253,6 +261,7 @@ function liveCard(r) {
       <div class="mut">eval train / val</div><div>${f4(L.eval_train_loss)} / ${f4(L.eval_val_loss)}</div>
       <div class="mut">full val</div><div>${f4(L.full_val_loss)}</div>
       <div class="mut">heartbeat</div><div>${ago(L.updated)}${stale ? ' ⚠︎' : ''}</div>
+      ${costLive(r.cost)}
     </div>
     ${r.remote ? `<div class="mut" style="margin-top:8px">On Modal: read-only here (live control is off for multi-GPU runs). Progress syncs every ~30 s.</div>` : `<div class="row" style="margin-top:8px">
       ${L.paused ? `<button class="pri" onclick="cmd('${id}', {type:'resume'}, 'Resume')">Resume</button>` : `<button onclick="cmd('${id}', {type:'pause'}, 'Pause')">Pause</button>`}
@@ -465,7 +474,7 @@ $('#g-ckpt').onchange = () => { ckptInfo(); scheduleDist(); };
 async function showDetail(id, btn) {
   const pre = mark(btn, 'detail').querySelector('pre'); pre.classList.remove('hidden');
   try { const s = await api(`/api/runs/${id}`); const m = { ...(s.metrics || {}) }; delete m.full_val_curve;
-    pre.textContent = JSON.stringify({ args: s.args, metrics: m, full_val_curve: s.metrics?.full_val_curve?.map(([a, b]) => `${a}: ${b}`), forecast_error: s.forecast_error, error: s.error }, null, 2);
+    pre.textContent = JSON.stringify({ args: s.args, metrics: m, full_val_curve: s.metrics?.full_val_curve?.map(([a, b]) => `${a}: ${b}`), cost: s.cost, forecast_error: s.forecast_error, error: s.error }, null, 2);
   } catch (e) { pre.textContent = e.message; }
 }
 
@@ -473,7 +482,7 @@ function histCard(r) {
   const id = esc(r.run_id);
   return `<div class="card" data-run="${id}">
     <div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(r.name || r.run_id)}</strong>${remoteTag(r)}<span class="pill s-${esc(r.status)}">${esc(r.status)}</span></div>
-    <div class="mut num">${r.started ? new Date(r.started).toLocaleString() : ''} · ${dur(r.duration_sec)}${r.full_val_loss != null ? ` · full val <strong style="color:var(--fg)">${f4(r.full_val_loss)}</strong>` : ''}${r.kind === 'prepare-data' ? ' · dataset' : ''}</div>
+    <div class="mut num">${r.started ? new Date(r.started).toLocaleString() : ''} · ${dur(r.duration_sec)}${costHist(r.cost)}${r.full_val_loss != null ? ` · full val <strong style="color:var(--fg)">${f4(r.full_val_loss)}</strong>` : ''}${r.kind === 'prepare-data' ? ' · dataset' : ''}</div>
     ${r.error ? `<div class="mut" style="color:var(--bad)">${esc(r.error)}</div>` : ''}
     <div class="row" style="margin-top:8px">
       <button onclick="showDetail('${id}', this)">Details</button>
@@ -638,7 +647,7 @@ async function submitJob(dryRun) {
   try {
     const r = await api(`/api/jobs${dryRun ? '?dry_run=true' : ''}`, { method: 'POST', body: JSON.stringify(job) });
     const f = r.forecast && !r.forecast.error ? `\nforecast: ~${Number(r.forecast.time_hours).toFixed(1)}h${r.forecast.loss != null ? `, full_val ≈ ${Number(r.forecast.loss).toFixed(3)}` : ''}` : '';
-    const where = r.target === 'modal' ? `${dryRun ? '✓ valid' : 'launching on Modal'} as ${r.run_id} · ${r.gpus} (${r.nproc} ranks) · timeout ${r.timeout_hours}h` : `${dryRun ? '✓ valid' : 'queued as ' + r.file}${f}`;
+    const where = r.target === 'modal' ? `${dryRun ? '✓ valid' : 'launching on Modal'} as ${r.run_id} · ${r.gpus} (${r.nproc} ranks)${r.hourly_usd != null ? ` · ${usd(r.hourly_usd)}/h list, ≤ ${usd(r.hourly_usd * r.timeout_hours)} at the timeout` : ''} · timeout ${r.timeout_hours}h` : `${dryRun ? '✓ valid' : 'queued as ' + r.file}${f}`;
     out.textContent = `${where}\n\n${r.argv.join(' ')}`;
     if (!dryRun) { toast(r.target === 'modal' ? 'Launching on Modal' : 'Queued'); refresh(); }
   } catch (e) { out.textContent = 'Rejected: ' + e.message; }
