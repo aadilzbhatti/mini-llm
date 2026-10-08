@@ -137,12 +137,14 @@ def _cache_bytes(model) -> tuple[int, int]:
 
 @torch.no_grad()
 def kv_reference(checkpoints: list[str], device=None, contexts=KV_CONTEXTS, rounds: int = 7) -> dict:
-    """Absolute position embeddings + KV cache: prefill, decode with and without the cache, cache memory,
-    at each context length -- the fixed reference for what caching alone bought (e.g. before RoPE).
+    """KV cache: prefill, decode with and without the cache, cache memory, at each context length.
+    With absolute-PE checkpoints this is the fixed reference for what caching alone bought; with a RoPE
+    checkpoint next to one, it shows what the rolling cache buys.
 
     decode@c: 64 greedy tokens from a (c - 64)-token prompt, so the context grows to exactly c and stays
-    inside the window. "past the window": 64 tokens from a full window, where absolute positions force
-    the cache to be refilled every step.
+    inside the window. "past the window": 64 tokens from a full window. Absolute positions force the cache
+    to be refilled every step there; a RoPE model keeps feeding single tokens through its rolling cache
+    (model.next_token_logits).
     """
     from mini_llm.report import generate_until_eos
 
@@ -204,6 +206,7 @@ def kv_reference(checkpoints: list[str], device=None, contexts=KV_CONTEXTS, roun
         per_token, alloc = _cache_bytes(m["model"])
         cfg = m["cfg"]
         out[k] = {
+            "positions": "rope" if cfg.use_rope_embeddings else "absolute",
             "n_embd": cfg.n_embd,
             "n_layer": cfg.n_layer,
             "n_head": cfg.n_head,
@@ -223,22 +226,27 @@ def kv_reference(checkpoints: list[str], device=None, contexts=KV_CONTEXTS, roun
         "host": platform.node(),
         "torch": torch.__version__,
         "at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "protocol": f"absolute position embeddings; {rounds} interleaved rounds (order rotated); prefill = one "
+        "protocol": f"{rounds} interleaved rounds (order rotated); prefill = one "
         f"forward over c tokens filling the cache (last-position logits); decode@c = {DECODE_TOKENS} "
         f"greedy tokens from a (c - {DECODE_TOKENS})-token prompt, without / with the KV cache; "
-        f"past the window = {DECODE_TOKENS} tokens from a full window (the cache is refilled every step); "
+        f"past the window = {DECODE_TOKENS} tokens from a full window (absolute PE: the cache is refilled "
+        "every step; RoPE: the cache rolls); "
         "fp32; median (p10-p90)",
         "models": out,
     }
 
 
-def render_kv_reference(b: dict) -> str:
+POSITIONS = {"absolute": "absolute PE + KV cache", "rope": "RoPE + rolling KV cache"}
+
+
+def render_kv_reference(b: dict, title: str | None = None, intro: str | None = None) -> str:
     f = lambda s: f"{s['median']:.1f} ({s['p10']:.1f}–{s['p90']:.1f})"
     mb = lambda n: f"{n / 2**20:.1f}"
     lines = [
-        "# KV cache reference: absolute position embeddings",
+        title or "# KV cache reference: absolute position embeddings",
         "",
-        "A fixed record of what the KV cache alone buys with this model's learned absolute position "
+        intro
+        or "A fixed record of what the KV cache alone buys with this model's learned absolute position "
         "embeddings, to compare later changes against (e.g. RoPE). Regenerate with "
         "`uv run mini-llm-bench --kv-reference`.",
         "",
@@ -247,13 +255,14 @@ def render_kv_reference(b: dict) -> str:
         f"- protocol: {b['protocol']}",
         "",
         "**Past the window**: once the context fills `block_size`, every token's absolute position shifts by one "
-        "each step, so the cached keys and values go stale and the cache is refilled from scratch every step. "
-        "That row is what relative positions (RoPE) would let the cache avoid.",
+        "each step, so with absolute PE the cached keys and values go stale and the cache is refilled from "
+        "scratch every step. RoPE encodes position through rotations such that Q·K attention depends on "
+        "relative positional offsets, so retained cached K/V do not need to be re-positioned when the window rolls.",
         "",
     ]
     for k, m in b["models"].items():
         lines += [
-            f"## {k}",
+            f"## {k}" + (f" ({POSITIONS[m['positions']]})" if "positions" in m else ""),
             "",
             f"d{m['n_embd']} · {m['n_layer']} layers · {m['n_head']} heads · block_size {m['block_size']} · "
             f"cache {m['cache_bytes_per_token'] / 1024:.0f} KiB per token, "
@@ -306,6 +315,11 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--out-dir", default=str(EVALS_DIR))
     p.add_argument("--reference", default="data160k-bs64-15k-lr1.2e-3-wu256k-v4")
     p.add_argument(
+        "--kv-out",
+        default="kv_reference",
+        help="With --kv-reference: write <out-dir>/<this>.md|json (keep the default for the fixed reference).",
+    )
+    p.add_argument(
         "--kv-reference",
         action="store_true",
         help="Write evals/kv_reference.md instead: prefill / decode / cache memory at T=128..1024 "
@@ -325,8 +339,8 @@ def main(argv: list[str] | None = None) -> None:
                         best[key] = (val, r["checkpoint"])
             cks = [ck for _, ck in sorted(best.values(), key=lambda v: v[1])]
         b = kv_reference(cks, args.device, rounds=args.rounds)
-        (out / "kv_reference.json").write_text(json.dumps(b, indent=2))
-        (out / "kv_reference.md").write_text(render_kv_reference(b))
+        (out / f"{args.kv_out}.json").write_text(json.dumps(b, indent=2))
+        (out / f"{args.kv_out}.md").write_text(render_kv_reference(b))
         print(render_kv_reference(b))
         return
     cks = args.checkpoints or [r["checkpoint"] for r in eval_results(out)]
