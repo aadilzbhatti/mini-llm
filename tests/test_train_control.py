@@ -102,3 +102,19 @@ def test_pause_then_resume(workdir):
     t.join()
     assert time.time() - started >= 3
     assert [e["type"] for e in read_jsonl(workdir / "runs" / "t1.events.jsonl")] == ["pause", "resume"]
+
+
+def test_stop_after_ends_early_on_the_long_schedule(workdir, capsys):
+    """--stop-after N: N steps of a --steps-long cosine (an LR proxy on the real schedule), not a short cosine."""
+    train.main(
+        ARGS
+        + ["--steps", "1000", "--stop-after", "30", "--lr", "1e-3", "--min-lr", "1e-5", "--save", "--save-name", "p.pt"]
+    )
+    assert "stopped early by --stop-after" in capsys.readouterr().out
+
+    ckpt = torch.load(workdir / "checkpoints" / "p.pt", map_location="cpu", weights_only=False)
+    assert ckpt["step"] == 30 and ckpt["val_history"][-1][0] == 29  # recorded as 30 steps, final eval ran
+    lrs = dict(ckpt["lr_history"])
+    for step in (0, 15, 29):  # still the 1000-step cosine: barely decayed by step 29
+        assert abs(lrs[step] - train.lr_at_step(step, 1000, 1e-3, 1e-5, 0)) < 1e-12
+    assert lrs[29] > 0.99e-3

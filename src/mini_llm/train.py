@@ -476,6 +476,14 @@ def build_parser() -> argparse.ArgumentParser:
         "notice) on MPS/CPU. Eval stays fp32 so eval losses remain comparable across runs.",
     )
     p.add_argument("--steps", type=int, default=100)
+    p.add_argument(
+        "--stop-after",
+        type=int,
+        default=None,
+        help="End the run after this many of --steps, exactly as a stop command would (final eval, plot, "
+        "save), while the LR schedule still spans all of --steps. For LR proxies: several LRs on the real "
+        "long schedule, compared over its first N steps, rather than each on its own short cosine.",
+    )
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument(
         "--restart-lr",
@@ -936,6 +944,8 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
 
         # A stop command ends the run *here*, as if this had been the last
         # step, so the final eval/plot/save/report all still happen.
+        if args.stop_after is not None and local_step == args.stop_after - 1:
+            ctl.stop = True  # --stop-after: the same early end as a stop command
         is_last_step = local_step == args.steps - 1 or ctl.stop
         forced_eval = ctl.eval_now
         ctl.eval_now = False
@@ -1012,7 +1022,12 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
 
         if ctl.stop:
             stopped_at = step
-            print(f"step {step:5d} | stopped early by control command", flush=True)
+            how = (
+                "--stop-after"
+                if args.stop_after is not None and local_step == args.stop_after - 1
+                else "control command"
+            )
+            print(f"step {step:5d} | stopped early by {how}", flush=True)
             break
 
     steps_done = (stopped_at - start_step + 1) if stopped_at is not None else args.steps
