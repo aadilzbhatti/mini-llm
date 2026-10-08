@@ -15,33 +15,34 @@ Every evaluated model on the same 20 prompts × 5 draws, 256 new tokens, T=0.7, 
 | M7 | data320k · d512-L4 · 38.9M · T1024 · 40K steps | 3.9376 | 0.423 / 0.780 | 17/100 (11%–26%) | token 183 | 0.387 / 0.553 | 33% | 237 tokens | 9/100 |
 | M8 | data160k · d512-L4 · 38.9M · T1024 · 40K steps | 3.8919 | 0.436 / 0.748 | 17/100 (11%–26%) | token 180 | 0.402 / 0.566 | 30% | 180 tokens | 13/100 |
 | M9 | data320k · d512-L4 · 38.9M · T1024 · 80K steps | 3.7476 | 0.496 / 0.795 | 26/100 (18%–35%) | token 156 | 0.381 / 0.529 | 31% | 204 tokens | 7/100 |
+| M10 | data320k · d512-L4 · 38.4M · T1024 · 80K steps | 3.6622 | 0.411 / 0.752 | 19/100 (12%–28%) | token 200 | 0.412 / 0.573 | 37% | 246 tokens | 6/100 |
 
 ## rep4 by prompt
 
 Median over draws; (n) = draws that end in an exact loop.
 
-| prompt | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 |
-|---|---|---|---|---|---|---|---|---|---|
-| definition | 0.27 | 0.17 | 0.29 (1) | 0.37 (1) | 0.52 | 0.53 (3) | 0.36 (1) | 0.42 (1) | 0.76 (4) |
-| biography | 0.38 (1) | 0.32 (1) | 0.20 | 0.14 | 0.16 | 0.15 (1) | 0.24 | 0.13 (1) | 0.27 |
-| science_explainer | 0.53 (2) | 0.31 (1) | 0.32 (1) | 0.43 | 0.60 | 0.44 (1) | 0.42 (1) | 0.44 | 0.70 (3) |
-| instructional | 0.25 | 0.29 | 0.41 (1) | 0.44 | 0.31 | 0.66 (1) | 0.55 (1) | 0.68 | 0.62 (2) |
-| bullet_list | 0.67 | 0.62 | 0.82 (2) | 0.92 (1) | 0.86 (2) | 0.91 (2) | 0.96 (4) | 0.71 (2) | 0.61 (2) |
-| numbered_list | 0.56 | 0.55 (1) | 0.56 (1) | 0.57 (1) | 0.68 | 0.67 (1) | 0.64 (1) | 0.68 (1) | 0.70 (2) |
-| enumeration | 0.59 | 0.71 (1) | 0.32 (1) | 0.39 | 0.56 | 0.66 (2) | 0.73 (2) | 0.28 (2) | 0.88 (2) |
-| long_dependency | 0.30 | 0.32 (1) | 0.35 | 0.49 (1) | 0.19 | 0.63 (1) | 0.41 (1) | 0.36 | 0.27 |
-| attribution | 0.10 | 0.18 | 0.10 | 0.25 | 0.35 (1) | 0.48 (2) | 0.28 (1) | 0.22 | 0.27 |
-| numeric_units | 0.15 | 0.29 | 0.40 | 0.28 (1) | 0.70 | 0.74 (1) | 0.47 | 0.52 | 0.62 (2) |
-| agreement_gap | 0.27 | 0.17 | 0.15 | 0.27 | 0.22 | 0.37 | 0.42 | 0.49 (1) | 0.28 (1) |
-| history | 0.11 | 0.15 | 0.22 | 0.31 | 0.27 | 0.41 | 0.14 (1) | 0.31 | 0.28 |
-| anatomy | 0.19 | 0.52 | 0.27 | 0.26 | 0.13 | 0.68 | 0.45 | 0.19 (1) | 0.46 (1) |
-| geography | 0.25 | 0.27 | 0.25 (1) | 0.47 | 0.44 (1) | 0.41 | 0.21 | 0.38 (1) | 0.52 (1) |
-| math_definition | 0.28 | 0.45 | 0.36 (1) | 0.41 (1) | 0.30 (1) | 0.50 (1) | 0.53 (1) | 0.53 (3) | 0.61 (2) |
-| environment | 0.07 | 0.14 | 0.12 | 0.10 | 0.28 | 0.53 (3) | 0.23 | 0.51 (1) | 0.19 |
-| recipe | 0.13 | 0.22 | 0.23 (1) | 0.27 (1) | 0.14 | 0.58 (1) | 0.50 (1) | 0.18 (1) | 0.53 (1) |
-| literature | 0.30 (1) | 0.16 | 0.24 | 0.17 | 0.21 | 0.47 (1) | 0.37 | 0.53 (1) | 0.21 |
-| technology | 0.09 | 0.13 | 0.12 | 0.12 | 0.23 | 0.45 (2) | 0.41 (1) | 0.17 | 0.13 (1) |
-| economics | 0.24 | 0.25 | 0.13 | 0.35 | 0.45 | 0.64 (3) | 0.47 (1) | 0.47 (1) | 0.52 (2) |
+| prompt | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| definition | 0.27 | 0.17 | 0.29 (1) | 0.37 (1) | 0.52 | 0.53 (3) | 0.36 (1) | 0.42 (1) | 0.76 (4) | 0.33 (1) |
+| biography | 0.38 (1) | 0.32 (1) | 0.20 | 0.14 | 0.16 | 0.15 (1) | 0.24 | 0.13 (1) | 0.27 | 0.41 (1) |
+| science_explainer | 0.53 (2) | 0.31 (1) | 0.32 (1) | 0.43 | 0.60 | 0.44 (1) | 0.42 (1) | 0.44 | 0.70 (3) | 0.26 |
+| instructional | 0.25 | 0.29 | 0.41 (1) | 0.44 | 0.31 | 0.66 (1) | 0.55 (1) | 0.68 | 0.62 (2) | 0.41 |
+| bullet_list | 0.67 | 0.62 | 0.82 (2) | 0.92 (1) | 0.86 (2) | 0.91 (2) | 0.96 (4) | 0.71 (2) | 0.61 (2) | 0.66 (2) |
+| numbered_list | 0.56 | 0.55 (1) | 0.56 (1) | 0.57 (1) | 0.68 | 0.67 (1) | 0.64 (1) | 0.68 (1) | 0.70 (2) | 0.56 (1) |
+| enumeration | 0.59 | 0.71 (1) | 0.32 (1) | 0.39 | 0.56 | 0.66 (2) | 0.73 (2) | 0.28 (2) | 0.88 (2) | 0.57 (2) |
+| long_dependency | 0.30 | 0.32 (1) | 0.35 | 0.49 (1) | 0.19 | 0.63 (1) | 0.41 (1) | 0.36 | 0.27 | 0.37 (1) |
+| attribution | 0.10 | 0.18 | 0.10 | 0.25 | 0.35 (1) | 0.48 (2) | 0.28 (1) | 0.22 | 0.27 | 0.40 |
+| numeric_units | 0.15 | 0.29 | 0.40 | 0.28 (1) | 0.70 | 0.74 (1) | 0.47 | 0.52 | 0.62 (2) | 0.41 (1) |
+| agreement_gap | 0.27 | 0.17 | 0.15 | 0.27 | 0.22 | 0.37 | 0.42 | 0.49 (1) | 0.28 (1) | 0.68 (3) |
+| history | 0.11 | 0.15 | 0.22 | 0.31 | 0.27 | 0.41 | 0.14 (1) | 0.31 | 0.28 | 0.27 |
+| anatomy | 0.19 | 0.52 | 0.27 | 0.26 | 0.13 | 0.68 | 0.45 | 0.19 (1) | 0.46 (1) | 0.32 (1) |
+| geography | 0.25 | 0.27 | 0.25 (1) | 0.47 | 0.44 (1) | 0.41 | 0.21 | 0.38 (1) | 0.52 (1) | 0.51 |
+| math_definition | 0.28 | 0.45 | 0.36 (1) | 0.41 (1) | 0.30 (1) | 0.50 (1) | 0.53 (1) | 0.53 (3) | 0.61 (2) | 0.74 (3) |
+| environment | 0.07 | 0.14 | 0.12 | 0.10 | 0.28 | 0.53 (3) | 0.23 | 0.51 (1) | 0.19 | 0.20 (1) |
+| recipe | 0.13 | 0.22 | 0.23 (1) | 0.27 (1) | 0.14 | 0.58 (1) | 0.50 (1) | 0.18 (1) | 0.53 (1) | 0.38 |
+| literature | 0.30 (1) | 0.16 | 0.24 | 0.17 | 0.21 | 0.47 (1) | 0.37 | 0.53 (1) | 0.21 | 0.22 |
+| technology | 0.09 | 0.13 | 0.12 | 0.12 | 0.23 | 0.45 (2) | 0.41 (1) | 0.17 | 0.13 (1) | 0.14 (1) |
+| economics | 0.24 | 0.25 | 0.13 | 0.35 | 0.45 | 0.64 (3) | 0.47 (1) | 0.47 (1) | 0.52 (2) | 0.66 (1) |
 
 ## Reading set
 
@@ -240,6 +241,26 @@ How long can I harvest seeds from the garden?
 You can harvest seeds that are longer than the average day. You can harvest seeds that are shorter than the average day. You can harvest seeds that are shorter than the average day. You
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.545 · topic 100%, last mention at token 255
+
+```
+Photosynthesis is a process that we use to make organic food. It is the most important part of the process.
+- Carbon is formed by the process of photosynthesis.
+- Carbon is a process that involves the process of photosynthesis.
+- A carbon is an organic material that is made up of carbon.
+In the process of photosynthesis, carbon breaks down the carbon into elements.
+- The process of photosynthesis is called photosynthesis.
+- Carbon is the result of the decomposition of organic matter in the process.
+- Carbon is formed from the carbon, by the process of photosynthesis.
+- Photosynthesis is the process of photosynthesis by the process of photosynthesis.
+- The process of photosynthesis is called photosynthesis.
+- Photosynthesis is the process of photosynthesis by the process of photosynthesis.
+- Photosynthesis is the process of photosynthesis by the process of photosynthesis.
+- Photosynthesis is the process of photosynthesis by the process of photosynthesis by the process of photosynthesis.
+- Photosynthesis is the process of photosynthesis by the process of photosynthesis by the process of photosynthesis by the process of photosynthesis.
+- When photosynthesis is involved in the process of photosynthesis, photosynthesis is the process of photosynthesis
+```
+
 ### biography
 
 prompt: 'Albert Einstein was a German-born theoretical physicist who'
@@ -329,6 +350,14 @@ He was a physicist and was born in Switzerland. He was a young man who had lived
 He was a physicist and was a member of the German Academy of Sciences. He was the first man to be born in Switzerland.
 He was a scientist and was a German physicist. He was the first person to be born in Switzerland, and was a member of the German Academy.
 He was a
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.285 · topic 50%, last mention at token 254
+
+```
+Albert Einstein was a German-born theoretical physicist who was not a physicist who is still considered one of the most famous physicists in the world.
+The Albert Einstein Institute – the first Einstein-born scientist to ever become Einstein’s most famous scientist for decades – was a physicist who was the first Einstein to be accepted for the Nobel Prize in Physics. Einstein’s first scientific prize was Albert Einstein’s first, while Einstein’s second – Albert Einstein’s first, and Albert Einstein’s second – was born in 1945. So, Einstein’s first year of Einstein’s first scientific achievement, Albert Einstein, was born in 1961.
+Albert Einstein’s first two years of Einstein’s second, and Albert Einstein’s second, were born in 1962. Einstein was one of the only three scientists to ever become Einstein’s first. Einstein’s first, but Einstein’s first, and Albert Einstein’s second only, was born in 1959. Albert Einstein’s first year of teaching was only the first Einstein to ever become Einstein’s second. Albert Einstein’s first year of teaching was only a year after Albert Einstein’s first three years of teaching, when he became Albert Einstein’
 ```
 
 ### science_explainer
@@ -509,6 +538,15 @@ It is used as a substrate for catalytic reactions in catalytic reactions.
 The IKEC can be used as a substrate for catalytic reactions in catalytic reactions.
 The IKEC can be used as a substrate for catalytic reactions in catalytic reactions.
 The IKEC can be used as a substrate for catalytic reactions in catalytic reactions in catalytic reactions
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.055 · topic 0%, last mention at token 0
+
+```
+Oxygen is a chemical element with a large amount of energy, which can be used to create an electric power grid. The battery is a continuous component of the grid, it is a source of electricity, and it has an important role in the process of the solar system. The solar energy is a powerful energy source that can provide the best possible energy for a wide variety of applications.
+In the early days of solar energy, there was a revival of traditional solar cells, which are a result of the use of solar cells. When a solar cell is installed and the solar energy is converted into a hybrid form, the solar cells are equipped with the power that is used to store energy, and the solar cells are powered by solar cells for use in other applications. This process is being adopted in the form of solar cells, which are the basis for the design of solar cells.
+In the early days of solar energy, there were only about 4,000 solar cells in the United States. This was the year the United States was on a mission to protect the environment, protect the environment, and make the world’s largest solar cell. This includes solar cells that are used in the United States for storing and storing energy.
+The first solar cell was the first solar cell, which was used in the
 ```
 
 ### instructional
@@ -702,6 +740,26 @@ In: The lesson will also include how the world works, the world map, the world m
 In: The lesson will also include how the world works, the world map, and the world maps.
 In: The lesson will include how the world works, the earth map, and the world map.
 In: The lesson
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.091 · topic 67%, last mention at token 254
+
+```
+In this lesson, students will learn how to make a positive impact on students' success. Students will be able to use it all in a simple way, using both the benefits of learning.
+Students will be able to use the following:
+- Be aware of the benefits of learning to students
+- Improve their overall achievement
+- Improve their overall performance
+- Improve mental skills
+- Reduce academic stress and anxiety
+- Improve academic performance
+- Identify and discuss student needs
+- Improve communication skills
+The lesson plan is a great way to introduce the concept of learning to students in different contexts. Students will learn to work independently, and then learn to work independently and independently. It also includes practice activities such as teaching and learning, and use the concepts as a stepping stone to enhance learning.
+Teachers are interested in introducing the concept of learning to students and develop their own skills, which will help them to become more fully engaged in learning. It will also include a greater emphasis on the concepts of learning to be taught, which will help to improve students' learning.
+Teaching and learning to students
+Students will also be able to use the concept of learning to help them to become more motivated.
+Teachers are interested in helping students to develop their learning by using advanced technology and learning to learn. It
 ```
 
 ### bullet_list
@@ -965,6 +1023,41 @@ The best time to exercise is to exercise. You can always follow the recommended 
 - Lifestyle changes: High
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.589 · topic 33%, last mention at token 180
+
+```
+There are several benefits to regular exercise:
+- ___________ – Exercise helps you to focus more effectively on your weight
+- ___________ – Exercise helps you to focus more effectively on your work and hobbies
+- ___________ – Exercise helps you to focus more effectively on your work
+- ___________ – Exercise helps you to focus more effectively
+- ___________ – Exercise helps you to focus more effectively on your work
+- ___________ – Exercise helps to focus more effectively on your work
+- ___________ – Exercise helps you to focus more effectively on the work you’ve done
+- ___________ – Exercise helps you focus more effectively on your work
+It’s important to remember that exercise is only about one hour long. It’s not about being able to improve overall well-being
+- ___________ – Exercise helps you to focus more effectively on work
+- ___________ – Exercise helps you to focus more effectively on your work
+- 2% of your total work is done by daily
+- 3% of your total work is done by daily
+- 3% of the total work is done by daily
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- 3
+```
+
 ### numbered_list
 
 prompt: 'To solve a quadratic equation, follow these steps:\n1.'
@@ -1160,6 +1253,30 @@ The main points of the quadratic equation are the area of the quadratic equation
 4. What are the major points of the quadratic equation?
 The main points of the quadratic equation is the area of the quadratic equation.
 5. What are the major
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.735 · topic 67%, last mention at token 246
+
+```
+To solve a quadratic equation, follow these steps:
+1. Step-by-step:
+- Select the left-hand corner of the quadratic equation.
+2. Step-by-step:
+- Select the right-hand corner of the quadratic equation as the input for the quadratic equation.
+- Create an example:
+- Select the left-hand corner of the quadratic equation.
+- Select the right-hand corner of the quadratic equation.
+3. Step-by-step:
+- Select the left-hand corner, right-hand corner, or quadratic equation.
+- Select the right-hand corner of the quadratic equation.
+- Select the left-hand corner, right-hand corner, or quadratic equation.
+4. Step-by-step:
+- Select the right-hand corner of the quadratic equation.
+5. Step-by-step:
+- Select the right-hand corner, right-hand corner, or quadratic equation.
+- Select the left-hand corner, right-hand corner, or quadratic equation.
+- Select the left-hand corner, right-hand corner, or quadratic equation.
+6. Step-by-step:
 ```
 
 ### enumeration
@@ -1392,6 +1509,35 @@ The human body is composed of a variety of different parts of the body. Some peo
 The human body is made up of a number of different parts that have different parts of the body. The human body is made up of several parts that are called the girdle. The human body is made up of a number of different parts that are called the girdle. The human body consists of three different parts that are called the girdle. The human body consists of both parts of the body. The human body consists of the three parts. The human body consists of three organs. The human body consists in the human body,
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.482 · topic 0%, last mention at token 0
+
+```
+There are three main types of the most popular types of the two types of data types are:
+- Data type
+- Data type
+- Data type
+- Data type
+- Data type
+- Data type
+- Data type
+- Data type
+- Data type
+- Data type
+- Data type
+The most popular type of data type is available in the following type:
+- Data type
+- Data type
+- Data type
+The simplest type is the name of the data type. In this type, the name of the data type is used to make a statement. It can be used to make statements or statements. Therefore, it is important to use data type in the following type:
+- Data type
+- Data type
+- Data type
+- Data type
+The most popular type of data type is Data Type. It is an example of a type. For example, a Data Type is used to make a statement. This type of data type is called Data Type.
+There are many kinds of data type. For example, data type is used to make statements and statements. It can be used to make statements or statements. It can be used to make statements and statements.
+Data type is used to make statements and statements. It can be used to make statements
+```
+
 ### long_dependency
 
 prompt: 'Although the treaty was signed in 1919, it'
@@ -1530,6 +1676,14 @@ The United States was once in the middle of the 20th century when the United Sta
 Today, the United States is a free-running federal government, which has been a popular choice for both the state and federal governments.
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.506 · topic 0%, last mention at token 0
+
+```
+Although the treaty was signed in 1919, it was still a joint project between the Indian and British forces. This was the result of the ongoing war between India and the British.
+The India War of 1812–17
+The Battle of Britain was a series of battles between British and British forces. British troops were sent to war with Britain, and British troops were deployed to the British. The British were sent to British troops. Britain was defeated by British forces. British troops were sent to Britain for the British. The British were sent to Britain. British troops and British troops were sent to Britain. Britain was part of Parliament. British forces were sent to England. British troops were sent to Britain. British troops were sent to Britain. British troops were sent to Britain. British troops were sent on. British troops were sent to Britain. British troops were sent to Britain. British troops were sent to Britain and England. British troops were sent to British troops. Britain was sent to Britain. British troops were sent to Britain and England. British troops were sent to Britain. British soldiers were sent to England and England. British troops were sent to Britain. British troops were sent to Britain. British soldiers were sent to England. British soldiers were sent to England and England. British troops were sent to England. British soldiers were sent to England
+```
+
 ### attribution
 
 prompt: 'According to a study published in'
@@ -1640,6 +1794,23 @@ The study was conducted by the American Academy of Public Health on the conditio
 “The study was conducted in more than one-third of the country.”
 “There were few studies on the causes, treatments, or treatments available, including the use of the “biological approach,” the study was conducted in more than one-third of the country’s population.”
 “This study is a very important tool in the diagnosis and treatment of a disease or disease,�
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.269 · topic 0%, last mention at token 105
+
+```
+According to a study published in the journal Nature Communications, this study was conducted from the University of Basel’s School of Earth Sciences. The study was conducted under a separate project in St. Louis, Germany. The study was carried out in a hospital in the UK at the end of the year. The researchers were then divided into two groups:
+- Theoretically, the study was carried out in two different laboratories.
+- Three different laboratories were used to study the relationship between the two groups.
+- The main aim of the study was to measure the relationship between the two groups.
+- The different laboratory groups were conducted at different universities in the same country as the University of Basel and in the same country as the University of Basel.
+- The different laboratories were conducted at different universities in the same country as the University of Basel.
+- The students were divided into two groups.
+- The students were divided into two groups according to the degree of learning.
+- The students were given the same degree of learning they did on a regular basis.
+- It was said that the students were divided as a group.
+- The students were divided into two groups according to the degree of learning they took.
+- The student was divided into two groups according to
 ```
 
 ### numeric_units
@@ -1776,6 +1947,25 @@ The mountain ranges are the mountain ranges. The mountain ranges are the mountai
 The mountain ranges are the mountain ranges. The mountain ranges are the mountain ranges.
 The mountain ranges are the mountain ranges. The mountain ranges are the mountain ranges. The mountain ranges are the mountain ranges.
 The mountain ranges are the mountain ranges. The mountain ranges are the mountain ranges. Mountain ranges are the
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.391 · topic 33%, last mention at token 254
+
+```
+The mountain rises to a height of 10,000 feet.
+The mountain is considered the "pine" in the Russian Empire. It was once a great mountain for the Russian Empire. The mountain is an ancient monument of the Russian Empire.
+In the mountains, it is often called "pine hill", a hill.
+The mountain is the "pine hill" in the Russian Empire, which it is called "pine hill" because it is one of the top features of the Russian Empire. It has a wide range of hilltop slopes that are steep and steep.
+The mountain is the "pine hill" in Russian Empire. It is the top of the mountain.
+The mountain is the highest mountain in Russia. It is the most famous of all the mountain in Russia.
+The mountain is the mountain in the Russian Empire, which has a high mountain.
+The mountain is a mountain in Russia, which is the mountain in the Russian Empire.
+The mountain is the center of the Russian Empire. It is the center of the Russian Empire.
+The mountain is the highest mountain in Russia.
+The mountain is the highest mountain in the Russian Empire.
+The mountain is the largest mountain in Russia.
+The mountain is the highest mountain in Russia.
+The mountain is the highest mountain in Russia
 ```
 
 ### agreement_gap
@@ -1932,6 +2122,13 @@ The following are the ideas of the rubric:
 
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.478 · loops from token 206 (period 9) · topic 22%, last mention at token 254
+
+```
+The students who had spent the entire semester preparing for the final examination in organic chemistry classes were at the beginning of the semester. The second semester was in the second semester. The students were invited to go outside the semester because they were not allowed to finish class in the semester. The students were then given a copy of the results of the course and the final exam. The students were then given a copy of the results from the class. The students were given a copy of the results. The students were given two copies of the results, one containing the results of the previous exam. The third and final exam was in the final exam. The third was in the final exam. The results were given a copy of the results of the course. The conclusion of the final exam is that there were no final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam.
+The students were asked to write a paper on the assignment of their homework. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was
+```
+
 ### history
 
 prompt: 'The French Revolution began in 1789, when'
@@ -2032,6 +2229,15 @@ The French Revolution: The French Revolution was a time for American revolution 
 The French Revolution started in 1789, when a new French revolution was planned, but it was not the main cause. The French Revolution was a time of great influence in the colonies, and it was a time of great influence in the colonies.
 The French Revolution, which lasted from 1789 to 1789, was a time of great influence in the colonies. The French Revolution was a time of great influence in the colonies, which could be seen as a time of great influence on the colonies.
 The French Revolution was a time of great influence in the colonies, but it was still important to understand the history of the Revolution. The French Revolution was a time of great influence during the 1789 revolutions, which helped to shape the colonies. The French Revolution was a time
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.221 · topic 33%, last mention at token 256
+
+```
+The French Revolution began in 1789, when French troops were defeated in the Battle of Waterloo. The French fought in the Battle of Waterloo, and the French fleet was defeated. Napoleon was involved in the Continental Army and was the last French to win the battle. Napoleon was the last French to win the French in 1696.
+The French were defeated by French forces in 1799 and the French were defeated by French forces of the French. The French were defeated by French forces and fought in the battle. Napoleon was defeated by French forces under France’s first-ever French.
+French Revolution took place on the 13th of April 1799, when Napoleon’s French victory was defeated, the French forces led by French forces led by French forces led by German forces. France lost its strategic position as France’s capital and was the largest city in the world. The French army was defeated in 1799.
+Napoleon’s victory was won by French forces and the French had a lasting impact on the French. The French were defeated by French forces led by French forces led by French forces led by French forces. France’s defeat in 1799 led to the victory of Napoleon’s second-hand French. The French were defeated by French forces led by French forces led by French
 ```
 
 ### anatomy
@@ -2142,6 +2348,19 @@ The heart is the main organ that connects to the heart, and it is part of the he
 A heart is the heart that connects to the heart and connects to the heart. The heart is responsible for supplying the heart with the heart with oxygen.
 A heart is the heart that connects to the heart. The heart works by attaching the heart to the heart. The heart is responsible for supplying the heart with oxygen to the heart by sending it to the heart. The heart is responsible for supplying the heart with oxygen to the heart by sending it to the heart.
 The heart is responsible for supplying the heart with oxygen to the heart by sending it to the heart, and the heart is responsible for supplying the heart with oxygen to the heart. The heart is responsible
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.794 · loops from token 181 (period 3) · topic 25%, last mention at token 254
+
+```
+The human heart is a muscular organ that carries a heart-shaped blood supply to the heart. The heart is located in the heart of the heart.
+The heart produces two chambers of blood called the coronary heart. The heart is in the form of a brain.
+The heart is located in the heart of the heart. The heart is located in the heart of the heart.
+The heart is located in the heart of the heart. The heart is located in the heart of the heart.
+The heart is located in the heart of the heart of the heart. It lies in the heart of the heart of the heart.
+The heart is located in the heart of the heart of the heart. The heart is located in the heart of the heart of the heart.
+The heart is located in the heart of the heart of the heart of the heart. The heart is located in the heart of the heart of the heart.
+The heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the
 ```
 
 ### geography
@@ -2264,6 +2483,17 @@ The Amazon River flows through the Gulf of Mexico.
 The main river in Mexico is the S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.B. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.759 · topic 50%, last mention at token 254
+
+```
+The Amazon River flows through the river to the River Thames, where the river flows into the river. The river is called Ganga, and the river is called Sanga, and the river is called the Ganga.
+The river flows into the river and flows into the river. The river flows into the river and flows into the river. The river flows into the river, and flows into the river and flows into the river.
+Boggy River flows into the river, and flows into the river. The river flows into the river, and flows into the river.
+The river flows into the river, and flows back through the river. The river flows into the river and flows into the river, and flows into the river and flows into the river. The river flows into the river, and flows into the river, and flows into the river.
+The river flows into the river, and flows into the river, and flows into the river. The river flows into the river and flows into the river, and flows into the river.
+The river flows into the river, and flows into the river, and flows into the river, and flows into the river. The river flows into the river. The river flows into the river, and flows into the river, and flows into the
+```
+
 ### math_definition
 
 prompt: 'In mathematics, a prime number is'
@@ -2382,6 +2612,31 @@ There are different languages, such as the "N" (the "N" (the "N").
 The two most popular languages are the Italian, German, and Spanish. The second is the "N" (the "N" (the "N" (the "N") (the "N") (the "N") (the "N") (the "N") (the "N") (the "n" (the "N") (the "N") (the "N
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.715 · loops from token 122 (period 10) · topic 33%, last mention at token 254
+
+```
+In mathematics, a prime number is called the number of bits, the number of bits and the number of bits is called the number of bits. A prime number is called the number of bits, the number of bits, the number of bits, the number of bits and the number of bits.
+What are the four numbers for integers?
+In this article, we will discuss the four numbers for integers.
+The twelve integers are the number of bits in a given number.
+The ten integers are the number of bits and the number of bits.
+The twelve integers are the number of bits.
+As you can see, they represent the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits.
+The twelve integers are the number of bits
+```
+
 ### environment
 
 prompt: 'Climate change refers to long-term shifts in'
@@ -2488,6 +2743,20 @@ The most important thing that we can do is to add a few calories. The amount of 
 Achieving the correct balance is crucial for the climate. The amount of calories you consume and the amount you consume is the most important thing that we can do for the planet. For example, if you are going to use a lot of energy, you will have no more energy than the amount of fats you consume. You can also reduce the amount of calories you take to landfills.
 If you are spending more on food, you will have more calories that you can use. In addition to eating more calories, you will have more calories to eat. You will also have less calories to eat.
 How to conserve the carbon
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.198 · topic 33%, last mention at token 252
+
+```
+Climate change refers to long-term shifts in the Earth’s climate. The shift in temperature will continue to occur in the coming weeks, which is a good reason to consider this impact.
+How does climate change impact on carbon output?
+Climate change impacts on human life and ecology. Climate change is the increase in the temperature of the Earth’s oceans and oceanic regions, and it continues to affect human life.
+The impacts of climate change will be a significant contributor to the global climate change and the impact of climate change. The impact of climate change will be a major contributor to global warming.
+Climate change has a very large impact on the environment. Climate change is likely to affect human life, and the impacts of climate change will be a major contributor to the global warming.
+Climate change has a huge impact on the environment. Climate change has a large impact on the environment, and the impact of global warming will also have an impact on the environment.
+Climate change impacts are on the environment that we are seeing, and we can change the way we respond to climate change.
+Climate change impacts are not just a direct result of climate change but also a direct result of the impact of climate change. It’s a direct result of climate change.
+Climate change has a huge impact
 ```
 
 ### recipe
@@ -2664,6 +2933,55 @@ What are the best foods for a meal?
 The best foods for a meal are bread, yogurt, kimchi, and other foods. You will also need to include plenty of vegetables, fruits, and whole grains in your meals. You will also need to make sure that you have the right foods
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.688 · topic 0%, last mention at token 57
+
+```
+To make bread at home, you will need to use the same basic formula:
+1 teaspoon of salt.
+2 tablespoons of bread.
+3 tablespoons of 1 teaspoon of bread.
+4 tablespoons of honey.
+5 tablespoons of honey.
+5 tablespoons of honey.
+6 tablespoons of water.
+7 tablespoons of bread.
+8 tablespoons of water.
+8 tablespoons of honey.
+2 tablespoons of honey.
+1 tablespoon of butter.
+1 tablespoon of honey.
+2 tablespoons of honey.
+2 tablespoons of honey.
+1 tablespoon of honey.
+2 tablespoons of honey.
+1 tablespoon of honey.
+1 tablespoon of honey.
+1 teaspoon of honey.
+2 tablespoons of honey.
+2 tablespoons of honey.
+3 teaspoon of honey.
+1 teaspoon of honey.
+1 teaspoon of honey.
+2 tablespoons of honey.
+1 tablespoon of honey.
+1 cup of honey.
+2 tablespoons of honey.
+1 teaspoon of honey.
+1 teaspoon of honey.
+1 teaspoon of honey.
+1 teaspoon of honey.
+2 tablespoons of honey.
+1 tablespoon of honey.
+1 teaspoon of honey.
+1 tablespoon of honey.
+1 tablespoon.
+1 cup of honey.
+1 tablespoon.
+1 tablespoon.
+1 teaspoon.
+1
+```
+
 ### literature
 
 prompt: 'William Shakespeare wrote many plays, including'
@@ -2777,6 +3095,14 @@ The main themes in the play are:
 - The playwright plays a significant role in the play
 ```
 
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.348 · topic 0%, last mention at token 115
+
+```
+William Shakespeare wrote many plays, including Henry II and Henry II, in the late nineteenth century, when his son, Henry, was a pupil. He was the son of Henry II, who was the son of Henry II, to Henry II and Henry III. He was the son of Henry I. After Henry III, Henry II was the son of Henry II, and Henry II and Henry II were both King Henry I and Henry III.
+Henry II, Henry II, Henry II
+Henry II was a professor of English at the University of Cambridge and an English teacher at the University of Oxford. He wrote two articles on the history of the world. In both cases Henry III was a man who lived in a large town in the middle of England, and Henry II was a man who was a great boy and he was a man who was a great boy. Henry died in the middle of his death in the mid-nineteenth century. Henry III was a man who lived in the middle of his death as a man who was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy. Henry II was a
+```
+
 ### technology
 
 prompt: 'The internet began as a research project in'
@@ -2888,6 +3214,18 @@ The rise of the Internet has led to changes in the market for new computers, com
 The rise of the Internet
 As a result of the Internet, the availability of online gaming remains a problem. In the United States, the need for internet access has become increasingly significant. The rise of online gaming has brought about a growing concern for many people.
 The rise of online gaming has also led to the emergence of online gaming, and the shortage of resources has led to the development of new technologies. The rise of digital gaming
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.237 · topic 0%, last mention at token 80
+
+```
+The internet began as a research project in the United States, and became one of the first large-scale research projects to explore the internet. The paper provides a detailed overview of the development of the internet in the US.
+The paper provides a comprehensive overview of the research, the purpose, and the overall purpose of the study. It also provides a detailed overview of the research and project activities, and provides an overview of the research and project activities.
+This article is a stub. You can help Wikipedia by expanding it.
+How to Read Wikipedia
+The article has been published in the United States and is often published in American, Canadian, or Pacific Media. It is meant to be a summary of the original article, and then a summary of the article, and then provide a summary of the article, and to be able to provide an overview of the original article, and the main purpose.
+The article has been written in the United States and is a complete summary of the articles, and a summary of the article, and a summary of the article.
+The article has been published in the United States and is generally written in the United States and is usually written in the United States. It is a complete summary of the article, and is generally written in the United States and is commonly used as a summary
 ```
 
 ### economics
@@ -3014,5 +3352,13 @@ A player loses money from a business, and the other person will lose money by bu
 A player loses money from a company, or a player loses money from a business, or a member of a corporation. This can mean that each player loses his or her money because of his or her ability to pay a specific amount of money.
 A player can lose money from a business, or a player loses money from a business, or a member of a corporation. A player can lose money by following the instructions or by having a good credit score.
 A player loses a certain amount of money, and the player will lose their money because of the value of the game. The player has to keep the game
+```
+
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.589 · loops from token 214 (period 4) · topic 50%, last mention at token 256
+
+```
+Inflation occurs when the inflation rate is not as high or low and the inflation rate is not as high. This is because the inflation rate is very low and the inflation rate is low. This is because inflation is not high because inflation is low. Therefore the inflation rate is low and the inflation rate is high.
+The inflation rate also differs from inflation in that inflation is not high. The inflation rate is not high and that is not high enough. This is because inflation is high because inflation is low. This is because inflation is low because inflation is high and the inflation rate is low.
+The inflation rate is not high and the inflation rate is low. The inflation rate is not high but the inflation rate is low. This is because inflation is low because inflation is low because inflation is low. This is because inflation is high because inflation is high because inflation is low. This is because inflation is lower because inflation is low because inflation can be low. This is because inflation is low because inflation is low because inflation is low because inflation is high because inflation has low inflation. This is because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation
 ```
 
