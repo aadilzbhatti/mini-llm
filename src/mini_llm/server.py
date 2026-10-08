@@ -40,6 +40,7 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, PlainTextResponse
 
 from mini_llm.control import KNOBS, COMMAND_TYPES, CommandError, append_command, read_jsonl, run_paths
+from mini_llm import sweeps
 from mini_llm.remote import costs
 
 RUN_ID = re.compile(r"^[A-Za-z0-9._-]{1,200}$")
@@ -565,19 +566,27 @@ def create_app(
         except runner.JobError as exc:
             raise HTTPException(422, str(exc)) from exc
         if target == "modal":
-            return launch_modal(name, kind, cmd, args, body, dry_run)
+            preview, job = plan_modal(name, kind, args, body)
+            if dry_run:
+                return {"ok": True, **preview}
+            start_modal([job])
+            return preview
         forecast = runner.forecast_for(repo, args) if kind == "train" else None
         if dry_run:
             return {"ok": True, "name": name, "kind": kind, "argv": cmd[4:], "forecast": forecast}
+        fname = enqueue(name, kind, args)
+        return {"file": fname, "name": name, "kind": kind, "argv": cmd[4:], "forecast": forecast}
+
+    def enqueue(name: str, kind: str, args: dict) -> str:
         queue_dir.mkdir(exist_ok=True)
         fname = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{name}.json"
         tmp = queue_dir / f".{fname}.tmp"
         tmp.write_text(json.dumps({"name": name, "kind": kind, "args": args}, indent=2))
         tmp.replace(queue_dir / fname)
-        return {"file": fname, "name": name, "kind": kind, "argv": cmd[4:], "forecast": forecast}
+        return fname
 
-    def launch_modal(name: str, kind: str, cmd: list[str], args: dict, body: dict, dry_run: bool) -> dict:
-        """Hand a validated job to mini_llm.remote.launch in the background.
+    def plan_modal(name: str, kind: str, args: dict, body: dict) -> tuple[dict, dict]:
+        """Check a validated job against Modal's rules -> (preview for the page, job for start_modal).
 
         Modal jobs skip queue/ entirely: the queue runs one local job at a
         time, and a remote run has no reason to wait behind a long Mac run.
@@ -607,7 +616,6 @@ def create_app(
             )
         if importlib.util.find_spec("modal") is None:
             raise HTTPException(503, "the modal package isn't installed here: run `uv sync --group modal`")
-        from mini_llm.remote.launch import launching_status, write_status
         from mini_llm.remote.modal_train import config_to_argv, make_run_id
 
         run_id = make_run_id(name)
@@ -623,22 +631,115 @@ def create_app(
             # What torchrun will actually run on Modal (not the local queue's argv).
             "argv": ["mini-llm-train", *config_to_argv({"args": effective})],
         }
-        if dry_run:
-            return {"ok": True, **preview}
         job = {"run_id": run_id, "name": name, "args": effective, "gpus": gpus, "timeout_hours": timeout_hours}
-        job_file = runs_dir / f"{run_id}.modal-job.json"
+        return preview, job
+
+    def start_modal(jobs: list[dict]) -> None:
+        """Write the jobs and hand them to ONE background mini_llm.remote.launch, which launches them in
+        order (a sweep's runs then never race each other to upload missing data)."""
+        from mini_llm.remote.launch import launching_status, write_status
+
         runs_dir.mkdir(exist_ok=True)
-        job_file.write_text(json.dumps(job, indent=2))
-        write_status(repo, run_id, launching_status(run_id, job))  # visible before this returns
+        job_files = []
+        for job in jobs:
+            job_file = runs_dir / f"{job['run_id']}.modal-job.json"
+            job_file.write_text(json.dumps(job, indent=2))
+            write_status(repo, job["run_id"], launching_status(job["run_id"], job))  # visible at once
+            job_files.append(str(job_file))
         subprocess.Popen(
-            [sys.executable, "-m", "mini_llm.remote.launch", str(job_file), "--repo", str(repo), "--uv", uv],
+            [sys.executable, "-m", "mini_llm.remote.launch", *job_files, "--repo", str(repo), "--uv", uv],
             cwd=repo,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             start_new_session=True,  # survives a server restart mid-launch
         )
-        return preview
+
+    # --- sweeps: one base job, one flag varied (mini_llm.sweeps) ---------------
+
+    sweeps_dir = runs_dir / "sweeps"
+
+    @app.post("/api/sweeps", dependencies=[Depends(auth)])
+    def submit_sweep(body: dict, dry_run: bool = False) -> dict:
+        """Validate every child before launching any; launch them in order (Modal) or queue them (local)."""
+        try:
+            sweep = sweeps.expand(body, runner.INT_FLAGS, runner.FLOAT_FLAGS)
+        except sweeps.SweepError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        target = body.get("target", "local")
+        if target not in ("local", "modal"):
+            raise HTTPException(422, f"target must be 'local' or 'modal', got {target!r}")
+        planned = []  # (value, name, kind, args, preview, modal job or None)
+        pending = pending_outputs()
+        for value, child in sweep.children:
+            job = {k: v for k, v in child.items() if k not in MODAL_KEYS}
+            try:
+                name, kind, cmd, args = runner.validate_job(job, repo, uv, pending=pending)
+            except runner.JobError as exc:
+                raise HTTPException(422, f"{child['name']}: {exc}") from exc
+            if target == "modal":
+                preview, modal_job = plan_modal(name, kind, args, child)
+            else:
+                preview, modal_job = {"name": name, "argv": cmd[4:]}, None
+            planned.append((value, name, kind, args, preview, modal_job))
+        sweep_id = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{sweep.name}"
+        out = {
+            "id": sweep_id,
+            "name": sweep.name,
+            "flag": sweep.flag,
+            "values": sweep.values,
+            "stop_after": sweep.stop_after,
+            "target": target,
+            "children": [p[4] for p in planned],
+        }
+        if dry_run:
+            return {"ok": True, **out}
+        children = []
+        if target == "modal":
+            start_modal([p[5] for p in planned])
+            children = [{"value": p[0], "name": p[1], "key": p[5]["run_id"], "run_id": p[5]["run_id"]} for p in planned]
+        else:
+            for value, name, kind, args, _, _ in planned:
+                children.append({"value": value, "name": name, "key": enqueue(name, kind, args)})
+        from mini_llm.remote.launch import now_z
+
+        record = {**{k: v for k, v in out.items() if k != "children"}, "created": now_z(), "children": children}
+        sweeps_dir.mkdir(parents=True, exist_ok=True)
+        tmp = sweeps_dir / f".{sweep_id}.json.tmp"
+        tmp.write_text(json.dumps(record, indent=2))
+        tmp.replace(sweeps_dir / f"{sweep_id}.json")
+        return out
+
+    def sweep_view(record: dict) -> dict:
+        # Local children are keyed by their queue file until the runner starts them; find their run by it.
+        by_job_file = {}
+        if any("run_id" not in c for c in record["children"]):
+            for path in runs_dir.glob("*.status.json"):
+                st = _read_json(path) or {}
+                if st.get("job_file"):
+                    by_job_file[st["job_file"]] = st.get("run_id") or path.name.removesuffix(".status.json")
+        statuses, cost_blocks = {}, {}
+        rates, now = costs.load_rates(runs_dir), time.time()
+        for c in record["children"]:
+            run_id = c.get("run_id") or by_job_file.get(c["key"])
+            st = _read_json(runs_dir / f"{run_id}.status.json") if run_id else None
+            if st is not None and st.get("status") == "running":
+                st["live"] = _read_json(run_paths(runs_dir, run_id)["live"])
+            statuses[c["key"]] = st
+            cost_blocks[c["key"]] = costs.run_cost(st, st.get("live"), rates, now) if st else None
+        return sweeps.summarize(record, statuses, cost_blocks)
+
+    @app.get("/api/sweeps", dependencies=[Depends(auth)])
+    def list_sweeps(limit: int = 20) -> list[dict]:
+        paths = sorted(sweeps_dir.glob("*.json"), reverse=True)[: max(1, min(limit, 200))]
+        return [sweep_view(r) for r in (_read_json(p) for p in paths) if r]
+
+    @app.get("/api/sweeps/{sweep_id}", dependencies=[Depends(auth)])
+    def get_sweep(sweep_id: str) -> dict:
+        record = _read_json(sweeps_dir / f"{check_id(sweep_id)}.json")
+        if record is None:
+            raise HTTPException(404, f"no sweep {sweep_id}")
+        return sweep_view(record)
 
     # --- checkpoints, inference, evals -------------------------------------
     #

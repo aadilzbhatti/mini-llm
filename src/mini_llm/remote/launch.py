@@ -165,11 +165,19 @@ def launch(job_file: Path, repo: Path, uv: str = "uv") -> int:
 
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(description="Launch a web-submitted job on Modal (used by mini_llm.server).")
-    p.add_argument("job_file", type=Path)
+    p.add_argument(
+        "job_files",
+        type=Path,
+        nargs="+",
+        help="Launched one after another (a sweep's runs): the first uploads any missing data before the "
+        "next looks for it, so concurrent launches never race to upload the same file.",
+    )
     p.add_argument("--repo", type=Path, default=Path("."))
     p.add_argument("--uv", default="uv")
     args = p.parse_args(argv)
-    raise SystemExit(launch(args.job_file, args.repo.expanduser().resolve(), args.uv))
+    repo = args.repo.expanduser().resolve()
+    codes = [launch(job_file, repo, args.uv) for job_file in args.job_files]  # a failed one doesn't stop the rest
+    raise SystemExit(next((c for c in codes if c), 0))
 
 
 if __name__ == "__main__":

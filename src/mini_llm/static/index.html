@@ -101,6 +101,7 @@
   <button data-tab="live" class="on">Live</button>
   <button data-tab="queue">Queue</button>
   <button data-tab="history">History</button>
+  <button data-tab="sweeps">Sweeps</button>
   <button data-tab="best">Best</button>
   <button data-tab="gen">Generate</button>
   <!-- a link, not a <button>: every nav button is wired up as a tab switcher below -->
@@ -143,6 +144,7 @@
 </section>
 
 <section id="history" class="hidden"></section>
+<section id="sweeps" class="hidden"></section>
 <section id="best" class="hidden"></section>
 <section id="gen" class="hidden">
   <div class="card">
@@ -478,6 +480,37 @@ async function showDetail(id, btn) {
   } catch (e) { pre.textContent = e.message; }
 }
 
+// One-variable sweep (server: mini_llm.sweeps.summarize). full_val is compared only at steps every child reached.
+function sweepCard(s) {
+  const tags = s.children.map(c => c.tag);
+  const counts = s.children.reduce((m, c) => (m[c.status] = (m[c.status] || 0) + 1, m), {});
+  const head = `<tr><th>step</th>${tags.map(t => `<th>${esc(s.flag)} ${esc(t)}</th>`).join('')}</tr>`;
+  const rows = s.table.map(r => `<tr><td>${r.step.toLocaleString()}</td>${tags.map(t => {
+    const v = r.full_val[t], g = r.gap[t];
+    return `<td${t === r.leader ? ' style="font-weight:700"' : ''}>${f4(v)}${g ? ` <span class="mut">+${g.toFixed(3)}</span>` : ''}</td>`;
+  }).join('')}</tr>`).join('');
+  const kids = s.children.map(c => `<div class="row" style="gap:8px"><span style="flex:1">${esc(s.flag)} <strong>${esc(c.tag)}</strong>${c.diverged ? ' <span class="pill s-failed">diverged</span>' : ''}</span>
+    <span class="mut num">${c.step != null ? `${Number(c.step).toLocaleString()}${c.total_steps ? ' / ' + Number(c.total_steps).toLocaleString() : ''}` : ''}${c.cost_usd != null ? ` · ${c.cost_source === 'billed' ? '' : '≈'}${usd(c.cost_usd)}` : ''}</span>
+    <span class="pill s-${esc(c.status)}">${esc(c.status)}</span>${c.run_id && c.status !== 'queued' ? `<button onclick="cloneSweepWinner('${esc(c.run_id)}')">Launch full</button>` : ''}</div>`).join('');
+  return `<div class="card" data-sweep="${esc(s.id)}">
+    <div class="row"><strong style="flex:1; overflow-wrap:anywhere">${esc(s.name)}</strong><span class="pill">${esc(s.target)}</span>${s.done ? '<span class="pill s-completed">done</span>' : '<span class="pill s-running">running</span>'}</div>
+    <div class="mut num">${esc(s.flag)} ∈ {${tags.map(esc).join(', ')}}${s.stop_after ? ` · stop after ${Number(s.stop_after).toLocaleString()} steps of the full schedule` : ''} · ${Object.entries(counts).map(([k, n]) => `${n} ${k}`).join(', ')}${s.cost_usd != null ? ` · ≈${usd(s.cost_usd)}` : ''}${s.leader ? ` · leader <strong style="color:var(--fg)">${esc(s.flag)} ${esc(s.leader)}</strong>` : ''}</div>
+    ${rows ? `<div style="overflow-x:auto; margin-top:8px"><table class="num">${head}${rows}</table><div class="mut hint">full_val at steps every run reached; bold = lowest, +gap to it. Small gaps early on a long schedule can reverse.</div></div>` : '<div class="mut" style="margin-top:8px">No full_val point shared by every run yet.</div>'}
+    <div style="margin-top:8px">${kids}</div></div>`;
+}
+
+// "Launch full": the chosen child's job in the form, without --stop-after, so it runs its whole schedule.
+// It only fills the form: the long run is still a deliberate click.
+async function cloneSweepWinner(id) {
+  const s = await api(`/api/runs/${id}`); await freshMeta();
+  const args = { ...(s.args || {}) };
+  delete args['stop-after'];
+  if (s.remote) delete args['save-name'];
+  args.save = true;
+  const name = (s.name || 'job').replace(/-proxy[0-9a-z]*$/i, '') + '-full';
+  openForm({ name, kind: 'train', args, ...(s.remote ? { target: 'modal', gpus: s.remote.gpus } : {}) }, `from sweep run ${s.name || id}, without --stop-after`);
+}
+
 function histCard(r) {
   const id = esc(r.run_id);
   return `<div class="card" data-run="${id}">
@@ -715,6 +748,10 @@ async function refresh() {
       $('#history').innerHTML = hist.map(histCard).join('') || '<div class="card mut">No runs yet.</div>';
       restore('#history', st); HIST_SIG = sig;
     }
+    try {
+      const sw = await api('/api/sweeps');
+      if (!editing()) { const st = openState('#sweeps'); $('#sweeps').innerHTML = sw.length ? sw.map(sweepCard).join('') : `<div class="card mut">No sweeps yet. POST /api/sweeps with one base job and <code>"vary": {"lr": [3e-4, 4e-4]}</code> (plus <code>"stop_after"</code> for proxies on the full schedule).</div>`; restore('#sweeps', st); }
+    } catch {}
     {
       const b = await api('/api/baselines');
       BEST = b || [];
