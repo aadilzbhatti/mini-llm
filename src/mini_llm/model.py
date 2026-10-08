@@ -20,6 +20,25 @@ import torch.nn.functional as F
 
 from mini_llm.config import DynamicModelConfig, ModelConfig
 
+RopeAngles = tuple[torch.Tensor, torch.Tensor]  # (cos, sin) rows for a call's positions, (T, head_size / 2) each
+
+
+def rope_table(speeds: torch.Tensor, n: int) -> RopeAngles:
+    """cos and sin of position * speed for positions 0 .. n - 1: (n, head_size / 2) each, on the CPU.
+    Angles in float64 (position 50,000 is ~5e4 rad, where float32 keeps only ~4e-3 rad), stored as float32."""
+    positions = torch.arange(n, dtype=torch.float64)
+    angles = torch.outer(positions, speeds.double())
+    return torch.cos(angles).float(), torch.sin(angles).float()
+
+
+def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.Tensor:
+    """Rotate each (even, odd) pair of x's last dimension: row t by the angles in cos[t], sin[t].
+    x is (B, T, head_size); cos and sin are (T, head_size / 2)."""
+    ret = torch.empty_like(x)
+    ret[..., 0::2] = x[..., 0::2] * cos - x[..., 1::2] * sin
+    ret[..., 1::2] = x[..., 0::2] * sin + x[..., 1::2] * cos
+    return ret
+
 
 class Head(nn.Module):
     """one head of self-attention"""
@@ -47,8 +66,6 @@ class Head(nn.Module):
         self.head_size = head_size
         self.block_size = config.block_size
         self.use_rope_embeddings = config.use_rope_embeddings
-        if self.use_rope_embeddings:
-            self.register_buffer("speeds", dynamic_config.speeds, persistent=False)
 
         # Initialize linear layers
         self.init_weights()
@@ -58,15 +75,17 @@ class Head(nn.Module):
         nn.init.xavier_normal_(self.query.weight)
         nn.init.xavier_normal_(self.value.weight)
 
-    def forward(self, x: torch.Tensor, use_cache: bool = False):
+    def forward(self, x: torch.Tensor, use_cache: bool = False, rope: "RopeAngles | None" = None):
+        """rope: the (cos, sin) rows for this call's positions, sliced once per forward by the model
+        (ModelCustomTransformer.rope_angles) and shared by every head; required when RoPE is on."""
         B, T, C = x.shape  # pyright: ignore[reportUnusedVariable]
         k_new = self.key(x)
         v_new = self.value(x)
         q = self.query(x)
 
-        start = self.pos if use_cache else 0  # uncached passes (training, loss evals) always start at 0
         if self.use_rope_embeddings:
-            k_new, q = self.rotate(k_new, start), self.rotate(q, start)
+            assert rope is not None, "a RoPE head needs the model's angle rows for this call's positions"
+            k_new, q = apply_rope(k_new, *rope), apply_rope(q, *rope)
 
         if use_cache:
             if self.k_cache is None or self.k_cache.size(0) != B or self.k_cache.dtype != k_new.dtype:
@@ -108,19 +127,6 @@ class Head(nn.Module):
     def clear_cache(self):
         self.pos = 0  # keep the buffers: the next generation reuses them
 
-    def rotate(self, x: torch.Tensor, start: int) -> torch.Tensor:
-        T = x.shape[1]
-        assert isinstance(self.speeds, torch.Tensor)
-        positions = torch.arange(start, start + T, device=x.device, dtype=torch.float32)
-        angles = torch.outer(positions, self.speeds)
-        cosines = torch.cos(angles)
-        sines = torch.sin(angles)
-        ret = torch.empty_like(x)
-        # for each row, rotate each pair
-        ret[..., 0::2] = x[..., 0::2] * cosines - x[..., 1::2] * sines
-        ret[..., 1::2] = x[..., 0::2] * sines + x[..., 1::2] * cosines
-        return ret
-
 
 class MultiHeadAttention(nn.Module):
     """multiple heads of self-attention in parallel"""
@@ -136,9 +142,9 @@ class MultiHeadAttention(nn.Module):
     def init_weights(self):
         nn.init.xavier_uniform_(self.proj.weight)
 
-    def forward(self, x: torch.Tensor, use_cache: bool = False):
+    def forward(self, x: torch.Tensor, use_cache: bool = False, rope: "RopeAngles | None" = None):
         # FIX (#2): no mask to pass along any more -- see Head.forward.
-        out = torch.cat([h(x, use_cache) for h in self.heads], dim=-1)
+        out = torch.cat([h(x, use_cache, rope) for h in self.heads], dim=-1)
         out = self.dropout(self.proj(out))
         return out
 
@@ -181,8 +187,8 @@ class Block(nn.Module):
         self.ln1 = nn.LayerNorm(config.n_embd)
         self.ln2 = nn.LayerNorm(config.n_embd)
 
-    def forward(self, x: torch.Tensor, use_cache: bool = False):
-        x = x + self.sa(self.ln1(x), use_cache)
+    def forward(self, x: torch.Tensor, use_cache: bool = False, rope: "RopeAngles | None" = None):
+        x = x + self.sa(self.ln1(x), use_cache, rope)
         x = x + self.ffwd(self.ln2(x))
         return x
 
@@ -204,6 +210,14 @@ class ModelCustomTransformer(nn.Module):
         self.ln_f = nn.LayerNorm(config.n_embd)  # final layer norm
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size)
         self.dropout = nn.Dropout(config.dropout)
+        if self.use_rope_embeddings:
+            # One (positions, head_size / 2) cos/sin table for the whole model: every head in every layer
+            # rotates the same positions, so they share it instead of each recomputing its angles per call.
+            # Not saved with the model (derived from the config); grown when positions pass its end.
+            self.rope_speeds = dynamic_config.speeds  # float64 on the CPU (MPS has no float64), so not a buffer
+            cos, sin = rope_table(self.rope_speeds, config.block_size)
+            self.register_buffer("rope_cos", cos, persistent=False)
+            self.register_buffer("rope_sin", sin, persistent=False)
 
         self.init_weights()
 
@@ -259,9 +273,10 @@ class ModelCustomTransformer(nn.Module):
         x = tok_emb  # (B, T, C)
         if not self.use_rope_embeddings:
             x = tok_emb + pos_emb
+        rope = self.rope_angles(offset, T) if self.use_rope_embeddings else None
         x = self.dropout(x)
         for block in self.blocks:
-            x = block(x, use_cache)
+            x = block(x, use_cache, rope)
         if last_only and targets is None:
             x = x[:, -1:]  # generation only needs the next-token distribution
         x = self.ln_f(x)  # (B, T, C)
@@ -291,8 +306,8 @@ class ModelCustomTransformer(nn.Module):
 
         Only the newest token is fed once the cache holds the context. When the window is full:
         a RoPE model run at its full block_size keeps feeding single tokens through the wrapped cache
-        (positions are relative, so the window rolls; with more than one layer this drifts slightly
-        from a windowed recompute). Every other case clears the cache and re-runs the cropped window,
+        (RoPE makes Q·K depend only on relative offsets, so cached K/V stay valid as the window rolls;
+        with more than one layer this drifts slightly from a windowed recompute). Every other case clears the cache and re-runs the cropped window,
         which is exact: absolute-PE models (older checkpoints) have no position past block_size, and
         a window smaller than the model's would not match where the cache ring wraps. Callers clear
         the cache before the first call."""
@@ -321,6 +336,15 @@ class ModelCustomTransformer(nn.Module):
             # append sampled index to the running sequence
             idx = torch.cat((idx, idx_next), dim=1)  # (B, T+1)
         return idx
+
+    def rope_angles(self, start: int, T: int) -> "RopeAngles":
+        """The (cos, sin) rows for positions start .. start + T - 1, each (T, head_size / 2). The rolling
+        cache's positions keep growing past block_size, so the table doubles when they run past its end."""
+        if start + T > self.rope_cos.size(0):
+            n = max(2 * self.rope_cos.size(0), start + T)
+            cos, sin = rope_table(self.rope_speeds, n)
+            self.rope_cos, self.rope_sin = cos.to(self.rope_cos.device), sin.to(self.rope_sin.device)
+        return self.rope_cos[start : start + T], self.rope_sin[start : start + T]
 
     def cache_len(self) -> int:
         # every head in every layer holds the same number of positions

@@ -24,7 +24,9 @@ class DynamicModelConfig:
     @classmethod
     def from_config(cls, config: "ModelConfig") -> "DynamicModelConfig":
         head_size = config.n_embd // config.n_head
-        pair_indices = torch.arange(0, head_size // 2, 1)
+        pair_indices = torch.arange(0, head_size // 2, 1, dtype=torch.float64)
+        # float64 so the angle tables built from these stay accurate at large positions (the rolling cache's
+        # positions keep growing past block_size); the tables are cast to float32 once built.
         speeds = 10000 ** (-2 * pair_indices / head_size)
         return cls(head_size=head_size, speeds=speeds)
 

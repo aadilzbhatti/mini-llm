@@ -1,4 +1,4 @@
-"""RoPE tests: Head.rotate against its mathematical definition, plus cache equivalence."""
+"""RoPE tests: apply_rope with the model's angle table against its mathematical definition, plus cache equivalence."""
 
 import pytest
 import torch
@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 from mini_llm.config import ModelConfig, build_model
 from mini_llm.data import get_tokenizer
-from mini_llm.model import Head, ModelCustomTransformer
+from mini_llm.model import Head, ModelCustomTransformer, apply_rope
 
 BLOCK_SIZE = 32
 N_EMBD = 32
@@ -34,9 +34,14 @@ def head(model: ModelCustomTransformer) -> Head:
     return model.blocks[0].sa.heads[0]
 
 
-def rotate_at(head: Head, x: torch.Tensor, pos: int) -> torch.Tensor:
+def rotate(model: ModelCustomTransformer, x: torch.Tensor, start: int) -> torch.Tensor:
+    """Rotate a (B, T, head_size) block whose row t sits at position start + t, as the heads do."""
+    return apply_rope(x, *model.rope_angles(start, x.shape[-2]))
+
+
+def rotate_at(model: ModelCustomTransformer, x: torch.Tensor, pos: int) -> torch.Tensor:
     """Rotate a (head_size,) vector as if it sat at position `pos`."""
-    return head.rotate(x.view(1, 1, -1), pos).view(-1)
+    return rotate(model, x.view(1, 1, -1), pos).view(-1)
 
 
 def rotation_matrix(head: Head, pos: int) -> torch.Tensor:
@@ -51,11 +56,27 @@ def rotation_matrix(head: Head, pos: int) -> torch.Tensor:
     return R
 
 
-def test_speeds_match_formula(head: Head):
+def test_speeds_match_formula(model: ModelCustomTransformer):
     """The per-pair frequencies are 10000^(-2i/d); every angle p * speed is built from these."""
     d = HEAD_SIZE
-    expected = torch.tensor([10000.0 ** (-2 * i / d) for i in range(d // 2)])
-    assert torch.allclose(head.speeds, expected, rtol=1e-5)
+    expected = torch.tensor([10000.0 ** (-2 * i / d) for i in range(d // 2)], dtype=torch.float64)
+    assert torch.allclose(model.rope_speeds, expected, rtol=1e-12)
+
+
+def test_angle_table_matches_formula_and_grows_past_the_window(model: ModelCustomTransformer):
+    """The shared table holds cos/sin(p * speed), starts at block_size rows, and grows when positions
+    run past its end (the rolling cache's positions keep growing). Row p is exact even far out."""
+    assert model.rope_cos.shape == (BLOCK_SIZE, HEAD_SIZE // 2)
+    start = 5 * BLOCK_SIZE + 3
+    cos, sin = model.rope_angles(start, 4)
+    assert model.rope_cos.size(0) >= start + 4
+    d = HEAD_SIZE
+    for t in range(4):
+        angles = torch.tensor([(start + t) * 10000.0 ** (-2 * i / d) for i in range(d // 2)], dtype=torch.float64)
+        assert torch.allclose(cos[t].double(), angles.cos(), atol=1e-6)
+        assert torch.allclose(sin[t].double(), angles.sin(), atol=1e-6)
+    # rows already in the table don't change when it grows
+    assert torch.equal(model.rope_angles(0, BLOCK_SIZE)[0], model.rope_cos[:BLOCK_SIZE])
 
 
 def test_rope_is_enabled(model: ModelCustomTransformer):
@@ -65,15 +86,15 @@ def test_rope_is_enabled(model: ModelCustomTransformer):
     assert not hasattr(model, "position_embedding_table")
 
 
-def test_forward_rotates_q_and_k(head: Head):
+def test_forward_rotates_q_and_k(model: ModelCustomTransformer, head: Head):
     """Training mode, no dropout: the head's logged attention must equal the hand-computed
     softmax(mask(rot(q) rot(k)^T * scale)). Rotating only k (or only q) gives different weights."""
     head.train()
     T = 6
     x = torch.randn(1, T, N_EMBD)
-    head(x)
+    head(x, rope=model.rope_angles(0, T))
     q, k = head.query(x), head.key(x)
-    q, k = head.rotate(q, 0), head.rotate(k, 0)
+    q, k = rotate(model, q, 0), rotate(model, k, 0)
     wei = (q @ k.transpose(-2, -1)) * head.scale
     wei = wei.masked_fill(torch.tril(torch.ones(T, T)) == 0, float("-inf"))
     expected = F.softmax(wei, dim=-1)
@@ -85,38 +106,38 @@ def test_forward_rotates_q_and_k(head: Head):
     assert not torch.allclose(head.attention_values, k_only, atol=1e-5)
 
 
-def test_rotation_preserves_norm(head: Head):
+def test_rotation_preserves_norm(model: ModelCustomTransformer):
     x = torch.randn(4, BLOCK_SIZE, HEAD_SIZE)
-    rotated = head.rotate(x, 0)
+    rotated = rotate(model, x, 0)
     assert torch.allclose(rotated.norm(dim=-1), x.norm(dim=-1), atol=1e-5)
 
 
-def test_position_zero_is_identity(head: Head):
+def test_position_zero_is_identity(model: ModelCustomTransformer):
     x = torch.randn(3, 1, HEAD_SIZE)
-    assert torch.allclose(head.rotate(x, 0), x)
+    assert torch.allclose(rotate(model, x, 0), x)
 
 
-def test_relative_invariance(head: Head):
+def test_relative_invariance(model: ModelCustomTransformer):
     q, k = torch.randn(HEAD_SIZE), torch.randn(HEAD_SIZE)
     m, n = 7, 3
-    base = rotate_at(head, q, m) @ rotate_at(head, k, n)
-    for shift in (1, 5, 20):
-        shifted = rotate_at(head, q, m + shift) @ rotate_at(head, k, n + shift)
+    base = rotate_at(model, q, m) @ rotate_at(model, k, n)
+    for shift in (1, 5, 20, 3 * BLOCK_SIZE):  # the last one runs past the table's first block_size rows
+        shifted = rotate_at(model, q, m + shift) @ rotate_at(model, k, n + shift)
         assert torch.allclose(base, shifted, atol=1e-4), f"shift {shift}"
 
 
-def test_matches_slow_reference(head: Head):
+def test_matches_slow_reference(model: ModelCustomTransformer, head: Head):
     x = torch.randn(HEAD_SIZE)
     for pos in (0, 1, 9, BLOCK_SIZE - 1):
         slow = rotation_matrix(head, pos) @ x
-        assert torch.allclose(rotate_at(head, x, pos), slow, atol=1e-5), f"pos {pos}"
+        assert torch.allclose(rotate_at(model, x, pos), slow, atol=1e-5), f"pos {pos}"
 
 
-def test_batched_rotate_matches_per_position(head: Head):
+def test_batched_rotate_matches_per_position(model: ModelCustomTransformer, head: Head):
     """Rotating a (B, T, d) block at `start` rotates row t by position start + t."""
     x = torch.randn(2, 5, HEAD_SIZE)
     start = 4
-    out = head.rotate(x, start)
+    out = rotate(model, x, start)
     for t in range(5):
         for b in range(2):
             assert torch.allclose(out[b, t], rotation_matrix(head, start + t) @ x[b, t], atol=1e-5)
