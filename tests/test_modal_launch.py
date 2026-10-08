@@ -163,3 +163,30 @@ def test_warmup_steps_and_tokens_together_rejected_at_submit(repo, spawned):
         r = post(repo, {**JOB, "args": args, "target": target})
         assert r.status_code == 422 and "not both" in r.text
     assert spawned == [] and not list((repo / "queue").glob("*.json"))
+
+
+def test_upload_check_retries_errors_that_are_not_not_found(monkeypatch):
+    """Several launches at once: a flaky existence check must not look like a missing file."""
+    from mini_llm.remote import launch
+
+    monkeypatch.setattr(launch.time, "sleep", lambda s: None)
+
+    class Flaky:
+        def __init__(self):
+            self.calls = 0
+
+        def listdir(self, path):
+            self.calls += 1
+            if self.calls < 3:
+                raise ConnectionError("rate limited")
+            return [path]
+
+    vol = Flaky()
+    assert launch._on_volume(vol, "/data320k/val.pt") is True and vol.calls == 3
+
+    class Down:
+        def listdir(self, path):
+            raise ConnectionError("down")
+
+    with pytest.raises(ConnectionError):
+        launch._on_volume(Down(), "/x.pt")

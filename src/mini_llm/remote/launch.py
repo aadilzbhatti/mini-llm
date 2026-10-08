@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -60,6 +61,23 @@ def launching_status(run_id: str, job: dict) -> dict:
     }
 
 
+def _on_volume(volume, path: str, attempts: int = 4) -> bool:
+    """Whether `path` exists on the volume. Only "not found" means missing: any other error
+    (Modal rate-limiting several launches at once, a dropped connection) is retried and then
+    raised, because treating it as missing re-uploads a file that is there, which fails."""
+    for attempt in range(attempts):
+        try:
+            volume.listdir(path)
+            return True
+        except Exception as exc:  # noqa: BLE001 - classified below
+            if type(exc).__name__ in ("NotFoundError", "FileNotFoundError"):
+                return False
+            if attempt == attempts - 1:
+                raise
+            time.sleep(2**attempt)
+    return False
+
+
 def upload_missing_data(repo: Path, args: dict, volume=None) -> list[str]:
     """Put repo-relative data files on the data volume where modal_train
     looks for them (data/x/y.pt -> /x/y.pt, other/z.pt -> /other/z.pt)."""
@@ -74,12 +92,7 @@ def upload_missing_data(repo: Path, args: dict, volume=None) -> list[str]:
         import modal
 
         volume = modal.Volume.from_name(DATA_VOLUME, create_if_missing=True)
-    missing = []
-    for remote, local in wanted.items():
-        try:
-            volume.listdir(remote)
-        except Exception:  # noqa: BLE001 - "not found" is the only case that matters here
-            missing.append((remote, local))
+    missing = [(remote, local) for remote, local in wanted.items() if not _on_volume(volume, remote)]
     if missing:
         with volume.batch_upload() as batch:
             for remote, local in missing:
