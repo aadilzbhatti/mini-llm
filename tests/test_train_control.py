@@ -118,3 +118,5 @@ def test_stop_after_ends_early_on_the_long_schedule(workdir, capsys):
     for step in (0, 15, 29):  # still the 1000-step cosine: barely decayed by step 29
         assert abs(lrs[step] - train.lr_at_step(step, 1000, 1e-3, 1e-5, 0)) < 1e-12
     assert lrs[29] > 0.99e-3
+    live = json.loads((workdir / "runs" / "t1.live.json").read_text())
+    assert live["total_steps"] == 30  # the page's ETA runs to the stop, not to step 1000

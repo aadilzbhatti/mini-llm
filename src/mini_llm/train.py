@@ -893,7 +893,10 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         "\n".join(f"    {k}: {v}" for k, v in {**cfg.to_dict(), **optim_cfg, "run_id": run_id}.items()),
         start_step,
     )
-    control.heartbeat(start_step, total_steps, force=True)
+    # Progress (and so the page's ETA and projected cost) runs to where training will actually end:
+    # --stop-after, when given, not the end of the LR schedule.
+    progress_end = start_step + args.stop_after if args.stop_after is not None else total_steps
+    control.heartbeat(start_step, progress_end, force=True)
     stopped_at: int | None = None
 
     # DDP wraps the model for the TRAINING forward/backward only. Wrapping
@@ -1018,7 +1021,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         if log_now or eval_now or step % control.poll_every == 0:
             control.heartbeat(
                 step + 1,
-                total_steps,
+                progress_end,
                 extra={
                     "lr": current_lr,
                     "eval_train_loss": train_history[-1][1] if train_history else None,
