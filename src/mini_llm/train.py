@@ -475,6 +475,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="bf16 autocast for the training forward pass. CUDA only; ignored (with a "
         "notice) on MPS/CPU. Eval stays fp32 so eval losses remain comparable across runs.",
     )
+    p.add_argument(
+        "--fused-attention",
+        action="store_true",
+        help="Train model_fused.py: one q/k/v matmul per layer and F.scaled_dot_product_attention, instead "
+        "of model.py's per-head attention. The same function; recorded in the checkpoint's config.",
+    )
     p.add_argument("--steps", type=int, default=100)
     p.add_argument(
         "--stop-after",
@@ -712,6 +718,7 @@ def run_training(args: argparse.Namespace, dist_info: DistInfo) -> None:
         n_head=args.n_head,
         n_layer=args.n_layer,
         dropout=args.dropout,
+        fused_attention=args.fused_attention,
     )
     print(f"Config: {cfg.to_dict()}")
     model = build_model(cfg).to(device)

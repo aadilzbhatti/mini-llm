@@ -40,6 +40,9 @@ class ModelConfig:
     n_layer: int = 2
     dropout: float = 0.0
     use_rope_embeddings: bool = True
+    # model_fused.py (one q/k/v matmul + scaled_dot_product_attention) instead of model.py's per-head
+    # attention. The same function; checkpoints record which one trained them. Absent = False.
+    fused_attention: bool = False
 
     @classmethod
     def from_dict(cls, d: dict) -> "ModelConfig":
@@ -56,7 +59,12 @@ class ModelConfig:
 
 
 def build_model(cfg: ModelConfig) -> "ModelCustomTransformer":
-    """Instantiate the custom Transformer from a config."""
-    from mini_llm.model import ModelCustomTransformer  # deferred: model.py imports this module
+    """Instantiate the custom Transformer from a config: model_fused.py's when cfg.fused_attention."""
+    # deferred: the model modules import this one
+    if cfg.fused_attention:
+        from mini_llm.model_fused import ModelCustomTransformer as Fused
+
+        return Fused(cfg)  # type: ignore[return-value]  # same interface
+    from mini_llm.model import ModelCustomTransformer
 
     return ModelCustomTransformer(cfg)

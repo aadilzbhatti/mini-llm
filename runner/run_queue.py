@@ -79,7 +79,7 @@ PATH_FLAGS = {"tokens", "val-tokens", "text", "resume"}
 # plot name, so it gets the same character rules.
 NAME_FLAGS = {"plot-name", "save-name", "plot-suffix"}
 
-BOOL_FLAGS = {"fixed-batch", "plot-loss", "save", "sample-report", "baseline"}
+BOOL_FLAGS = {"fixed-batch", "plot-loss", "save", "sample-report", "baseline", "fused-attention"}
 
 DEFAULT_ARGS: dict[str, object] = {
     "tokens": "data/train.pt",

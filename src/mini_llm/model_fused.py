@@ -1,4 +1,13 @@
-"""Custom decoder-only Transformer.
+"""Custom decoder-only Transformer, with fused attention.
+
+Branched from model.py (see its git history): identical except MultiHeadAttention, which projects
+q, k and v for all heads in one matmul, keeps one KV cache per layer, and calls
+F.scaled_dot_product_attention instead of running a Head module per head. Selected by
+ModelConfig.fused_attention (config.build_model); model.py's per-head checkpoints load into it.
+
+model.py's docstring follows.
+
+Custom decoder-only Transformer.
 
 Copied from the original project's src/text_prediction/model.py
 (commit 3ba9e94), then corrected. The attention math, residual structure,
@@ -40,57 +49,79 @@ def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.T
     return ret
 
 
-class Head(nn.Module):
-    """one head of self-attention"""
+class MultiHeadAttention(nn.Module):
+    """All heads at once: one fused q/k/v projection, one KV cache per layer, and
+    F.scaled_dot_product_attention (a fused kernel where the backend has one) in place of model.py's
+    per-head Head modules, each with its own projections, cache and explicit softmax(q k^T).
 
-    tril: torch.Tensor
+    The same function as model.py's attention: qkv.weight is model.py's per-head query, key and value
+    weights stacked ([q heads | k heads | v heads], heads in order), and the output is the heads
+    concatenated in order, as torch.cat did. Per-head checkpoints load into it (_load_from_state_dict).
+    Not kept: attention_values (SDPA never materializes the attention matrix)."""
+
+    mask: torch.Tensor
 
     def __init__(self, config: ModelConfig, dynamic_config: DynamicModelConfig):
         super().__init__()
-        head_size = dynamic_config.head_size
-        self.key = nn.Linear(config.n_embd, head_size, bias=False)
-        self.query = nn.Linear(config.n_embd, head_size, bias=False)
-        self.value = nn.Linear(config.n_embd, head_size, bias=False)
-        self.scale = head_size**-0.5
-        self.register_buffer("tril", torch.tril(torch.ones(config.block_size, config.block_size)))
+        self.n_head, self.head_size = config.n_head, dynamic_config.head_size
+        self.block_size = config.block_size
+        self.qkv = nn.Linear(config.n_embd, 3 * self.n_head * self.head_size, bias=False)
+        self.proj = nn.Linear(self.n_head * self.head_size, config.n_embd)
+        self.dropout_p = config.dropout
         self.dropout = nn.Dropout(config.dropout)
+        self.use_rope_embeddings = config.use_rope_embeddings
+        # Only needed for a multi-token write on top of an existing cache (see forward). Derived from the
+        # config, so not saved (model.py saved its per-head tril masks; loading drops them).
+        self.register_buffer(
+            "mask", torch.tril(torch.ones(config.block_size, config.block_size, dtype=torch.bool)), persistent=False
+        )
 
-        # Allocated once at (B, block_size, head_size) and written in place; min(pos, block_size) says how
-        # many positions are filled. Not saved with the model.
+        # (B, n_head, block_size, head_size), allocated once and written in place; min(pos, block_size)
+        # says how many positions are filled. Not saved with the model.
         self.register_buffer("k_cache", None, persistent=False)
         self.register_buffer("v_cache", None, persistent=False)
+        self.pos = 0  # absolute position of the next token, only ever grows
 
-        # absolute position of next token, only ever grows
-        self.pos = 0
-
-        self.head_size = head_size
-        self.block_size = config.block_size
-        self.use_rope_embeddings = config.use_rope_embeddings
-
-        # Initialize linear layers
         self.init_weights()
 
     def init_weights(self):
-        nn.init.xavier_normal_(self.key.weight)
-        nn.init.xavier_normal_(self.query.weight)
-        nn.init.xavier_normal_(self.value.weight)
+        # The same distribution as model.py: xavier_normal_ on each head's (head_size, n_embd) q, k and
+        # v weights (not on the whole stacked matrix, whose fans differ). Not the same RNG draws.
+        w = self.qkv.weight.data.view(3, self.n_head, self.head_size, -1)
+        for h in range(self.n_head):
+            for which in range(3):
+                nn.init.xavier_normal_(w[which, h])
+        nn.init.xavier_uniform_(self.proj.weight)
+
+    def _load_from_state_dict(self, state_dict, prefix, *args, **kwargs):
+        # Per-head checkpoints (model.py) hold heads.{h}.{query,key,value}.weight and heads.{h}.tril:
+        # stack the weights into qkv.weight in the order forward() splits it, drop the masks.
+        if f"{prefix}heads.0.query.weight" in state_dict:
+            state_dict[f"{prefix}qkv.weight"] = torch.cat(
+                [
+                    state_dict.pop(f"{prefix}heads.{h}.{name}.weight")
+                    for name in ("query", "key", "value")
+                    for h in range(self.n_head)
+                ]
+            )
+            for h in range(self.n_head):
+                state_dict.pop(f"{prefix}heads.{h}.tril", None)
+        super()._load_from_state_dict(state_dict, prefix, *args, **kwargs)
 
     def forward(self, x: torch.Tensor, use_cache: bool = False, rope: "RopeAngles | None" = None):
         """rope: the (cos, sin) rows for this call's positions, sliced once per forward by the model
-        (ModelCustomTransformer.rope_angles) and shared by every head; required when RoPE is on."""
-        B, T, C = x.shape  # pyright: ignore[reportUnusedVariable]
-        k_new = self.key(x)
-        v_new = self.value(x)
-        q = self.query(x)
-
+        (ModelCustomTransformer.rope_angles); required when RoPE is on."""
+        B, T, C = x.shape
+        # (B, T, 3 * n_head * hs) -> three (B, n_head, T, hs)
+        q, k, v = self.qkv(x).view(B, T, 3, self.n_head, self.head_size).permute(2, 0, 3, 1, 4)
         if self.use_rope_embeddings:
-            assert rope is not None, "a RoPE head needs the model's angle rows for this call's positions"
-            k_new, q = apply_rope(k_new, *rope), apply_rope(q, *rope)
+            assert rope is not None, "RoPE attention needs the model's angle rows for this call's positions"
+            q, k = apply_rope(q, *rope), apply_rope(k, *rope)  # (T, hs/2) broadcasts over batch and heads
 
         if use_cache:
-            if self.k_cache is None or self.k_cache.size(0) != B or self.k_cache.dtype != k_new.dtype:
+            if self.k_cache is None or self.k_cache.size(0) != B or self.k_cache.dtype != k.dtype:
                 # cache is uninitialized or batch size changed; allocate it
-                self.k_cache = k_new.new_empty(B, self.tril.size(0), k_new.size(-1))
+                self.k_cache = k.new_empty(B, self.n_head, self.block_size, self.head_size)
                 self.v_cache = torch.empty_like(self.k_cache)
             start, end = self.pos % self.block_size, (self.pos % self.block_size) + T
             assert end <= self.block_size, f"Cache overflow: pos={self.pos}, T={T}, block_size={self.block_size}"
@@ -98,60 +129,29 @@ class Head(nn.Module):
             assert (
                 T == 1 or self.pos < self.block_size
             ), f"Multi-token write after the cache wrapped: pos={self.pos}, T={T}, block_size={self.block_size}"
-            self.k_cache[:, start:end] = k_new
-            self.v_cache[:, start:end] = v_new
+            self.k_cache[:, :, start:end] = k
+            self.v_cache[:, :, start:end] = v
             self.pos += T
-
             filled = min(self.pos, self.block_size)
-            k = self.k_cache[:, :filled]
-            v = self.v_cache[:, :filled]
-        else:
-            k = k_new
-            v = v_new
+            k, v = self.k_cache[:, :, :filled], self.v_cache[:, :, :filled]
 
-        T_total = k.shape[1]  # k.shape != q.shape if we are using the cache
-        wei = (q @ k.transpose(-2, -1)) * self.scale
-        if T > 1:  # a single new token attends to the whole cache: its mask row is all ones
-            wei = wei.masked_fill(self.tril[T_total - T : T_total, :T_total] == 0, float("-inf"))
-
-        wei = F.softmax(wei, dim=-1)
-        wei = self.dropout(wei)
-        # Log wei values
-        if self.training:
-            self.attention_values = wei.detach()
-
-        out = wei @ v
-
-        return out
+        T_total = k.size(2)  # != T when attending over the cache
+        # One new token sees the whole cache (no mask). A full causal pass uses SDPA's is_causal path. Only
+        # a multi-token write on top of an existing cache needs the explicit offset mask.
+        mask = self.mask[T_total - T : T_total, :T_total] if 1 < T < T_total else None
+        out = F.scaled_dot_product_attention(
+            q,
+            k,
+            v,
+            attn_mask=mask,
+            is_causal=1 < T == T_total,
+            dropout_p=self.dropout_p if self.training else 0.0,
+        )  # (B, n_head, T, hs); default scale hs**-0.5, as before
+        out = out.transpose(1, 2).reshape(B, T, self.n_head * self.head_size)  # heads in order, as torch.cat
+        return self.dropout(self.proj(out))
 
     def clear_cache(self):
         self.pos = 0  # keep the buffers: the next generation reuses them
-
-
-class MultiHeadAttention(nn.Module):
-    """multiple heads of self-attention in parallel"""
-
-    def __init__(self, config: ModelConfig, dynamic_config: DynamicModelConfig):
-        super().__init__()
-        self.heads = nn.ModuleList([Head(config, dynamic_config) for _ in range(config.n_head)])
-        self.proj = nn.Linear(dynamic_config.head_size * config.n_head, config.n_embd)
-        self.dropout = nn.Dropout(config.dropout)
-
-        self.init_weights()
-
-    def init_weights(self):
-        nn.init.xavier_uniform_(self.proj.weight)
-
-    def forward(self, x: torch.Tensor, use_cache: bool = False, rope: "RopeAngles | None" = None):
-        # FIX (#2): no mask to pass along any more -- see Head.forward.
-        out = torch.cat([h(x, use_cache, rope) for h in self.heads], dim=-1)
-        out = self.dropout(self.proj(out))
-        return out
-
-    def clear_cache(self):
-        for m in self.modules():
-            if isinstance(m, Head):
-                m.clear_cache()
 
 
 class FeedForward(nn.Module):
@@ -347,8 +347,8 @@ class ModelCustomTransformer(nn.Module):
         return self.rope_cos[start : start + T], self.rope_sin[start : start + T]
 
     def cache_len(self) -> int:
-        # every head in every layer holds the same number of positions
-        return self.blocks[0].sa.heads[0].pos
+        # every layer holds the same number of positions
+        return self.blocks[0].sa.pos
 
     def clear_cache(self):
         for block in self.blocks:

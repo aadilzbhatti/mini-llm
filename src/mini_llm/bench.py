@@ -129,9 +129,12 @@ KV_CONTEXTS = (128, 256, 512, 1024)
 
 def _cache_bytes(model) -> tuple[int, int]:
     """(bytes per cached token, bytes allocated) for the model's KV cache."""
-    heads = [h for b in model.blocks for h in b.sa.heads]
-    per_token = sum(2 * h.key.out_features for h in heads) * model.token_embedding_table.weight.element_size()
-    alloc = sum(t.numel() * t.element_size() for h in heads for t in (h.k_cache, h.v_cache) if t is not None)
+    # per-head modules (model.py) or one fused attention module per layer (model_fused.py)
+    caches = [h for b in model.blocks for h in getattr(b.sa, "heads", [b.sa])]
+    per_token = (
+        2 * len(model.blocks) * model.blocks[0].sa.proj.in_features * model.token_embedding_table.weight.element_size()
+    )
+    alloc = sum(t.numel() * t.element_size() for c in caches for t in (c.k_cache, c.v_cache) if t is not None)
     return per_token, alloc
 
 
