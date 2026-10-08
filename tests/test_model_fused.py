@@ -145,3 +145,21 @@ def test_dropout_trains():
     _, loss = fused(x, x)
     loss.backward()
     assert torch.isfinite(loss)
+
+
+@pytest.mark.parametrize("rope", [True, False], ids=["rope", "absolute"])
+def test_attention_is_causal(rope):
+    """Changing token t must not change any output before t (no peeking at future tokens), in training mode
+    (the path training uses) as well as eval."""
+    _, fused = pair(rope)
+    for mode in (fused.train, fused.eval):
+        mode()
+        x = torch.randint(0, VOCAB, (1, BLOCK))
+        y = x.clone()
+        t = BLOCK // 2
+        y[0, t] = (x[0, t] + 1) % VOCAB
+        with torch.no_grad():
+            a, _ = fused(x)
+            b, _ = fused(y)
+        assert torch.equal(a[:, :t], b[:, :t]), "an output before the changed token moved: attention sees the future"
+        assert not torch.allclose(a[:, t:], b[:, t:])  # and the change does reach t and later
