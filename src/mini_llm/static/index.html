@@ -121,9 +121,9 @@
     <div class="field" id="targetfield"><label for="target">run on</label>
       <select id="target" onchange="targetChanged()"><option value="local">this Mac — the job queue</option><option value="modal">Modal GPUs — starts now</option></select></div>
     <div id="modalopts" class="hidden">
-      <div class="field"><label for="gpus">GPUs</label><input id="gpus" list="gpulist" value="L4:2" autocapitalize="off" autocorrect="off" spellcheck="false" oninput="collectJob(true)">
-        <datalist id="gpulist"><option value="L4:2"><option value="A100-80GB:2"><option value="H100:2"><option value="H100:4"><option value="cpu"></datalist>
-        <div class="mut hint">type:count, e.g. L4:2 · batch-size is the global batch and must divide by the count · L4 ≈ $0.80/GPU-h, H100 ≈ $3.95/GPU-h</div><div class="err"></div></div>
+      <div class="field"><label for="gpus">GPUs</label><input id="gpus" list="gpulist" value="H100" autocapitalize="off" autocorrect="off" spellcheck="false" oninput="collectJob(true)">
+        <datalist id="gpulist"><option value="H100"><option value="L4:2"><option value="A100-80GB:2"><option value="H100:2"><option value="H100:4"><option value="cpu"></datalist>
+        <div class="mut hint">type:count, e.g. L4:2 · batch-size is the global batch and must divide by the count · L4 ≈ $0.80/GPU-h, H100 ≈ $3.95/GPU-h · for the 39M model 1×H100 is cheapest per run</div><div class="err"></div></div>
       <div class="field"><label for="timeout">timeout (hours)</label><input id="timeout" inputmode="decimal" value="6">
         <div class="mut hint">Modal stops the run here; it saves only at the end, so leave headroom</div></div>
     </div>

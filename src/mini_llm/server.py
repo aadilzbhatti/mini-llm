@@ -577,7 +577,8 @@ def create_app(
         """
         if kind != "train":
             raise HTTPException(422, "only train jobs can run on Modal")
-        gpus = str(body.get("gpus") or "L4:2")
+        # 1xH100: the cheapest per run at this model size, and ~3x faster than 2xL4 (measured 2026-10-07).
+        gpus = str(body.get("gpus") or "H100")
         if not MODAL_GPUS.match(gpus):
             raise HTTPException(422, f"gpus must look like L4:2, A100-80GB:4, H100 or cpu; got {gpus!r}")
         nproc = 2 if gpus == "cpu" else int(gpus.partition(":")[2] or 1)
