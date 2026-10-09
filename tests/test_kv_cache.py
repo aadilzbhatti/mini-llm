@@ -32,9 +32,19 @@ PROMPTS = [
 ]
 
 
+MAX_PARAMS = 50_000_000  # real weights, but small enough that this module runs in seconds on the CPU
+
+
 def best_baseline_checkpoint() -> Path | None:
+    """The best trained model up to MAX_PARAMS: real weights exercise the cache the way generation does.
+    (The 95M models made this module take ~15 min on the CPU; model_fused.py's cache is checked against
+    model.py in test_model_fused.py.)"""
     rows = json.loads((ROOT / "baselines.json").read_text())
-    rows = [r for r in rows if r.get("checkpoint") and (ROOT / r["checkpoint"]).exists()]
+    rows = [
+        r
+        for r in rows
+        if r.get("checkpoint") and (ROOT / r["checkpoint"]).exists() and (r.get("params") or 0) <= MAX_PARAMS
+    ]
     if not rows:
         return None
     best = min(rows, key=lambda r: r.get("full_val_loss") or r.get("eval_val_loss") or float("inf"))
@@ -96,7 +106,11 @@ def reference_until_eos(model, idx, max_new_tokens, block_size, greedy=False, te
 
 
 def time_generate(
-    model: ModelCustomTransformer, idx: torch.Tensor, max_new_tokens: int, block_size: int, greedy: bool = False,
+    model: ModelCustomTransformer,
+    idx: torch.Tensor,
+    max_new_tokens: int,
+    block_size: int,
+    greedy: bool = False,
     reference: bool = False,
 ) -> tuple[torch.Tensor, float]:
     t0 = time.perf_counter()
@@ -308,13 +322,14 @@ def test_last_only_logits_match_full_forward(models):
 @torch.no_grad()
 def test_cache_buffers_are_allocated_once_and_reused(models):
     _, cached = models
-    head = cached.blocks[0].sa.heads[0]
-    block_size = head.tril.size(0)
+    sa = cached.blocks[0].sa
+    head = sa.heads[0] if hasattr(sa, "heads") else sa  # per-head (model.py) or one per layer (model_fused.py)
+    block_size = cached.block_size
     idx = encode(PROMPTS[1], get_tokenizer()).unsqueeze(0)
     cached.clear_cache()
     cached(idx, use_cache=True)
     buf = head.k_cache
-    assert buf.shape == (1, block_size, head.key.out_features)  # full window, filled in place
+    assert buf.shape[0] == 1 and buf.shape[-2] == block_size  # the full window, filled in place
     cached(idx[:, -1:], use_cache=True)
     assert head.k_cache is buf and cached.cache_len() == idx.size(1) + 1
     cached.clear_cache()
