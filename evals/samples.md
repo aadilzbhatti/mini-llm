@@ -16,35 +16,36 @@ Every evaluated model on the same 20 prompts × 5 draws, 256 new tokens, T=0.7, 
 | M8 | data160k · d512-L4 · 38.9M · T1024 · 40K steps | 3.8919 | 0.436 / 0.748 | 17/100 (11%–26%) | token 180 | 0.402 / 0.566 | 30% | 180 tokens | 13/100 |
 | M9 | data320k · d512-L4 · 38.9M · T1024 · 80K steps | 3.7476 | 0.496 / 0.795 | 26/100 (18%–35%) | token 156 | 0.381 / 0.529 | 31% | 204 tokens | 7/100 |
 | M10 | data320k · d512-L4 · 38.4M · T1024 · 80K steps | 3.6622 | 0.411 / 0.752 | 19/100 (12%–28%) | token 200 | 0.412 / 0.573 | 37% | 246 tokens | 6/100 |
-| M11 | data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.3310 | 0.257 / 0.661 | 16/100 (10%–24%) | token 191 | 0.494 / 0.669 | 46% | 241 tokens | 14/100 |
-| M12 | data640k · d768-L8 · 95.3M · T1024 · 190K steps | 3.3239 | 0.356 / 0.672 | 14/100 (8%–22%) | token 156 | 0.469 / 0.627 | 43% | 233 tokens | 10/100 |
+| M11 | data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.4038 | 0.342 / 0.690 | 11/100 (6%–19%) | token 195 | 0.443 / 0.619 | 36% | 236 tokens | 6/100 |
+| M12 | data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.3310 | 0.257 / 0.661 | 16/100 (10%–24%) | token 191 | 0.494 / 0.669 | 46% | 241 tokens | 14/100 |
+| M13 | data640k · d768-L8 · 95.3M · T1024 · 190K steps | 3.3239 | 0.356 / 0.672 | 14/100 (8%–22%) | token 156 | 0.469 / 0.627 | 43% | 233 tokens | 10/100 |
 
 ## rep4 by prompt
 
 Median over draws; (n) = draws that end in an exact loop.
 
-| prompt | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | M12 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| definition | 0.27 | 0.17 | 0.29 (1) | 0.37 (1) | 0.52 | 0.53 (3) | 0.36 (1) | 0.42 (1) | 0.76 (4) | 0.33 (1) | 0.64 (2) | 0.32 |
-| biography | 0.38 (1) | 0.32 (1) | 0.20 | 0.14 | 0.16 | 0.15 (1) | 0.24 | 0.13 (1) | 0.27 | 0.41 (1) | 0.15 | 0.27 (2) |
-| science_explainer | 0.53 (2) | 0.31 (1) | 0.32 (1) | 0.43 | 0.60 | 0.44 (1) | 0.42 (1) | 0.44 | 0.70 (3) | 0.26 | 0.39 | 0.41 (1) |
-| instructional | 0.25 | 0.29 | 0.41 (1) | 0.44 | 0.31 | 0.66 (1) | 0.55 (1) | 0.68 | 0.62 (2) | 0.41 | 0.52 (2) | 0.49 (3) |
-| bullet_list | 0.67 | 0.62 | 0.82 (2) | 0.92 (1) | 0.86 (2) | 0.91 (2) | 0.96 (4) | 0.71 (2) | 0.61 (2) | 0.66 (2) | 0.78 (1) | 0.72 (1) |
-| numbered_list | 0.56 | 0.55 (1) | 0.56 (1) | 0.57 (1) | 0.68 | 0.67 (1) | 0.64 (1) | 0.68 (1) | 0.70 (2) | 0.56 (1) | 0.54 | 0.53 (1) |
-| enumeration | 0.59 | 0.71 (1) | 0.32 (1) | 0.39 | 0.56 | 0.66 (2) | 0.73 (2) | 0.28 (2) | 0.88 (2) | 0.57 (2) | 0.38 (2) | 0.56 |
-| long_dependency | 0.30 | 0.32 (1) | 0.35 | 0.49 (1) | 0.19 | 0.63 (1) | 0.41 (1) | 0.36 | 0.27 | 0.37 (1) | 0.22 (1) | 0.38 (1) |
-| attribution | 0.10 | 0.18 | 0.10 | 0.25 | 0.35 (1) | 0.48 (2) | 0.28 (1) | 0.22 | 0.27 | 0.40 | 0.09 | 0.08 |
-| numeric_units | 0.15 | 0.29 | 0.40 | 0.28 (1) | 0.70 | 0.74 (1) | 0.47 | 0.52 | 0.62 (2) | 0.41 (1) | 0.25 | 0.15 |
-| agreement_gap | 0.27 | 0.17 | 0.15 | 0.27 | 0.22 | 0.37 | 0.42 | 0.49 (1) | 0.28 (1) | 0.68 (3) | 0.21 (2) | 0.60 (1) |
-| history | 0.11 | 0.15 | 0.22 | 0.31 | 0.27 | 0.41 | 0.14 (1) | 0.31 | 0.28 | 0.27 | 0.27 (1) | 0.29 |
-| anatomy | 0.19 | 0.52 | 0.27 | 0.26 | 0.13 | 0.68 | 0.45 | 0.19 (1) | 0.46 (1) | 0.32 (1) | 0.17 (1) | 0.34 |
-| geography | 0.25 | 0.27 | 0.25 (1) | 0.47 | 0.44 (1) | 0.41 | 0.21 | 0.38 (1) | 0.52 (1) | 0.51 | 0.35 | 0.36 |
-| math_definition | 0.28 | 0.45 | 0.36 (1) | 0.41 (1) | 0.30 (1) | 0.50 (1) | 0.53 (1) | 0.53 (3) | 0.61 (2) | 0.74 (3) | 0.38 (1) | 0.58 (1) |
-| environment | 0.07 | 0.14 | 0.12 | 0.10 | 0.28 | 0.53 (3) | 0.23 | 0.51 (1) | 0.19 | 0.20 (1) | 0.10 | 0.14 |
-| recipe | 0.13 | 0.22 | 0.23 (1) | 0.27 (1) | 0.14 | 0.58 (1) | 0.50 (1) | 0.18 (1) | 0.53 (1) | 0.38 | 0.22 | 0.25 |
-| literature | 0.30 (1) | 0.16 | 0.24 | 0.17 | 0.21 | 0.47 (1) | 0.37 | 0.53 (1) | 0.21 | 0.22 | 0.07 | 0.09 |
-| technology | 0.09 | 0.13 | 0.12 | 0.12 | 0.23 | 0.45 (2) | 0.41 (1) | 0.17 | 0.13 (1) | 0.14 (1) | 0.11 (1) | 0.12 (1) |
-| economics | 0.24 | 0.25 | 0.13 | 0.35 | 0.45 | 0.64 (3) | 0.47 (1) | 0.47 (1) | 0.52 (2) | 0.66 (1) | 0.55 (2) | 0.33 (2) |
+| prompt | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | M12 | M13 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| definition | 0.27 | 0.17 | 0.29 (1) | 0.37 (1) | 0.52 | 0.53 (3) | 0.36 (1) | 0.42 (1) | 0.76 (4) | 0.33 (1) | 0.49 (2) | 0.64 (2) | 0.32 |
+| biography | 0.38 (1) | 0.32 (1) | 0.20 | 0.14 | 0.16 | 0.15 (1) | 0.24 | 0.13 (1) | 0.27 | 0.41 (1) | 0.27 | 0.15 | 0.27 (2) |
+| science_explainer | 0.53 (2) | 0.31 (1) | 0.32 (1) | 0.43 | 0.60 | 0.44 (1) | 0.42 (1) | 0.44 | 0.70 (3) | 0.26 | 0.35 | 0.39 | 0.41 (1) |
+| instructional | 0.25 | 0.29 | 0.41 (1) | 0.44 | 0.31 | 0.66 (1) | 0.55 (1) | 0.68 | 0.62 (2) | 0.41 | 0.41 | 0.52 (2) | 0.49 (3) |
+| bullet_list | 0.67 | 0.62 | 0.82 (2) | 0.92 (1) | 0.86 (2) | 0.91 (2) | 0.96 (4) | 0.71 (2) | 0.61 (2) | 0.66 (2) | 0.55 (1) | 0.78 (1) | 0.72 (1) |
+| numbered_list | 0.56 | 0.55 (1) | 0.56 (1) | 0.57 (1) | 0.68 | 0.67 (1) | 0.64 (1) | 0.68 (1) | 0.70 (2) | 0.56 (1) | 0.55 | 0.54 | 0.53 (1) |
+| enumeration | 0.59 | 0.71 (1) | 0.32 (1) | 0.39 | 0.56 | 0.66 (2) | 0.73 (2) | 0.28 (2) | 0.88 (2) | 0.57 (2) | 0.73 (2) | 0.38 (2) | 0.56 |
+| long_dependency | 0.30 | 0.32 (1) | 0.35 | 0.49 (1) | 0.19 | 0.63 (1) | 0.41 (1) | 0.36 | 0.27 | 0.37 (1) | 0.25 (2) | 0.22 (1) | 0.38 (1) |
+| attribution | 0.10 | 0.18 | 0.10 | 0.25 | 0.35 (1) | 0.48 (2) | 0.28 (1) | 0.22 | 0.27 | 0.40 | 0.15 | 0.09 | 0.08 |
+| numeric_units | 0.15 | 0.29 | 0.40 | 0.28 (1) | 0.70 | 0.74 (1) | 0.47 | 0.52 | 0.62 (2) | 0.41 (1) | 0.29 | 0.25 | 0.15 |
+| agreement_gap | 0.27 | 0.17 | 0.15 | 0.27 | 0.22 | 0.37 | 0.42 | 0.49 (1) | 0.28 (1) | 0.68 (3) | 0.23 | 0.21 (2) | 0.60 (1) |
+| history | 0.11 | 0.15 | 0.22 | 0.31 | 0.27 | 0.41 | 0.14 (1) | 0.31 | 0.28 | 0.27 | 0.32 | 0.27 (1) | 0.29 |
+| anatomy | 0.19 | 0.52 | 0.27 | 0.26 | 0.13 | 0.68 | 0.45 | 0.19 (1) | 0.46 (1) | 0.32 (1) | 0.31 (1) | 0.17 (1) | 0.34 |
+| geography | 0.25 | 0.27 | 0.25 (1) | 0.47 | 0.44 (1) | 0.41 | 0.21 | 0.38 (1) | 0.52 (1) | 0.51 | 0.48 | 0.35 | 0.36 |
+| math_definition | 0.28 | 0.45 | 0.36 (1) | 0.41 (1) | 0.30 (1) | 0.50 (1) | 0.53 (1) | 0.53 (3) | 0.61 (2) | 0.74 (3) | 0.49 (1) | 0.38 (1) | 0.58 (1) |
+| environment | 0.07 | 0.14 | 0.12 | 0.10 | 0.28 | 0.53 (3) | 0.23 | 0.51 (1) | 0.19 | 0.20 (1) | 0.37 (1) | 0.10 | 0.14 |
+| recipe | 0.13 | 0.22 | 0.23 (1) | 0.27 (1) | 0.14 | 0.58 (1) | 0.50 (1) | 0.18 (1) | 0.53 (1) | 0.38 | 0.30 (1) | 0.22 | 0.25 |
+| literature | 0.30 (1) | 0.16 | 0.24 | 0.17 | 0.21 | 0.47 (1) | 0.37 | 0.53 (1) | 0.21 | 0.22 | 0.22 | 0.07 | 0.09 |
+| technology | 0.09 | 0.13 | 0.12 | 0.12 | 0.23 | 0.45 (2) | 0.41 (1) | 0.17 | 0.13 (1) | 0.14 (1) | 0.27 | 0.11 (1) | 0.12 (1) |
+| economics | 0.24 | 0.25 | 0.13 | 0.35 | 0.45 | 0.64 (3) | 0.47 (1) | 0.47 (1) | 0.52 (2) | 0.66 (1) | 0.26 | 0.55 (2) | 0.33 (2) |
 
 ## Reading set
 
@@ -263,7 +264,20 @@ In the process of photosynthesis, carbon breaks down the carbon into elements.
 - When photosynthesis is involved in the process of photosynthesis, photosynthesis is the process of photosynthesis
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.818 · loops from token 107 (period 18) · topic 100%, last mention at token 255
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.336 · topic 0%, last mention at token 0
+
+```
+Photosynthesis is a process that we use as a way to slow down the production of chlorophyll.
+The process is called chlorophyll production. The amount of chlorophyll produced from a plant depends on the plant’s ability to absorb water. So, plants absorb water from the air, and they absorb nutrients from the soil.
+So, while the water is being absorbed through the plant, plants absorb water from the air. So, for example, in the case of the plant, the water is absorbed through an organic compound called chlorophyll. So, it is the water that leaves the plant.
+Plant production plants need the water that is being used to make chlorophyll. The plant is also used for chlorophyll production.
+The process of reducing water to produce chlorophyll is called chlorophyll production. The process of reducing water to produce chlorophyll is called chlorophyll production.
+The process of reducing water to produce chlorophyll involves washing the water with soap. This soap is then absorbed through the plant.
+The process of reducing water to produce chlorophyll is called chlorophyll production.
+The process of reducing water to produce chlorophyll is called chlorophyll production. The process of reducing water to produce chlorophy
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.818 · loops from token 107 (period 18) · topic 100%, last mention at token 255
 
 ```
 Photosynthesis is a process that enables photosynthesis to occur in a plant cell.
@@ -284,7 +298,7 @@ Photosynthesis is a process that enables photosynthesis to occur in a plant cell
 - Photosynthesis
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.482 · topic 100%, last mention at token 244
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.482 · topic 100%, last mention at token 244
 
 ```
 Photosynthesis is a process that enables photosynthesis to occur in a plant cell. Plants and leaf chloroplasts are the main source of chlorophyll. Photosynthesis is a process that occurs in a plant cell that uses chlorophyll. Most photosynthesis is done by photosynthesis. Plants rely on the chemical reaction of photosynthesis and respiration. Photosynthesis is a process that involves photosynthesis. Photosynthesis is a process that occurs in a plant cell that uses photosynthesis.
@@ -391,7 +405,22 @@ The Albert Einstein Institute – the first Einstein-born scientist to ever beco
 Albert Einstein’s first two years of Einstein’s second, and Albert Einstein’s second, were born in 1962. Einstein was one of the only three scientists to ever become Einstein’s first. Einstein’s first, but Einstein’s first, and Albert Einstein’s second only, was born in 1959. Albert Einstein’s first year of teaching was only the first Einstein to ever become Einstein’s second. Albert Einstein’s first year of teaching was only a year after Albert Einstein’s first three years of teaching, when he became Albert Einstein’
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.103 · topic 67%, last mention at token 228
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.324 · topic 17%, last mention at token 133
+
+```
+Albert Einstein was a German-born theoretical physicist who was not afraid of the laws of physics, but would become a physicist after the discovery of the universe. Einstein was a naturalist. He made his famous observations about the universe and how it came about. Einstein later published his famous observations on the Universe and Einstein wrote, “I think you must be prepared to be a scientist.”
+In his famous theory of relativity, Einstein was the first one to propose that the universe is composed of two or more distinct types of particles. It is not so much that the universe is composed of two or more particles, but that the particles in the universe are composed of two or more distinct types of particles. Einstein proposed that the universe contains particles of two or more distinct types of particles, and he proposed that the universe is composed of two or more distinct types of particles. The universe is composed of three different types of particles:
+- The particle of light
+- The particle of light
+- The particle of light
+- The particle of heat
+- The particle of heat
+- The particle of light
+The particle of light is a particle that is composed of two or more distinct types of particles. The particle of light is a particle that is composed of two or more distinct types of particles.
+The particle of light
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.103 · topic 67%, last mention at token 228
 
 ```
 Albert Einstein was a German-born theoretical physicist who was a leading physicist among other people, especially in the post-war years of his life. Einstein received his doctorate in mathematics from the University of Vienna, and his doctorate in physics from the University of Vienna. He also received a master's degree in mathematics, which he later became famous in the field of thermodynamics.
@@ -403,7 +432,7 @@ Although he was a well-known scientist, he also authored several books, which we
 He was also
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.273 · topic 33%, last mention at token 236
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.273 · topic 33%, last mention at token 236
 
 ```
 Albert Einstein was a German-born theoretical physicist who demonstrated the quantum field as a discrete, observable phenomenon. His contributions to science and mathematics were instrumental in shaping his theories and his method of scientific discovery.
@@ -601,7 +630,13 @@ In the early days of solar energy, there were only about 4,000 solar cells in th
 The first solar cell was the first solar cell, which was used in the
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 56 tokens · EOS · rep4 0.528 · topic 100%, last mention at token 54
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.711 · topic 0%, last mention at token 57
+
+```
+Oxygen is a chemical element with a charge of 1.2, a charge of 4, and a charge of 2. The molecule is a hydromorphic molecule with a base charge of 1.3, a charge of 2.0, and a charge of 1.4. The molecule is a chemical element with a charge of 2.0, a charge of 2.0, and a charge of 2.0. The molecule is a gas with a base charge of 3.0, and a charge of 3.0. The molecule is a gas with a base charge of 3.0, and a charge of 2.0. The molecules are a gas with a base charge of 2.0, and a charge of 3.0. The molecule is a gas with a base charge of 3.0, and a charge of 3.0. The molecule is a gas with a base charge of 3.0, and a charge of 3.0, and a charge of 3.0. The molecule is a gas with a base charge of 3.0, and a charge of 3.0. The molecules are a gas with a base charge of 3.0, and a charge of 3.0. A gas with a base charge of 3.0, and a charge
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 56 tokens · EOS · rep4 0.528 · topic 100%, last mention at token 54
 
 ```
 Oxygen is a chemical element with the symbol Oxygen.
@@ -610,7 +645,7 @@ Oxygen is a chemical element with the symbol Oxygen.
 The element has the symbol Oxygen. The symbol Oxygen is a chemical element with the symbol Oxygen.
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.869 · loops from token 50 (period 15) · topic 100%, last mention at token 251
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.869 · loops from token 50 (period 15) · topic 100%, last mention at token 251
 
 ```
 Oxygen is a chemical element with the symbol Oxygen.
@@ -846,7 +881,25 @@ Students will also be able to use the concept of learning to help them to become
 Teachers are interested in helping students to develop their learning by using advanced technology and learning to learn. It
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 66 tokens · EOS · rep4 0.016 · topic 33%, last mention at token 57
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.474 · topic 0%, last mention at token 6
+
+```
+In this lesson, students will learn how to make a good case for students to write a letter to the editor.
+- Read the first paragraph of the letter to the editor in the next one and then write it down.
+- Read the second paragraph, write the sentence “a” and find the words “1” and “2” in the first paragraph.
+- Write the first paragraph in the first paragraph of the paragraph.
+- Write the last paragraph of the paragraph.
+- Write the last sentence in the first paragraph of the paragraph.
+- Write the last sentence in the second paragraph of the paragraph.
+- You can use the first paragraph of the paragraph to write the last sentence in the third paragraph.
+- If you use the last paragraph, you can use the last two paragraphs of the paragraph to write the last paragraph.
+- You can use the last four paragraphs of the paragraph to write the last four paragraphs of the paragraph.
+- You can use the last four paragraphs of the paragraph to write the last four paragraphs of the paragraph.
+- You can use the last four paragraphs of the paragraph to write the last four paragraphs of the paragraph.
+- You can use the last five paragraphs of the paragraph to write the last four paragraphs of the paragraph
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 66 tokens · EOS · rep4 0.016 · topic 33%, last mention at token 57
 
 ```
 In this lesson, students will learn how to make a good case for a friend who is in a hospital.
@@ -854,7 +907,7 @@ Students will review the case to create a case based on the case. The lesson wil
 In the end, students will be able to solve their own case.
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.66 · loops from token 117 (period 22) · topic 0%, last mention at token 98
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.66 · loops from token 117 (period 22) · topic 0%, last mention at token 98
 
 ```
 In this lesson, students will learn how to make a good impression on your class and how to use the vocabulary we use at all times.
@@ -1159,7 +1212,28 @@ It’s important to remember that exercise is only about one hour long. It’s n
 - 3
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.249 · topic 100%, last mention at token 253
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.755 · topic 33%, last mention at token 244
+
+```
+There are several benefits to regular exercise:
+-  During the day, your blood circulation is boosted with a regular workout.
+-  When you’re exercising, you can feel relaxed and refreshed.
+-  When you’re feeling more active, your heart rate is boosted by exercising.
+-  When you’re exercising, your body burns more calories.
+-  When you’re exercising, your body burns more calories than it burns.
+-  When you’re exercising, your body burns more calories than it burns.
+-  When you’re exercising, your body burns more calories than it burns.
+-  When you’re exercising, your body burns more calories than it burns.
+-  When you’re exercising, your body burns more calories than it burns.
+-  When you’re exercising, your body burns more calories than it burns.
+-  When you’re exercising, your body burns more calories than it burns.
+-  When you’re exercising, your body burns more calories than it burns.
+-  During the day, your body burns more calories than it burns.
+-  When you’re exercising, your body burns more calories than it burns.
+-
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.249 · topic 100%, last mention at token 253
 
 ```
 There are several benefits to regular exercise:
@@ -1176,7 +1250,7 @@ It can help to reduce the risk of stroke. Exercise improves blood circulation an
 Exercise can help
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.534 · topic 0%, last mention at token 4
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.534 · topic 0%, last mention at token 4
 
 ```
 There are several benefits to regular exercise:
@@ -1419,7 +1493,14 @@ To solve a quadratic equation, follow these steps:
 6. Step-by-step:
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.561 · topic 0%, last mention at token 0
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.787 · topic 0%, last mention at token 0
+
+```
+To solve a quadratic equation, follow these steps:
+1. Step 1: Step 1: Step 2: Step 3: Step 4: Step 4: Step 5: Step 5: Step 6: Step 7: Step 8: Step 8: Step 9: Step 10: Step 11: Step 11: Step 12: Step 12: Step 13: Step 13: Step 13: Step 13: Step 14: Step 14: Step 14: Step 15: Step 1: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 15: Step
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.561 · topic 0%, last mention at token 0
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1443,7 +1524,7 @@ To solve a quadratic equation, follow these steps:
 18. Find the area of the circle in which
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.731 · loops from token 138 (period 13) · topic 67%, last mention at token 249
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.731 · loops from token 138 (period 13) · topic 67%, last mention at token 249
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1713,7 +1794,30 @@ There are many kinds of data type. For example, data type is used to make statem
 Data type is used to make statements and statements. It can be used to make statements
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.759 · loops from token 213 (period 15) · topic 0%, last mention at token 6
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.684 · topic 100%, last mention at token 246
+
+```
+There are three main types of the BMR. BMR is the single most common type of BMR.
+BMR is a type of BMR that is divided into two major types, namely
+BMR and BMR. BMR is a type of BMR that is divided into two major types.
+The type of BMR is the most common form of BMR.
+The type of BMR is the most common form of BMR. BMR is the most common form of BMR.
+The BMR is a type of BMR that is classified into two major types:
+The BMR is a type of BMR that is classified into two major types.
+The BMR is classified into two major types:
+BMR is a type of BMR that is classified into two main types:
+BMR is classified into three major types:
+BMR is a type of BMR that is classified into two major types:
+BMR is classified into two major types:
+BMR is classified into two major types:
+BMR is classified into two major types:
+BMR is classified into three major types:
+BMR is classified into two major types.
+BMR is classified into three major types.
+BMR is classified into two
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.759 · loops from token 213 (period 15) · topic 0%, last mention at token 6
 
 ```
 There are three main types of the process
@@ -1738,7 +1842,7 @@ Fourthary Process: The process of converting raw materials into finished product
 Fourthary Process: The process of converting raw materials into finished products.
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.573 · topic 0%, last mention at token 0
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.573 · topic 0%, last mention at token 0
 
 ```
 There are three main types of the garter. The first is the type of garter that is used for the
@@ -1920,7 +2024,20 @@ The India War of 1812–17
 The Battle of Britain was a series of battles between British and British forces. British troops were sent to war with Britain, and British troops were deployed to the British. The British were sent to British troops. Britain was defeated by British forces. British troops were sent to Britain for the British. The British were sent to Britain. British troops and British troops were sent to Britain. Britain was part of Parliament. British forces were sent to England. British troops were sent to Britain. British troops were sent to Britain. British troops were sent to Britain. British troops were sent on. British troops were sent to Britain. British troops were sent to Britain. British troops were sent to Britain and England. British troops were sent to British troops. Britain was sent to Britain. British troops were sent to Britain and England. British troops were sent to Britain. British soldiers were sent to England and England. British troops were sent to Britain. British troops were sent to Britain. British soldiers were sent to England. British soldiers were sent to England and England. British troops were sent to England. British soldiers were sent to England
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.704 · loops from token 221 (period 8) · topic 100%, last mention at token 255
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.241 · topic 100%, last mention at token 253
+
+```
+Although the treaty was signed in 1919, it was still a law that protected both sides.
+There were no changes in the treaty, so the treaty was considered a violation of the rights of other peoples. It was a treaty that was not ratified by both sides.
+There was a time when both sides agreed to uphold the rights of the people. The treaty was ratified by all parties. The treaty was ratified by the people.
+It was passed by the states of the United States and Canada on September 25, 1921, and the treaty was ratified by all 193 states. The treaty was ratified by the people.
+The first significant treaty was to be ratified by both sides.
+The first treaty was signed by the people on December 19, 1921, and the first treaty was ratified by all 193 states in the United States. It gave the states a chance to sign treaties that were ratified by both sides. The treaty was ratified by all 193 states.
+The first treaty was signed by the first 193 states on September 21, 1922, and the second was ratified by all 193 states on November 25, 1930.
+The treaty was signed by all 193 states on October 9, 1929, and the first treaty was ratified by all 193 states in the United States on October 31, 1925. The treaty was signed by all 193
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.704 · loops from token 221 (period 8) · topic 100%, last mention at token 255
 
 ```
 Although the treaty was signed in 1919, it was repealed in the year 1919.
@@ -1946,7 +2063,7 @@ The treaty was signed in 1919.
 The treaty was signed in
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.32 · topic 100%, last mention at token 248
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.32 · topic 100%, last mention at token 248
 
 ```
 Although the treaty was signed in 1919, it was repealed in the year 1919.
@@ -2090,7 +2207,18 @@ According to a study published in the journal Nature Communications, this study 
 - The student was divided into two groups according to
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.186 · topic 50%, last mention at token 246
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 247 tokens · EOS · rep4 0.148 · topic 100%, last mention at token 240
+
+```
+According to a study published in the Journal of Biological Sciences, the researchers found that the levels of glucose in the blood are higher in people who are overweight or obese.
+“Our findings suggest that people who are overweight or obese may be at risk of developing diabetes, cardiovascular disease and other diseases that affect the brain,” said Dr. Michael Henshaw, director of the Department of Health and Human Services at the University of California, Santa Barbara. “By focusing on glucose levels in the blood, we can better understand how the body responds to diabetes and diabetes.”
+Scientists at the University of California, San Diego, published the results in the journal Molecular Medicine.
+The researchers also found that the blood glucose levels in the blood are significantly higher in people who are overweight or obese, compared to people who are overweight or obese.
+“Our study shows that blood glucose levels in the blood can be very important to our health as well as to our mental health,” Henshaw said. “In general, blood glucose levels in the blood can be very important in our health and our mental health, as well as our mental health as a whole.”
+The study was published in the Journal of Biological Sciences.
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.186 · topic 50%, last mention at token 246
 
 ```
 According to a study published in the journal Nature, this study confirmed that the amount of water in the ocean is not a factor in the production of salt in the ocean, but instead a factor in the increase in the size of the ocean, as well as the concentration of salt in the ocean.
@@ -2102,7 +2230,7 @@ The researchers also found that the amount of water in the ocean is not a factor
 The study also showed that the ocean floor is not a factor
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.051 · topic 100%, last mention at token 214
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.051 · topic 100%, last mention at token 214
 
 ```
 According to a study published in the journal Nature, this study was conducted by the University of Adelaide, South Australia, in collaboration with the Australian National University. The results showed that the team’s findings were consistent with those of the study, which was published in the journal Nature.
@@ -2267,7 +2395,15 @@ The mountain is the highest mountain in Russia.
 The mountain is the highest mountain in Russia
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.292 · topic 33%, last mention at token 254
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.431 · topic 33%, last mention at token 248
+
+```
+The mountain rises to a height of 3.2 metres. The peak is in the south-west of the country, and it is said that the highest mountain is Mt. Kilimanjaro. The mountain is famous for its large amounts of limestone and limestone. The mountain is called the mountain “the mountain” because it is the highest mountain in the world. The mountain is also known as the mountain “the mountain” because of its sheer white sands and high mountain ranges.
+The mountain is named after the hill that rises to a height of 4 metres. The mountain is a famous mountain in the world. It is the highest mountain in the world, and it is the highest mountain in the world. The mountain is famous for its large amounts of limestone and limestone. The mountain is also famous for its huge amounts of limestone and limestone. The mountain is famous for its massive amounts of limestone and limestone. The mountain is famous for its large amounts of limestone and limestone. The mountain is famous for its large amounts of limestone and limestone. The peak in the Himalayas is called the “mountain” because it is the highest mountain in the world.
+The mountain is also famous for its huge amounts of limestone and limestone. The mountain is famous for its large amounts of limestone
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.292 · topic 33%, last mention at token 254
 
 ```
 The mountain rises to a height of 10,000 feet. The peak is in the south-eastern part of the mountain range of the Russian Federation.
@@ -2275,7 +2411,7 @@ The mountain has a total area of 3.9 million square meters (1,300,000 acres), of
 The mountain has a total area of 11,200 square meters (1,300,000 acres), of which 9,200 square meters (3,200,000 acres) are in the mountains. The mountain is surrounded by three main mountainous systems: the Red Mountain, the Black Mountain, and the Black Mountain. The Black Mountain ranges on the Russian and Soviet side of the Red Mountain. The Black Mountain ranges on the Russian side of the Red Mountain range on the Russian side of the Red Mountain. The Black Mountain ranges on the Russian side of the Red Mountain range on the Russian side of the Red Mountain range on
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.115 · topic 0%, last mention at token 21
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.115 · topic 0%, last mention at token 21
 
 ```
 The mountain rises to a height of at least 25 feet. The peak is in the south-eastern part of the town called "Mount St. Helens".
@@ -2447,7 +2583,16 @@ The students who had spent the entire semester preparing for the final examinati
 The students were asked to write a paper on the assignment of their homework. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.83 · loops from token 156 (period 49) · topic 33%, last mention at token 255
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.107 · topic 22%, last mention at token 242
+
+```
+The students who had spent the entire semester preparing for the final examination in organic chemistry, I have to admit, I have been quite a bit nervous. I have never been nervous about the preparation of the final exam. I have never been nervous about the final preparation. The students were very well prepared and they were very friendly and helpful. I will definitely use them again in my future exams.
+I will be doing my best to keep my students engaged and healthy. I am sure I will be able to use my skills in all aspects of the exam to help me in my own life. I will be using my skills in my daily life as a way to help others.
+I love the idea of using my skills in a healthy way and I am looking forward to working with the students in this one. I love the idea of being able to use my skills in a healthy way and I do not forget to be patient.
+This is my first year teaching chemistry or chemistry, so I am very excited to start teaching chemistry with my students. I can see myself in the classroom and in the classroom. I am very motivated and excited to be teaching chemistry. I love the idea of giving students the right to learn and to practice. I am very excited about the idea of giving students the right to learn and practice. The way I look at it is
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.83 · loops from token 156 (period 49) · topic 33%, last mention at token 255
 
 ```
 The students who had spent the entire semester preparing for the final examination in organic chemistry study were the students who were not part of the organic chemistry study.
@@ -2459,7 +2604,7 @@ The students who were not part of the organic chemistry study were the students 
 The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study. The students who
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.601 · topic 78%, last mention at token 227
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.601 · topic 78%, last mention at token 227
 
 ```
 The students who had spent the entire semester preparing for the final examination in organic chemistry study were included in the study. The study was a randomized controlled trial. The study was conducted within two consecutive weeks of the final examination. The results of each study were:
@@ -2587,7 +2732,18 @@ French Revolution took place on the 13th of April 1799, when Napoleon’s French
 Napoleon’s victory was won by French forces and the French had a lasting impact on the French. The French were defeated by French forces led by French forces led by French forces led by French forces. France’s defeat in 1799 led to the victory of Napoleon’s second-hand French. The French were defeated by French forces led by French forces led by French
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.336 · topic 100%, last mention at token 250
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.142 · topic 67%, last mention at token 160
+
+```
+The French Revolution began in 1789, when Louis XIV of France defeated the British. The victory was a result of the Revolution' rule of France, which eventually led to the construction of the French Revolution.
+During the Revolution of the Revolution, France was a major player in the United States. It was the country which had become the country of Italy, where the revolution had taken place. France also had a significant role in the development of the country.
+France was the first official state in the world to have a major influence in politics. France's position was that of the people and the economy. In 1848, France was the first country in the world to have a significant influence in politics. France's public administration had a strong influence on political action. In 1855, France took over the country as the country of the French Revolution.
+In October 1856, the first official state in France was established in France. It was the first state in the world to have a major influence in politics.
+In January 1856, the first official state of the Netherlands was established. In 1857, the first official state in the Netherlands was the Netherlands. In 1858, the first official state was established in New York, but in the same year, the first official state was established in Philadelphia.
+In
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.336 · topic 100%, last mention at token 250
 
 ```
 The French Revolution began in 1789, when Louis XIV of France was overthrown. The French Revolution eventually ended in 1789 when Louis XVI of France was overthrown. The French Revolution involved the assassination of the French commander, who was also the head of a group of French revolutionaries.
@@ -2597,7 +2753,7 @@ The French Revolution was a series of revolutions that began in 1789. The French
 The French Revolution was a series of revolutions that started in 1789 and ended in 1817. The French Revolution was a period of great political and military power that lasted from 1789-1817. The French Revolution was a period of great political and military power in the French people and the people. The
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.474 · topic 67%, last mention at token 254
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.474 · topic 67%, last mention at token 254
 
 ```
 The French Revolution began in 1789, when Louis XIV of France was overthrown. The French Revolution eventually ended in 1789 when Louis XVI of France was overthrown. The French Revolution involved the assassination of the French commander, who was executed on November 11, 1789. The French Revolution came to an end in 1790 when the French Revolution came out of the hands of the French. France became a more powerful country with an economy and a population that was more dependent on agriculture. The French Revolution was a period of great social upheaval which made it particularly important for the French and the Indians.
@@ -2727,7 +2883,17 @@ The heart is located in the heart of the heart of the heart of the heart. The he
 The heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.142 · topic 25%, last mention at token 247
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.368 · topic 50%, last mention at token 245
+
+```
+The human heart is a muscular organ that is a natural part of the body. The human heart cannot function properly because of its ability to produce and release oxygen.
+The heart is a muscle that connects the heart's blood to the heart muscle. The heart muscle is a muscle that is responsible for beating and pumping blood throughout the body. When the heart is not beating, the heart muscle will not pump blood to the heart muscle. The heart muscle is the heart's main source of energy.
+The heart is a muscular organ that connects the heart to the brain. It is responsible for pumping blood throughout the body. The heart is a physical organ that is responsible for beating and pumping blood to the heart muscle. The heart muscle is responsible for pumping blood to the heart muscle.
+The heart muscle is a muscle that connects the heart muscle to the brain. A muscle is the organ responsible for beating and pumping blood to the brain. The heart muscle is responsible for pumping blood to the brain by pumping blood to the brain. The heart muscle is responsible for pumping blood to the brain.
+The heart muscle is responsible for pumping blood to the brain. When the heart muscle is not pumping blood to the brain, the heart muscle cannot pump blood to the brain. The heart muscle also has pumps, which are designed to pump blood
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.142 · topic 25%, last mention at token 247
 
 ```
 The human heart is a muscular organ that works in two different ways. The human heart beats with a certain amount of force applied to the body’s cells. The heart also pumps blood through the vessels, which are called aortic and pulmonary arteries. The heart beats mechanically with blood flowing through the heart’s valves, and the heart pumps the blood out of the body.
@@ -2741,7 +2907,7 @@ Vascular Health Benefits
 There are many other types of heart, and each has its own benefits and uses
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.395 · topic 25%, last mention at token 201
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.395 · topic 25%, last mention at token 201
 
 ```
 The human heart is a muscular organ that pumps blood to the lungs. The heart delivers the oxygen and nutrients that fuel the body. The heart is constantly pumping blood throughout the body. The heart pumps blood to the lungs to provide oxygen to the body. The heart also pumps blood throughout the body, making the heart work harder to pump blood through the body.
@@ -2886,7 +3052,26 @@ The river flows into the river, and flows into the river, and flows into the riv
 The river flows into the river, and flows into the river, and flows into the river, and flows into the river. The river flows into the river. The river flows into the river, and flows into the river, and flows into the
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.348 · topic 75%, last mention at token 256
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.482 · topic 75%, last mention at token 255
+
+```
+The Amazon River flows through the river to the mountains.
+The first man to enter the river has been named G. G. B. Wells. Wells is named after the water's flowing river. Wells is the second man to enter the river through the river.
+The river flows through the river and into the Mississippi River. Wells and G. G. Wells are river dwellers, and the river flows directly into the river.
+A river flowing through the river into the Mississippi River flows through the river to the Mississippi River. The river is also the gateway of the Mississippi River.
+The river flows into the Mississippi River and into the Mississippi River and into the Mississippi River.
+The Mississippi River flows through the river to the Mississippi River.
+The Mississippi River flows through the river to the Mississippi River.
+The Mississippi River flows into the Mississippi River through a river to the Mississippi River.
+The Mississippi River flows through the Mississippi River to the Mississippi River.
+The Mississippi River flows through the Mississippi River, to the Mississippi River.
+The Mississippi River flows through the Mississippi River to the Mississippi River.
+The Mississippi River flows through the Mississippi River to the Mississippi River.
+The Mississippi River flows through the Mississippi, to the Mississippi River.
+The Mississippi River flows through the Mississippi River to
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.348 · topic 75%, last mention at token 256
 
 ```
 The Amazon River flows through the largest river in the world, and the only river in the world. The river is called Gama in Chinese and the name of it is Gama in Chinese.
@@ -2896,7 +3081,7 @@ The Gama River flows through the Gama River and passes through the Gama River. T
 The river passes through the Gama River, which crosses the Gama River. The river passes through
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.589 · topic 100%, last mention at token 253
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.589 · topic 100%, last mention at token 253
 
 ```
 The Amazon River flows through the largest river in the world, and the only river in the world. It is the longest river in the world and the longest river in the world.
@@ -3053,7 +3238,17 @@ The twelve integers are the number of bits.
 The twelve integers are the number of bits
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.375 · topic 100%, last mention at token 255
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.364 · topic 33%, last mention at token 256
+
+```
+In mathematics, a prime number is the number of years in which the value of an integer in an area is measured.
+When a given number is calculated, the value of that integer is referred to as the number of years. In the case of a given number, the value of a number is referred to as the number of years. In this case, the value of a number is referred as the number of years in which the value of an element in a cubic is measured.
+In fact, when the value of a number is an integer, it is referred to as the number of years in which the value of that element in a cubic is measured. In this case, the value of a number is referred to as the number of years in which the value of a number is inversely proportional to the number of years in which the value of the element in a cubic is measured.
+The term “double digit” is used for a number of reasons, one of them being that it is a linear number. The number of years is the number of years in which the value of a number in the first place is measured. A number of other examples are the following:
+The number of years in which the value of a number is measured is referred to as “determinate number
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.375 · topic 100%, last mention at token 255
 
 ```
 In mathematics, a prime number is a number of numbers. In the simplest of terms, prime numbers are divisors of a number, and in the simplest terms, prime numbers are divisors of a number.
@@ -3066,7 +3261,7 @@ In mathematics, a prime number is a number whose prime factors are positive inte
 A prime number is a number whose prime factors
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.229 · topic 0%, last mention at token 117
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.229 · topic 0%, last mention at token 117
 
 ```
 In mathematics, a prime number is a number of numbers. In the simplest of terms, a prime number is an integer divisor, that is, the number that is divisible by 2. Similarly, a prime number is a number of integers that is multiplied by itself.
@@ -3196,7 +3391,22 @@ Climate change impacts are not just a direct result of climate change but also a
 Climate change has a huge impact
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 141 tokens · EOS · rep4 0.014 · topic 33%, last mention at token 120
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.47 · loops from token 196 (period 17) · topic 17%, last mention at token 193
+
+```
+Climate change refers to long-term shifts in the climate change response, but in response to climate change, it is a short-term shift in the climate system as well as the climate change response. In the climate system, the carbon dioxide equivalent of CO2, with its greenhouse gases, comes from the sun. This warming is a result of changes in the atmospheric environment, and the heat of the atmosphere is a result of changes in the atmospheric environment.
+Climate change and climate change:
+Climate change is a long-term change in the climate system. Climate change can be described as a process to increase the amount of energy available to the atmosphere. The amount of energy available to the atmosphere can be estimated using the following equation:
+The amount of energy available to the atmosphere can be estimated using the following equation:
+The amount of energy available to the atmosphere can be estimated using the following equation:
+The amount of energy available to the atmosphere can be estimated using the following equation:
+In the climate system, the amount of energy available to the atmosphere can be estimated using the following equation:
+The amount of energy available to the atmosphere can be estimated using the following equation:
+The amount of energy available to the atmosphere can be estimated using the following equation:
+The amount of energy available to the atmosphere can be
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 141 tokens · EOS · rep4 0.014 · topic 33%, last mention at token 120
 
 ```
 Climate change refers to long-term shifts in the Earth’s climate system, and is an important component in the evolution of the climate system.
@@ -3207,7 +3417,7 @@ To learn more about climate change, visit the following sites:
 Climate change is a complex issue that affects everyone so it is important to understand how to best address it through development.
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.099 · topic 50%, last mention at token 216
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.099 · topic 50%, last mention at token 216
 
 ```
 Climate change refers to long-term shifts in the Earth’s climate system, and is an important component in the evolution of the climate system.
@@ -3442,7 +3652,15 @@ To make bread at home, you will need to use the same basic formula:
 1
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.059 · topic 25%, last mention at token 137
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.688 · topic 25%, last mention at token 244
+
+```
+To make bread at home, you will need to buy the bread directly from a local bakery, the owner must provide the bread to the family, the kitchen manager, who will give the bread to the family, the cook, and the family members. The bread comes in a rectangular shape and is made from the same materials as bread. The bread is made from the same materials as bread.
+The bread comes in an oval shape and is made from the same materials as bread. The dough is made from the same materials as bread. The dough is made from the same materials as bread. The bread is made from the same materials as bread. The bread comes in a rectangular shape and is made from the same materials as bread. The dough comes in a rectangular shape and is made from the same materials as bread. The bread comes in a rectangular shape and is made from the same materials as bread. The dough comes in a rectangular shape and is made from the same materials as bread. The bread comes in a rectangular shape and is made from the same materials as bread. The bread comes in a rectangular shape and is made from the same materials as bread.
+So, the bread comes in an oval shape and is made from the same materials as bread. The bread comes in a rectangular shape and is made from the same materials
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.059 · topic 25%, last mention at token 137
 
 ```
 To make bread at home, you will need to use an oven. If you have a stove, you must provide the oven with an oven, as it is not necessary to use a stove. A good oven will do much more than simply heat food. As a result, a good oven will not have to be a great stove to use.
@@ -3459,7 +3677,7 @@ What are the risks of food safety?
 Food safety is a responsibility of food safety professionals. Food safety professionals must be aware of the
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.174 · topic 0%, last mention at token 91
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.174 · topic 0%, last mention at token 91
 
 ```
 To make bread at home, you will need to use an oven. If you have a stove, use a stove that is not at all high. For example, if your oven is 40-50 degrees, use a furnace that has a high oven.
@@ -3591,7 +3809,15 @@ Henry II, Henry II, Henry II
 Henry II was a professor of English at the University of Cambridge and an English teacher at the University of Oxford. He wrote two articles on the history of the world. In both cases Henry III was a man who lived in a large town in the middle of England, and Henry II was a man who was a great boy and he was a man who was a great boy. Henry died in the middle of his death in the mid-nineteenth century. Henry III was a man who lived in the middle of his death as a man who was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy. Henry II was a
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.067 · topic 0%, last mention at token 98
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.194 · topic 50%, last mention at token 249
+
+```
+William Shakespeare wrote many plays, including “The Last of the Fables.” Shakespeare wrote the play which, in his most memorable plays, was written on the same day as “The Last of the Fables.” Shakespeare wrote of the play “The Last of the Fables,” which was written before his death at the end of his life and was in the form of a long poem that had been written by a man named G. Wells.
+The Last of the Fables is a play which is based on the play of the character G. Wells, an English playwright. The play is set in the early 1600s and this character is named in the play ‘The Last of the Fables’. This play has been described as ‘the most memorable play of the last of the Fables’. It is also the story of William Shakespeare, who was sent from the very beginning of the play, to write the play which, in the beginning of the Fables, was written by the famous poet, G. Wells. It was written in the form of a short poem, “The Last of the Fables.”
+The Last of the Fables is a play which, in many ways, was written before the death
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.067 · topic 0%, last mention at token 98
 
 ```
 William Shakespeare wrote many plays, including those of Shakespeare, but his greatest works were probably Shakespeare's plays, his plays, and his most famous plays. Shakespeare's plays were written mainly in the 15th century in Shakespeare's court, and his essays, plays, poems, plays, and plays were written in the 14th century.
@@ -3599,7 +3825,7 @@ Aristotle's Aristotle was one of the greatest men in the fields of philosophy, a
 The philosopher Aristotle was a man of great intellectual, intellectual, and philosophical power, who was a philosopher who was the founder of the philosophical system and the philosopher of the Middle Ages. Aristotle's work was characterized by a variety of themes, which are important for understanding human nature and its role in human society. Aristotle died on August 28, 1587 in Rome. Aristotle was a philosopher who was
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.241 · topic 50%, last mention at token 251
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.241 · topic 50%, last mention at token 251
 
 ```
 William Shakespeare wrote many plays, including Shakespeare’s Romeo and Juliet, and william shakespeare’s play Romeo and Juliet, Romeo and Juliet, Romeo and Juliet, Romeo and Juliet, and Romeo and Juliet.
@@ -3732,7 +3958,17 @@ The article has been written in the United States and is a complete summary of t
 The article has been published in the United States and is generally written in the United States and is usually written in the United States. It is a complete summary of the article, and is generally written in the United States and is commonly used as a summary
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.107 · topic 25%, last mention at token 175
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.352 · topic 0%, last mention at token 105
+
+```
+The internet began as a research project in 1993. The project was launched in 2011 by the American Institute of Orthopaedic Surgeons. The project was funded by the American College of Orthopaedic Surgeons.
+The project involved more than 1,000 orthopedic surgeons, surgeons and other professionals. The goal was to improve the quality of life for a patient. Through the Internet, patients could get more information about the life of a patient, as well as more information about the care of their own health.
+The first patient to receive the Internet was a patient who was diagnosed with the disease. The patient was diagnosed with the disease by an orthopedic surgeon, who was not involved in the operation. The patient was diagnosed with the disease by a surgeon or orthopedic surgeon. The patient was referred by the orthopedic surgeon to the orthopedic surgeon, who was not involved in the operation.
+The second patient was a patient who was diagnosed with the disease by a surgeon who was not involved in the operation. The patient was referred by a surgeon, who was not involved in the operation.
+The third patient was a patient who was diagnosed with the disease by a surgeon who was not involved in the operation. The patient was referred by a surgeon, who was not involved in the
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.107 · topic 25%, last mention at token 175
 
 ```
 The internet began as a research project in the 1960s, and became one of the most popular internet sites.
@@ -3746,7 +3982,7 @@ Online Learning Courses
 Online courses are available for almost all students, and they are available for all levels of learners.
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.123 · topic 50%, last mention at token 245
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.123 · topic 50%, last mention at token 245
 
 ```
 The internet began as a research project in the 1960s, and became one of the most popular internet sites.
@@ -3897,7 +4133,44 @@ The inflation rate also differs from inflation in that inflation is not high. Th
 The inflation rate is not high and the inflation rate is low. The inflation rate is not high but the inflation rate is low. This is because inflation is low because inflation is low because inflation is low. This is because inflation is high because inflation is high because inflation is low. This is because inflation is lower because inflation is low because inflation can be low. This is because inflation is low because inflation is low because inflation is low because inflation is high because inflation has low inflation. This is because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.494 · loops from token 206 (period 11) · topic 50%, last mention at token 203
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.257 · topic 0%, last mention at token 0
+
+```
+Inflation occurs when the economy is in recession.
+If you are not a fan of the U.S. economy, you will find a place in the U.S. where you can enjoy the benefits of the economy with a wide range of services that are available to you.
+There are many free and paid services available for U.S. residents, and they include:
+- Business and lifestyle services
+- Social services
+- Real estate
+- Home and business
+- Social services
+- Insurance, 401(k) plans, housing
+- Social support
+- Business and lifestyle programs
+- Health care
+- Housing services
+- Public safety
+- Social services
+- Social services
+- Medical
+- Social services
+- Social support
+- Social services
+- Social services
+- Health care
+- Health insurance
+- Social services
+- Life insurance
+- Social services
+When you are looking for an investment in U.S. infrastructure, consider the following:
+- A strong economy is better than a weak economy.
+- The U.S. economy is not as good as a weak economy.
+- The U.S. economy is still a weak economy.
+- The U.S. economy is still very weak.
+- The U.
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.494 · loops from token 206 (period 11) · topic 50%, last mention at token 203
 
 ```
 Inflation occurs when the economy is able to meet its growing needs and the size of the economy.
@@ -3920,7 +4193,7 @@ A currency that is not tied to a specific currency
 A currency that is
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.225 · topic 50%, last mention at token 252
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.225 · topic 50%, last mention at token 252
 
 ```
 Inflation occurs when the economy is able to meet its growing needs and wants.
