@@ -1,0 +1,45 @@
+{
+  "sources": [
+    {
+      "dataset": "HuggingFaceFW/fineweb",
+      "config": "sample-10BT",
+      "fraction": 0.7,
+      "train_quota": 442645100,
+      "train_tokens": 443066574,
+      "train_docs": 639000,
+      "val_quota": 643109,
+      "val_tokens": 643688,
+      "val_docs": 943,
+      "train_share": 0.6994461566109736
+    },
+    {
+      "dataset": "HuggingFaceTB/smollm-corpus",
+      "config": "fineweb-edu-dedup",
+      "fraction": 0.3,
+      "train_quota": 189705043,
+      "train_tokens": 190386866,
+      "train_docs": 191000,
+      "val_quota": 275619,
+      "val_tokens": 275685,
+      "val_docs": 277,
+      "train_share": 0.30055384338902635
+    }
+  ],
+  "seed": 0,
+  "split": "train",
+  "val_pool_fraction": 0.1,
+  "tokenizer": "gpt2",
+  "val_tokens": 919373,
+  "train_tokens": 633453440,
+  "overlap_with_train": {
+    "val.pt": {
+      "docs": 937,
+      "in_train": 0
+    },
+    "val_mix.pt": {
+      "docs": 1220,
+      "in_train": 0
+    }
+  },
+  "yardstick": "val.pt is data20k/val.pt byte for byte"
+}

@@ -16,33 +16,35 @@ Every evaluated model on the same 20 prompts × 5 draws, 256 new tokens, T=0.7, 
 | M8 | data160k · d512-L4 · 38.9M · T1024 · 40K steps | 3.8919 | 0.436 / 0.748 | 17/100 (11%–26%) | token 180 | 0.402 / 0.566 | 30% | 180 tokens | 13/100 |
 | M9 | data320k · d512-L4 · 38.9M · T1024 · 80K steps | 3.7476 | 0.496 / 0.795 | 26/100 (18%–35%) | token 156 | 0.381 / 0.529 | 31% | 204 tokens | 7/100 |
 | M10 | data320k · d512-L4 · 38.4M · T1024 · 80K steps | 3.6622 | 0.411 / 0.752 | 19/100 (12%–28%) | token 200 | 0.412 / 0.573 | 37% | 246 tokens | 6/100 |
+| M11 | data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.3310 | 0.257 / 0.661 | 16/100 (10%–24%) | token 191 | 0.494 / 0.669 | 46% | 241 tokens | 14/100 |
+| M12 | data640k · d768-L8 · 95.3M · T1024 · 190K steps | 3.3239 | 0.356 / 0.672 | 14/100 (8%–22%) | token 156 | 0.469 / 0.627 | 43% | 233 tokens | 10/100 |
 
 ## rep4 by prompt
 
 Median over draws; (n) = draws that end in an exact loop.
 
-| prompt | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| definition | 0.27 | 0.17 | 0.29 (1) | 0.37 (1) | 0.52 | 0.53 (3) | 0.36 (1) | 0.42 (1) | 0.76 (4) | 0.33 (1) |
-| biography | 0.38 (1) | 0.32 (1) | 0.20 | 0.14 | 0.16 | 0.15 (1) | 0.24 | 0.13 (1) | 0.27 | 0.41 (1) |
-| science_explainer | 0.53 (2) | 0.31 (1) | 0.32 (1) | 0.43 | 0.60 | 0.44 (1) | 0.42 (1) | 0.44 | 0.70 (3) | 0.26 |
-| instructional | 0.25 | 0.29 | 0.41 (1) | 0.44 | 0.31 | 0.66 (1) | 0.55 (1) | 0.68 | 0.62 (2) | 0.41 |
-| bullet_list | 0.67 | 0.62 | 0.82 (2) | 0.92 (1) | 0.86 (2) | 0.91 (2) | 0.96 (4) | 0.71 (2) | 0.61 (2) | 0.66 (2) |
-| numbered_list | 0.56 | 0.55 (1) | 0.56 (1) | 0.57 (1) | 0.68 | 0.67 (1) | 0.64 (1) | 0.68 (1) | 0.70 (2) | 0.56 (1) |
-| enumeration | 0.59 | 0.71 (1) | 0.32 (1) | 0.39 | 0.56 | 0.66 (2) | 0.73 (2) | 0.28 (2) | 0.88 (2) | 0.57 (2) |
-| long_dependency | 0.30 | 0.32 (1) | 0.35 | 0.49 (1) | 0.19 | 0.63 (1) | 0.41 (1) | 0.36 | 0.27 | 0.37 (1) |
-| attribution | 0.10 | 0.18 | 0.10 | 0.25 | 0.35 (1) | 0.48 (2) | 0.28 (1) | 0.22 | 0.27 | 0.40 |
-| numeric_units | 0.15 | 0.29 | 0.40 | 0.28 (1) | 0.70 | 0.74 (1) | 0.47 | 0.52 | 0.62 (2) | 0.41 (1) |
-| agreement_gap | 0.27 | 0.17 | 0.15 | 0.27 | 0.22 | 0.37 | 0.42 | 0.49 (1) | 0.28 (1) | 0.68 (3) |
-| history | 0.11 | 0.15 | 0.22 | 0.31 | 0.27 | 0.41 | 0.14 (1) | 0.31 | 0.28 | 0.27 |
-| anatomy | 0.19 | 0.52 | 0.27 | 0.26 | 0.13 | 0.68 | 0.45 | 0.19 (1) | 0.46 (1) | 0.32 (1) |
-| geography | 0.25 | 0.27 | 0.25 (1) | 0.47 | 0.44 (1) | 0.41 | 0.21 | 0.38 (1) | 0.52 (1) | 0.51 |
-| math_definition | 0.28 | 0.45 | 0.36 (1) | 0.41 (1) | 0.30 (1) | 0.50 (1) | 0.53 (1) | 0.53 (3) | 0.61 (2) | 0.74 (3) |
-| environment | 0.07 | 0.14 | 0.12 | 0.10 | 0.28 | 0.53 (3) | 0.23 | 0.51 (1) | 0.19 | 0.20 (1) |
-| recipe | 0.13 | 0.22 | 0.23 (1) | 0.27 (1) | 0.14 | 0.58 (1) | 0.50 (1) | 0.18 (1) | 0.53 (1) | 0.38 |
-| literature | 0.30 (1) | 0.16 | 0.24 | 0.17 | 0.21 | 0.47 (1) | 0.37 | 0.53 (1) | 0.21 | 0.22 |
-| technology | 0.09 | 0.13 | 0.12 | 0.12 | 0.23 | 0.45 (2) | 0.41 (1) | 0.17 | 0.13 (1) | 0.14 (1) |
-| economics | 0.24 | 0.25 | 0.13 | 0.35 | 0.45 | 0.64 (3) | 0.47 (1) | 0.47 (1) | 0.52 (2) | 0.66 (1) |
+| prompt | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | M12 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| definition | 0.27 | 0.17 | 0.29 (1) | 0.37 (1) | 0.52 | 0.53 (3) | 0.36 (1) | 0.42 (1) | 0.76 (4) | 0.33 (1) | 0.64 (2) | 0.32 |
+| biography | 0.38 (1) | 0.32 (1) | 0.20 | 0.14 | 0.16 | 0.15 (1) | 0.24 | 0.13 (1) | 0.27 | 0.41 (1) | 0.15 | 0.27 (2) |
+| science_explainer | 0.53 (2) | 0.31 (1) | 0.32 (1) | 0.43 | 0.60 | 0.44 (1) | 0.42 (1) | 0.44 | 0.70 (3) | 0.26 | 0.39 | 0.41 (1) |
+| instructional | 0.25 | 0.29 | 0.41 (1) | 0.44 | 0.31 | 0.66 (1) | 0.55 (1) | 0.68 | 0.62 (2) | 0.41 | 0.52 (2) | 0.49 (3) |
+| bullet_list | 0.67 | 0.62 | 0.82 (2) | 0.92 (1) | 0.86 (2) | 0.91 (2) | 0.96 (4) | 0.71 (2) | 0.61 (2) | 0.66 (2) | 0.78 (1) | 0.72 (1) |
+| numbered_list | 0.56 | 0.55 (1) | 0.56 (1) | 0.57 (1) | 0.68 | 0.67 (1) | 0.64 (1) | 0.68 (1) | 0.70 (2) | 0.56 (1) | 0.54 | 0.53 (1) |
+| enumeration | 0.59 | 0.71 (1) | 0.32 (1) | 0.39 | 0.56 | 0.66 (2) | 0.73 (2) | 0.28 (2) | 0.88 (2) | 0.57 (2) | 0.38 (2) | 0.56 |
+| long_dependency | 0.30 | 0.32 (1) | 0.35 | 0.49 (1) | 0.19 | 0.63 (1) | 0.41 (1) | 0.36 | 0.27 | 0.37 (1) | 0.22 (1) | 0.38 (1) |
+| attribution | 0.10 | 0.18 | 0.10 | 0.25 | 0.35 (1) | 0.48 (2) | 0.28 (1) | 0.22 | 0.27 | 0.40 | 0.09 | 0.08 |
+| numeric_units | 0.15 | 0.29 | 0.40 | 0.28 (1) | 0.70 | 0.74 (1) | 0.47 | 0.52 | 0.62 (2) | 0.41 (1) | 0.25 | 0.15 |
+| agreement_gap | 0.27 | 0.17 | 0.15 | 0.27 | 0.22 | 0.37 | 0.42 | 0.49 (1) | 0.28 (1) | 0.68 (3) | 0.21 (2) | 0.60 (1) |
+| history | 0.11 | 0.15 | 0.22 | 0.31 | 0.27 | 0.41 | 0.14 (1) | 0.31 | 0.28 | 0.27 | 0.27 (1) | 0.29 |
+| anatomy | 0.19 | 0.52 | 0.27 | 0.26 | 0.13 | 0.68 | 0.45 | 0.19 (1) | 0.46 (1) | 0.32 (1) | 0.17 (1) | 0.34 |
+| geography | 0.25 | 0.27 | 0.25 (1) | 0.47 | 0.44 (1) | 0.41 | 0.21 | 0.38 (1) | 0.52 (1) | 0.51 | 0.35 | 0.36 |
+| math_definition | 0.28 | 0.45 | 0.36 (1) | 0.41 (1) | 0.30 (1) | 0.50 (1) | 0.53 (1) | 0.53 (3) | 0.61 (2) | 0.74 (3) | 0.38 (1) | 0.58 (1) |
+| environment | 0.07 | 0.14 | 0.12 | 0.10 | 0.28 | 0.53 (3) | 0.23 | 0.51 (1) | 0.19 | 0.20 (1) | 0.10 | 0.14 |
+| recipe | 0.13 | 0.22 | 0.23 (1) | 0.27 (1) | 0.14 | 0.58 (1) | 0.50 (1) | 0.18 (1) | 0.53 (1) | 0.38 | 0.22 | 0.25 |
+| literature | 0.30 (1) | 0.16 | 0.24 | 0.17 | 0.21 | 0.47 (1) | 0.37 | 0.53 (1) | 0.21 | 0.22 | 0.07 | 0.09 |
+| technology | 0.09 | 0.13 | 0.12 | 0.12 | 0.23 | 0.45 (2) | 0.41 (1) | 0.17 | 0.13 (1) | 0.14 (1) | 0.11 (1) | 0.12 (1) |
+| economics | 0.24 | 0.25 | 0.13 | 0.35 | 0.45 | 0.64 (3) | 0.47 (1) | 0.47 (1) | 0.52 (2) | 0.66 (1) | 0.55 (2) | 0.33 (2) |
 
 ## Reading set
 
@@ -261,6 +263,35 @@ In the process of photosynthesis, carbon breaks down the carbon into elements.
 - When photosynthesis is involved in the process of photosynthesis, photosynthesis is the process of photosynthesis
 ```
 
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.818 · loops from token 107 (period 18) · topic 100%, last mention at token 255
+
+```
+Photosynthesis is a process that enables photosynthesis to occur in a plant cell.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis occurs in the plant cell.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis in plants and animals is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis occurs in the plant and animal cells.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis is the process by which plants and animals obtain energy from the sun.
+- Photosynthesis
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.482 · topic 100%, last mention at token 244
+
+```
+Photosynthesis is a process that enables photosynthesis to occur in a plant cell. Plants and leaf chloroplasts are the main source of chlorophyll. Photosynthesis is a process that occurs in a plant cell that uses chlorophyll. Most photosynthesis is done by photosynthesis. Plants rely on the chemical reaction of photosynthesis and respiration. Photosynthesis is a process that involves photosynthesis. Photosynthesis is a process that occurs in a plant cell that uses photosynthesis.
+Photosynthesis is an important process in the photosynthesis process. Photosynthesis is a process that occurs in a plant cell that uses chlorophyll. It is the process that occurs in a plant cell that uses photosynthesis. Photosynthesis is the process that occurs in a plant cell that uses chlorophyll. Photosynthesis is the process by which plants and other organisms convert light energy from the sun into light. Photosynthesis is a process in which plants and other organisms convert light energy from.
+Photosynthesis is a process that occurs in plants and other organisms. Photosynthesis is the process by which plants and other organisms convert light energy from the sun into light energy. Photosynthesis is the process by which plants and other organisms convert light energy from the sun into energy. Photosynthesis is a process in which plants and other organisms convert light
+```
+
 ### biography
 
 prompt: 'Albert Einstein was a German-born theoretical physicist who'
@@ -358,6 +389,27 @@ He was a
 Albert Einstein was a German-born theoretical physicist who was not a physicist who is still considered one of the most famous physicists in the world.
 The Albert Einstein Institute – the first Einstein-born scientist to ever become Einstein’s most famous scientist for decades – was a physicist who was the first Einstein to be accepted for the Nobel Prize in Physics. Einstein’s first scientific prize was Albert Einstein’s first, while Einstein’s second – Albert Einstein’s first, and Albert Einstein’s second – was born in 1945. So, Einstein’s first year of Einstein’s first scientific achievement, Albert Einstein, was born in 1961.
 Albert Einstein’s first two years of Einstein’s second, and Albert Einstein’s second, were born in 1962. Einstein was one of the only three scientists to ever become Einstein’s first. Einstein’s first, but Einstein’s first, and Albert Einstein’s second only, was born in 1959. Albert Einstein’s first year of teaching was only the first Einstein to ever become Einstein’s second. Albert Einstein’s first year of teaching was only a year after Albert Einstein’s first three years of teaching, when he became Albert Einstein’
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.103 · topic 67%, last mention at token 228
+
+```
+Albert Einstein was a German-born theoretical physicist who was a leading physicist among other people, especially in the post-war years of his life. Einstein received his doctorate in mathematics from the University of Vienna, and his doctorate in physics from the University of Vienna. He also received a master's degree in mathematics, which he later became famous in the field of thermodynamics.
+Although Einstein was well-known for his contributions to physics, he was one of the most important researchers in physics. He was especially important in the development of the modern world, and he was responsible for the development of the modern quantum computer.
+In the 1920s, Einstein was a German-born physicist, and he was a key figure in the development of the field of quantum mechanics. He was also a student of Albert Einstein, and he was a key figure in the development of the modern world.
+In 1924, Einstein was awarded the Nobel Prize for Physics, and he was one of the greatest physicists of the 20th century. He was also a professor of chemistry and a naturalist.
+He was also a member of the German Academy of Science, which was founded in 1900 as the German Scientific Society.
+Although he was a well-known scientist, he also authored several books, which were eventually published.
+He was also
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.273 · topic 33%, last mention at token 236
+
+```
+Albert Einstein was a German-born theoretical physicist who demonstrated the quantum field as a discrete, observable phenomenon. His contributions to science and mathematics were instrumental in shaping his theories and his method of scientific discovery.
+In the late 1920s, Einstein was interested in the relationship between the electric field and the electric field, and he believed that the field had a definite and measurable relationship with the electric field. Einstein, who was a scientist, could not be said to have known about his theories. He believed that the electric field was responsible for the transfer of energy across the electromagnetic spectrum.
+In the 1920s, Einstein began to work on the theory of relativity. He believed that the electromagnetic field could not be explained by a single force, but rather by a single force acting on it. He believed that the electric field had a definite and measurable and measurable relationship with the electric field, and he believed that the electric field could not be explained by a single force, or by a single force acting on it.
+In 1925, Einstein published his first paper on electromagnetism, which concluded that the electric field had a definite and measurable and measurable and measurable relationship with the electric field. In 1925, Einstein published his work on the theory of relativity, which he believed that the electric field had a definite and measurable and measurable and measurable and
 ```
 
 ### science_explainer
@@ -547,6 +599,38 @@ Oxygen is a chemical element with a large amount of energy, which can be used to
 In the early days of solar energy, there was a revival of traditional solar cells, which are a result of the use of solar cells. When a solar cell is installed and the solar energy is converted into a hybrid form, the solar cells are equipped with the power that is used to store energy, and the solar cells are powered by solar cells for use in other applications. This process is being adopted in the form of solar cells, which are the basis for the design of solar cells.
 In the early days of solar energy, there were only about 4,000 solar cells in the United States. This was the year the United States was on a mission to protect the environment, protect the environment, and make the world’s largest solar cell. This includes solar cells that are used in the United States for storing and storing energy.
 The first solar cell was the first solar cell, which was used in the
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 56 tokens · EOS · rep4 0.528 · topic 100%, last mention at token 54
+
+```
+Oxygen is a chemical element with the symbol Oxygen.
+- Oxygen is a chemical element with the symbol Oxygen.
+- Oxygen is a chemical element with the symbol Oxygen.
+The element has the symbol Oxygen. The symbol Oxygen is a chemical element with the symbol Oxygen.
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.869 · loops from token 50 (period 15) · topic 100%, last mention at token 251
+
+```
+Oxygen is a chemical element with the symbol Oxygen.
+- Oxygen is a chemical element with the symbol Oxygen.
+- Oxygen is a chemical element with the symbol Oxygen.
+The element has the symbol Oxygen, which is the symbol O.
+- Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxygen.
+- O Oxygen is a chemical element with the symbol Oxy
 ```
 
 ### instructional
@@ -760,6 +844,23 @@ Teachers are interested in introducing the concept of learning to students and d
 Teaching and learning to students
 Students will also be able to use the concept of learning to help them to become more motivated.
 Teachers are interested in helping students to develop their learning by using advanced technology and learning to learn. It
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 66 tokens · EOS · rep4 0.016 · topic 33%, last mention at token 57
+
+```
+In this lesson, students will learn how to make a good case for a friend who is in a hospital.
+Students will review the case to create a case based on the case. The lesson will be based on the case by the teacher and a student’s ability to make his case.
+In the end, students will be able to solve their own case.
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.66 · loops from token 117 (period 22) · topic 0%, last mention at token 98
+
+```
+In this lesson, students will learn how to make a good impression on your class and how to use the vocabulary we use at all times.
+In this lesson, students will learn how to create and use the word “d” in a sentence, and how to use the word “d” in a sentence to describe what is happening in the world.
+In this lesson, students will learn how to create and use the word “d” in a sentence.
+In this lesson, students will learn about the word “d” which is a different word in the word “d” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the
 ```
 
 ### bullet_list
@@ -1058,6 +1159,45 @@ It’s important to remember that exercise is only about one hour long. It’s n
 - 3
 ```
 
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.249 · topic 100%, last mention at token 253
+
+```
+There are several benefits to regular exercise:
+- __________ – Exercise helps you to maintain your heart and blood vessels. Exercise helps to maintain your heart and blood vessels. It can help to reduce inflammation and relieve pain in the legs.
+- __________ – Exercise helps to improve blood flow and circulation. It helps to keep your heart and blood vessels strong.
+- __________ – If you exercise regularly, your heart and blood vessels will not be able to work properly.
+- __________ – Exercise helps to improve the cardiovascular system. It helps to reduce the risk of heart disease.
+- __________ – Exercise helps to improve the muscles of the legs and lower the risk of high blood pressure.
+- __________ – Exercise helps to improve the blood flow and increase the circulation to improve blood flow.
+The Benefits of Exercise
+Regular exercise is important for the health of the body. It helps to maintain and improve the proper functioning of the heart, muscles, and blood vessels. It helps to reduce inflammation and reduce pain.
+Physical activity can help to improve the immune system and improve the balance of the body.
+It can help to reduce the risk of stroke. Exercise improves blood circulation and strengthens the heart. It can help to reduce the risk of heart disease.
+Exercise can help
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.534 · topic 0%, last mention at token 4
+
+```
+There are several benefits to regular exercise:
+- __________ – Exercise helps you to maintain muscle mass and tone muscles.
+- __________ – It improves sleep and helps to feel full.
+- __________ – It improves concentration and helps you to concentrate.
+- __________ – It helps you to focus on tasks and keeps you focused.
+- __________ – It improves concentration and helps you to focus on tasks.
+- __________ – It improves your brain and helps to focus on tasks.
+- __________ – Improves concentration and can be done by eating healthy food.
+- __________ – It improves your circulation and can be done by eating healthy.
+- __________ – It helps to focus on tasks and keeps you focused.
+- __________ - It improves your mood and helps to reduce stress.
+- __________ – You can relax and relax.
+- __________ – It helps to relax muscles and can be done by eating healthy food.
+- __________ – It helps to clear your mind and helps to focus on tasks.
+- __________ – It helps to focus on tasks and keeps you focused on tasks.
+- __________ – It helps you to focus on tasks and keeps you focused on tasks.
+
+```
+
 ### numbered_list
 
 prompt: 'To solve a quadratic equation, follow these steps:\n1.'
@@ -1277,6 +1417,41 @@ To solve a quadratic equation, follow these steps:
 - Select the left-hand corner, right-hand corner, or quadratic equation.
 - Select the left-hand corner, right-hand corner, or quadratic equation.
 6. Step-by-step:
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.561 · topic 0%, last mention at token 0
+
+```
+To solve a quadratic equation, follow these steps:
+1. Find the angle the line moves to.
+2. Find the distance of the angle at which the line moves to.
+3. Find the radius of the line in which the line moves to.
+4. Find the angle at which the line moves to.
+5. Find the area of the line in the circle.
+6. Find the area of the circle.
+7. Find the distance the line moves to.
+8. Find the area of the circle in which the line moves.
+9. Find the area of the circle in which the line moves to.
+10. Find the area of the circle in which the line moves to.
+11. Find the area of the circle in which the line moves to.
+12. Find the area of the circle in which the line moves to.
+13. Find the area of the circle in which the line moves to.
+14. Find the area of the circle in which the line moves to.
+15. Find the area of the circle in which the line moves to.
+16. Find the area of the circle in which the line moves.
+17. Find the area of the circle in which the line moves to.
+18. Find the area of the circle in which
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.731 · loops from token 138 (period 13) · topic 67%, last mention at token 249
+
+```
+To solve a quadratic equation, follow these steps:
+1. Step 1: Find the area of the right side of the triangle that is the quadratic equation.
+2. Step 2: Find the radius of the right side of the triangle that is the quadratic equation as the base for the square.
+3. Step 3: Calculate the area of the right side of the triangle that is the area of the triangle that is the quadratic equation.
+4. Step 4: Calculate the area of the right side of the triangle that is the quadratic equation as the base for the square that is the quadratic equation.
+5. Step 5: Calculate the area of the right side of the triangle that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that
 ```
 
 ### enumeration
@@ -1538,6 +1713,67 @@ There are many kinds of data type. For example, data type is used to make statem
 Data type is used to make statements and statements. It can be used to make statements
 ```
 
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.759 · loops from token 213 (period 15) · topic 0%, last mention at token 6
+
+```
+There are three main types of the process
+There are three main types of the process:
+- Primary Process:
+Primary Process: The process of making a product or service.
+Primary Process: The process of converting raw materials into finished products.
+Primary Process: The process of converting raw materials into finished products.
+Primary Process: The process of converting raw materials into finished products.
+Primary Process: The process of converting raw materials into finished products.
+Primary Process: The process of converting raw materials into finished products.
+Primary Process: The process of making a product or service.
+Primary Process: The process of creating a product or service.
+Primary Process: The process of creating a product or service.
+Primary Process: The process of converting raw materials into finished products.
+Primary Process: The process of transforming raw materials into finished products.
+Secondary Process: The process of converting raw materials into finished products.
+Secondary Process: The process of making a product or service.
+Secondary Process: The process of converting raw materials into finished products.
+Thirdary Process: The process of converting raw materials into finished products.
+Fourthary Process: The process of converting raw materials into finished products.
+Fourthary Process: The process of converting raw materials into finished products.
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.573 · topic 0%, last mention at token 0
+
+```
+There are three main types of the garter. The first is the type of garter that is used for the
+garter. The second is a round-shaped garter. The third is a round-shaped garter. This is
+only used for the
+a. garter shaped garter.
+b. round-shaped garter.
+c. round-shaped garter.
+Determine the garter position.
+The slot is the most crucial part of the garter. The slot is the
+a. The slot is the
+b. The slot is the
+d. The slot is the
+The slot is the
+The slot is the
+The slot is the most important part of the garter. The slot is the
+a. The slot is the
+b. The slot is the
+c. The slot is the
+d. The slot is the
+The slot is the
+a. The slot is the
+b. The slot is the
+c. The slot is the
+d. The slot is the
+The slot is the
+a. the slot is the
+b. the slot is the
+The slot is the
+The slot is the
+a. The slot is the
+b. The slot is the
+The slot
+```
+
 ### long_dependency
 
 prompt: 'Although the treaty was signed in 1919, it'
@@ -1684,6 +1920,47 @@ The India War of 1812–17
 The Battle of Britain was a series of battles between British and British forces. British troops were sent to war with Britain, and British troops were deployed to the British. The British were sent to British troops. Britain was defeated by British forces. British troops were sent to Britain for the British. The British were sent to Britain. British troops and British troops were sent to Britain. Britain was part of Parliament. British forces were sent to England. British troops were sent to Britain. British troops were sent to Britain. British troops were sent to Britain. British troops were sent on. British troops were sent to Britain. British troops were sent to Britain. British troops were sent to Britain and England. British troops were sent to British troops. Britain was sent to Britain. British troops were sent to Britain and England. British troops were sent to Britain. British soldiers were sent to England and England. British troops were sent to Britain. British troops were sent to Britain. British soldiers were sent to England. British soldiers were sent to England and England. British troops were sent to England. British soldiers were sent to England
 ```
 
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.704 · loops from token 221 (period 8) · topic 100%, last mention at token 255
+
+```
+Although the treaty was signed in 1919, it was repealed in the year 1919.
+The treaty was broken in 1919 and became the law of the land of the United Kingdom.
+The Treaty of Versailles
+The treaty was signed in 1919 and was signed by the people of France and the Kingdom of France. It was not until 1919, that the treaty was signed between the people of France and the Kingdom of the United Kingdom.
+The treaty was signed in 1919.
+The treaty was signed by the people of France and the Kingdom of the United Kingdom.
+The treaty was signed in 1919 and was ratified by the people of France and the Kingdom of the United Kingdom.
+The treaty was signed in 1919 and was signed in 1919.
+The treaty was signed in 1919.
+The treaty was signed in 1919.
+The treaty was signed in 1919.
+The treaty was signed in 1919 and was signed in 1919.
+The treaty was signed in 1919.
+The treaty was signed in 1919 and was signed in 1919.
+The treaty was signed in 1919.
+The Treaty of Versailles
+The treaty was signed in 1919 and was signed in 1919.
+The treaty was signed in 1919.
+The treaty was signed in 1919.
+The treaty was signed in 1919.
+The treaty was signed in
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.32 · topic 100%, last mention at token 248
+
+```
+Although the treaty was signed in 1919, it was repealed in the year 1919.
+The treaty was broken in 1919 and became known as the “War of the Three Kingdoms”. It was ratified as a treaty between the two nations, the Treaty of Versailles and the Treaty of Paris.
+The Treaty of Versailles was signed in 1919, but was not ratified until 1919. It was ratified on 1 July 1919, and passed on 2 May 1919.
+The War of the Three Kingdoms was fought on 3 June 1919. In 1920, it broke into four parts:
+- Treaty of Versailles – The treaty was signed on 1 July 1919, and was signed on 1 July 1919.
+- Treaty of Paris – The treaty was signed on 3 July 1919, and was ratified on 1 July 1919.
+- Treaty of Paris – The treaty was ratified on 1 July 1919, and was signed on 20 June 1919.
+- Treaty of Paris – The treaty was signed on 2 July 1919, and was ratified on 1 July 1919.
+The war of the Three Kingdoms was fought on 4 August 1919, and was fought on 1 June 1919.
+The Treaty of Paris was signed on 1 October 1919, and was ratified on 5 July 1919. It was signed on 1 July 1919, and was ratified
+```
+
 ### attribution
 
 prompt: 'According to a study published in'
@@ -1811,6 +2088,28 @@ According to a study published in the journal Nature Communications, this study 
 - It was said that the students were divided as a group.
 - The students were divided into two groups according to the degree of learning they took.
 - The student was divided into two groups according to
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.186 · topic 50%, last mention at token 246
+
+```
+According to a study published in the journal Nature, this study confirmed that the amount of water in the ocean is not a factor in the production of salt in the ocean, but instead a factor in the increase in the size of the ocean, as well as the concentration of salt in the ocean.
+In the study, the researchers found that a large proportion of the water in the ocean is salty, and salt is a major factor in the growth of the ocean.
+“In the ocean, the water is salty and it can become salty as a result of the food chain,” said Dr. David L. Gorman, a biologist at the University of Texas at Austin.
+The researchers also found that the amount of water in the ocean is not a factor in the growth of the ocean, so it is not a factor in the increase in the production of salt in the ocean.
+“The salt in the ocean has a greater role in the formation of the water as a result of salt accumulation and also contributes to the growth of the ocean,” said Dr. Gorman.
+“Salmon and other freshwater species are important contributors to the ocean and the ocean ecosystem, including the ocean floor.”
+The study also showed that the ocean floor is not a factor
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.051 · topic 100%, last mention at token 214
+
+```
+According to a study published in the journal Nature, this study was conducted by the University of Adelaide, South Australia, in collaboration with the Australian National University. The results showed that the team’s findings were consistent with those of the study, which was published in the journal Nature.
+The team followed the methodology used in the study, which was followed up and analysed using standard software packages and data analysis software. The researchers concluded that the study is “highly reliable” and that the findings are not only applicable for Australian researchers, but also for the public.
+“Our findings suggest that the team is confident that the findings will be applicable to Australian research,” said Dr Stephen MacPherson, a postdoctoral researcher at South Australia, who has also worked in the field as a postdoctoral researcher at the University of Adelaide.
+“Our study is unique in that the method used is not only reliable but also valid for the public. The results are also consistent with those published by the Australian National University,” said MacPherson.
+While the study is unique in that it is the first time that a single sample has been analyzed, it will be difficult to determine whether the team is accurate in its results, which is a matter of debate and we are confident
 ```
 
 ### numeric_units
@@ -1966,6 +2265,25 @@ The mountain is the highest mountain in the Russian Empire.
 The mountain is the largest mountain in Russia.
 The mountain is the highest mountain in Russia.
 The mountain is the highest mountain in Russia
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.292 · topic 33%, last mention at token 254
+
+```
+The mountain rises to a height of 10,000 feet. The peak is in the south-eastern part of the mountain range of the Russian Federation.
+The mountain has a total area of 3.9 million square meters (1,300,000 acres), of which 8.2 million square meters (900,000 acres) are in the mountains. The mountain is surrounded by three main mountain systems, the Red, Black and Oder systems, including the main mountain systems, the Black, the White, the Black and the Black Mountain systems, and the Red Mountain systems. The mountain is inhabited by three main mountain systems: the Haida, the Sierra, and the Tsar.
+The mountain has a total area of 11,200 square meters (1,300,000 acres), of which 9,200 square meters (3,200,000 acres) are in the mountains. The mountain is surrounded by three main mountainous systems: the Red Mountain, the Black Mountain, and the Black Mountain. The Black Mountain ranges on the Russian and Soviet side of the Red Mountain. The Black Mountain ranges on the Russian side of the Red Mountain range on the Russian side of the Red Mountain. The Black Mountain ranges on the Russian side of the Red Mountain range on the Russian side of the Red Mountain range on
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.115 · topic 0%, last mention at token 21
+
+```
+The mountain rises to a height of at least 25 feet. The peak is in the south-eastern part of the town called "Mount St. Helens".
+The city is known for its many castles, including castles like St. Helens and St. Helens. The castle is located in a small area north of the town.
+The city is named for the Roman Catholic bishop Paulinus Pius and bishop of the Benedictines. The church was founded in 1534, and is the largest in Europe. The church is the largest in Europe and is the largest church in the world.
+The parish church consists of the St. Helens, the parish church, and the parish church. The parish church is located in the parish parish, and is located close to the town of St. Helens. It is the largest parish in Europe.
+The church was built by the Catholic Bishop of St. Helens in the 1st century. The parish church was built in the middle of the 13th century and is the largest parish in Europe. It was built with the help of the bishop Cistercarius and bishop Petrusius of the Domesday book.
+The parish church is located in the village of St. Helens. The parish church was founded in the 13th
 ```
 
 ### agreement_gap
@@ -2129,6 +2447,35 @@ The students who had spent the entire semester preparing for the final examinati
 The students were asked to write a paper on the assignment of their homework. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was
 ```
 
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.83 · loops from token 156 (period 49) · topic 33%, last mention at token 255
+
+```
+The students who had spent the entire semester preparing for the final examination in organic chemistry study were the students who were not part of the organic chemistry study.
+The last semester of organic chemistry study was the first semester of organic chemistry study. The students who had spent the semester preparing for organic chemistry study were the students who were not part of the organic chemistry study.
+The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study. The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study.
+The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study. The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study.
+The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study.
+The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study. The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study.
+The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study. The students who
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.601 · topic 78%, last mention at token 227
+
+```
+The students who had spent the entire semester preparing for the final examination in organic chemistry study were included in the study. The study was a randomized controlled trial. The study was conducted within two consecutive weeks of the final examination. The results of each study were:
+- The students were given organic chemistry study material, which was administered to them in accordance with the university guidelines.
+- The students received organic chemistry study material from the universities.
+- The students were given organic chemistry study material and a study was conducted within the university guidelines.
+- The students were given organic chemistry study materials that were administered to them in accordance with the university guidelines.
+- The students were given organic chemistry study material and a study was conducted within the university guidelines.
+- The students were given organic chemistry study material and a study was conducted within the university guidelines.
+- The students were given organic chemistry study material and a study was conducted within the university guidelines.
+- The students were given organic chemistry study material and a study was conducted within the university guidelines.
+- The students were given organic chemistry study material and a study was conducted within the university guidelines.
+- The students who had spent the entire semester preparing for organic chemistry study material and a study was conducted within the university guidelines.
+The study was conducted in accordance with the university guidelines. The study was conducted within
+```
+
 ### history
 
 prompt: 'The French Revolution began in 1789, when'
@@ -2238,6 +2585,23 @@ The French Revolution began in 1789, when French troops were defeated in the Bat
 The French were defeated by French forces in 1799 and the French were defeated by French forces of the French. The French were defeated by French forces and fought in the battle. Napoleon was defeated by French forces under France’s first-ever French.
 French Revolution took place on the 13th of April 1799, when Napoleon’s French victory was defeated, the French forces led by French forces led by French forces led by German forces. France lost its strategic position as France’s capital and was the largest city in the world. The French army was defeated in 1799.
 Napoleon’s victory was won by French forces and the French had a lasting impact on the French. The French were defeated by French forces led by French forces led by French forces led by French forces. France’s defeat in 1799 led to the victory of Napoleon’s second-hand French. The French were defeated by French forces led by French forces led by French
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.336 · topic 100%, last mention at token 250
+
+```
+The French Revolution began in 1789, when Louis XIV of France was overthrown. The French Revolution eventually ended in 1789 when Louis XVI of France was overthrown. The French Revolution involved the assassination of the French commander, who was also the head of a group of French revolutionaries.
+The French Revolution was a French revolution that revolutionized the way the French people were governed. It was led by a group of nobles who had power over the French people and who created the French Revolution.
+The French Revolution was a major breakthrough in history because it led to the rise of the French Revolution. The French Revolution also saw the French Revolution as a reaction against the French Revolution. The French Revolution was a reaction against the French Revolution.
+The French Revolution was a series of revolutions that began in 1789. The French Revolution was a series of political revolutions that started in 1789. The French Revolution was a series of revolutions that began in 1789. The French Revolution was a period of great political and military power.
+The French Revolution was a series of revolutions that started in 1789 and ended in 1817. The French Revolution was a period of great political and military power that lasted from 1789-1817. The French Revolution was a period of great political and military power in the French people and the people. The
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.474 · topic 67%, last mention at token 254
+
+```
+The French Revolution began in 1789, when Louis XIV of France was overthrown. The French Revolution eventually ended in 1789 when Louis XVI of France was overthrown. The French Revolution involved the assassination of the French commander, who was executed on November 11, 1789. The French Revolution came to an end in 1790 when the French Revolution came out of the hands of the French. France became a more powerful country with an economy and a population that was more dependent on agriculture. The French Revolution was a period of great social upheaval which made it particularly important for the French and the Indians.
+The French Revolution was the most important event in American history. The French Revolution was a period of great social upheaval and struggle of the French and Indians. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power over the French and Indians. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a
 ```
 
 ### anatomy
@@ -2361,6 +2725,34 @@ The heart is located in the heart of the heart of the heart. It lies in the hear
 The heart is located in the heart of the heart of the heart. The heart is located in the heart of the heart of the heart.
 The heart is located in the heart of the heart of the heart of the heart. The heart is located in the heart of the heart of the heart.
 The heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.142 · topic 25%, last mention at token 247
+
+```
+The human heart is a muscular organ that works in two different ways. The human heart beats with a certain amount of force applied to the body’s cells. The heart also pumps blood through the vessels, which are called aortic and pulmonary arteries. The heart beats mechanically with blood flowing through the heart’s valves, and the heart pumps the blood out of the body.
+The heart is a very complex organ, and the body needs the right amount of oxygen to sustain its functions. Without oxygen, all the cells in the body will die.
+How Do You Replace a Heart?
+There are two common ways to replace a heart. One is by replacing the damaged part of the heart (usually aortic and pulmonary arteries), while the other is by replacing the damaged part.
+You may be able to replace the damaged part of the heart with a new one, or you may be able to replace the damaged part using a different type of blood vessel.
+What are the Different Types of Heart?
+There are many different types of heart, and each has its own unique benefits and uses. There are many different types of heart, and each has its own benefits and uses.
+Vascular Health Benefits
+There are many other types of heart, and each has its own benefits and uses
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.395 · topic 25%, last mention at token 201
+
+```
+The human heart is a muscular organ that pumps blood to the lungs. The heart delivers the oxygen and nutrients that fuel the body. The heart is constantly pumping blood throughout the body. The heart pumps blood to the lungs to provide oxygen to the body. The heart also pumps blood throughout the body, making the heart work harder to pump blood through the body.
+- The heart beats faster
+The heart beats faster than the blood flowing through the blood. The heart pumps out oxygen to the lungs, making the blood flow to the lungs. The heart also pumps out oxygen to the lungs, making the heart work harder to pump blood through the body.
+- The heart pumps blood throughout the body
+The heart pumps blood from the lungs to the rest of the body. This process is called the heart beat.
+- The heart pumps blood throughout the body
+The heart pumps blood throughout the body, making the heart work harder to pump blood through the body. This is called the heart beat. The heart pumps blood throughout the body, making the heart work harder to pump blood through the body.
+- The lungs pump blood around the lungs
+The lungs pump blood around the lungs to exchange oxygen and nutrients. The lungs then pump blood around the lungs to transport oxygen to the rest of the body. The lungs also pump blood
 ```
 
 ### geography
@@ -2492,6 +2884,30 @@ Boggy River flows into the river, and flows into the river. The river flows into
 The river flows into the river, and flows back through the river. The river flows into the river and flows into the river, and flows into the river and flows into the river. The river flows into the river, and flows into the river, and flows into the river.
 The river flows into the river, and flows into the river, and flows into the river. The river flows into the river and flows into the river, and flows into the river.
 The river flows into the river, and flows into the river, and flows into the river, and flows into the river. The river flows into the river. The river flows into the river, and flows into the river, and flows into the
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.348 · topic 75%, last mention at token 256
+
+```
+The Amazon River flows through the largest river in the world, and the only river in the world. The river is called Gama in Chinese and the name of it is Gama in Chinese.
+The Gama is the river of the Amazon River, which crosses the Gama River. This river flows through the Gama River and passes through the Gama river. The river has four main branches, which are the Gama River, Gama River, Gama river and Gama river.
+There are four main streams in the Gama River, which pass through the Gama river, which travels through the Gama River. The river is connected with the River Gama and is named after the river Gama, which is located in the south of China and the Gama River in the north.
+The Gama River flows through the Gama River and passes through the Gama River. The Gama River runs through the Gama River. The river flows through the Gama River and passes through the Gama River, which crosses the Gama River. The river is connected with The Gama River and passes through the Gama river and passes through the Gama River.
+The river passes through the Gama River, which crosses the Gama River. The river passes through
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.589 · topic 100%, last mention at token 253
+
+```
+The Amazon River flows through the largest river in the world, and the only river in the world. It is the longest river in the world and the longest river in the world.
+The river flows through the Amazon basin and the Amazon basin, and the other rivers in the world. The river that flows through the Amazon basin is called the Amazon River.
+The Amazon River is the biggest river in the world and the longest river in the world. It is the longest river in the world and the longest river in the world.
+The longest river in the world is the Amazon River, which flows through the Amazon basin. The river that flows through the Amazon River is called the Amazon River.
+The Amazon River is the longest river in the world. It is the longest river in the world and the longest river in the world.
+The longest river in the world is the Amazon River. It travels through the Amazon basin and the Amazon basin.
+The Amazon River is the longest river in the world and the longest river in the world. The river that flows through the Amazon basin has different characteristics that make it a good river.
+The Amazon River is the longest river in the world and the longest river in the world, and the longest river in the world.
+The Amazon River is the longest
 ```
 
 ### math_definition
@@ -2637,6 +3053,27 @@ The twelve integers are the number of bits.
 The twelve integers are the number of bits
 ```
 
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.375 · topic 100%, last mention at token 255
+
+```
+In mathematics, a prime number is a number of numbers. In the simplest of terms, prime numbers are divisors of a number, and in the simplest terms, prime numbers are divisors of a number.
+When a prime number is prime, the sum of its prime factors is called the sum of its prime factors. The prime factors of a number are given in parentheses.
+In mathematics, a prime number is a number whose prime factors are positive integers. In mathematics, a prime number is a number whose sum is zero, and positive integers are prime numbers.
+In mathematics, a prime number is a number whose prime factors are positive integers. A prime number is a number whose prime factors is positive integers. The prime factors of a number are positive integers.
+The basic property of a prime number is that it is divisible by the prime factor, and the remainder of a number is the sum of its prime factors.
+In mathematics, a prime number is a number whose prime factors are positive integers. It is an integer that is divisible by its prime factors with the remainder of the number.
+In mathematics, a prime number is a number whose prime factors are positive integers. It is a number whose prime factors are positive integers.
+A prime number is a number whose prime factors
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.229 · topic 0%, last mention at token 117
+
+```
+In mathematics, a prime number is a number of numbers. In the simplest of terms, a prime number is an integer divisor, that is, the number that is divisible by 2. Similarly, a prime number is a number of integers that is multiplied by itself.
+One of the most common types of prime numbers is called prime number. A prime number is a mathematical expression that contains a prime number of integers. It is a mathematical expression that has the same value in both its prime and its prime.
+A prime number is a general form of an integer. A prime number is any number of numbers that are divisible by itself, such as 1, 2, 3, 6, 6, 6, 7, 8, 9, 9, 9, 9, 12, 12, 13, 14, 13, 14, 15, 17, 18, 19, 20, 21, 21, 21, 21, 20, 21, 21, 25, 26, 27, 28, 28, 28, 29, 40, 40, 50, 81, 83, 83, 83, 83, 84, 84, 84, 84, 84, 84, 84, 84, 85, 84, 85, 87, 84, 84, 84, 84, 84, 84, 84, 84,
+```
+
 ### environment
 
 prompt: 'Climate change refers to long-term shifts in'
@@ -2757,6 +3194,29 @@ Climate change has a huge impact on the environment. Climate change has a large 
 Climate change impacts are on the environment that we are seeing, and we can change the way we respond to climate change.
 Climate change impacts are not just a direct result of climate change but also a direct result of the impact of climate change. It’s a direct result of climate change.
 Climate change has a huge impact
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 141 tokens · EOS · rep4 0.014 · topic 33%, last mention at token 120
+
+```
+Climate change refers to long-term shifts in the Earth’s climate system, and is an important component in the evolution of the climate system.
+Climate Change Insecurity in Climate Change
+Climate change is a significant issue for the United States. It is a problem that affects many Americans and many other Americans. Climate change is a serious health issue in America.
+This is because there are many ways to prevent or mitigate climate change. One of the biggest things that can help is providing the resources for the development of the infrastructure needed for climate-sensitive industries.
+To learn more about climate change, visit the following sites:
+Climate change is a complex issue that affects everyone so it is important to understand how to best address it through development.
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.099 · topic 50%, last mention at token 216
+
+```
+Climate change refers to long-term shifts in the Earth’s climate system, and is an important component in the evolution of the climate system.
+Climate Change Insecurity in Climate Change
+Climate change is a significant issue for the United States. It is a problem that affects many Americans and many citizens. In some cases, a new climate change will create additional challenges for the future of our environment, causing irreparable damage to the planet.
+Climate change is also a concern for many Americans. Many of our jobs have been affected by climate change. The increased use of fossil fuels has contributed to a reduction in greenhouse gas emissions. In fact, climate change has caused over 2 billion tons of CO2 emissions in the U.S. since 1970, according to the United States Environmental Protection Agency.
+The United States has a long history of dealing with the issues of climate change. People have been affected by the greenhouse gas emissions of various industries. The United States has a long history of dealing with the issues of climate change that affect many Americans, including climate change.
+Climate Change Insecurity in Climate Change
+Climate change is a growing concern with a number of environmental issues. One of the main issues in the United States is the greenhouse gas emissions that are emitted by the combustion of fossil fuels. This is one of the
 ```
 
 ### recipe
@@ -2982,6 +3442,34 @@ To make bread at home, you will need to use the same basic formula:
 1
 ```
 
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.059 · topic 25%, last mention at token 137
+
+```
+To make bread at home, you will need to use an oven. If you have a stove, you must provide the oven with an oven, as it is not necessary to use a stove. A good oven will do much more than simply heat food. As a result, a good oven will not have to be a great stove to use.
+Make sure you have a good thermostat.
+How to Use a Food Safety Brand:
+Food safety is paramount when it comes to purchasing food. If you are unsure about what type of food to buy, it is important to consult a food safety brand. The food should always be safe to eat, and it should never be used as a substitute for food.
+Make sure you have the right food for a safe and healthy eating experience.
+Frequently Asked Questions
+Are food hazards from cooking?
+Food hazards from cooking are becoming more common. You may have to cook different foods to avoid them. It is important to be aware of the risks involved.
+What are the risk factors for food safety?
+Food safety is the responsibility of food safety professionals. The food should be safe for the people they work with.
+What are the risks of food safety?
+Food safety is a responsibility of food safety professionals. Food safety professionals must be aware of the
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.174 · topic 0%, last mention at token 91
+
+```
+To make bread at home, you will need to use an oven. If you have a stove, use a stove that is not at all high. For example, if your oven is 40-50 degrees, use a furnace that has a high oven.
+Another way to heat food is to use a stove in a microwave oven. If you have an oven that has a low oven, use two ovens for an oven. If you have a stove that has a low oven, you will need to use a metal stove, which will be more efficient.
+There are several different ways to heat food. You can use a stovetop, oven, stovetop, oven, or stove. The most common is to use a stovetop that has a high oven, if you are using a stove with a high oven.
+You can use a stovetop oven, however, there are other methods to heat food that are easy to use and use. For example, using a microwave with a high oven, using a stove with a low oven, using a stove with a low oven, or using a stove with a high oven.
+Using a stovetop can be a good way to heat food. The better you use your stovetop, the better it will do.
+Use a stovetop with a high oven.
+```
+
 ### literature
 
 prompt: 'William Shakespeare wrote many plays, including'
@@ -3101,6 +3589,22 @@ The main themes in the play are:
 William Shakespeare wrote many plays, including Henry II and Henry II, in the late nineteenth century, when his son, Henry, was a pupil. He was the son of Henry II, who was the son of Henry II, to Henry II and Henry III. He was the son of Henry I. After Henry III, Henry II was the son of Henry II, and Henry II and Henry II were both King Henry I and Henry III.
 Henry II, Henry II, Henry II
 Henry II was a professor of English at the University of Cambridge and an English teacher at the University of Oxford. He wrote two articles on the history of the world. In both cases Henry III was a man who lived in a large town in the middle of England, and Henry II was a man who was a great boy and he was a man who was a great boy. Henry died in the middle of his death in the mid-nineteenth century. Henry III was a man who lived in the middle of his death as a man who was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy. Henry II was a
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.067 · topic 0%, last mention at token 98
+
+```
+William Shakespeare wrote many plays, including those of Shakespeare, but his greatest works were probably Shakespeare's plays, his plays, and his most famous plays. Shakespeare's plays were written mainly in the 15th century in Shakespeare's court, and his essays, plays, poems, plays, and plays were written in the 14th century.
+Aristotle's Aristotle was one of the greatest men in the fields of philosophy, and his ideas were probably influenced by Aristotle. Aristotle was a philosopher who wrote many works on Aristotle, including the treatise on the law of good and evil. Aristotle was a great writer, he was also a proponent of the idea of self-determinism, he argued in his treatise on the nature of the universe, the nature of matter and the nature of matter, and he believed that there were three types of atoms in nature. Aristotle died on August 28, 1587 in Rome.
+The philosopher Aristotle was a man of great intellectual, intellectual, and philosophical power, who was a philosopher who was the founder of the philosophical system and the philosopher of the Middle Ages. Aristotle's work was characterized by a variety of themes, which are important for understanding human nature and its role in human society. Aristotle died on August 28, 1587 in Rome. Aristotle was a philosopher who was
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.241 · topic 50%, last mention at token 251
+
+```
+William Shakespeare wrote many plays, including Shakespeare’s Romeo and Juliet, and william shakespeare’s play Romeo and Juliet, Romeo and Juliet, Romeo and Juliet, Romeo and Juliet, and Romeo and Juliet.
+This is an important work of literature for the next couple of decades. After Romeo and Juliet, Romeo and Juliet, in the 16th century, was a time in which a new generation of parents sought to imitate their own child, Romeo and Juliet. In this, the play Romeo and Juliet is a play that is based on the story of the Romeo and Juliet. The play is based on the death of a loved one. In Romeo and Juliet, the play is a time of change for all of us. It is a time of change and change in the world, and we see it as a time of change in our lives.
+The story of Romeo and Juliet, William Shakespeare's Romeo and Juliet, the tragedy of Romeo and Juliet, and the story of the deaths of Romeo and Juliet, are two parts of a drama. The play is a play that is based on the story of the Romeo and Juliet, the tragedy of the Romeo and Juliet, and the tragedy of the deaths of Romeo and Juliet, both of which are the same. Shakespeare wrote the tragedy Romeo and Juliet
 ```
 
 ### technology
@@ -3226,6 +3730,37 @@ How to Read Wikipedia
 The article has been published in the United States and is often published in American, Canadian, or Pacific Media. It is meant to be a summary of the original article, and then a summary of the article, and then provide a summary of the article, and to be able to provide an overview of the original article, and the main purpose.
 The article has been written in the United States and is a complete summary of the articles, and a summary of the article, and a summary of the article.
 The article has been published in the United States and is generally written in the United States and is usually written in the United States. It is a complete summary of the article, and is generally written in the United States and is commonly used as a summary
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.107 · topic 25%, last mention at token 175
+
+```
+The internet began as a research project in the 1960s, and became one of the most popular internet sites.
+The internet is a fantastic and growing resource, and its internet is a truly wonderful medium. One can find it everywhere, and it has become a place of endless learning and exploration.
+The internet is a wonderful resource that has been used by many people for many years. It has brought with it much-needed social and cultural knowledge, and it has a long and fascinating history, and it has been used for hundreds of years.
+In the year 2000, the internet began to be used by many people, and it continues to be used by millions of people around the world.
+The internet is still used by many people, and it has become a tool for learning and the arts. It has evolved over time, and it continues to be used by people all over the world.
+The internet has also been used by people who want to study and learn more about other subjects, and it has become a popular and popular platform for learning about other subjects.
+There are many schools and institutions around the world that offer free online studying and tutoring. Some of them are:
+Online Learning Courses
+Online courses are available for almost all students, and they are available for all levels of learners.
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.123 · topic 50%, last mention at token 245
+
+```
+The internet began as a research project in the 1960s, and became one of the most popular internet sites.
+The first Internet research project in the history of the internet began in the early 1980s with the invention of the World Wide Web.
+In the 1980s, the Internet began to be used by the average person to communicate with each other.
+The Internet was initially used to connect people with other organizations, such as the World Wide Web, but it was also used by the United States and other countries such as the United States, which were the first to use the Internet.
+The Internet began to be used by scientists, engineers, and researchers across the world.
+The Internet has been used almost daily for research and education.
+The Internet has revolutionized the way people talk, view information, and solve problems.
+The Internet has revolutionized the way people communicate with each other, and it has made communication more efficient.
+The Internet has transformed the way people communicate with each other, and the Internet has become a platform for communication in the 21st century.
+In 2001, the Internet became a global communication platform.
+The Internet has become a global phenomenon and has become a global phenomenon.
+The Internet has helped to shape the Internet, but it has also made a huge impact on the
 ```
 
 ### economics
@@ -3360,5 +3895,58 @@ A player loses a certain amount of money, and the player will lose their money b
 Inflation occurs when the inflation rate is not as high or low and the inflation rate is not as high. This is because the inflation rate is very low and the inflation rate is low. This is because inflation is not high because inflation is low. Therefore the inflation rate is low and the inflation rate is high.
 The inflation rate also differs from inflation in that inflation is not high. The inflation rate is not high and that is not high enough. This is because inflation is high because inflation is low. This is because inflation is low because inflation is high and the inflation rate is low.
 The inflation rate is not high and the inflation rate is low. The inflation rate is not high but the inflation rate is low. This is because inflation is low because inflation is low because inflation is low. This is because inflation is high because inflation is high because inflation is low. This is because inflation is lower because inflation is low because inflation can be low. This is because inflation is low because inflation is low because inflation is low because inflation is high because inflation has low inflation. This is because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation
+```
+
+**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.494 · loops from token 206 (period 11) · topic 50%, last mention at token 203
+
+```
+Inflation occurs when the economy is able to meet its growing needs and the size of the economy.
+A currency with a high inflation rate
+The inflation rate is a measure of how much money it can hold and the amount of money it can hold. This is measured as the inflation rate.
+The term inflation is used to describe the rate of inflation in a country. This is called the inflation rate.
+A currency that is not tied to a specific currency
+The currency that is not tied to a specific currency
+The term inflation is used to describe the price of the currency being fixed. It is used to describe the amount of money that can be held in the currency.
+A currency that is not tied to a particular currency
+A currency that is not tied to a specific currency
+A currency that is not tied to a specific currency
+The term inflation refers to the rate of inflation in a particular currency
+A currency that is not tied to a specific currency
+The term inflation is used to describe the level of inflation in a particular currency
+A currency that is not tied to a specific currency
+A currency that is not tied to a specific currency
+A currency that is not tied to a specific currency
+A currency that is not tied to a specific currency
+A currency that is
+```
+
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.225 · topic 50%, last mention at token 252
+
+```
+Inflation occurs when the economy is able to meet its growing needs and wants.
+Economists refer to recession as "the increase in the price of goods and services." It is a period when economic activity declines and the economy is unable to meet its growing needs.
+Why is inflation important?
+The term inflation is used to describe the rate of change in a currency's price or price.
+What are the 4 types of inflation?
+Some of the main types of inflation include:
+- Eligibility inflationary
+- Forced inflationary
+- Forced inflationary
+- Forced inflationary
+- Forced inflationary
+- Forced inflationary
+- Forced inflationary
+- Forced inflationary
+- Forced inflationary
+How is inflation related to inflationary?
+An inflationary is when the price of a commodity rises relative to the price of a commodity. A sudden increase in income or inflationary pressure can be caused by changes in the price of a commodity or an inflationary spiral of the price of a commodity.
+Why is inflation important in the economy?
+The main causes of inflation are:
+- Rising prices.
+- Decrease in the price of goods and services.
+- Increased prices.
+- Increased levels of inflation.
+- Increased inflation.
+- Increased
 ```
 
