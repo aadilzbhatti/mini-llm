@@ -99,6 +99,17 @@ class AutoEvaluator:
         st["eval"] = {**(st.get("eval") or {}), **fields}
         _write(status_path, st)
 
+    def write_report(self, run_id: str) -> None:
+        """The run's shareable report (mini_llm.run_report): md + html + pdf in reports/. Best effort: a
+        report that fails to render must not fail the eval or stop the worker."""
+        try:
+            from mini_llm.run_report import write
+
+            for kind, where in write(self.repo, run_id).items():
+                print(f"[report] {run_id}: {kind} -> {where}", flush=True)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[report] {run_id}: failed ({type(exc).__name__}: {exc})", flush=True)
+
     def scan(self) -> list[str]:
         """Queue every eligible, not-yet-evaluated run. Returns the run ids queued now."""
         new = []
@@ -143,4 +154,6 @@ class AutoEvaluator:
                 **({} if rc == 0 else {"error": f"mini-llm-eval exited {rc}; see runs/{run_id}.eval.log"}),
             )
             print(f"[auto-eval] {run_id}: {'done' if rc == 0 else f'FAILED ({rc})'}", flush=True)
+            if rc == 0:
+                self.write_report(run_id)
             self.jobs.task_done()

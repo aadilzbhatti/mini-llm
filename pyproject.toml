@@ -25,6 +25,7 @@ mini-llm-import-run = "mini_llm.import_run:main"
 mini-llm-eval = "mini_llm.evals:main"
 mini-llm-bench = "mini_llm.bench:main"
 mini-llm-samples = "mini_llm.samples:main"
+mini-llm-run-report = "mini_llm.run_report:main"
 mini-llm-modal-mirror = "mini_llm.remote.modal_mirror:main"
 
 [dependency-groups]

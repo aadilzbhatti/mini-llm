@@ -310,7 +310,8 @@ def summarize(ss: list[dict]) -> dict:
 def label(r: dict) -> str:
     """data320k · d512-L4 · 38.9M · T1024 · 80K steps -- what a model IS, not just its context."""
     stem, cfg = Path(r["checkpoint"]).stem, r["config"]
-    data = re.search(r"data\d+k", stem)
+    # The dataset's whole name (data640k, data640k-fw70edu30), not the run's config after it (-b8-t1024-...).
+    data = re.search(r"data\d+k(?:-(?!(?:b|bs|t|e|lr|wu|steps)\d)[a-z0-9]+)*", stem)
     steps = r.get("step")
     return " · ".join(
         [

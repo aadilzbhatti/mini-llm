@@ -12,3 +12,6 @@ queue/*.json
 queue/done/
 queue/failed/
 queue/cancelled/
+
+# run reports: .md and .pdf are kept; .html is the intermediate the PDF is printed from
+reports/*.html

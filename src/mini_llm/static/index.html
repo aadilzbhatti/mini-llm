@@ -511,6 +511,18 @@ async function cloneSweepWinner(id) {
   openForm({ name, kind: 'train', args, ...(s.remote ? { target: 'modal', gpus: s.remote.gpus } : {}) }, `from sweep run ${s.name || id}, without --stop-after`);
 }
 
+// The run's shareable report (mini_llm.run_report), fetched with the API token and opened as a file.
+async function openReport(id, fmt) {
+  try {
+    const r = await fetch(`/api/runs/${id}/report_file?fmt=${fmt}`, { headers: tok() ? { authorization: 'Bearer ' + tok() } : {} });
+    if (!r.ok) throw new Error(r.statusText);
+    const name = (r.headers.get('content-disposition') || '').match(/filename="?([^";]+)/)?.[1] || `report.${fmt}`;
+    const url = URL.createObjectURL(await r.blob());
+    const a = Object.assign(document.createElement('a'), fmt === 'pdf' ? { href: url, target: '_blank' } : { href: url, download: name });
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+  } catch (e) { toast('Report: ' + e.message); }
+}
+
 function histCard(r) {
   const id = esc(r.run_id);
   return `<div class="card" data-run="${id}">
@@ -521,6 +533,7 @@ function histCard(r) {
       <button onclick="showDetail('${id}', this)">Details</button>
       ${r.kind !== 'prepare-data' ? `<button onclick="showPlot('${id}', this)">Plot</button><button onclick="showReport('${id}', this)">Samples</button>` : ''}
       <button onclick="showLog('${id}', this)">Log</button>
+      ${(r.report_files || []).filter(f => f !== 'html').map(f => `<button onclick="openReport('${id}', '${f}')">Report ${f.toUpperCase()}</button>`).join('')}
       ${r.eval?.state === 'done' ? `<button onclick="showEval('${esc(r.eval.report)}')">Evals</button>` : r.eval?.state ? `<span class="pill ${r.eval.state === 'failed' ? 's-failed' : 's-running'}" title="${esc(r.eval.error || '')}">eval ${esc(r.eval.state)}</span>` : ''}
       <button onclick="cloneJob('${id}')">Clone</button>
       ${r.status === 'completed' && r.kind !== 'prepare-data' ? `<button onclick="continueFrom('/api/runs/${id}/continuation')">Continue</button>` : ''}

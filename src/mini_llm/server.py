@@ -380,8 +380,27 @@ def create_app(
             if status.get("status") == "interrupted":  # its cost ends at the last heartbeat
                 live = _read_json(run_paths(runs_dir, run_id)["live"])
             row["cost"] = costs.run_cost(status, live, rates, now)
+            row["report_files"] = report_files(status)
             out.append(row)
         return out
+
+    reports_dir = repo / "reports"
+
+    def report_files(status: dict) -> list[str]:
+        """Which formats of the run's shareable report (mini_llm.run_report) exist: md, pdf, html."""
+        stem = (status.get("eval") or {}).get("report")
+        return [f for f in ("md", "pdf", "html") if stem and (reports_dir / f"{stem}.{f}").exists()]
+
+    @app.get("/api/runs/{run_id}/report_file", dependencies=[Depends(auth)])
+    def run_report_file(run_id: str, fmt: str = "md") -> FileResponse:
+        status = status_of(check_id(run_id))
+        if fmt not in ("md", "pdf", "html") or fmt not in report_files(status):
+            raise HTTPException(404, f"no {fmt} report for {run_id} (written when its evals finish)")
+        stem = status["eval"]["report"]
+        media = {"md": "text/markdown; charset=utf-8", "pdf": "application/pdf", "html": "text/html; charset=utf-8"}[
+            fmt
+        ]
+        return FileResponse(reports_dir / f"{stem}.{fmt}", media_type=media, filename=f"{stem}.{fmt}")
 
     @app.get("/api/runs/{run_id}", dependencies=[Depends(auth)])
     def get_run(run_id: str) -> dict:
