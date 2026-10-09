@@ -253,8 +253,26 @@ GLOSSARY = [
         "retrieval@d",
         "Forced choice among 10 candidates (chance 10%): can the model pick the token that appeared d tokens earlier? Tests using information far back in context.",
     ),
-    ("rep4", "Share of repeated 4-grams in a generated sample (0 = no repetition). Median over 100 samples."),
-    ("loops", "Samples (of 100) that fall into a verbatim repetition loop, with its 95% CI."),
+    (
+        "degenerate",
+        "Samples (of 100) that end in an exact loop OR have rep4 >= 0.5, with its 95% CI. The headline repetition "
+        "number: exact loops alone miss repetition that never settles into a verbatim cycle.",
+    ),
+    (
+        "rep4",
+        "Share of repeated 4-grams in a generated sample (0 = no repetition). Median over 100 samples; also counted "
+        "at >= 0.3 / 0.5 / 0.7.",
+    ),
+    (
+        "near-loops",
+        "Samples whose tail repeats: from some token on, every 64-token window has rep4 >= 0.5. Onset = where that "
+        "tail starts (median).",
+    ),
+    (
+        "exact loops",
+        "Samples (of 100) that end in a verbatim repeating cycle of at least 32 tokens, with its 95% CI. A strict "
+        "subset of the degenerate samples.",
+    ),
     ("topic held", "Share of samples still mentioning the prompt's subject near the end of the 256-token generation."),
     ("distinct-2 / -4", "Distinct bigrams / 4-grams over total, a diversity measure."),
     (
@@ -262,6 +280,18 @@ GLOSSARY = [
         "20 frozen prompts x 5 seeds, 256 new tokens, temperature 0.7, top-k 40, stop at EOS; identical for every model.",
     ),
 ]
+
+
+def _buckets(s: dict) -> str:
+    ge = s.get("rep4_ge") or {}
+    return "–" if not ge else " / ".join(str(ge.get(k, "–")) for k in ("0.3", "0.5", "0.7"))
+
+
+def _near(s: dict) -> str:
+    if s.get("near_loops") is None:
+        return "–"
+    onset = s.get("near_loop_onset_median")
+    return f"{s['near_loops']}/{s.get('n')}" + ("" if onset is None else f" (token {onset:.0f})")
 
 
 def _comparison(repo: Path, me: dict) -> Table:
@@ -285,6 +315,7 @@ def _comparison(repo: Path, me: dict) -> Table:
                     ("**this run** · " if mine else "") + label(r),
                     f4(q.get(f"full_val@{T}")),
                     f4((cc.get(str(T)) or {}).get("loss")),
+                    "–" if s.get("degenerate") is None else f"{s['degenerate']}/{s.get('n', 100)}",
                     "–" if s.get("rep4") is None else f"{s['rep4']:.3f}",
                     "–" if s.get("looped") is None else f"{s['looped']}/{s.get('n', 100)}",
                     pct(s.get("topic")),
@@ -299,8 +330,9 @@ def _comparison(repo: Path, me: dict) -> Table:
             "model",
             f"full_val@{T}",
             f"L(c={T})",
+            "degenerate",
             "rep4 median",
-            "loops",
+            "exact loops",
             "topic held",
             "retrieval@256",
             "retrieval@496",
@@ -359,9 +391,22 @@ def build(repo: Path, run_id: str) -> tuple[list, str, dict]:
                     f"fixed-target L(c={T})",
                     f4(((r.get("context_curve") or {}).get("by_context") or {}).get(str(T), {}).get("loss")),
                 ],
-                ["rep4 median (generation)", "–" if s.get("rep4") is None else f"{s['rep4']:.3f}"],
                 [
-                    "loops",
+                    "degenerate (exact loop or rep4 ≥ 0.5)",
+                    (
+                        "–"
+                        if s.get("degenerate") is None
+                        else f"{s['degenerate']}/{s.get('n')} (95% CI {s.get('degenerate_ci95')})"
+                    ),
+                ],
+                [
+                    "rep4 median / mean / p90",
+                    "–" if s.get("rep4") is None else f"{s['rep4']:.3f} / {s.get('rep4_mean')} / {s.get('rep4_p90')}",
+                ],
+                ["samples with rep4 ≥ 0.3 / 0.5 / 0.7", _buckets(s)],
+                ["near-loops (median onset)", _near(s)],
+                [
+                    "exact loops",
                     "–" if s.get("looped") is None else f"{s['looped']}/{s.get('n')} (95% CI {s.get('loop_ci95')})",
                 ],
                 ["topic held", pct(s.get("topic"))],
@@ -504,8 +549,11 @@ def build(repo: Path, run_id: str) -> tuple[list, str, dict]:
             P(smp.get("protocol", "")),
             Table(
                 [
+                    "degenerate (95% CI)",
                     "rep4 median / p90",
-                    "loops (95% CI)",
+                    "rep4 ≥0.3 / 0.5 / 0.7",
+                    "near-loops (onset)",
+                    "exact loops (95% CI)",
                     "first loop at (median)",
                     "distinct-2 / -4",
                     "topic held",
@@ -515,7 +563,10 @@ def build(repo: Path, run_id: str) -> tuple[list, str, dict]:
                 ],
                 [
                     [
+                        f"{s.get('degenerate')}/{s.get('n')} {s.get('degenerate_ci95')}",
                         f"{s.get('rep4')} / {s.get('rep4_p90')}",
+                        _buckets(s),
+                        _near(s),
                         f"{s.get('looped')}/{s.get('n')} {s.get('loop_ci95')}",
                         str(s.get("loop_onset_median")),
                         f"{s.get('distinct2')} / {s.get('distinct4')}",
@@ -551,11 +602,12 @@ def build(repo: Path, run_id: str) -> tuple[list, str, dict]:
         for p in prompts:
             B.append(H(3, f"{p['label']}: \u201c{p['prompt']}\u201d"))
             for j, d in enumerate(p["draws"]):
-                tags = [
-                    f"rep4 {d.get('rep4')}",
-                    "loops" if d.get("looped") else "no loop",
-                    "topic held" if d.get("topic") else "topic lost",
-                ]
+                tags = [f"rep4 {d.get('rep4')}", "**DEGENERATE**" if d.get("degenerate") else "not degenerate"]
+                if d.get("looped"):
+                    tags.append(f"exact loop from token {d.get('loop_onset')}")
+                elif d.get("near_loop"):
+                    tags.append(f"near-loop from token {d.get('degen_onset')}")
+                tags.append("topic held" if d.get("topic") else "topic lost")
                 if d.get("eos"):
                     tags.append("ended at EOS")
                 B += [P(f"**draw {j + 1}** · " + " · ".join(tags)), Pre(p["prompt"] + d.get("text", ""))]

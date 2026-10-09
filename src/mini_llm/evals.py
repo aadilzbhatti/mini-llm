@@ -458,14 +458,15 @@ def render_markdown(r: dict) -> str:
             *_head(),
             f"| {_summary_cells(sm['summary'])} |",
             "",
-            "| prompt | rep4 median | loops | topic span (median) |",
-            "|---|---|---|---|",
+            "| prompt | rep4 median | degenerate | exact loops | topic span (median) |",
+            "|---|---|---|---|---|",
         ]
         for p in sm["prompts"]:
             ds = p["draws"]
             span = _quantile([x["topic_span"] for x in ds if "topic_span" in x], 0.5)
             lines.append(
                 f"| {p['label']} | {_quantile([x['rep4'] for x in ds], 0.5):.2f} | "
+                f"{sum(bool(x.get('degenerate')) for x in ds)}/{len(ds)} | "
                 f"{sum(bool(x.get('looped')) for x in ds)}/{len(ds)} | {'–' if span is None else f'{span:.0f}'} |"
             )
         lines.append("")
@@ -520,7 +521,7 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
     name = lambda r: Path(r["checkpoint"]).stem
     bench = (bench or {}).get("models", {})
     head = (
-        ["model", "ctx", "val@ctx", "rep4 median", "loops", "topic held"]
+        ["model", "ctx", "val@ctx", "degenerate", "rep4 median", "exact loops", "topic held"]
         + [f"L(c={c})" for c in ctxs]
         + cbs
         + [f"ret@{d}" for d in dists]
@@ -533,7 +534,9 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
         "history (compare models at equal c; this is the fair context comparison, not val@ctx). "
         "**cb@W**: context benefit in nats ± SE on identical windows, only for models with context ≥ W. "
         "**ret@d**: forced-choice retrieval at distance d (chance 10%), identical trials. "
-        "**rep4 median / loops / topic held**: generation samples (see evals/samples.md, evals/GUIDE.md). "
+        "**degenerate**: generation samples (of 100) that end in an exact loop OR have rep4 ≥ 0.5: the "
+        "headline repetition number, since exact loops alone miss repetition that never forms a verbatim cycle. "
+        "**rep4 median / exact loops / topic held**: generation samples (see evals/samples.md, evals/GUIDE.md). "
         "Inference columns come from `mini-llm-bench` (all models in one session, interleaved rounds; "
         "median, p10–p90) when available.",
         "",
@@ -551,9 +554,14 @@ def summary_table(results: list[dict], reference: str | None = None, bench: dict
         ss = (r.get("samples") or {}).get("summary")
         cells = [label(r), str(T), f"{q[f'full_val@{T}']:.4f}" if f"full_val@{T}" in q else "–"]
         cells += (
-            [f"{ss['rep4']:.3f}", f"{ss['looped']}/{ss['n']}", "–" if ss.get("topic") is None else f"{ss['topic']:.0%}"]
+            [
+                "–" if ss.get("degenerate") is None else f"{ss['degenerate']}/{ss['n']}",
+                f"{ss['rep4']:.3f}",
+                f"{ss['looped']}/{ss['n']}",
+                "–" if ss.get("topic") is None else f"{ss['topic']:.0%}",
+            ]
             if ss
-            else ["–", "–", "–"]
+            else ["–", "–", "–", "–"]
         )
         cells += [f"{curve[c]['loss']:.4f}" if c in curve else "–" for c in ctxs]
         cells += [_cb_line(cb[k]) if k in cb and "benefit_se" in cb[k] else "–" for k in cbs]
@@ -666,6 +674,28 @@ def refresh(out: Path, reference: str | None, bench: bool = True, device=None) -
     print(f"[eval] refreshed summary.md, samples.md for {len(results)} models", flush=True)
 
 
+def rescore_samples(out_dir: Path) -> list[str]:
+    """Recompute every per-draw metric and the summary from the stored sample texts, for every eval report
+    in out_dir; rewrite each report's .json and .md. The texts, seeds and decoding are untouched."""
+    from mini_llm.data import get_tokenizer
+    from mini_llm.samples import score, summarize
+
+    tokenizer = get_tokenizer()
+    done = []
+    for path in sorted(out_dir.glob("*.json")):
+        r = json.loads(path.read_text())
+        sm = r.get("samples") if isinstance(r, dict) and "quality" in r else None
+        if not sm or not sm.get("prompts"):
+            continue
+        for p in sm["prompts"]:
+            p["draws"] = [{**d, **score(p["prompt"], d["text"], tokenizer)} for d in p["draws"]]
+        sm["summary"] = summarize([d for p in sm["prompts"] for d in p["draws"]])
+        path.write_text(json.dumps(r, indent=2))
+        path.with_suffix(".md").write_text(render_markdown(r))
+        done.append(path.stem)
+    return done
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(
         description="Evaluate checkpoints (quality, context, retrieval, samples), "
@@ -680,6 +710,12 @@ def main(argv: list[str] | None = None) -> None:
         help="Recompute just these parts, keeping the rest of each existing report.",
     )
     p.add_argument("--no-bench", action="store_true", help="Skip the inference benchmark when refreshing.")
+    p.add_argument(
+        "--rescore-samples",
+        action="store_true",
+        help="Re-score every saved generation sample in out-dir from its text (no model, no GPU), e.g. after a "
+        "metric is added, then refresh the cross-model reports. Draws themselves are unchanged.",
+    )
     p.add_argument("--val-tokens", default=str(DEFAULT_VAL))
     p.add_argument("--device", default=None)
     p.add_argument("--out-dir", default=str(EVALS_DIR))
@@ -694,6 +730,11 @@ def main(argv: list[str] | None = None) -> None:
     args = p.parse_args(argv)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    if args.rescore_samples:
+        for stem in rescore_samples(out):
+            print(f"{stem}: samples re-scored", flush=True)
+        refresh(out, args.reference, bench=False, device=args.device)
+        return
     cks = list(args.checkpoints) + ([r["checkpoint"] for r in eval_results(out)] if args.all else [])
     for ck in dict.fromkeys(cks):
         stem = Path(ck).stem

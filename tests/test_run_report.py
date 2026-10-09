@@ -66,6 +66,9 @@ def repo(tmp_path):
         "step     0 | eval_train_loss 10.8275 | eval_val_loss 10.8264\nstep  2000 | eval_train_loss 5.3389 | eval_val_loss 5.2654\n"
     )
     draw = {
+        "degenerate": False,
+        "near_loop": False,
+        "degen_onset": None,
         "text": " in 1789 the people rose up.",
         "tokens": 9,
         "eos": True,
@@ -117,7 +120,18 @@ def repo(tmp_path):
         },
         "samples": {
             "protocol": "20 prompts x 5 draws",
-            "summary": {"n": 100, "rep4": 0.342, "looped": 11, "loop_ci95": [0.063, 0.186], "topic": 0.36},
+            "summary": {
+                "n": 100,
+                "rep4": 0.342,
+                "looped": 11,
+                "loop_ci95": [0.063, 0.186],
+                "topic": 0.36,
+                "degenerate": 28,
+                "degenerate_ci95": [0.2, 0.37],
+                "rep4_ge": {"0.3": 58, "0.5": 25, "0.7": 10},
+                "near_loops": 21,
+                "near_loop_onset_median": 140,
+            },
             "prompts": [{"label": "history", "prompt": "The French Revolution began in 1789, when", "draws": [draw]}],
         },
     }
@@ -130,7 +144,11 @@ def test_report_has_the_numbers_curves_samples_and_glossary(repo):
     md = out["md"].read_text()
     for needle in (
         "3.4038",  # headline full_val
-        "11/100",  # loops
+        "28/100 (95% CI [0.2, 0.37])",  # degenerate, the headline repetition number
+        "58 / 25 / 10",  # rep4 buckets
+        "21/100 (token 140)",  # near-loops
+        "11/100",  # exact loops
+        "not degenerate",  # per-sample tag in the appendix
         "36%",  # topic held
         "95,333,713 params",
         "RoPE · fused (SDPA)",

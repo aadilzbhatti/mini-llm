@@ -158,6 +158,30 @@ def loop_info(ids: list[int], max_period: int = 64, min_len: int = 32) -> dict:
     return best or {"looped": False, "period": None, "onset": None}
 
 
+# A sample is DEGENERATE if it ends in an exact loop or its rep4 is at least this. The exact-loop test
+# alone misses heavy repetition that never settles into a verbatim cycle (e.g. a list alternating
+# "Safe Diet" / "Healthy Diet" in varying order: rep4 0.82, not looped).
+DEGENERATE_REP4 = 0.5
+# Near-loop: from some token on, every NEAR_WINDOW-token window has rep4 >= DEGENERATE_REP4.
+NEAR_WINDOW = 64
+
+
+def degeneration_onset(ids: list[int], window: int = NEAR_WINDOW, threshold: float = DEGENERATE_REP4) -> int | None:
+    """Where the sample stops saying new things: the start of the unbroken run of `window`-token windows
+    with rep4 >= threshold that reaches the end of the sample. None if the last window is below it.
+    Catches near-loops (repetitive but never an exact cycle) that loop_info misses; for an exact loop
+    the onset is at or before the cycle's."""
+    starts = range(0, len(ids) - window + 1)
+    if not starts:
+        return None
+    onset = None
+    for i in reversed(starts):
+        if rep4(ids[i : i + window]) < threshold:
+            break
+        onset = i
+    return onset
+
+
 def content_words(text: str) -> set[str]:
     return {w for w in re.findall(r"[a-z]{4,}", text.lower()) if w not in _STOP}
 
@@ -191,8 +215,13 @@ def score(prompt: str, text: str, tokenizer) -> dict:
     """Every per-sample metric, from the text alone."""
     ids = encode(text, tokenizer).tolist() if text else []
     loop = loop_info(ids)
+    r4 = rep4(ids)
+    onset = degeneration_onset(ids)
     return {
-        "rep4": round(rep4(ids), 3),
+        "rep4": round(r4, 3),
+        "degenerate": bool(loop["looped"] or round(r4, 3) >= DEGENERATE_REP4),
+        "near_loop": onset is not None,
+        "degen_onset": onset,
         "distinct2": round(distinct(ids, 2), 3),
         "distinct4": round(distinct(ids, 4), 3),
         "looped": loop["looped"],
@@ -286,8 +315,17 @@ def summarize(ss: list[dict]) -> dict:
     topics = [s["topic"] for s in ss if s.get("topic") is not None]
     onsets = [s["loop_onset"] for s in ss if s.get("looped")]
     looped = len(onsets)
+    degenerate = sum(bool(s.get("degenerate")) for s in ss)
+    near = [s["degen_onset"] for s in ss if s.get("near_loop")]
     return {
         "n": len(ss),
+        "degenerate": degenerate,
+        "degenerate_rate": round(degenerate / len(ss), 3),
+        "degenerate_ci95": _wilson(degenerate, len(ss)),
+        "rep4_ge": {f"{t:g}": sum(v >= t for v in r4) for t in (0.3, 0.5, 0.7)},
+        "near_loops": len(near),
+        "near_loop_ci95": _wilson(len(near), len(ss)),
+        "near_loop_onset_median": _quantile(near, 0.5),
         "rep4": round(_quantile(r4, 0.5), 3),
         "rep4_p90": round(_quantile(r4, 0.9), 3),
         "rep4_mean": mean(r4),
@@ -324,7 +362,10 @@ def label(r: dict) -> str:
     )
 
 
-SUMMARY_HEAD = "rep4 median / p90 | loops (95% CI) | first loop at | distinct-2 / -4 | topic held | " "topic span | EOS"
+SUMMARY_HEAD = (
+    "degenerate (95% CI) | rep4 median / p90 | rep4 ≥0.3 / ≥0.5 / ≥0.7 | near-loops (onset) | exact loops (95% CI) | "
+    "first loop at | distinct-2 / -4 | topic held | topic span | EOS"
+)
 
 
 def _summary_cells(s: dict) -> str:
@@ -333,9 +374,22 @@ def _summary_cells(s: dict) -> str:
     lo, hi = s.get("loop_ci95") or (None, None)
     loops = f"{s['looped']}/{s['n']}" + (f" ({lo:.0%}–{hi:.0%})" if lo is not None else "")
     onset = s.get("loop_onset_median")
+    dlo, dhi = s.get("degenerate_ci95") or (None, None)
+    degenerate = "–" if s.get("degenerate") is None else f"**{s['degenerate']}/{s['n']}** ({dlo:.0%}–{dhi:.0%})"
+    ge = s.get("rep4_ge") or {}
+    buckets = "–" if not ge else " / ".join(str(ge.get(k, "–")) for k in ("0.3", "0.5", "0.7"))
+    near = (
+        "–"
+        if s.get("near_loops") is None
+        else f"{s['near_loops']}"
+        + (f" (token {s['near_loop_onset_median']:.0f})" if s.get("near_loop_onset_median") is not None else "")
+    )
     return " | ".join(
         [
+            degenerate,
             f"{f(s.get('rep4'), '.3f')} / {f(s.get('rep4_p90'), '.3f')}",
+            buckets,
+            near,
             loops,
             "–" if onset is None else f"token {onset:.0f}",
             f"{f(s.get('distinct2'), '.3f')} / {f(s.get('distinct4'), '.3f')}",
@@ -353,6 +407,10 @@ def _head(*first: str) -> list[str]:
 
 def _sample_block(head: str, prompt: str, s: dict) -> list[str]:
     loop = f" · loops from token {s['loop_onset']} (period {s['loop_period']})" if s.get("looped") else ""
+    if s.get("near_loop") and not s.get("looped"):
+        loop += f" · near-loop from token {s['degen_onset']}"
+    if s.get("degenerate"):
+        loop += " · **degenerate**"
     topic = (
         "" if s.get("topic") is None else f" · topic {s['topic']:.0%}, last mention at token {s.get('topic_span', '?')}"
     )
@@ -420,7 +478,7 @@ def render_comparison(results: list[dict]) -> str:
         "",
         "## rep4 by prompt",
         "",
-        "Median over draws; (n) = draws that end in an exact loop.",
+        "Median over draws; (n) = degenerate draws (exact loop or rep4 ≥ 0.5).",
         "",
         "| prompt | " + " | ".join(keys[id(r)] for r in rs) + " |",
         "|" + "---|" * (len(rs) + 1),
@@ -432,7 +490,7 @@ def render_comparison(results: list[dict]) -> str:
             if not p:
                 cells.append("–")
                 continue
-            n = sum(bool(s.get("looped")) for s in p["draws"])
+            n = sum(bool(s.get("degenerate")) for s in p["draws"])
             cells.append(f"{_quantile([s['rep4'] for s in p['draws']], 0.5):.2f}{f' ({n})' if n else ''}")
         lines.append(f"| {lab} | " + " | ".join(cells) + " |")
     lines += [

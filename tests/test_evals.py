@@ -151,7 +151,9 @@ def test_generate_samples_reuses_existing_draws(monkeypatch):
     )
     from types import SimpleNamespace
 
-    out = samples.generate_samples(SimpleNamespace(), get_tokenizer(), 128, "cpu", previous=prev)  # complete() is patched, so no real model is needed
+    out = samples.generate_samples(
+        SimpleNamespace(), get_tokenizer(), 128, "cpu", previous=prev
+    )  # complete() is patched, so no real model is needed
     assert calls == [samples.GEN_PROMPTS[-1][1]] * samples.DRAWS  # only the missing prompt is generated
     assert out["summary"]["n"] == len(samples.GEN_PROMPTS) * samples.DRAWS
     assert (
@@ -171,3 +173,40 @@ def test_kv_reference_and_cached_bench(tmp_path):
     assert "past the window" in bench.render_kv_reference(b)
     res = bench.benchmark([str(ck)], device="cpu", rounds=1, prefills_per_round=1)
     assert res["models"]["t128"]["decode_cached_tok_s"]["n"] == 1 and "KV cache" in bench.render(res)
+
+
+def test_degenerate_catches_repetition_that_never_forms_an_exact_loop():
+    """The weakness that prompted these metrics: a list alternating two items in varying order is heavy
+    repetition (high rep4) with no exact ending cycle, so loop_info misses it; degenerate/near-loop don't."""
+    from mini_llm.data import get_tokenizer
+    from mini_llm.samples import degeneration_onset, loop_info, score, summarize
+
+    items = ["Safe Diet", "Healthy Diet", "Safe Diet", "Safe Diet", "Healthy Diet", "Healthy Diet"] * 6
+    text = "\n" + "\n".join(f"- 【{x}】" for x in items[:-1]) + "\n- 【Exercise】"  # breaks any exact cycle at the end
+    s = score("There are several benefits to regular exercise:", text, get_tokenizer())
+    assert not s["looped"] and s["rep4"] >= 0.5
+    assert s["degenerate"] and s["near_loop"] and s["degen_onset"] is not None and s["degen_onset"] < 20
+
+    fresh = list(range(200))
+    assert degeneration_onset(fresh) is None  # nothing repeats
+    tail = list(range(150)) + [7, 8, 9, 10, 11] * 20  # repetitive from token 150 on
+    onset = degeneration_onset(tail)
+    assert onset is not None and 120 <= onset <= 150 and loop_info(tail)["looped"]
+    assert degeneration_onset(list(range(30))) is None  # shorter than one window
+
+    rows = [
+        {"rep4": r, "looped": lp, "degenerate": lp or r >= 0.5, "near_loop": nl, "degen_onset": 90 if nl else None}
+        | {"distinct2": 0.9, "distinct4": 0.9, "loop_onset": 100 if lp else None, "topic": 0.5, "topic_span": 100}
+        | {"eos": False, "tokens": 256}
+        for r, lp, nl in (
+            (0.1, False, False),
+            (0.35, False, False),
+            (0.6, False, True),
+            (0.8, True, True),
+            (0.75, False, True),
+        )
+    ]
+    sm = summarize(rows)
+    assert sm["degenerate"] == 3 and sm["looped"] == 1 and sm["near_loops"] == 3
+    assert sm["rep4_ge"] == {"0.3": 4, "0.5": 3, "0.7": 2} and sm["near_loop_onset_median"] == 90
+    assert sm["degenerate_ci95"][0] < 0.6 < sm["degenerate_ci95"][1]
