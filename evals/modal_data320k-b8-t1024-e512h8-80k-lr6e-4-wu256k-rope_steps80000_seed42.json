@@ -58825,6 +58825,23 @@
     "draws": 5,
     "summary": {
       "n": 100,
+      "degenerate": 48,
+      "degenerate_rate": 0.48,
+      "degenerate_ci95": [
+        0.385,
+        0.577
+      ],
+      "rep4_ge": {
+        "0.3": 66,
+        "0.5": 42,
+        "0.7": 18
+      },
+      "near_loops": 47,
+      "near_loop_ci95": [
+        0.375,
+        0.567
+      ],
+      "near_loop_onset_median": 104.0,
       "rep4": 0.411,
       "rep4_p90": 0.752,
       "rep4_mean": 0.427,
@@ -58858,7 +58875,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 106
           },
           {
             "text": " begins in the plant roots.\nThe plants that build up the food chain contain the carbon so that it can be converted to photosynthesis.\nThe carbon fibers that make up the food chain are used as food additives, by absorbing carbon dioxide into the plant.\nCarbon dioxide is created by dividing the plant by the carbon dioxide in the plant.\nThis means that if the plant is too large, the carbon dioxide in the plant will not be absorbed by the plant and will not be absorbed by the plant.\nThe carbon dioxide in the plant is called CO2.\nThe carbon dioxide in the plant is called CO2- or CO2.\nSome plants are called CO2- or CO2-based, so they must be converted to photosynthesis by the plant.\nThis is called CO2-based, because the plant absorbs CO2 using the CO2-based process.\nThe carbon dioxide in the plant is called CO2-based, because CO2 is converted to CO2 by the plant to photosynthesis.\nThe CO2 in the plant is called CO2.\nCarbon dioxide is a greenhouse gas free of carbon dioxide.\nCarbon dioxide comes from plants because it is absorbed by the plant.\nThe CO2 produced by a",
@@ -58871,7 +58891,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 207
+            "topic_span": 207,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " occurs after the process of photosynthesis.\nPhotosynthesis is the process by which the sun passes through the interior of the plant and the soil. The soil is called the \"plant\" or \"tree\".\nThe plant takes care of the plant by absorbing sunlight and absorbing it from direct sunlight. The plants need to be able to survive and thrive.\nThe plant uses light energy to create photosynthesis and is able to process the photosynthesis process by absorbing sunlight.\nHumidity is the force in the environment that determines the temperature and the amount of sunlight that plants produce.\nHumidity is the force in the soil that regulates the temperature of the soil.\nHumidity is the force in the soil that determines the amount of sunlight that plants produce.\nThe process involves the photosynthesis of photosynthesis by absorbing sunlight.\nThe photosynthesis process involves the process of photosynthesis by absorbing sunlight.\nPhotosynthesis is the process by which sunlight is absorbed by plants.\nPhotosynthesis uses sunlight to produce photosynthesis.\n- Photosynthesis uses sunlight to produce light.\n- Photosynthesis uses sunlight to produce photosynthesis.\n- Photosynthesis uses sunlight to produce photosynthesis by absorbing sunlight.\n- Photosynthesis uses sunlight to produce photosynthesis by absorbing sunlight.\n- Photos",
@@ -58884,7 +58907,10 @@
             "loop_onset": 224,
             "loop_period": 14,
             "topic": 1.0,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 187
           },
           {
             "text": " starts with you taking the steps of converting the light from sunlight into electricity.\nThe first step is converting light into electricity.\nThis is a simple process that converts light into electricity.\nThe light used in this process is a special type of photonic photonic system that converts light into electricity.\nHowever, this process is still the most efficient way to convert light into electricity.\nIn order to convert light into electricity, you need to convert the light into electricity by either the photonic or solar cells.\nThe process involves converting light into electricity by converting light into electricity by converting the light into electricity.\nIn addition, this process converts light into electricity by converting it into electricity by converting light into electricity by converting it into electricity by converting it into electricity by converting it into electricity by converting light into electricity by converting light into electricity by converting sunlight into electricity by converting it into electricity by converting it into electricity by converting a natural light into electricity by converting it into electricity by converting it into electricity by converting sunlight into electricity by converting it into electricity by converting it into electricity by converting it into electricity by converting it into electricity by converting it to electricity by converting it into electricity by converting it into electricity by converting it into electricity by converting it into electricity by converting it into electricity by",
@@ -58897,7 +58923,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 98
+            "topic_span": 98,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 101
           },
           {
             "text": " involves making the cells and converting it to other cells.\n(Photosynthesis, also known as photosynthesis, is a process where the plants and plants are living together)\nPhotosynthesis, also known as photosynthesis, is a process in which the plants and plants are living together. Photosynthesis is a process that converts the energy of sunlight, water, and carbon dioxide into energy.\nPhotosynthesis is when the plants and plants of the plants absorb sunlight and convert the sunlight into energy.\nPhotosynthesis is a process that involves converting light energy into energy, such as photosynthesis, photosynthesis, and photosynthesis.\nPhotosynthesis is the process of converting light energy from sunlight into energy. Photosynthesis is the process through which the plants and plants convert light energy into energy from sunlight.\nPhotosynthesis is the process by which plants and plants absorb light energy from sunlight. Photosynthesis occurs when the plant and plants absorb sunlight from sunlight, which then converts sunlight into energy.\nPhotosynthesis is the process by which plants and plants convert light energy into energy. Photosynthesis is the process by which plants and plants convert light energy from sunlight into energy.\nPhotosynthesis is the process by which plants and plants convert sunlight into energy. Photosynthesis can be achieved by dividing plants into two",
@@ -58910,7 +58939,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 247
+            "topic_span": 247,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -58929,7 +58961,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " was born in Germany, but he was not a physicist. His work was published in 1958. He died in 1949. He is credited with the development of a German-born physicist named Max Planck.\nThe atomic physicists are not the only scientists, because they are the only scientists of the world and all the other scientific disciplines in general. The physicists of the Bohr-class-S\u00f6ppen-K\u00fcnberg, the former professor of physics at the University of Berlin, are the first to publish their work on the atomic physicists.\nThe first physicists on the atomic physicists were the first to publish their work on the atomic physicists. They were the first to publish their work on the atomic physicists themselves, in addition to the first two of these physicists. The first physicists of the two were the first to publish their work on nuclear physics. The physicists of the Bohr-class-S\u00f6ppen-K\u00fcnberg, the first to publish their work on the atomic physicists themselves, were the first to publish their work on the atomic physicists themselves.\nThe first physicists that were published in the German-Jewish journal called the atom-sensing theory was published in December 1958. The first physicists in the German-Jewish journal called the atom-s",
@@ -58942,7 +58977,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " studied physics and mathematics in 1905, and a German-born professor of physics at Stanford, who was considered one of the greatest scientists in the world.\nOn October 1, 1917, Einstein was awarded the Nobel Prize in Chemistry and Physiology to be awarded Nobel laureates for his discovery of the atomic nucleus. Einstein\u2019s ideas were inspired by a combination of theories on the nature of the atom and his ideas in a way that inspired him to think about the atom itself.\nIn 1917 Einstein\u2019s life was divided into four phases:\n- The nucleus, which is the nucleus of the atom and the nucleus of the nucleus\n- The nucleus, which is the nucleus of the nucleus\n- The nucleus of the nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n- The nucleus of the nucleus\n",
@@ -58955,7 +58993,10 @@
             "loop_onset": 146,
             "loop_period": 7,
             "topic": 0.0,
-            "topic_span": 100
+            "topic_span": 100,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 100
           },
           {
             "text": " became Einstein in his early 20s. Einstein\u2019s father was a German-born physicist who developed into a physicist known for having a strong German-like temperament. Einstein\u2019s father was also a German-born, who developed the world\u2019s first three-dimensional model.\n- Einstein\u2019s name was Pierre-Auguste-Bouza (1759\u20131764), a German-born born.\n- Albert Einstein (1761\u20131781) was a German-born born.\n- Albert Einstein (1761\u20131781) was born in Berlin.\n- Albert Einstein (1856\u20131935) was a German-born born of a German origin and a German-born born of his own.\n- Albert Einstein (1873\u20131949) was a German-born born of a German origin and a German-born born of a German origin.\n- Albert Einstein (1874\u20131943) was a German-born born of a German origin.\n- Albert Einstein (1874\u20131940) was a German-born born of an ancestry.\n- Albert Einstein (1873\u20131951) was a German-born born of a German origin.\n- Albert Einstein (18",
@@ -58968,7 +59009,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " became the first Einstein to write.\nIn 1891 Einstein\u2019s first words were the first to write a German-born German, and Einstein\u2019s second words were the first to write a German-born German: the first to write a German-born German.\nThe first words of the German-born German were translated as \u201cstav\u201d, \u201chier-hier-wier-hier-hier-wier-hier-wier-hier-wier-wier-hier-wier-hier-wier-hier-wier-hier-hier-wier-hier-wier-wier-hier-wier-hier-wier-hier-wier-hier-wier-wier-hier-wier-hier-wier-wier-hier-wier-hier-wier-wier-hier-wier-hier-wier-hier-wier-wier-hier-wier-wier-wier-wier-wier-wier-wier-hier-wier-w",
@@ -58981,7 +59025,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 66
+            "topic_span": 66,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 56
           }
         ]
       },
@@ -59000,7 +59047,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a unique element and a specific characteristic. The element is used to describe the chemical elements of the element(s).\nIn the Chemistry of Chemistry, the elements are taken with the element(s) of the element(s) and the element(s) of the element(s). The element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s). The element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s).\nThe element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s) of the element(s), of the element(s) of the element(s) of element(s) of the element(s) of the element(s).\nIn the Chemistry of Chemistry, the element(s) of the element",
@@ -59013,7 +59063,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 17
           },
           {
             "text": " a few specific ions.\nHow do I get hooked on my product?\nIt works by creating a single molecule of the product. The first step in the process is to create a single molecule that matches the molecule\u2019s specific ions. In the second step, the molecule will be used to create a single molecule of the product. The third step is to create a single molecule of the product. The third step is to create a single molecule of the product.\nHow do I get hooked on my product?\nI want to get hooked on my product because of the way my product is being attached to my product. The first step is to create a single molecule of the product. This is the first step: the first step is to create a single molecule of the product.\nHow do I create a single molecule of the product?\nYou can create a single molecule of the product by creating a single molecule of the product. This is where a single molecule of the product comes from. The single molecule of the product comes from the first molecule of the product, which is the first molecule of the product.\nHow do I make a single molecule of the product?\nThe first step is to create a double molecule of the product. This is the first step",
@@ -59026,7 +59079,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the most common non-chemical element in it. The use of this inorganic compound is particularly important in the development of a chemical element, since it provides the biological element with the ability to make the chemical structure more complex, and thus, the use of this compound in the production of organic compounds is a great way to make the chemical structure more complex.\n3. The role of the natural compounds in the production of organic compounds can have many advantages. The most common of these is the combination of natural and natural compounds and their chemical properties are determined by their properties. Natural compounds, on the other hand, are also found as a compound in the production of organic compounds.\nA chemical element is a substance in a chemical composition, and its chemical structure is determined by the chemical structure, and its relative strength is determined by its chemical structure. Natural compounds, such as organic acids, are the most abundant element in the biological elements.\n5. The use of natural compounds is associated with the development of new chemical elements, such as organic compounds, which are a chemical element of the chemical elements. It is important to understand the nature of natural compounds and to understand the role of the natural compounds in the production of organic compounds.\n6. The use of natural compounds as a",
@@ -59039,7 +59095,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 219
+            "topic_span": 219,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a unique role. In the process of hydrogenation, it is a reaction in which the atoms move at different speeds in the process. The two reactions are connected in a way that is consistent with the process. The process of hydrogenation is usually referred to as the \u201csynthesis\u201d process because it is a process that is not specific to the reaction itself. The process of hydrogenation involves a process where the atoms form a hydrogen bond and then bonds a hydrogen bond.\nSynthesis is the process of converting hydrogen into oxygen. In the process of hydrogen, the hydrogen atoms form hydrogen bonds. The hydrogen bonds are joined by the carbon dioxide molecules forming the hydrogen atoms. The hydrogen atoms form the hydrogen atoms of the hydrogen atom. The hydrogen atoms form the hydrogen atoms of hydrogen. This atom is used to make hydrogen gas.\nSynthesis is the process of finding hydrogen atoms in a solution. The hydrogen atoms in a solution form the hydrogen atoms of the solution. The hydrogen atoms of the solution form the hydrogen atoms of the solution. The hydrogen atoms of the solution form the hydrogen atom of the solution. A hydrogen is a gas that is used to make hydrogen bonds. The hydrogen atoms of the solution form the hydrogen atoms of the solution. The hydrogen atoms",
@@ -59052,7 +59111,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 109
+            "topic_span": 109,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59071,7 +59133,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " create a visual-friendly learning environment, and develop a visual-friendly, interactive learning environment. Students will learn how to create a visual-friendly learning environment by using visual-friendly learning spaces to create a visual-friendly learning environment.",
@@ -59084,7 +59149,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 45
+            "topic_span": 45,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " make decisions about how to make decisions.\n4. Organize and Revolve:\nHelp students organize and organize as many resources as possible.\n5. Teach students how to make decisions\nUse this lesson plan to help you understand how to make decisions.\n1. Create a plan:\nCreate a plan by making a plan.\n2. Create a plan that outlines the plan for the plan.\n3. Create a plan for the plan for the plan.\n4. Create a plan for the plan.\n5. Create a plan.\n6. Write a plan for the plan.\n7. Create a plan for the plan.\nWhat are the most important steps for planning?\n1. Create a plan for the plan.\n2. Create a plan.\n3. Create a plan for the plan.\nCan you create a plan for the plan?\nThe plan is the most important step in the planning process.\nWhat is the best plan for the plan?\nWhat is the best plan for the plan?\nWhat is the best plan for the plan?\nWhat are the best plans for the plan?\nWhat is the best plan for the plan?\nWhat are the best plan for the plan?\nWhat are the",
@@ -59097,7 +59165,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 42
+            "topic_span": 42,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 179
           },
           {
             "text": " use a laptop (or laptop, or laptop) and how to use a laptop with a laptop (or laptop).\nHere is a video demonstration of how to use a laptop for laptop.\nHere is a video demonstration of how to use the laptop for laptop.\nThere are three methods of using a laptop to create portable laptop.\nFirst, you will need to use a laptop to create a laptop.\nThen, you can use a laptop at all.\nThen, you will need to use a laptop for laptop to create a laptop.\nFinally, you can use a laptop for laptop.\nThen, you can use a laptop to create a laptop for laptop.\nThen, you should use a laptop for laptop.\nThen, you can use a laptop for laptop and laptop.\nThen, you can use a laptop for laptop, or laptop.\nThen, you can use a laptop for laptop and laptop.\nThen, you can use a laptop for laptop.\nThen, you can use a laptop for laptop or laptop.\nThen, you can use a laptop for laptop use.\nFinally, you can use a laptop for laptop.\nThen, you can use a laptop for laptop.\nNow, you can use a laptop as a laptop",
@@ -59110,7 +59181,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 104
           },
           {
             "text": " read and write a text in a sentence:\n1. Students will learn how to read and write poetry, and how to write a poem.\n2. Students will learn how to use a literary technique to write poetry.\n3. Students will know how to use a literary technique to write poetry.\n4. Students will learn how to use literary techniques in their writing.\n5. Students will learn how to create a literary technique to write poetry.\n6. Students will learn how to use literary techniques in writing.\n7. Students will learn how to use a literary technique to write poetry.\n8. Students will learn how to use literary techniques in writing and how to use literary techniques in writing.\n9. Students will learn how to use literary techniques in writing.\n9. Students will learn how to use literary techniques in writing.\n10. Students will learn how to use literary techniques in writing.\n11. Students will learn how to use literary techniques in writing.\n12. Students will learn how to use literary techniques in writing.\n13. Students will learn how to use literary techniques in writing.\n14. Students will learn how to use literary techniques in writing.\n15. Students will learn how to use literary techniques in writing.",
@@ -59123,7 +59197,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 116
           }
         ]
       },
@@ -59142,7 +59219,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 180
+            "topic_span": 180,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 181
           },
           {
             "text": "igorating your body\u2019s immune system: When your body is unable to fight off infections, the immune system is destroyed.\n- igorating your immune system: Eating a balanced diet rich in protein, fiber, and fiber can help fight infections and improve your overall health.\n- igorating your body: Eating a balanced diet rich in fiber can help you fight infections and promote faster healing!\n- igorating your immune system: Eating a balanced diet rich in fiber, such as leafy greens, legumes, and leafy greens helps fight infections and improve overall health.\n- igorating your body: Eating a balanced diet rich in fiber can help fight infections and reduce inflammation.\n- igorating your immune system: Eating a balanced diet rich in fiber can help fight infections and promote overall health.\n- igorating your immune systems: Eating a balanced diet rich in fiber can help fight infections and promote overall health.\n- igorating your immune system: Eating a balanced diet rich in fiber can help fight infections and promote healthy immune systems.\n- igorating your immune system: Eating a balanced diet rich in fiber can help fight infections and promote overall health.\n- igorating your immune system: Eating a balanced",
@@ -59155,7 +59235,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": "__________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ ___________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ __________ ________",
@@ -59168,7 +59251,10 @@
             "loop_onset": 170,
             "loop_period": 3,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 0
           },
           {
             "text": "____________________: Exercise can help you stay fit and alert, while reducing your risk of falls.\n- ____________________: Exercise can help you stay fit and alert, while reducing your risk of falls.\n- ____________________: Exercise can help you stay fit and alert.\n- ____________________: Exercise can help you stay fit and alert.\n- ____________________: Exercise can help you stay fit and alert, while reducing your risk of falls.\n- ____________________: Exercise can help you stay fit and alert in a way that you can stay fit and alert.\n- ____________________: Exercise-induced sleep deprivation can help reduce the risk of falls, while exercise can help to stay fit and alert.\n- ____________________: Exercise can help increase your risk of falls, while exercise can help you stay fit and alert.\n- ____________________: Exercise can also help improve your risk of falls, especially if you are taking too much or too little.\nHow to Get a Rest\n- ____________________: Exercise can help you stay fit and alert.\n- ____________________: Exercise can help you stay fit and alert, while exercise can help you stay fit and alert.\n- ____________________: Exercise can help you stay",
@@ -59181,7 +59267,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:\n-  Increases oxygen levels:",
@@ -59194,7 +59283,10 @@
             "loop_onset": 0,
             "loop_period": 7,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 0
           }
         ]
       },
@@ -59213,7 +59305,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 246
+            "topic_span": 246,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 179
           },
           {
             "text": " If we want to solve a quadratic equation, we can then use the formula below to solve it.\n2. If we want to solve a quadratic equation, we can use the formula below:\nWe can solve quadratic equation by using the formula:\n- x1 = x2\n- x2 = x2\n- x8 = x2\nWe can solve an equation by using the formula below:\nNow we have to solve it using the formula:\nWe have to solve the quadratic equation by using the formula below:\n1. x2 = x2 + x2\n2. x2 = x2 + x2\n3. x2 = x1 + x2\nWe can solve it using the formula below:\n1. x2 = x2 + x2\nWe have to solve the quadratic equation by using the formula:\nn = x2 + x2\nWe can solve a quadratic equation by using the formula:\nn = x1 + y2\nWe can solve this quadratic equation by using the formula:\nn = x2 + x2\nWe can solve the quadratic equation by using the formula:\nn = x2",
@@ -59226,7 +59321,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 246
+            "topic_span": 246,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Create a matrix by using\n2. Create a matrix using\n3. Create a matrix using\n3. Run a matrix using\n4. Create a matrix using\n4. Create a matrix using\n5. Create a matrix using\n6. Create a matrix using\n7. Create a matrix using\n7. Create a matrix using\nMATLAB Studio Tutorial:\nMATLAB Studio is a versatile and easy to follow Python tutorial, and it can be used for various tasks. The following steps are:\n1. Use the matrix to create a matrix using\n2. Create a matrix using\n3. Create a matrix using\nMATLAB Studio is a versatile and easy-to-follow tutorial, and it can be used in various contexts to create a powerful matrix using\nMATLAB Studio Tutorial:\nMATLAB Studio is a powerful and easy-to-follow tutorial for beginners, as it can be used in various scenarios, including scenarios, scenarios, and scenarios.\nMATLAB Studio Tutorial:\nMATLAB Studio is a versatile and easy-to-follow tutorial, and it can be used in various scenarios, including scenarios, scenarios, and scenarios.\nMATLAB Studio is a powerful and easy-to-follow tutorial, and it can be used in various",
@@ -59239,7 +59337,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Identify the equation:\nNow, let\u2019s see how to solve a quadratic equation.\n2. Type the equation:\nNow, let\u2019s move on to the next step:\n3. Start by defining the quadratic equation:\nNext, find the expression:\nTo solve the quadratic equation:\nWe use the formula in the following section:\n1. Write a formula that shows the quadratic equation:\n(Note: the formula is the formula that shows the quadratic equation):\ny = y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y",
@@ -59252,7 +59353,10 @@
             "loop_onset": 115,
             "loop_period": 1,
             "topic": 0.0,
-            "topic_span": 111
+            "topic_span": 111,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 81
           },
           {
             "text": " The quadratic equation can be solved using the formula\n2. The resulting equation can be solved using a formula\n3. The formula can be solved using the formula\n4. The formula can be solved using the formula\n5. The resulting equation can be solved using the formula\n6. The formula can be solved using the formula\n7. The formula can be solved using the formula\nNote that in our column, we have solved using the formula\n2. For example, if we solve the quadratic equation\nIf we solve the quadratic equation\n4. The resulting quadratic equation can be solved using the formula\n6. A formula such as\n1. The formula can be solved using the formula\n2. The formula can be solved using the formula\n3. The formula\nThe formula can be solved using the formula\n4. The formula can be solved using the formula\n6. In this formula, the formula can be solved using the formula\n7. The formula can be solved using the formula\n7. The formula can be solved using the formula\n7. The formula can be solved using the formula\n7. The formula can be solved using the formula\n- Find the formula\nNow, you can solve the equation",
@@ -59265,7 +59369,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 161
           }
         ]
       },
@@ -59284,7 +59391,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the same. The first is the most common type of the system. In contrast, the main type is the most common type. The main type is the main type of the system.\nThe main type is the main type of the system. The main type is the main type. The main type is the main type.\nThe main type is the main type, the main type. The main type is the main type. The main type are the main type, the main type. The main type is the main type. The main type is the main type, the main type.\nThere are four main types of the main type. The main type is the main type. The main type is the main type.\nThe main type is the main type of the main type. The main type is the main type. The main type is the main type.\nThe main type is the main type. The main type is the main type. The main type is the main type, the main type that is the main type.\nThe main type is the main type. The main type is the main type. The main type is the main type. The main type is the main type. The main type is the main type. The main type is the main type",
@@ -59297,7 +59407,10 @@
             "loop_onset": 210,
             "loop_period": 8,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 18
           },
           {
             "text": " plant-foods: fruits and vegetables.\n- Vegetables: Vegetables are a great source of vegetables. Some of the vegetables that are high in fat and cholesterol are high in fiber. Vegetables include:\n- Vegetables: Vegetables are a great source of vitamins C and C, which are a great source of vitamins A, B, E, and C.\n- Vegetables are a great source of vitamins C, B vitamins B, C, B6, and C, which are the main source of vitamins C and E.\n- Vegetables are a great source of vitamins C and E, which are a great source of vitamins C and B6, and are a great source of vitamins C and E.\n- Vegetables include:\n- Vegetables include:\n- Vegetables are a great source of vitamins C, C, C, E, E, and C.\n- Vegetables include:\n- Vegetables include:\n- Vegetables include:\n- Vegetables include:\n- Vegetables include:\n- Vegetables include:\n- Vegetable foods are a great source of vitamins C and E, E, E, and C.\n- Vegetables include:\n- Vegetables include:\n- Veget",
@@ -59310,7 +59423,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 172
           },
           {
             "text": " cancer: cancer type 1 and the most common type 1 and the most common type 1.\nThe type of cancer has a specific type 1 that causes the most common type 1 cancer, which is the most common type 1 cancer. The type 1 cancer is most common in the U.S. However, most cancers form the most common type 1 cancer, which is the most common type 1 cancer.\nThe most common type 1 cancer is the most common type 1 cancer, which is the most common type 1 cancer.\nThe most common type 1 cancer is the most common type 1 cancer. This type of cancer is the most common type 1 cancer, which is the most common type 1 cancer.\nThe most common type 1 cancer is the most common type 1 cancer. This is the most common type 1 cancer and it is the most common type 1 cancer.\nThe most common type 1 cancer is the most common type 1 cancer, which is the most common type 1 cancer.\nThe most common type 1 cancer is the most common type 1 cancer.\nThe most common type 1 cancer is the most common type 1 cancer.\nThe most common type 1 cancer is the most common type 1 cancer.\nThe most common type 1 cancer is the most common type 1 cancer",
@@ -59323,7 +59439,10 @@
             "loop_onset": 189,
             "loop_period": 15,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 119
           },
           {
             "text": " the same diseases.\n- Infection. Infection will occur on the body and may lead to health complications.\n- The disease is characterized by the presence of a number of different organs.\n- The person has a characteristic which may be the most advanced stage of the disease.\n- The person has the characteristic which is related to the diseases, diseases, and diseases.\n- The disease can be found on the body, in which there are no symptoms of the disease.\n- Infection of the body, in the body, and a number of other diseases.\n- Infection of the organs, in the body.\n- If the disease, in the body, is more than a combination of the disease, it is a disease which is caused by the disease.\n- The disease is caused by the disease, with the symptoms and the risk of disease.\n- The disease is caused by the disease.\n- If the disease is caused by the disease, the disease is caused by the disease.\n- There are no symptoms in the body.\n- The disease is caused by the disease.\n- The disease is caused by the disease.\n- The disease is caused by the disease, the disease is caused by the disease.\n-",
@@ -59336,7 +59455,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 174
           }
         ]
       },
@@ -59355,7 +59477,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 177
           },
           {
             "text": " was ratified in 1920 and the treaty to end the war in 1914, in the period of peace and stability.\nThe war was officially ended by the end of the war with the United States. It was also the result of the treaty of versailles, which allowed for both the dissolution of the United States into a union of two states and a part of the United States.\nThe treaty of versailles was signed in 1919, in 1920, by the treaty of versailles, which guaranteed that the treaty of versailles was signed in 1920. The treaty of versailles was ratified in 1919.\nThe treaty was signed in 1919 for the first time in the peace between the United States and the United States. It was signed in 1919, in the United States and the United States.\nThe treaty of versailles was signed in 1920, and in 1929, the treaty of versailles was signed.\nThe treaty of versailles was signed in 1920. It was signed in 1922.\nThe treaty of versailles was signed in 1926. The treaty of versailles was signed in 1920.\nThe treaty of versailles was signed in 1923.\nThe treaty of versailles was signed in 1919.\nIn 1922, the treaty of versailles was signed.\nThe treaty of",
@@ -59368,7 +59493,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " was signed in 1921.\nToday the treaty offers a glimpse of the treaty's potential as a testament to the power of the international community. It was signed in 1919 by the United Nations. It was signed in 1922 by the United Nations.\nThe treaty promises to provide peace and security for the future and to build a peaceful future for the future, the United Nations is the world's largest resource of global cooperation.\nThe treaty's goal is to protect the people and their families, communities and governments. The treaty establishes a global community of global peace and reconciliation. It also establishes the principles of international cooperation.\nThe Treaty of Paris was signed by the United States and Canada on December 1, 1919, which was signed in 1919. The treaty is signed in 1920, the first international treaty signed by the United Kingdom on December 1, 1919.\nThe treaty is signed in 1920, and the world's largest international partner. The treaty is signed in 1920 and ratified in 1920. The treaty is signed at the UN General Assembly in Geneva.\nThe treaty is signed in 1919. The treaty is signed in 1920. The treaty is signed in 1919. The treaty is signed in 1920. The treaty is signed in 1920.\nThe treaty is signed in 1920. The treaty is signed",
@@ -59381,7 +59509,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 189
           },
           {
             "text": " took an enormous toll on the nation\u2019s economy. But the treaty was signed in 1922 to guarantee the stability of the country\u2019s economy in the coming years. The treaty was signed in 1919.\nThe treaty was signed in 1919 by President George W. Bush, and it was signed in 1919 by the President. Bush\u2019s decision to sign the treaty made him a must-read.\nIn the end, the agreement was signed in 1919, and the agreement was signed in 1922. It was signed by President George W. Bush, who had been in the country for several years. The agreement was signed in 1922, giving the United States the ability to expand and expand. The agreement was signed in 1922, and Bush signed into law in 1919.\nIn the end, the agreement was signed in 1927, and the agreement was signed in 1927. The agreement was signed in 1927, and the agreement was signed in 1927.\nIn the end, the agreement was signed in 1927, and the agreement was signed. When the agreement was signed, the agreement was signed in 1927, and the agreement was signed in 1927. The agreement was signed in 1927, and the agreement was signed in 1927. The agreement was signed in 1927, and the agreement was signed",
@@ -59394,7 +59525,10 @@
             "loop_onset": 215,
             "loop_period": 15,
             "topic": 0.5,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 153
           },
           {
             "text": " became known as \u201cThe Law of the United States\u201d and was subsequently ratified in 1919.\nThe two countries were united under the terms of the United States Constitution, which included the Fourteenth Amendment, the Fourteenth Amendment, and the Eighteenth Amendment.\nThe Fourteenth Amendment was adopted in 1920 by the United States Constitution by the United States Constitution of the United States.\nA letter from the Supreme Court that was to be passed in 1920, the Supreme Court determined that the United States Constitution was unconstitutional and that the Court should be held unconstitutional. The court ruled that the Supreme Court would be void in most cases.\nIn a separate court, the right of the defendant to be convicted was a very important one. The right of the defendant to be convicted could be considered as a part of a person\u2019s right to life.\nIn the same way, the Supreme Court decided that the Court should be held unconstitutional and that it should be held unconstitutional for the United States.\nIn addition, the Supreme Court made a decision on the Supreme Court\u2019s decision to override the decision of the Supreme Court. The Court found that the Supreme Court had not ruled that the decision had been unconstitutional for the Supreme Court.\nThe Supreme Court held that the Supreme Court",
@@ -59407,7 +59541,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59426,7 +59563,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 105
+            "topic_span": 105,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Journal of Clinical Nutrition, in the past 40 years, the number of individuals who consumed at least two meals per day was significantly higher in the obese individuals who consumed less than one meal. The study also concluded that the percentage of obese individuals who consumed less than one meal per day was significantly lower in the obese individuals who consumed more than one meal per day.\nThe study also concluded that the number of individuals who consumed the same meal per day consumed more than one meal per day.\nThe study further suggests that the number of individuals consumed more than one meal per day. This may be because the number of individuals consumed more than one meal per day consumed less than one meal per day.\nIn addition, the study also suggests that the number of individuals consumed more than one meal per day consumed more than one meal per day. This could be because the number of individuals consumed more than one meal per day consumed less than one meal per day.\nThis observation is due to the fact that the number of individuals consumed more than one meal per day consumed more than one meal per day. Thus, it is not just those who consumed more than one meal per day consumed more than one meal per day.\nThe study also concluded that the number of individuals consumed more than one meal per",
@@ -59439,7 +59579,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 243
+            "topic_span": 243,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the journal Psychological Science, the authors examined the data in the journal Proceedings of the National Academy of Sciences.\nThe authors found that the study of the study was similar to the study that was published in the Journal of Clinical Neuropsychology.\nStudy author, Journal of the College of Clinical Psychology, vol. 20, no. 4, pp. 14-14, Article 12, Article 12, Article 13, Article 13, Article 13, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 15, Article 14, Article 14, Article 14, Article 14, Article 14, Article 13, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 15, Article 14, Article 13, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 15, Article 15, Article 14, Article 14, Article 15, Article 14, Article 14, Article 14, Article 14, Article 15, Article 15, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14, Article 14",
@@ -59452,7 +59595,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 50
+            "topic_span": 50,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 54
           },
           {
             "text": " the journal ACS-VIR-I Interfaces, a team of researchers at the University of California, Berkeley (UCS) and the University of California, Berkeley (UCS) were able to synthesize a new, fully sequenced, graphene-based nanoelectric nanocrystals (FTs), a type of nanocrystalline graphene that\u2019s made from graphene.\nThese nanocrystals are then processed to form nanoscale structures.\nThe researchers at the University of California, Berkeley (UCS) and the University of California, Berkeley (UCS) have been able to synthesize a graphene-based nanocrystalline graphene-based nanocrystal.\n\u201cThe nanocrystalline graphene-based nanocrystals are the building blocks of this type of nanocrystalline graphene,\u201d said lead author Dr. David A. Dravan.\nThe researchers were able to synthesize a graphene-based nanocrystalline graphene-based nanocrystalline graphene-based nanocrystalline graphene-based nanocrystalline graphene-based nanocrystalline graphene-based nanoreactor \u2014 a key step in the development of nanocrystalline graphene-based nanocrystalline graphene-based nanocry",
@@ -59465,7 +59611,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 181
           },
           {
             "text": " the journal Science, the research was conducted on 20,000 people a year and found that they were living in poverty.\nResearchers found that a study published in the journal Nature found that even if a person\u2019s home was built with the help of a smartphone and then a smartphone, the chances of having a self-determined childhood is much higher.\nSource: Journal of the American Medical Association",
@@ -59478,7 +59627,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 31
+            "topic_span": 31,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59497,7 +59649,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 178
           },
           {
             "text": " 2,500 meters and rises to an altitude of 2,500 meters. The mountain rises to a height of 2,500 meters and rises to 2,000 meters.\nThe mountain rises to an altitude of 3,500 meters. The mountain is surrounded by mountains, and rises to an altitude of 1,500 meters. The mountain rises to an altitude of 1,500 meters and rises to an altitude of 2,500 meters. The mountain rises to an altitude of 2,000 meters and rises to an altitude of 2,700 meters.\nThe mountain rises to an altitude of 2,300 meters and rises to an altitude of 2,250 meters and rises to an altitude of 1,400 meters and rises to an altitude of 2,500 meters and rises to an altitude of 2,300 meters and rises to an altitude of 2,500 meters and rises to an altitude of 6,000 meters. The mountain rises to an altitude of 2,600 meters and rises to an altitude of 3,500 meters and rises to an altitude of 2,500 meters and rises to a altitude of 2,400 meters.\nThe mountain rises to an altitude of 2,500 meters and rises to an altitude of 1,300 meters and rises to an altitude of 3,800 meters",
@@ -59510,7 +59665,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 4,000 meters, and rises above the mountain. The mountain rises to a height of 6,000 meters. A mountain rises to a height of 3,000 meters.\nThe mountain is the largest of the mountain. A mountain is the largest of the mountain. The mountain is the highest mountain in the world in the world. It is the second largest mountain of the world in the world. The mountain is the third largest and the deepest mountain in the world in this world.\nAccording to the mountain, mountain is the third largest and the deepest mountain.\nIt is the fourth largest mountain in the world in the world in the world in the 20th century. The mountain is the sixth largest in the world in the world in the world in the 20th century. The mountain is the fourth largest in the world in the world in the 20th century.\nThe mountain is the fifth largest mountain in the world in the world in the 20th century. Its main attractions include the famous mountain of the Himalayas, the mountain of the world, the famous mountain, the mountain of the world, the mountain of the world, the famous mountain of the world and the famous mountain of the world.\nThe mountain is the sixth largest mountain in the world in the",
@@ -59523,7 +59681,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 251
+            "topic_span": 251,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 4.5 million feet and is about half the size of the world\u2019s tallest mountain.\nThe mountain mountain is also called the \"Abracu\"?\nThe mountain is a mountain that is taller than it is tall and has a height of 4.1 meters.",
@@ -59536,7 +59697,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 51
+            "topic_span": 51,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 1,300 feet by a quarter.\nThe mountain rises to a height of 2,400 feet. The mountain rises to 2,400 feet.\nWhen the mountain rises, the mountain rises to a height of 2,800 feet.\nThe mountain rises above the mountain.\nThe mountain rises to a height of 1,200 feet.\nThe mountain rises to a height of 1,700 feet.\nThe mountain rises to a height of 1,200 feet.\nThe mountain rises to a height of 2,700 feet.\nThe mountain rises to a height of 1,600 feet.\nThe mountains to a height of 1,000 feet.\nThe mountain rises to a height of 1,400 feet.\nThe mountain rises to a height of 1,000 feet.\nThe mountain rises to a height of 1,500 feet.\nThe mountain rises to a height of 1,400 feet.\nThe mountain rises to a height of 1,200 feet.\nThe mountain rises to a height of 1,200 feet.\nThe mountain rises to a height of 1,000 feet.\nThe mountain rises to a height of 1,200 feet.\nThe mountain rises to a height of 1,200 feet.\nThe mountain rises to a",
@@ -59549,7 +59713,10 @@
             "loop_onset": 222,
             "loop_period": 13,
             "topic": 1.0,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 101
           }
         ]
       },
@@ -59568,7 +59735,10 @@
             "loop_onset": 206,
             "loop_period": 9,
             "topic": 0.2222222222222222,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 122
           },
           {
             "text": " are:\n- Students who participated in the previous semester.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.\n- Students who participated in the final exam.",
@@ -59581,7 +59751,10 @@
             "loop_onset": 11,
             "loop_period": 10,
             "topic": 0.2222222222222222,
-            "topic_span": 140
+            "topic_span": 140,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 0
           },
           {
             "text": " are:\n- Students who were in graduate school were interested in the chemistry of the chemistry of the chemical compounds, but had to be subject to the chemistry of the chemical compounds.\n- Students who participated in the class were also interested in the chemistry of the chemical compounds.\n- Students who did not attend the class were interested in the chemistry of the chemical compounds.\n- Students who participated in the class were interested in the chemistry of the chemical compounds.\n- Students who participated in the class were interested in the chemistry of the chemistry of the chemical compounds.\n- Students who participated in the class were interested in the chemistry of the chemical compounds.\n- Students who participated in the class were interested in the chemistry of the chemical compounds.\n- Students who participated in the class were interested in the chemistry of the chemical compounds.\n- Students who participated in the class were interested in the chemistry of the chemical compounds.\n- Students who participated in the class were interested in the chemistry of the chemical compounds.\n- Students who participated in the class were interested in the chemistry of the chemical compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds compounds",
@@ -59594,7 +59767,10 @@
             "loop_onset": 219,
             "loop_period": 1,
             "topic": 0.2222222222222222,
-            "topic_span": 219
+            "topic_span": 219,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 27
           },
           {
             "text": " would be found to be the most experienced in the exam, but this is not the first time the students who had spent the entire semester preparing for the final exam. In addition, the students who were taking part in the final exam were also found to be both engaged in a variety of academic activities. The student who was already engaged in the coursework also had to attend a class of three for the semester.\nThe final exam was made possible with an introduction to organic chemistry. The students who attended the class had to choose from two different academic disciplines, one in the class on the topic and one in the classes on the topic. The third was made possible by students who were considering the choice between organic chemistry and the organic chemistry of the students. The students who were studying organic chemistry were also able to use the second semester as a starting point. The students who were in the class were able to choose the most effective chemistry topics and have the class read out and write down their choice. The third students who attended lab classes were also able to choose the most effective chemistry topics for class.\nThe students who attended the class were also able to select the most effective chemistry topics for class as a starting point. The students who attended the class were also able to choose the most effective",
@@ -59607,7 +59783,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.4444444444444444,
-            "topic_span": 244
+            "topic_span": 244,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": ", in the final exam on the subject, were able to have the final exam on the subject.\nThe class asked the students to write a paper on the subject that is published in the year of the exam. The students asked the students to write a paper on the subject they have chosen to write the paper. The students had to write a paper on the subject.\nThe students asked the students to write a paper on the subject. They had to write a paper on the subject of the paper. The students asked the students to write a paper on the subject. The students had to write a paper on the subject. The students asked the students to write a paper on the subject. The students were asked to write a paper on the subject. The students were asked to write a paper on the subject of the paper. The students asked the students to write a paper on the subject. The students asked the students to write a paper on the subject. The students answered the paper on the subject of the paper on the subject.\nThe students asked the students to write a paper on the subject. The students asked the students to write a paper on the subject of the paper on the subject of the paper on the subject of the subject. The students asked the students to write a",
@@ -59620,7 +59799,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.1111111111111111,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 154
           }
         ]
       },
@@ -59639,7 +59821,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the French government had been established, and the French monarchy was no longer a monarchy. The French monarchy was abolished in 1789, and the French monarchy was replaced in 1789 by the French monarchy.\nIn 1789, French monarchy was replaced by a monarch, with the monarchy, the French monarchy, and the French monarchy in 1799.\nThe French monarchy was the last monarch in history, and the reign lasted until 1789. The monarchy was a monarchy in 1789, and as a result, the monarchy was replaced by a monarchy.\nThe French monarchy was abolished in 1705, and the monarchy was abolished in 1814. In 1714, the French monarchy was abolished in the 19th century and the French monarchy was abolished in 1785.\nThe French monarchy was abolished in 1789, and the monarchy was abolished in 1794, when the French monarchy was abolished in 1813. In 1789, the monarchy was abolished in 1790.\nThe French monarchy was abolished in the 17th century, and the monarchy was abolished in 1789. The monarchy was abolished in 1814.\nDuring the French monarchy, the monarchy was abolished in 1815, and the monarchy was abolished in 1789.\nThe French monarchy was abolished in 1815,",
@@ -59652,7 +59837,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 249
+            "topic_span": 249,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the French army was overthrown and the French began to build up.\nAfter the French Revolution, the French revolution began. After the French Revolution, French troops were defeated at the French. The French government intervened to secure the French, and the French took control of the French.\nThe French Revolution took the French out of the hands of the French. The French were defeated, but French forces began to plunder and annex the French. France had to take control of the French, especially the French.\nDuring the French Revolution, French troops and French allies were defeated and the French began to seize control of France.\nThe French were defeated by the French. The French had to take control of France and to the French. The French, in fear of the French, was defeated by the French.\nThe French feared that French troops would attempt to seize control of France. The French had to take control of France. The French were afraid of the French. The French were afraid of the French.\nFrance was a powerful force in France and was the main force behind the French. The French, with its French, had to take control of France.\nFrance wanted France to defeat France. The French and French were defeated by the French. The French were defeated by the French",
@@ -59665,7 +59853,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a group of wealthy, well-rooted Frenchmen arrived at the settlement of the French colonies. The French were the best-known Frenchmen of the French Revolution and were the French-American leaders.\nIn the 17th century, French revolutionaries were known as the French-American people.\nIn 1789, the French-American government decided to leave the French colonies. The French were initially unable to help the French, but the French were forced to abandon their control over the French.\nIn the 1830s, the French government decided to abandon the French-American government. French and French were opposed by the French, but the French were forced to abandon their control over the French.\nThe French left France for France and the French-American movement was dominated by the French-American leadership, despite the French government\u2019s ability to control the French.\nThe French-American government, which had become known as the French-American leadership since 1884, was a part of the French-American leadership.\nThe French-American Alliance on the French-American Council signed the Treaty of Paris on May 14, 1887, to establish a new treaty in Paris.\nFrance was the first European country to accept the French as a member of the French government.",
@@ -59678,7 +59869,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " French troops seized power in Paris. The French Revolution was the first in North America. The French Revolution was a revolt of the French government.\nAfter the coup of 1789 the French government took control of the French. It was the most powerful state in the world. The French government took control of the whole country.\nThe first part of the French Revolution was the French government. It was a public official who had a strong influence on the French government.\nThe French government tried to suppress the French government but the French government tried to suppress the French government. The French government took control of the French government.\nThe French government was the first country to have a strong influence. The French government had a strong influence with the French government.\nAfter the coup the French government took control of the entire country. The French government was the first country to have a strong influence against the French government.\nThe French government was able to control the French government. It was not until the French government had been in control of the entire country.\nWhen the French government was in control of the entire country, the French government was able to control the French government.\nThe French government was able to control the French government.\nThe French government was able to control the French government until",
@@ -59691,7 +59885,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59710,7 +59907,10 @@
             "loop_onset": 181,
             "loop_period": 3,
             "topic": 0.25,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 28
           },
           {
             "text": " has a central nervous system that controls heart rate and heart rate. It is also a protein that controls the heart rate and blood flow. The human heart is a complex organ that is used for pumping and maintaining blood pressure, which in turn makes it ideal for the heart to pump and maintain blood flow to the heart. The heart is a complex organ that is responsible for pumping blood throughout the body and heart. The heart is a complex organ that pumps blood to the heart and is responsible for pumping blood to the heart for a long period of time.\nThe human heart is the heart of all shapes and sizes. The heart is made up of a large number of muscles. The heart is responsible for pumping blood to the heart. The heart muscle is the heart of the heart, the heart is a muscular organ that pumps blood to the heart. It is a complex organ that pumps blood to the heart. It is the heart of the heart and is responsible for pumping blood to the heart for a long period of time. The heart is a complex organ that pumps blood to the heart for a long period of time.\nThe heart is a complex organ that pumps blood to the heart. The heart is a complex organ that pumps blood to the heart, and the heart is the heart to",
@@ -59723,7 +59923,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " acts as a cushion, cushioning the blood of its own body. It helps to cushion the heart muscle.\nA healthy heart is a simple heart muscle that acts as a muscle. It works by connecting the heart muscles with muscular tissue.\nThere are two kinds of heart muscle.\nThe heart muscle is a muscular organ. It is an organ that carries oxygen and nutrients to the body. It is also involved in energy.\nThe heart muscle is a muscular organ in the same sense. It is a muscle that acts as the heart muscle.\nIt is a muscle that acts as the heart muscle. It also acts as a power source for the body.\nThe ability of the heart muscle to function is called the ability of the heart.\nThe heart muscle is the heart muscle. It is the heart muscle. It plays a significant role in regulating the heartbeat.\nThe heart muscle is a muscular organ that acts as a muscle. It is a muscle that acts as a power source for the body.\nThe heart muscle is a muscular organ that carries oxygen and nutrients to the body. It serves as a muscle for the body to function.\nThe heart muscle is a muscular organ that acts as a muscle. It acts as a muscular organ.\nThe heart muscle",
@@ -59736,7 +59939,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " enables the muscles to move in a wide range of bodily functions. When this organ is damaged, it can cause a range of symptoms as well.\nThe most common type of heart attack is the heart attack. This is the reason why an attack occurs, so it is important to do a healthy lifestyle before it can be prevented.\nThis is the reason why you should have an accurate diagnosis. Most people are aware of the damage caused by the heart attack. If you are suffering from your heart attack, the doctor may recommend a new blood test or if a new blood test is warranted.\nIf you or someone you know is experiencing heart attack symptoms, contact your doctor to discuss the possible causes.\nHeart attack is a sudden increase in heart rate that can lead to heart attack. It is the sudden rise in heart rate (CK) and its occurrence in the heart attack. It can also lead to heart attack.\nThe heart attack is a very common condition that can lead to heart attack. It is the heart attack that attacks and it is the opposite of heart attack. The heart attacks begin in the third and final stage of the attack. The heart attack is the same as the other parts of the body.\nIt is a slow process. It is the heart",
@@ -59749,7 +59955,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " allows blood to move and perform complex tasks such as swallowing, swallowing, and swallowing. This is the main reason why the heart is a muscular organ that allows blood to flow out of the heart.\nThe heart\u2019s natural pumping process relies on the heart\u2019s pumping process to deliver the blood into the heart.\nThis process is called a \u201ccardiovascular pumping.\u201d Cardiologist and cardiologist Dr. M.M. DuBald has been treating heart failure and stroke since its inception in 2000. He has been working on his own research on the cardiac anatomy of the heart and has been developing the technology that allows the heart to pump blood throughout the body.\n\u201cWe are not a single unit in our ability to pump blood and pump blood together,\u201d he says.\n\u201cWe have a lot of options to get it out of the heart and, when we can,\u201d he says.\n\u201cIt isn\u2019t like the heart, but it is like the heart\u2019s pumping force,\u201d he says.\n\u201cHow the heart pumps blood to pump blood is not a single unit in the heart, so we need to use the system to pump blood to pump blood.\u201d\n",
@@ -59762,7 +59971,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 238
+            "topic_span": 238,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59781,7 +59993,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 82
           },
           {
             "text": " the Amazon River, and is the largest and most biodiverse area in the world.\nThe oceans are divided into three zones. The two main zones are the Amazon and the Amazon, and the Amazon, which is the land of the Amazon, is the largest of the three major marine species.\nThe Amazon River is the longest of the four major oceans in the world, with its largest ever recorded and one-of-a-kind lakes, and the largest of the three major remaining largest in the world. The Amazon is the most biodiverse area and is the world's second only to the Amazon.\nThe Amazon is also the third largest of the three major continents. It is the third most biodiverse on the planet, and the Amazon is the third largest. The Amazon is the largest planet in the world, with a population of about 30 million people. The Amazon is the largest planet in the world.\nThe Amazon has a population of about 1.3 million people. The Amazon is the second largest of the three major continents. The Amazon is the fourth largest continent in the world. The Amazon, the fourth largest continent in the world, is the eighth largest continent in the world.\nThe Amazon is the third largest planet in the world, known for its",
@@ -59794,7 +60009,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 244
+            "topic_span": 244,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Amazon River. The Amazon River is a vast desert site that can only be found in the Amazon River.\nAmazon River is the largest of its kind in the world \u2013 and its climate has grown in recent years, with forests, forests, and mountains and even glaciers.",
@@ -59807,7 +60025,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 25
+            "topic_span": 25,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a series of river flows that have become waterfowl, and are connected to the dam's interior. In the early days of the river-building, the Amazon River flows from the lake to the basin, into the area of the river and into the western basin. During the time of the river flows, the river is now the river flowing towards the lake. The river flows through the river flow and into the river as the river flows into the river. The river flows into the river, and the river flows through the river. The river flows flows into the river, and through the river flows through the river, and through the river, to the river and into the river. The river flows through the river, and through the river, through the river, to the river, and through the river. These flows are then flowing into the river, and through the river. The river flows into the river, and through the river, through the river, to the river, and through the river, through the river. The river flows into the river, and through the river, through the river, through the river, through the river, through the river, through the river. The river flows through the river, and through the river, through the river, through the river",
@@ -59820,7 +60041,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 138
           },
           {
             "text": " a riverbank. The rivers and streams of the stream, as it flows through a river, into the river and into the river. The rivers and streams are flowing through the river.\nThe water flowing through the river is part of the river. The river flows into the river, through the river, into the river. The river flows through the river and into the rivers. The river flows through the river to the river and into the river. The river flows through the river are parallel in the river. A river flows through the river.\nThe river flows through the river. The river flows in the river and into the river. The river flows through the river. The river flows through the river. The river flows through the river. The river flows through the river. The river flows through the river. The river flows through the river. The river flows through the river.\nThe river flows through the river. The river flows through the river. The river flows through the river. The river flows through the river. The river flows through the river. The river flows through the river. The river flows through the river. The river. The river flows through the river. The river flows through the river. The river has the river. The river. The river is",
@@ -59833,7 +60057,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 83
           }
         ]
       },
@@ -59852,7 +60079,10 @@
             "loop_onset": 122,
             "loop_period": 10,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 86
           },
           {
             "text": " not a number, but a number is a number.\nHow can you do this?\nThe key to solving problems is to find a way to solve the number in a way that does not solve the problem. You can do this by finding a way to solve the problem.\nDo you have a number that is not a number?\nThe answer is a number. This number is the number of numbers that can be solved by multiplying the numbers by 2.\nWhat is the number of times the number is a number?\nThe number of times the number is a number. The number of times the number is a number. The number of times the number starts to divide.\nHow can you solve the number of times the number is a number?\nYou can solve the number of times the number is a number.\nHow do you solve the number of times the number is a number?\nThe number of times the number is a number.\nHow can you solve the number of times the number is a number?\nThe number of times the number is a number.\nHow can you solve a number?\nYou can solve the number of times the number is a number. The number of times the number is a number.\nHow can you solve the",
@@ -59865,7 +60095,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 249
+            "topic_span": 249,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " represented by the number prime numbers. Thus the prime numbers are represented by the prime numbers. In mathematics, all prime numbers are represented by the prime numbers.\nIn mathematics, numbers represent the prime numbers, and represent the prime numbers.\nIn mathematics, a prime number is represented by the prime number, and the prime numbers are represented by the prime numbers.\nIn science, a prime number is represented by the prime number.\nIn mathematics, the prime numbers are represented by the prime numbers.\nIn mathematics, a prime number is represented by the prime numbers.\nA prime number is represented by the prime number.\nIn mathematics, a prime number is represented by the prime number.\nIn mathematics, all prime numbers represent the prime numbers.\nIn mathematics, a prime number is represented by the prime numbers.\nIn mathematics, a prime number is represented by the prime numbers.\nIn mathematics, a prime number is represented by the prime number.\nIn mathematics, a prime number is represented by the prime numbers.\nIn mathematics, a prime number is represented by the prime number.\nIn mathematics, a prime number is represented by the prime number.\nIn mathematics, a prime number is represented by the prime number.\nIn mathematics, a prime number",
@@ -59878,7 +60111,10 @@
             "loop_onset": 206,
             "loop_period": 14,
             "topic": 1.0,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 93
           },
           {
             "text": " a number and its function is to represent the number in a rational number is the number that is the number in the number in the given figure.\n2. A number\nA number that is a number is a number which is the number of integers that is the number of integers that are the number the number of integers that are the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that are the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers that can be represented by the number of integers",
@@ -59891,7 +60127,10 @@
             "loop_onset": 99,
             "loop_period": 9,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 35
           },
           {
             "text": " the number of digits, and a decimal number is the number of digits.\nIt is the number of digits in a number that is the number of digits in a number.\nThe number of digits in a number depends on the number of digits, and the number of digits in a number can be the number of digits in a number.\nThe number of digits in a number can be the number of digits in a number.\nThe number of digits in a number can be the number of digits in a number or a number that is the number of digits in a number.\nThe number of digits in a number can be the number of digits in a number.\nThe number of digits in a number can be the number of digits in a number or a number that is the number of digits in a number.\nThe number of digits in a number can be the number of digits in a number.\nThe number of digits in a number can be the number of digits in a number.\nThe number of digits in a number can be the number of digits in a number.\nThe number of digits in a number can be the number of digits in a number that is the number of digits in a number.\nThe number of digits in a number can be the",
@@ -59904,7 +60143,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 17
           }
         ]
       },
@@ -59923,7 +60165,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " climate change, which may result in increased crop yields. Some key findings are that the warming of the planet's surface may result in a decrease in global temperature, which could contribute to human extinction.\nThe Earth's climate is a complex and important part of our lives. We are constantly in the midst of climate change, and we are constantly in the midst of these changes. It is important to be aware that in this way, we are not doing well in the face of climate change.\nMost people don't understand climate change, but we can understand it and take action to curb that. If you know the truth, it is a problem. In fact, the Earth's climate is not the same as the Earth itself. But it is the same. The Earth is what we call the \"climate.\"\nClimate change is a term coined by the term \"climate\" and refers to the changes in the weather system that occur when the Earth's temperature is rising. The change in the climate is caused by the changes in the Earth's temperature and the amount of sunlight that passes through the Earth's surface.\nClimate change is a term coined by John Lewis in the 1980s. It is a term coined by James L. Lewis called the word \"climate\" and refers to",
@@ -59936,7 +60181,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the atmosphere that result in warmer temperatures. The term \u201cclimate change\u201d refers to the increase in temperatures that result in the increase in temperatures.\nThe term \u201cclimate change\u201d is used to describe a wide range of climate-related changes across the globe. The term \u201cclimate change\u201d refers to the increase in temperatures caused by the increase in the temperature of the atmosphere in the United States.\nClimate change has become more common in the past few decades, with the rapid rise of the world\u2019s largest global crop (Gutierrez et al. 2009). This rise has been attributed to the increase in temperature due to the increase in atmospheric CO2 (solar CO2) in the atmosphere.\nThe term \u201cclimate change\u201d refers to the increase in the number of atmospheric CO2 in the atmosphere due to the increase in the atmosphere due to the increase in the temperatures caused by the increase in the CO2 concentration caused by the increase in the atmosphere due to the increase in the temperature caused by the increase in the temperature caused by the increase in the CO2 concentration caused by the increase in the atmosphere due to the increase in the CO2 concentration caused by the increase in the carbon dioxide concentration caused by the increase in the atmospheric CO",
@@ -59949,7 +60197,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 157
+            "topic_span": 157,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 160
           },
           {
             "text": " temperature, precipitation, and nutrient availability that disrupt populations and ecosystems, causing climate change.\nGlobal temperatures are not limited to a single day or two. Climate change may affect individuals and their families, and may therefore affect their ability to adapt to changing climate conditions.\nClimate change poses significant challenges, but it is important to address each issue accurately. In this chapter, we will discuss the different impacts of climate change on individuals, communities, and communities, and discuss possible changes to their lifestyles.\nThe Power and Impact of Climate Change on Communities\nClimate change is not limited to a single day or two. While this chapter serves as a guide, it does not necessarily represent the impact of climate change on communities and communities.\nWe will discuss the impact of climate change on communities and communities in this chapter, as well as discuss the impact of climate change on communities.\nThis chapter serves as a guide that serves as a guide to future climate change adaptation and resilience. It focuses on the impact of climate change on communities and communities that impact climate change.\nUnderstanding Climate Change and Climate Change\nClimate change is a serious issue that affects communities, communities, and communities. It affects communities, communities, and communities, impacting their ability to adapt to changing climate conditions.\nClimate Change and",
@@ -59962,7 +60213,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the agricultural sector and the increase in agricultural activity. The impacts of climate change have not yet been studied in the past decade. These changes have been associated with the impact of climate change on climate change.\nThe National Climate Assessment (NCC) is the first ever Earth-Moon Survey (SPST) report to assess the impact of climate change on the atmosphere. The annual report includes a summary of the impacts of climate change. The annual report includes summary of the current global climate change assessment.\nThe National Climate Assessment (NCC) is the first annual report to collect data on the impact of climate change on the environment. This report provides a summary of the current climate change assessment (NE) and a summary of the impacts and impacts of climate change on the environment.\nThe National Climate Assessment (NCC) is the first nationally-recognized indicator of the impact of climate change on the environment. This report was prepared by the National Climate Assessment (NCC) and its partners (National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National Climate Assessment, National",
@@ -59975,7 +60229,10 @@
             "loop_onset": 200,
             "loop_period": 4,
             "topic": 0.3333333333333333,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 174
           }
         ]
       },
@@ -59994,7 +60251,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 57
+            "topic_span": 57,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 47
           },
           {
             "text": " to prepare for the night before you go to bed.\nThe bread is not only delicious but also delicious as a snack. Its delicious taste makes it a great snack for those who want to enjoy fresh air and enjoy the taste of the dishes.\nWhat Are Breads Made Of?\nTraditional breads like bread, bread, and pasta are made of seeds and other ingredients that are not made on the bread. Additionally, the bread contains fiber, vitamins, and other nutrients that can help you enjoy bread without the risk of other diseases.\nThere is a reason why people should choose bread as a snack. Instead, it\u2019s important to choose a variety of breads that have different types of breads. To make bread, it\u2019s important to choose a variety of breads that have the same taste and texture.\nWhat Are Breads Made Of?\nIn terms of the type of bread you buy, bread is a great choice for those who want to enjoy it. Breads like bread can be made with bread, which has the added benefit of being eaten by the majority.\nThe following table shows breads as a dessert made of bread:\n- Bread is the best part of the dessert.\n- Bread is the best part of the",
@@ -60007,7 +60267,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to be able to set the bread temperature by the middle of the day. You can also use a variety of different types of bread to make bread-at home.\nTo make bread at home, you will need to put the bread on a baking sheet to make it crispy. You will need to make an oven with a few minutes of baking time.\nTo make bread at home, you need to make a bread baking sheet. You will need to make a bread baking sheet with the same amount of baking material. You will need to make a bread baking sheet with the same amount of baking material.\nTo make bread at home\nAnother example of bread at home is bread. You can make a bread with two pieces of bread at home, and you can use baking bread. You can make a bread with two pieces of bread at home.\nTo make a bread with two pieces of bread at home, you can use baking bread at home. You can also use baking bread at home, and you can make a bread by one piece of bread.\nTo make a bread with two pieces of bread at home, you can add one piece of bread at home. You can make the bread at home by adding 1 piece of bread.\nTo make a bread with two",
@@ -60020,7 +60283,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to add a small amount.\n- Make a big bread box.\n- Add a small amount of flour to make a small amount of dough. Place the bread box on the bread box.\n- Then you will have to add a small amount of flour to make a small amount of dough.\nThe best way to make bread is to add it to smoothies.\nThe best way to make bread is to add a small amount of flour to make a small amount of dough.\nFor example, you will need to add a small amount of flour to make a small amount of dough.\nYou can also use a small amount of flour to make a small amount of dough.\nYou will need to add a small amount of flour to make a small amount of dough.\nWhen you add a small amount of flour to make a small amount of dough, add a small amount of flour to make a small amount of dough.\nYou will need to add a small amount of flour to make a small amount of dough.\nHow do you make bread?\nTo make bread, you will need to add a small amount of flour to make a small amount of dough.\nIn order to make a small amount of dough, you will need to add a small amount",
@@ -60033,7 +60299,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 251
+            "topic_span": 251,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to know if it will give you the necessary information. You will need to know how to properly prepare bread at home and to make the necessary changes.\n1. Make bread at home for breakfast.\n3. Make bread at home.\n4. Have breakfast.\n5. Be creative.\n6. Don\u2019t forget to be creative.\nDo not indulge in bread.\nIf you want to make bread at home, try to find a way to make your bread at home. If you want to make your bread at home, try to find a way to make it simple and simple.\n6. Make bread at home with a table of bread.\nRemember that bread is the bread that is made with bread. It has a lot of breads.\n- Make sure you have a sheet of bread at home on your bread.\n- Keep it simple and easy.\n- Make your bread at home with a table of bread.\n- Make bread at home with a table of bread.\n- Make bread at home with a table of bread.\n- Make the bread at home for breakfast.\n- Make a bread for breakfast.\n- Make bread at home with a table of bread.\n- Make bread at home with a",
@@ -60046,7 +60315,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 180
           }
         ]
       },
@@ -60065,7 +60337,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 115
+            "topic_span": 115,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 175
           },
           {
             "text": " his famous play 'The Tempest, and his Macbeth' (\u2018The Tempest,\u2019).\nThe first of six plays, and the third of them, were written by the English King John the Great. The most famous play of the play is the Great Scranton of England (\u2018The Tempest\u2019).\nThe great Scranton of England is written by a man named William Shakespeare, who is believed to have been in the play of King George\u2019s plays.\nThe most famous play of the play is The Tempest (1916)\nThe play is written by William Shakespeare, who is known to have written over the last fifty-five years.\nIn one of these plays, the play is written on the right (\u2018The Tempest,\u2019 \u2018The Tempest,\u2019 \u2018The Tempest,\u2019 \u2018The Tempest,\u2019 and \u2018The Tempest,\u2019 \u2018The Tempest and the Tempest\u2019).\nThe main character is The Tempest, a play written by Robert Morris, that is the most famous play of the play.\nThe play is written by William Shakespeare, who was born in 1801.\nThe major play of the play is The Tempest, and this play",
@@ -60078,7 +60353,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 234
+            "topic_span": 234,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " The Merry King, the King, the Queen Mary, and the Queen Mary. But the Queen, and the Queen, were the same characters, the same.\nIn the mid-60s, King James II wrote in the New Testament that the King wrote, \"But it was his fault. The King was the king of the sea.\" He wrote the King, \"And the King, the King, the King, the King, the King, the King, the King, the Queen, the Queen.\" In the same vein, the King's power was limited to the Queen. The Duke of the King, King James, was only a little more than a few hundred feet away from his throne.\nThis King was the King's own. Many of her characters were in the king's hands, and the King was the king. The King was the King, the King's own, the King's own.\nThe King's own, King's own, and Queen's own, were all but two of the same characters. The King's own.\nThe King's own, King's own, was the Queen's own. The King's own was the King's own. He did not know how to make his own. The King's own was the",
@@ -60091,7 +60369,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.16666666666666666,
-            "topic_span": 152
+            "topic_span": 152,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Shakespeare's \u201ctitles\u201d for Shakespeare's plays and plays with him.\nIn the early twentieth century, Shakespeare had become one of the most influential plays of the 20th century. In his novel The Tempest, Shakespeare uses his plays as a metaphor for the power of words. He uses their power to describe people in his plays, such as the characters in a play, the characters in a play, and the character in a play. In Shakespeare's plays, Shakespeare uses various characters to express feelings and emotions, including feelings, emotion, and love. In the modern era, Shakespeare uses many different characters, including the characters in the play, the characters in a play, the characters in a play, and the character in a play. In Shakespeare's plays, Shakespeare uses the power of words to describe feelings and emotions, such as anger or anger.\nIn the early twentieth century, Shakespeare's plays were a major influence on the play, and it was their influence on the audience. In this section, we will explore the ways in which Shakespeare uses his plays to describe the different roles and roles played in the play.\nIn the early twentieth century, Shakespeare used Shakespeare's plays to highlight the roles played by actors and actresses, such as actors, actors, and",
@@ -60104,7 +60385,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 239
+            "topic_span": 239,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the sonnets of William Shakespeare, whose sonnets have been published in 1803.\nIn 1601, the first English king of the English king in England, Arthur Henry Maccises in the English king, Henry Duke, a son of Philip. The play was written in 1802, and the English king was published in 1802.\nIn 1826, William Shakespeare wrote the first English king of England, William Shakespeare wrote in his home town in 1827, and in 1812, William Shakespeare was said to have been in England for more than four years, and in 1812, William Shakespeare wrote his first play with the sonnets of William Shakespeare as well as William Shakespeare; and in 1829, William Shakespeare wrote his King William, which was in fact the first Shakespeare to use the sonnets of William Shakespeare. The plays of William Shakespeare are in English, and in English, the sonnets of William Shakespeare are in English.\nThe first English king of England, William Shakespeare wrote his first play on the English king, William Shakespeare, in 1604, and William Shakespeare, in 1605, William Shakespeare wrote his first play in England. William Shakespeare was born in England in 1627, and in 1614 he became the sonnet of William Shakespeare,",
@@ -60117,7 +60401,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -60136,7 +60423,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 80
+            "topic_span": 80,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " which researchers from the University of Queensland, Queensland and the University of Queensland, and the University of Queensland, led by Dr Jeremy Boulou, a senior lecturer in the project, said that it was possible to develop an internet connection between humans and machines.\n\u201cOne of the best ways to tackle internet connectivity is by using a computerized circuit (PC) or in the form of an inverter (PC) that allows you to find the appropriate outlet (for example, to draw the inverter in a way that it has an inverter that can be connected to a PC,\u201d he said.\nThe results of the study, in conjunction with the research, led the researchers to develop a computer-based system that allows for the computer to be connected to a PC, which can be connected to a PC via a computer. The computer is then used for the purpose of developing a computer that can easily access the internet through a computer, and the computer can easily be connected to the computer by using a computer to connect to a PC or other electronic devices.\n\u201cAs we have seen, the computer can be connected to a PC or PC, which can be connected to a PC via a computer,\u201d said Boulou. \u201cThis can",
@@ -60149,7 +60439,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 187
+            "topic_span": 187,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the 1980s and 1990s. To become a successful internet connection, the research and development of the internet began as a result of the development of an internet connection.\nThe Internet started as a method of creating and distributing internet content. It was used by the internet and was used for various purposes. The internet is also used for internet communication by the internet.\nThe internet is the Internet of Things that was used by the internet to transport and exchange information. The internet is a way to go, store, and store computers. Another advantage of this method is that it allows for faster browsing and retrieval of information. The internet can be used by the internet to send and receive data.\nThe Internet of Things\nThe internet was used by the internet to promote the growth of the internet. This technology is used by the internet to send and receive data. It also has advantages such as faster processing speed and speed.\nThe internet is used to connect people, servers, and other computers to connect to the internet. It is a way to go and send people and computers to a network. The internet also has advantages such as faster processing speed, speed, and speed.\nThe internet also has advantages such as reliability and privacy. It also has advantages such as user-friendliness",
@@ -60162,7 +60455,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 237
+            "topic_span": 237,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the US, which allowed users to view the internet in a short period of time.",
@@ -60175,7 +60471,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 10
+            "topic_span": 10,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the late 1980s, but it was soon becoming popular.\nThe idea of the internet is something that people thought was true, and that they were able to imagine their own lives. So, it was a big step towards creating a positive and even positive impact on society.\nSo, if you need a solid foundation, take the time to think about it. The internet has no magic, so it is no surprise that the internet has become an integral part of our lives.\nThe internet is the first internet service and it is a great service for any type of work.\nIn essence, it is not a service to anyone. It is a service to someone in the private sector.\nThe internet is a great way to connect with people, and it is a great way to connect with our internet.\nIn addition to being a great way to connect to people, there are many ways to connect with people.\nThere are also some great ways to connect with people who have no idea what the internet has to offer.\nHere are some of the most popular internet service websites:\n- Google + Google + Google + Google + Google + Google + Google + Google + Google + Google + Google + Google + Google + Google + Google + Google + Google + Google",
@@ -60188,7 +60487,10 @@
             "loop_onset": 221,
             "loop_period": 2,
             "topic": 0.25,
-            "topic_span": 216
+            "topic_span": 216,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -60207,7 +60509,10 @@
             "loop_onset": 214,
             "loop_period": 4,
             "topic": 0.5,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 132
           },
           {
             "text": " the inflation rises and rises during the inflation.\nThe inflation is proportional to the amount of inflation in the period of inflation.\nWhat is inflation inflation?\nThe inflation is the amount of inflation in the market that happens during the inflation.\nIt is a difference between the rate of inflation and the amount of inflation in the period of inflation.\nOne variable in the inflation is the amount of inflation in the period of inflation and the amount of inflation in the period of inflation.\nIt is the amount of inflation in the period of inflation and the amount of inflation in the period of inflation.\nThe amount of inflation in the period of inflation is the amount of inflation in the period of inflation.\nThe amount of inflation in the period of inflation is the amount of inflation in the period of inflation in the period of inflation.\nThe amount of inflation in the period of inflation in the period of inflation in the period of inflation is the amount of inflation in the period of inflation in the period of inflation in the period of inflation.\nIt is the amount of inflation in the period of inflation in the period of inflation in the period of inflation in the period of inflation in the period of inflation in the period of inflation.\nThe amount of inflation in the period of inflation",
@@ -60220,7 +60525,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 68
           },
           {
             "text": " inflation is more than a factor of two.\n- Consumer prices are relatively high, and they are not as low as in normal.\n- Prices are very high, and because they are low, they are low, and it is not a good thing to have them.\n- The price of a good quality is high, but because the price is low, it is low, and the price is low.\n- Prices are low, and the price is low.\n- Prices are low, and the price is low, and the price is low.\n- Prices are low, and the price is low, and the price is low.\n- Prices are low, but the price is low, and the price is low, and the price is low.\n- Prices are low, and the price is low, and the price is low, and the price is low.\n- Prices are low, and the price is low, and the price is low.\n- Prices are low, and the price is low.\n- Prices are low, and the price is low, and the price is low.\n- Prices are low, and the price is low, and the price is low, and the price is low, and the price is low",
@@ -60233,7 +60541,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 1
+            "topic_span": 1,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 56
           },
           {
             "text": " inflation is lower and the inflation is lower than inflation.\nRipple inflation is a problem that arises when the inflation is lower than inflation. This is because inflation is usually caused by inflation, which is a phenomenon that occurs when inflation is high or low. This phenomenon is called inflation.\nThe inflation is a problem that arises when inflation is high or low. This is because inflation increases the inflation because inflation is low. This is because inflation is low or low. The inflation is higher than inflation because inflation is high or low.\nIf inflation is high or low, inflation can increase the inflation. This is because inflation is high or low. The inflation is an increase in inflation. This is because inflation is high or low. This is because inflation is low or low because inflation is high or low.\nThe inflation is a result of inflation. This can occur because inflation is higher because inflation was lower than inflation. This is because inflation is low because inflation is low or low. This can be because inflation can increase the inflation.\nPeople can also suffer from this because inflation is low and low. This is because inflation is low or low because inflation is low. This is because inflation is low because inflation is high because inflation is low because inflation is high. This is because",
@@ -60246,7 +60557,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " you are in a position in the market such as a bank, and you are in a position in a position in the securities market. The reason is that when you are in a position in which you are in a position in the stock market. The rate of inflation depends on the market market price on the price and if you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in an position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in a position in which you are in an position in which you are in a position in which you are in a position in which you are at",
@@ -60259,7 +60573,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 53
+            "topic_span": 53,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 31
           }
         ]
       }

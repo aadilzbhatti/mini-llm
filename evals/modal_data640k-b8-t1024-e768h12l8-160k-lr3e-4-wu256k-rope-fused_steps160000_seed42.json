@@ -58826,6 +58826,23 @@
     "draws": 5,
     "summary": {
       "n": 100,
+      "degenerate": 33,
+      "degenerate_rate": 0.33,
+      "degenerate_ci95": [
+        0.246,
+        0.427
+      ],
+      "rep4_ge": {
+        "0.3": 46,
+        "0.5": 28,
+        "0.7": 10
+      },
+      "near_loops": 22,
+      "near_loop_ci95": [
+        0.15,
+        0.311
+      ],
+      "near_loop_onset_median": 109.5,
       "rep4": 0.257,
       "rep4_p90": 0.661,
       "rep4_mean": 0.331,
@@ -58859,7 +58876,10 @@
             "loop_onset": 107,
             "loop_period": 18,
             "topic": 1.0,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 80
           },
           {
             "text": " begins in the phototrophic cascade.\nThe phototrophic cascade consists of four primary stages:\n- The primary stage is the photosynthetic stage.\n- The primary stage is the photosynthetic stage,\n- The secondary stage is the photosynthetic stage.\n- The secondary stage is the phototrophic stage,\n- The secondary stage is the photosynthetic stage,\n- The secondary stage is the photosynthetic stage.\nThe primary stage is the photosynthetic stage.\nThe phototrophic stage is the photosynthetic stage.\nThe phototrophic stage is characterized by the formation of a phototrophic film.\nThe phototrophic film is created from phototrophic microorganisms.\nThe phototrophic cascade consists of three primary stages:\n- The secondary stage is the photosynthetic stage,\n- The secondary stage is the photosynthetic stage,\n- The secondary stage is the phototrophic stage,\n- The secondary stage is the photosynthetic stage.\nThe phototrophic stage consists of the primary stage,\n- The secondary stage is the photosynthetic stage.\nThe secondary stage is the photosynthetic stage,\n- The primary stage is the photosynthetic stage.",
@@ -58872,7 +58892,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " occurs after the sun has passed through the atmosphere. The process is called photosynthesis.\nThe carbon dioxide is the primary and secondary source of energy for plants. In photosynthesis, the light energy is transferred to the plant. Photosynthesis is a process of photosynthesis.\nThe term \u201cphotosynthesis\u201d is used to refer to the process of converting carbon dioxide into energy. The term is also used to refer to the process of converting carbon dioxide into energy.\nThe term \u201cphotosynthesis\u201d is used to refer to the process of converting carbon dioxide into energy. Photosynthesis is the process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into energy. Photosynthesis is a process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into energy.\nPhotosynthesis is the process of converting carbon dioxide into",
@@ -58885,7 +58908,10 @@
             "loop_onset": 146,
             "loop_period": 13,
             "topic": 1.0,
-            "topic_span": 247
+            "topic_span": 247,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 99
           },
           {
             "text": " takes place in the cell respiration. The process occurs in the mitochondria, but it is not a single process. In the mitochondria, the energy is turned into energy and the energy is transferred to the cells through photosynthesis, which is a process of photosynthesis.\nPhotosynthesis happens in the mitochondria, but there are other processes that occur in the mitochondria. The mitochondria are the single biggest body organelle and are responsible for the movement of energy through the cell. They are responsible for making ATP and ATP from the sugar glucose and ATP from carbon dioxide, and the energy stored in the mitochondria.\nPhotosynthetic organisms have photosynthetic organisms that use energy to convert that energy into chemical energy.\nPhotosynthesis happens in the mitochondria, but the energy is transferred from the food chain to the cells. The energy is transferred to the mitochondria. Photosynthesis takes place in the mitochondria, but the energy is transferred to the cells.\nPhotosynthesis is the process of converting the energy from the food chain into chemical energy. Photosynthesis happens in the mitochondria, but the energy is transferred to the cells.\nPhotosynthesis takes place in the mitochondria, but there are other processes that take place in the mitochondria. These processes take",
@@ -58898,7 +58924,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 232
+            "topic_span": 232,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " involves the conversion of carbon dioxide into glucose and oxygen. A study published in the Journal of the American Chemical Society found that in the lab, the plants with photosynthesis were able to use a high amount of glucose and oxygen to produce ATP.\nHow did this happen?\nThe experiment was able to produce a high amount of ATP and a high amount of oxygen. The amount of ATP required for photosynthesis is different from the amount of oxygen needed to produce ATP as the sugar glucose cannot be converted to glucose in the same way as the sugar glucose is used for energy. The process is known as photosynthesis and the amount of glucose needed to produce ATP is known as its efficiency.\nWhat is photosynthesis?\nPhotosynthesis is the process where carbon dioxide is converted into energy from the sun\u2019s energy source. Photosynthesis has two main processes: photosynthesis and respiration.\n- Photosynthesis is the process where one organism uses energy from the sun\u2019s energy to produce carbohydrates and oxygen for energy production.\n- Photosynthesis is the process where carbon dioxide is used as energy to produce ATP.\nWhat is photosynthesis?\nPhotosynthesis is the process where a plant uses carbon dioxide and water to process carbon dioxide and water to make energy. Photosynthesis is",
@@ -58911,7 +58940,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -58930,7 +58962,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 228
+            "topic_span": 228,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " was born on November 18, 1905, in Munich, Germany.\nHe was one of the first to make a distinction between the two.\nIt\u2019s estimated that he would have been killed by a bomb in the German Empire.\nIt\u2019s believed that Einstein made a breakthrough in his theory of relativity.\nHe had been able to make a distinction between the two.\nHe was born on November 17, 18, in Leipzig, Germany.\nHe was a German-born physicist who was a key player in the development of quantum field theory.\nHe was an astronomer who was also a scientist who was a key player in the development of quantum theory.\nHis first book, \u201cOn the Origin of Quantum Physics\u201d, appeared in the year 1874.\nHe was the first person to create a quantum field theory.\nHe was the first person to create a quantum field theory.\nHe was the first person to create a quantum field theory.\nHe was the first person to create a quantum field theory.\nHe used it to create a new mathematical theory.\nHe died on November 18, 1905, in Leipzig, France.\nHe was born on November 17, 18, in Leipzig, Germany",
@@ -58943,7 +58978,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " believed that the universe could be made from a mixture of atoms. He believed that, while it was impossible to determine the exact size of the universe, the result was the discovery of the existence of an inner universe. In the next chapter, we will examine Einstein\u2019s most famous work, Nature, and explain how it had a profound impact on our understanding of the universe.\n1. What is the most important discovery of Einstein\u2019s theory?\nThe first one, Nature, was a mathematical model that showed that the universe exists only in a single, isolated region of space, or that the entire universe is composed of a single small region of space. According to Einstein, the universe is composed of a large number of small regions of space, and it is not possible to determine the exact size of the universe by simple mathematical models. The result of this mathematical model is a mathematical model that shows that the universe is composed of a large number of small regions of space, and the entire universe is composed of a large number of small regions of space. In this way, our understanding of the universe is based on the scientific method.\n2. How does Einstein\u2019s theory explain the origins of the universe?\nThe theory of relativity, or Einstein\u2019",
@@ -58956,7 +58994,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " became one of the foremost scientists of his day. He was particularly interested in the concept of atomic energy and the relativity of the universe. Einstein\u2019s early work on the concept of gravity and the theory of gravity and the theory of relativity were among his most important contributions.\nAfter studying the theory of relativity, Einstein established his theories on the nature of light and the relativity of the universe. He developed his theory of relativity in 1911. The name Einstein\u2019s theory of gravity is \u201cthe theory of relativity\u201d and is considered to be one of the most important scientific discoveries of his day.\nHe was also known for his work on relativity and the relativity of the universe. He was also considered a pioneer in the field of mathematical physics. He was also considered to be one of the most influential physicists of his day and was widely known for his contributions to the field of physics. Einstein was also known for his work on the theory of relativity.\nDuring his lifetime, Einstein held several important positions during his lifetime. He was considered to be one of the most well-known figures of the 20th-century. He was known for his work on quantum mechanics and was also a supporter of the idea of relativity. He was known for his work on the theory",
@@ -58969,7 +59010,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " became the first person to understand the laws of quantum mechanics, which he called quantum mechanics. He was also the first person to write about the phenomenon of quantum vacuum. He was the first European to realize the concept of quantum vacuum and was also the first person to understand the concept of quantum vacuum.\nThe first quantum vacuum experiment was a breakthrough in the field of quantum mechanics. In 1859, Albert Einstein published the famous equation, \u201cThe Law of Conservation of Energy,\u201d which he named the law of conservation of energy. Albert Einstein\u2019s formula was the law of conservation of energy. He also proposed the law of conservation of energy. He proposed that the energy of a photon cannot be transferred from a distance. This law was later proved later in 1869.\nIn 1872, Albert Einstein led the first scientific research of the photon. He was a German physicist and Nobel Prize winner. He discovered the concept of quantum vacuum and named it the law of conservation of energy. He was also the first person to define the law of conservation of energy. He also founded the so-called \u201cquantum optics\u201d as a research area.\nThe discovery of the law of conservation of energy is one of the most important discoveries in physics. It is the",
@@ -58982,7 +59026,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59001,7 +59048,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 54
+            "topic_span": 54,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " symbol W.\n7. To change the position of something, as part of its physical properties.\n8. To change the position of something.\n9. To change the color of something.\n10. To change the shape of a thing.\n11. To change the shape of an object.\n12. To change the position of something in relation to other objects.\n13. To change the position of something.\n14. To change something by changing its position.\n15. To change the position of a thing by changing its position.\n16. To change the position of something.\n17. To change its position.\n18. To change its shape.\n19. To change its position.\n20. To change its position.\n21. To change its position.\n22. To change its position.\n23. To change its position.\n24. To change its position.\n25. To change its position.\n26. To change its position.\n27. To change its position.\n28. To change its position.\n29. To change its position.\n30. To change its position.\n31. To change its position.\n32. To change its position.\n33. To change",
@@ -59014,7 +59064,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " symbol Oxy-G. Oxygen molecules are the most abundant chemical elements in nature. Oxygen atoms are the building blocks of most chemical substances.\nWhat are the characteristics of Oxygen?\nWhat are the characteristics of Oxygen?\nThe oxygen atoms are the building blocks of most chemical substances. Oxygen is the building block of most substances. Oxygen is the building block of most chemical substances. The most abundant element in the air is Oxy-Gly, which is a building block of most chemical substances. Oxygen is the building block of most chemicals.\nIs Oxygen a chemical?\nThe three most common chemical substances are Oxygen, Nitrogen, and Oxygen. Oxygen is a gas that is composed of two elements. Oxygen is another element in the periodic table, Oxygen is the building block of most substances.\nDo Oxygen atoms exist?\nThe only known physical structure of Oxygen is that it is an atom that contains three elements. Oxygen is the building block of most chemical substances.\nWhat are the characteristics of Oxygen?\nThere are four basic characteristics of Oxygen: the most important one is the structure of Oxygen. Oxygen is the building block of most chemical substances, while Oxygen is the building",
@@ -59027,7 +59080,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the symbol \"LF\"). The word \"oxygen\" is an acronym for \"hydrogen\". It is an electron in the periodic table. The number of molecules in the periodic table is often called the number of electrons in the periodic table. The number of electrons in the periodic table is the number of electrons in the periodic table. The number of electrons in the periodic table is very small. Therefore, the number of electrons in the periodic table is always less than the number of electrons in the periodic table.\nThe chemical element is often called a \"particle\". When the number of atoms in the periodic table is greater than the number of electrons in the periodic table, it is called a \"electron\". The number of electrons in the periodic table is usually less than the number of electrons in the periodic table.\nThe number of electrons in the periodic table is usually greater than the number of electrons in the periodic table. In addition, the number of electrons in the periodic table is often less than the number of electrons in the periodic table.\nThe periodic table is a type of periodic table containing only one element. It is the symbol for the periodic table.\nIf you want to learn about the periodic table, you can check out our article on the periodic table.",
@@ -59040,7 +59096,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 224
+            "topic_span": 224,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the symbol M. The term is also used to denote the carbon in the solar system, which in turn is also a gas. A chemical element with the symbol F, meaning Oxygen is an element with a symbol M. The term is also used to denote the element Carbon, which is also a gas.\nThe term Oxygen is also used to denote the element Oxygen in the solar system, which is a gas. For example, if the solar system is a gas, the carbon in the solar system will be Oxygen. The term oxygen is also used to denote the element Oxygen in the solar system, which is a gas.\nThe term Oxygen is also used to denote the element Oxygen in the solar system, which is a gas. A chemical element with the symbol M, meaning Oxygen is an element with the symbol M, meaning Oxygen is an element with the symbol M. The term Oxygen is also used to denote the element Oxygen in the solar system, which is a gas.\nThe term Oxygen in solar system refers to the element Oxygen, meaning a gas. A gas is a gas that is a gas. The term Oxygen in solar system refers to the element Oxygen in the solar system, which is",
@@ -59053,7 +59112,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59072,7 +59134,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 57
+            "topic_span": 57,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " create a 3D model of a robot. The model will be built in a very simple way and the students will build a 3D model of a 3D model of the robot.\nA 3D model of a 3D model of a robot is illustrated below.\n|In this lesson, students will create a 3D model of a robot and explain the steps involved in creating a robot. (Optional to save on the cost.)\n|In this lesson, students will learn:\n- how to build a 3D model of a robot and how to create a 3D model of the robot.\n- an example of a 3D model of the robot.\n- a 3D model of a robot that is created in a very simple way.\n- how to build a 3D model of a robot.\n- a 3D model of a robot that is created in a very simple way.\n- how to build a 3D model of a robot to model the robot.\n- how to build a robot that can be used for a different task.\n- how to build a robot that can be used for a different task.\n- how to build a 3D model of a robot.\n- how to build a robot that can be",
@@ -59085,7 +59150,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 97
+            "topic_span": 97,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " make a simple and effective tool to help you make a good, sustainable and healthy planet. They will know that when you make a good, sustainable and healthy planet, you can make a difference in the world.\nBy sharing this lesson with your students, you can help them to understand the importance of sustainable living. Your students will learn about the importance of sustainable living and how to make a sustainable living environment.\nAs part of the Earth Day, I\u2019m also excited to share the lesson with you. This lesson includes:\n- How to Make a Difference\n- The importance of sustainability\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- Why sustainability is important\n- How to make a difference\n- What to do about a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How to make a difference\n- How",
@@ -59098,7 +59166,10 @@
             "loop_onset": 181,
             "loop_period": 7,
             "topic": 0.0,
-            "topic_span": 105
+            "topic_span": 105,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 96
           },
           {
             "text": " use a calculator (if you\u2019re teaching it to a computer program) to determine a value. It will also help them to explain the use of a calculator and how to calculate the value of a calculator.\n- In this lesson, students will learn how to use a calculator in a computer program. They will also learn how to use a calculator to find the value of a variable and how to use a calculator to find it.\n- In this lesson, students will learn to use a calculator to find the value of a variable. They will learn to use a calculator to find the value of a variable and how to use it to find the value of a variable.\n- In this lesson, students will learn how to use a calculator to find the value of a variable and how to use the calculator in a computer program.\n- In this lesson, students will learn to use a calculator to find the value of a variable. They will learn how to use a calculator to find the value of a variable.\n- In this lesson, students will learn how to use a calculator in a computer program to find the value of a variable. They will learn to use the calculator in a computer program to find the value of a variable.\n- In this lesson,",
@@ -59111,7 +59182,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " take advantage of the Internet in the classroom:\n- What is the Internet in Education?\n- What is the purpose of the Internet?\n- What are the advantages and disadvantages of using the Internet in a classroom?\n- What is the Internet in the classroom?\n- What are the advantages and disadvantages of using the Internet in a classroom?\n- What is the Internet in education?\n- What are the disadvantages of using the Internet in a classroom?\n- What is the Internet in class?\n- What is the Internet in the classroom?\n- What is the Internet in a classroom?\n- What are the main advantages of using the Internet in a classroom?\n- What are the advantages and disadvantages of using the Internet in a classroom?\n- What are the advantages of using the Internet in a classroom?\n- What are the disadvantages of using the Internet in a classroom?\n- Which Internet in the classroom is the Internet in your classroom?\n- What is the Internet in the classroom?\n- What is the Internet in a classroom?\n- What is the Internet in a classroom?\n- What is the Internet in education?\n- What is the Internet in a classroom?\n- What is the Internet in education?\n- What",
@@ -59124,7 +59198,10 @@
             "loop_onset": 214,
             "loop_period": 19,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 174
           }
         ]
       },
@@ -59143,7 +59220,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": "\u0e14\u0e2d\u0e19\u0e31\u0e01\u0e19\u0e27\u0e34\u0e2b\u0e19\u0e27\u0e32\u0e23\u0e19\u0e20\u0e32\u0e20\u0e32\u0e14\u0e2d\u0e19\u0e31\u0e01\u0e07\u0e19\u0e31\u0e07\u0e2d\u0e07\u0e2b\u0e19\u0e23\u0e07\u0e2d\u0e07\u0e19\u0e31\u0e07\u0e2d\u0e07\u0e2d\u0e07\u0e01\u0e07\u0e2d\u0e07\u0e07\u0e2d\u0e07\u0e19\u0e27\u0e34\u0e19\u0e27\u0e34\u0e27\u0e32\u0e23\u0e19\u0e31\u0e07\u0e2d\u0e07\u0e2d\u0e07\u0e2d\u0e07\u0e19\u0e27\u0e32\u0e23\u0e19\u0e31\u0e07\u0e2d\u0e07\u0e07\u0e2d\u0e07\u0e07\u0e2d\u0e07\u0e2a\u0e2a\u0e34\u0e19\u0e32\u0e23\u0e07\u0e2d\u0e07\u0e2d\u0e07\u0e2d\u0e19\u0e2b\u0e19\u0e1b\u0e49\u0e21\u0e23\u0e30\u0e27\u0e34\u0e23\u0e19\u0e32\u0e23\u0e23\u0e19\u0e39\u0e27\u0e19\u0e37\u0e19\u0e31\u0e30\u0e23\u0e32\u0e01\u0e19\u0e07\u0e2d\u0e07\u0e2d\u0e07\u0e2d\u0e07",
@@ -59156,7 +59236,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": "__________ can help to reduce stress levels and improve overall health.\n- __________ can help to reduce stress levels and improve overall health.\n- __________ can improve your mood and reduce stress levels.\n- __________ can improve your mood and reduce stress levels.\n- __________ can reduce stress levels and improve overall health.\n- __________ can help to reduce stress levels in the body.\n- __________ can help to reduce stress levels and improve overall health.\n- __________ can help to reduce stress levels and improve overall health.\n- __________ can help to reduce stress levels and improve overall health.\n- __________ can help to reduce stress levels and improve overall health.\n- __________ can reduce stress levels and improve overall health.\n- __________ can also help to improve mood and reduce stress levels.\n- __________ can help to reduce stress levels and improve overall health.\n- __________ can improve overall health and reduce stress levels.\n- __________ can be used to reduce stress levels and improve overall health.\n- __________ can improve overall health and reduce stress levels.\n- __________ can help to improve overall health and reduce stress levels",
@@ -59169,7 +59252,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": "_________ can be used as a mood booster.\n- _________ can be used as a stress reliever.\n- _________ can be used to prevent stress and anxiety.\n- _________ can be used as a stress reliever or as a stress reliever.\n- __________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used to reduce stress and anxiety.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________",
@@ -59182,7 +59268,10 @@
             "loop_onset": 146,
             "loop_period": 13,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 8
           },
           {
             "text": "__________ It can lower your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can lower your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart diseases.\n- __________ It can reduce your risk of stroke and heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of blood clots in the arteries.\n- __________ It can reduce your risk of heart disease.\n- __________ It can reduce your risk of heart disease.\n",
@@ -59195,7 +59284,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 0
           }
         ]
       },
@@ -59214,7 +59306,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 82
           },
           {
             "text": " Determine the slope of the quadratic equation.\n2. Define the term using the formula:\nA = -2 + b = -3\n3. Determine the slope of the equation using the equation:\nA = -2 + b = -3\n4. Define the term using the formula:\nA = -2 + b = -3\n5. Determine the slope of the equation using the formula:\nA = -2 + b = -3\n6. Define the term using the formula:\nA = -3 + b = -3\n7. Define the term using the formula:\nA = -2 + b = -3\n8. Define the term using the formula:\nA = -3 + b = -3\n9. Define the term using the formula:\nA = -3 + b = -3\n10. Define the term using the formula:\nA = -3 + b = -3\n11. Define the term using the formula:\nA = -3 + b = -3\n12. Define the term using the formula:\nA = -3 + b = -3\n13. Define the term using",
@@ -59227,7 +59322,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 87
+            "topic_span": 87,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 137
           },
           {
             "text": " Find the slope at the bottom of the graph\n2. Find the slope at the top of the graph\n3. Graph the line below the graph\n4. Draw the line with a pencil\n5. Draw a line above the graph using the appropriate graph\n6. Draw the line below the line with a pencil\n7. Draw a line below the graph\n8. Draw a line below the graph using the appropriate graph\n9. Draw a line below the graph using the appropriate graph\n10. Draw a line above the graph using the appropriate graph\n11. Draw a line below the graph using the appropriate graph\n12. Draw a line below the graph using the appropriate graph\n13. Draw a line below the graph using the appropriate graph\n14. Draw a line below the graph using the appropriate graph\n15. Draw a line below the graph using the appropriate graph\n16. Draw a line below the graph using the appropriate graph\n17. Draw a line below the graph using the appropriate graph\n18. Draw a line below the graph using the appropriate graph\n19. Draw a line below the graph using the appropriate graph\n20. Draw a line below the graph using the appropriate graph\n22. Draw a line below the graph using the appropriate graph\n",
@@ -59240,7 +59338,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 100
           },
           {
             "text": " Identify the equation in which the equation is expressed.\n2. Identify at least two factors that influence the equation.\n3. Identify the equation for a variable that is expressed as a positive and negative.\n4. Define the factors that affect the equation.\n5. Identify the factors that affect the equation.\n6. Identify the factors that affect the equation.\n7. Identify the factors that affect the equation.\n8. Identify the factors that affect the equation.\n9. Identify the factors that affect the equation.\n10. Identify the factors that affect the equation.\n11. Identify the factors that affect the equation.\n12. Define the factors that affect the equation.\n13. Define the factors that affect the equation.\n14. Identify the factors that affect the equation.\n15. Define the factors that affect the equation.\n16. Define the factors that affect the equation.\n17. Define the factors that affect the equation.\n18. Define the factors that affect the equation.\n19. Define the factors that affect the equation.\n20. Define the factors that affect the equation.\n21. Define the factors that",
@@ -59253,7 +59354,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 247
+            "topic_span": 247,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 167
           },
           {
             "text": " Determine the value of the vector in the range from 0 to infinity.\n2. Calculate the number of vectors in the range from 0 to infinity.\n3. Calculate the number of edges to be drawn when drawing a rectangle.\n4. The number of edges to be drawn when drawing a rectangle.\n5. Draw the rectangle.\n6. Divide the rectangle into three equal parts.\n7. Sketch the rectangle and its parts using a coordinate system.\n8. Draw the rectangle and its parts using a coordinate system.\n9. Draw the area of the rectangle and its parts.\n10. Draw the area and its parts using a coordinate system.\n1. Draw a rectangle as the point of intersection between two points.\n2. Draw a rectangle as the point of intersection between two points.\n3. Draw the rectangle as the point of intersection between two points.\n4. Draw the area and its parts using a coordinate system.\n5. Draw a rectangle as the point of intersection between two points.\n6. Draw the area and its parts using a coordinate system.\n7. Draw the area and its parts using a coordinate system.\n8. Draw the area and its parts using a coordinate system.\n9.",
@@ -59266,7 +59370,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59285,7 +59392,10 @@
             "loop_onset": 213,
             "loop_period": 15,
             "topic": 0.0,
-            "topic_span": 6
+            "topic_span": 6,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 181
           },
           {
             "text": " bullying: teasing, harassment and coercion. These kinds of bullying tend to occur at the same time as other bullying behaviours. The first type is bullying that is usually directed at someone, such as a friend. The second type is bullying that is directed against a person, such as a student, a teacher, or a friend.\nTypes of bullying by the school\nIt is a form of bullying that is intended to humiliate or intimidate someone. It is an aggressive form of bullying that is aimed at achieving or causing harm to another. The bully is usually someone who is committed to the cause of the harm to the human being and is usually not aware of the seriousness of the harm. The person who is involved in the bullying is usually the one who is attempting to hurt another person. The bully is usually someone who is trying to intimidate another person, such as someone someone who is trying to intimidate another person. The bully is usually someone who is trying to intimidate another person. There are many different types of bullying that are designed to intimidate the bully.\nTypes of bullying by the school\nThe form of bullying by the school includes:\n- Bullying: Bullying that is aimed at someone who is trying to intimidate another person, such as someone who is trying to persuade another",
@@ -59298,7 +59408,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " computer programs. The first is called the software program, or \"program\" (or \"program\" or \"program\") which is usually created on a computer. The computer programs are generally known as programs.\nThe main type of computer program is called a program.\nA program is a program that has three main parts. The first is a program, the second is a program.\nThe most common type of computer program is the program.\nThe most common type of computer program is called a program.\nThe main type of computer program is called a program.\nThe most common type of computer program is called the program.\nA computer program is a program that has a program.\nThe main type of computer program is called a program.\nThe main type of computer program is called a program.\nThe main types of computer programs are called programs.\nThe main types of computer program are called program.\nThe main types of computer programs are computer programs and programs.\nMany people think that computer programs are a form of computer program, but the truth is that they are a form of computer program.",
@@ -59311,7 +59424,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 62
+            "topic_span": 62,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " computer virus: A) virus B, B) virus C, D) virus D, E) virus D and E.\nThese are just a few of the most common types of viruses.\n1. A virus is a type of virus that is spread through the air or water.\n2. A virus is the only live virus that can survive in a cell.\n3. A virus is the only live virus that can survive in a cell.\n4. A virus is the only live virus that can survive in a cell.\n5. A virus is the only live virus that can survive in a cell.\nThere are two main types of virus:\n1. A virus is the only live virus that can survive in a cell.\n2. A virus is the only live virus that can survive in a cell.\nThere are a variety of ways to infect a computer virus. Some of the most common methods include:\n1. Viral (or known as a virus) A virus that is spread by direct contact with an infected person.\nThere are a number of ways to infect a computer virus.\n1. The Internet\nA virus cannot be spread through the air or water.\n2. A virus can be spread through the internet",
@@ -59324,7 +59440,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " water vapor condensing systems in the United States.\n- Condensing systems release vapor gases into the atmosphere through a mixture of water vapor and dust. This process is known as condensation.\n- Condensing systems are a type of evaporator that uses a liquid to vaporize water. These systems use a liquid that is heated to a high pressure to condense water.\n- Condensing systems can be found in many places like airports, homes, and industrial facilities.\n- Condensing systems are used in some industries to distribute the water vapor back to the customer.\n- Condensing systems are commonly used in some industries to distribute water.\n- Condensing systems are used in some industries to distribute the water.\n- Condensing systems are used in many industries to distribute the water.\n- Water condensing systems are used in some industries to distribute the water.\n- Condensing systems are used in some industries to distribute the water.\n- Water condensing systems are used in some industries to distribute the water.\n- Water condensing systems are used in some industries to distribute the water.\n- Water condensing systems are used in some industries to distribute the water.\n- Water condensing systems are used in some industries to distribute the water.\n",
@@ -59337,7 +59456,10 @@
             "loop_onset": 179,
             "loop_period": 16,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 119
           }
         ]
       },
@@ -59356,7 +59478,10 @@
             "loop_onset": 221,
             "loop_period": 8,
             "topic": 1.0,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 89
           },
           {
             "text": " would have included provisions for the establishment of an independent judiciary, as well as a series of related treaties.\nThe treaty was signed in 1919 by the House of Commons, with the intention of establishing a free and independent judiciary. However, it was not ratified by the House, and the treaty was not ratified by the House of Commons. The House of Commons was not ratified on November 17, 1919, and the House of Commons was not ratified in 1919.\nThe United Kingdom was founded in 1776 and the House of Commons was founded in 1777, as the United Kingdom was one of the world\u2019s most important parliamentary democracies.\nIt was also the first country to ratify the Constitution. It was the first country to ratify the United Kingdom\u2019s constitution, and the first to ratify it was the United States. The Constitution was the first to be ratified in the United Kingdom.\nThe Constitution was created in 1787. It was the first constitution to be ratified by the United Kingdom. It was the first constitution to be ratified by the UK and the first to be ratified by the United States.\nThe United Kingdom was founded in 1788, as the United Kingdom was the first country to ratify the United Kingdom\u2019s constitution and to",
@@ -59369,7 +59494,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 58
+            "topic_span": 58,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " was not signed in the treaty.\nIn 1945, the United States was in the midst of a global war on terror. In the end it was clear that the United States was on the verge of war. The war was coming to an end, and the United States was a world power.\nThe war was brought to an end because the United States was in a world war.\nIt was not the war that made America so angry. It was the war that made America angry.\nThe United States believed in the war and took it upon itself to create peace.\nThe war is one of the most complex and complicated in human history. It's the beginning of something that happened to millions of Americans.\nThe war was made known by the United Nations as the Korean War, but it was not until the Korean War of 1950 that the United States recognized the war as a war.\nIt was a war that ended in a war of two or three million people.\nThe American people were fighting for war because their governments were not able to help them.\nThe war was a war that ended in peace, but it was the beginning of something that ended in a war of two million people.\nThe war was a very important event in both the history of America",
@@ -59382,7 +59510,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 6
+            "topic_span": 6,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " took effect on January 16, 1919, when it was ratified by the United States.\nThe United States entered World War I as a non-incessionally-minded nation in 1919. It was largely based on a desire to secure victory. The Treaty of Versailles, signed on Dec. 7, 1919, gave the United States the freedom to unilaterally exclude all other nations. It was also a pre-war effort to eliminate the U.S. from the union.\nThe treaty also put into effect a law that prohibited the use of the United States\u2019 military or naval resources, which were not considered to be essential for the United States to exist.\nThe Treaty of Versailles was ratified on May 11, 1919. The treaty was signed on May 11, 1919, taking effect on May 11, 1919.\nThe Treaty of Versailles was signed on May 17, 1919, which was ratified on May 10, 1919.\nThe treaty, signed on May 17, 1919, would be ratified on July 20, 1919.\nThe Treaty of Versailles was signed on April 15, 1919, taking effect on March 21, 1919, when the United States entered World War I.\nThe treaty came into effect on May 13, 1919, as",
@@ -59395,7 +59526,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 246
+            "topic_span": 246,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " became known as \u201cThe Treaty of Paris and the Treaty of Versailles\u201d.\nIt was signed by the French leader Joseph de Ziegler, who was killed in the battle of the Dardanelles, just weeks after the Battle of the Somme, in 1919.\nWhat is the significance of the Treaty of Paris?\nThe Treaty of Versailles was signed in 1919 by the French President, Napoleon Bonaparte, and then the French Prime Minister, Louis XVIII.\nWhat does the treaty of Paris mean?\nThe Treaty of Versailles, which signed in 1919, provided that the people of France and Spain had a right to the free and fair treatment of the people of France and Spain.\nWhat does the Treaty of Versailles mean?\nThe Treaty of Versailles was a treaty of which the people of France and Spain had a right to the free and fair treatment of the people of France and Spain.\nWhat does the treaty of Paris mean?\nThe Treaty of Versailles included all the rights and freedoms existing in the United States and Europe. The only limitation to the free exercise of the rights of the people of France and Spain was the right of the people of France and Spain to exercise their",
@@ -59408,7 +59542,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 208
+            "topic_span": 208,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59427,7 +59564,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 246
+            "topic_span": 246,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Journal of Infectious Diseases in the journal, the number of cases of a bacterial infection in hospitals in the United States is expected to continue to grow in the coming years.\n\u201cThe most significant risk factor for a bacterial infection, including severe infections, is bacterial kidney disease,\u201d said the study\u2019s lead author, Dr. Lassa D. W. Shetty, PhD, of the University Hospital of Pittsburgh Medical Center, where he was part of the study.\n\u201cWe believe that the risk of infection is reduced, but that the risk is reduced because it is very high.\u201d\nThe results of the study highlight the importance of a culture-free approach for preventing bacterial infection.\n\u201cThis is one of the great advances in the field of medicine,\u201d said Dr. W. Shetty, professor of microbiology at the University of Pittsburgh Medical Center. \u201cThe technique is simple and safe.\u201d",
@@ -59440,7 +59580,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 132
+            "topic_span": 132,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the journal Nutrients International, some experts suggest that the plant may have a beneficial effect on the growth.\nResearchers from the University of Illinois at Chicago conducted the experiment and found that the plant was able to increase the number of mitochondria in the leaves of the plant.\n\u201cThe plant has a very strong and high metabolic rate, which makes it one of the best sources of plant energy,\u201d said study co-author Dr. Charles J. Gennedy. \u201cThe plant has the ability to produce energy for many applications, including food and beverages.\u201d\nThe plant also has a high percentage of natural antioxidants, which will help protect the body against oxidative stress and help reduce the risk of heart disease.\nThis is a very important step for the future of the plant.\nThe plant is also known for the health benefits it provides by promoting the production of antioxidants.\n\u201cIn this study, plant is being tested in a number of countries,\u201d said study co-author Dr. Charles J. Gennedy. \u201cThey also tested their benefits in several different countries.\u201d\nWhile the plant is considered the best source of plant energy, the plant has a high concentration of nutrients, such as Vitamin A and B6",
@@ -59453,7 +59596,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 201
+            "topic_span": 201,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " The British Medical Journal, in the 1980s, women who had been diagnosed with HIV at age 50 or older were more likely to have a positive pregnancy test and thus had lower blood levels of the virus.\nA second study published in the American Journal of Obstetrics & Gynecology (AAC) found that HIV was associated with higher levels of \u201csevere negative pregnancy\u201d.\nThese findings, along with the findings of other researchers, suggest that women who had been diagnosed with HIV during pregnancy may have higher rates of negative pregnancy.\nThe study authors claim that women who had been diagnosed with HIV during pregnancy are at a higher risk of having a positive pregnancy test and therefore, be advised to take HIV prevention education.\nThe study has found that women who had been diagnosed with HIV during pregnancy had lower rates of negative pregnancy tests and also had higher rates of negative pregnancy tests.\nThis study is important because it is a great way to understand the risks of HIV-positive pregnant women and the long-term benefits of using a condom during pregnancy.",
@@ -59466,7 +59612,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 182
+            "topic_span": 182,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the journal Science, the levels of protein and fat in the blood were more similar to those in subjects with normal blood cholesterol levels.\nThe researchers also found that the higher levels of protein in the blood were more likely to affect the heart and blood pressure, as well as in the brain and heart, the researchers found. The study results are published in the journal Circulation.\nThe research was also published in the journal Circulation.",
@@ -59479,7 +59628,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 81
+            "topic_span": 81,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59498,7 +59650,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 186
           },
           {
             "text": " 2,500 meters and rises to an altitude of 2,000 meters. The mountain is also surrounded by a mountain range of 4,000 metres.\nThe height of the peak is 1,350 meters, or 3,000 metres.\nThe largest mountain of the mountain, the Ganges. It is located on the south bank of the river Ganges.\nThe summit of the mountain is in the centre of Ganga. The summit is located at the northern edge of the Ganges river.\nThe summit of the Ganges River. It is located in the city of Ganga.\nThe summit of Ganges river. It is located at the southern edge of Ganges.\nThe summit of the mountain is called \"the Ganges\". The summit is about 2,500 meters above sea level.\nThe highest point of the mountain is called \"the lake Ganges\".\nThe mountain is about 0,500 meters above sea level. The summit is about 11,900 meters above sea level and the summit of the mountain is 1,000 meters above sea level.\nThe summit of the mountain is about 2,000 meters above sea level. The summit of the mountain is about 4,000 meters above sea level and the summit is about 3,000",
@@ -59511,7 +59666,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 239
+            "topic_span": 239,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 4,000 feet, and runs down the slopes. The mountain is in a small mountain range, so the height is close to the peak, so that it is more rugged. The mountain is covered with snow, and the snow is covered with snow. The mountain is covered with snow, but the snow is not in the area where the snow is.\n- To the south, there is a mountain range called the Himalayas: the western mountain ranges of the Himalayas, the northern region of the Himalayas, and the northern regions of the Himalayas. It is a narrow mountain range, called the mountain range, and is the only feature of the Himalayan Mountains.\n- It is called the Himalayas, and is one of the world\u2019s longest mountain ranges. It is also the second longest mountain range in the world, and the highest point in the Himalayas.\n- The Himalayas are a group of mountains that form in the Himalayas. They are located in the Himalayas, in the Himalayas. It is also the third largest mountain in the world, and is home to many other countries.\n- The Himalayas is a group of mountain ranges that form in the Himalay",
@@ -59524,7 +59682,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 249
+            "topic_span": 249,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 4,000 feet and rises to about 800 feet in the south. The mountain is the third highest mountain in the world, and is the largest of the highest mountains in the world. The height of this mountain is 4,500 feet and rises to about 9,000 feet.\nThe mountain is bordered by the Atlantic Ocean to its south and east to the Pacific Ocean to the east and west to the Pacific Ocean to the east and south to the Mediterranean Sea to the west. The most important peak of the mountain is Mount Vesuvius. The mountain is on the slopes of a mountain and is surrounded by a mountain range. The mountain is known as the \"Pountain of the Rain\" or \"Pountain of the Thunder\" because it is the highest mountain in the world. The mountain is surrounded by a mountain range. The mountain is the highest mountain in the world.\nThe mountain has the same name as the mountain because it is the highest mountain in the world and is often called the \"Pountain of the Thunder\". The mountain is also called the \"Pountain of the Storm\".\nThe mountain is also called the \"Stomachi\" because it is the highest mountain in the world, and is the largest mountain in the world. The mountain has a",
@@ -59537,7 +59698,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 1,000 feet in the north. The height is 9,000 feet, and it is the highest mountain in the world.\nThe mountain is also the highest point in the world. The highest point is Mount Everest. The summit of Mount Everest is the highest point in the world, and it is the highest point in the world.\nIs Mount Everest the highest mountain in the world?\nMount Everest is a mountain in the sky. It is located in the east of the world, and it is the highest point of the world.\nMount Everest is a mountain in the west of the world. It is the highest mountain in the world, and it has a height of 7,500 feet and a height of 2,000 meters.\nIs Mount Everest the highest mountain in the world?\nMount Everest is the highest mountain in the world, and it is the highest peak in the world. It is the highest mountain in the world, and it is the highest point in the world.\nIs Mount Everest the highest mountain in the world?\nMount Everest is the highest mountain in the world, and it is the highest mountain in the world. This mountain is the highest mountain in the world, and it is the highest mountain in the world.\nIs Mount",
@@ -59550,7 +59714,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59569,7 +59736,10 @@
             "loop_onset": 156,
             "loop_period": 49,
             "topic": 0.3333333333333333,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 32
           },
           {
             "text": " were:\n- At least three students from the first semester (7th grade, 13th grade, 16th grade, and 16th grade) who participated in the final exam:\n- At least two students from the second semester (8th grade, 13th grade, and 17th grade), who are enrolled in organic chemistry.\n- At least two students from the first semester (16th grade, 13th grade, and 16th grade), who are enrolled in the first semester, who are enrolled in the second semester and are enrolled in the final exam.\n- At least two students from the third semester (16th grade, 13th grade, and 16th grade) who are enrolled in the final exam.\n- At least two students from the third semester (8th grade, 13th grade, and 17th grade) who are enrolled in the final exam and are enrolled in the final exam.\n- At least two students from the fourth semester (8th grade, 13th grade, and 17th grade) who are enrolled in the final exam.\n- At least three students from the seventh grade (12th grade, 13th grade, and 17th grade) who are enrolled in the final exam.\nThe students who were enrolled",
@@ -59582,7 +59752,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " are:\n- A scientist who was previously a professor at the University of California, Los Angeles;\n- A student who has been studying the topic in organic chemistry for the past 6 years;\n- A student who has taken the course after 6 years of teaching;\n- A student who has taken the course after 6 years.\nIf you are preparing for the final examination from the last semester, a student who has taken the course after 6 years is probably not an organic chemistry expert. You may need to study organic chemistry with a teacher or professor.",
@@ -59595,7 +59768,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.7777777777777778,
-            "topic_span": 106
+            "topic_span": 106,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " would be required to take the chemical courses in the semester, but this is not the first time the students have had a chance to take the chemical course.\nThe students will study the physical properties of the organic compounds and the compounds that make up the molecules, but will also study the chemical structure of the organic compounds.\nIt is important for the students to understand that the students will study the chemical structure of the organic compounds in the course.\nThe students can take the chemical courses with the help of the lab work.\nThe students can take the chemical courses with the help of the lab work.",
@@ -59608,7 +59784,10 @@
             "loop_onset": 88,
             "loop_period": 16,
             "topic": 0.3333333333333333,
-            "topic_span": 112
+            "topic_span": 112,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": ".\nThe students also took part in the work of the class at the end of the semester.\nThe class was so very close that the students were all in the same class but the instructor was so quiet that they had to sit in the same room that they could only get a little more comfortable.\nThe students were so quiet that they were so engaged in the work that they were able to put the entire class together.\nThis made the class work extremely interesting. It led to the students having to make time for the work and to have fun. The students were so engaged that they had to work hard at the work and the class was very focused on their work.\nWith the students still in class, they had the opportunity to learn from the class. This allowed them to develop their skills and knowledge in the class.\nThe students felt that they could learn more and that they would get better at the work and the work and they would be able to work with different people.\nThe students were so very excited to learn from the class. They were really excited to learn more. The students were excited and excited to be done with the work.\nThis made the students think about what they could do and how they could make better choices. The students were very",
@@ -59621,7 +59800,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.1111111111111111,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59640,7 +59822,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the French government began to declare independence from the French monarchy. The French government, in response to the French Revolution, was in control of the French territories that had previously been part of the French Empire.\nBy 1789, however, the French government began to declare independence from the French crown. The French government, however, was unable to control the French territories that had previously occupied what was now the French capital, Paris. The French government had already declared independence from the French crown in 1789, leaving the French population of 1.5 million people without a permanent home.\nThe French government also, in response to the French Revolution, had the French government to declare independence from the French crown. As a result, the French government had to declare independence from the French crown until 1789, when the French government was overthrown.\nThe French government was led by the French government, and it was the government that declared independence from the French crown. The French government was responsible for the government's actions, and was responsible for the French government's decisions. The government was responsible for the French government's actions, and was responsible for the French government's decisions.\nThe French government was led by the French government, and the French government was overthrown in 1789. The",
@@ -59653,7 +59838,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 247
+            "topic_span": 247,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the French army commanded the French army in the French army and began to expand its arms to capture the French army in the French army.\nThe French army moved to the French capital of Mont-Savilla, where it took the place of the French Revolution. At the time, the French government was a small, relatively small, and heavily dependent power.\nFrench Revolution: Revolution of French Revolution\nIt was not until 1789, when the French government began to create an army of over 5,000 French soldiers. The French Revolution was a series of revolutions that began in 1789, lasting from 1789 to 1789.\nThe Revolution was a series of revolutions in which France was divided into a small army of about 500,000 troops. The French government in 1789 used force to support the French army and, when it disbanded, it was able to take control of the French army.\nIt was a series of revolutions that began in 1789 and ended in 1789. During this period, the French army was divided into three sections, each of which was a small army of about 400,000 troops.\nDuring this period, French soldiers were mainly cavalry and infantry, but they also had a small army of about 400,000 men.\nDuring the Revolution",
@@ -59666,7 +59854,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a young French revolutionary, Jean-Baptiste de Champagne, took over the throne of France. In 1789, Napoleon declared it a province, but the French were reluctant to give the crown. Instead, the French government decided to take a stand against the French government and demand its surrender, and the French people took over the monarchy.\nIn 1789, the French Revolution was known as the French Revolution, which began in the French Revolution in 1789. The French government was accused of trying to overthrow the monarchy and maintain the monarchy, but the French people were not able to resist the French government.\nThe French Revolution of 1789-1789 took place in Paris, where it ended in defeat. The French government was able to control the country, but the government was unable to control the entire country. Instead, the government was made up of the French nobility and the aristocracy, who were able to suppress the rebellion, as well as the monarchy itself.\nThe French Revolution of 1789-1789 was a powerful and successful one. It was a period of political upheaval and social unrest, and it was an attempt to break free from the monarchy. The government was able to take control of the country, and it was able to give it back.\n",
@@ -59679,7 +59870,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 199
+            "topic_span": 199,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " French troops seized the French city of Paris. The French and Prussian governments were outraged and the French were forced to take the city\u2019s inhabitants. The French were outraged and the French were forced to take the city. The French Revolution turned into a civil war. The French government took the city\u2019s citizens from the Bastille to Paris. These people were called \u201cThe Bastille\u201d, meaning a piece of land that had been used as a prison for the French.\nThe French Revolution had a huge impact on the world today. It changed the world. It changed the way we live, learn, live, etc. The French Revolution was a huge event. It changed the world. It changed the world. It changed the world. The world today is a place where people can live and learn.\nThe French Revolution is a great example of how we can live our lives in the world today. It is a great example of how we can live our lives in the world. It is the best example of how we can live our lives in the world today. It is the best example of how we can live our lives in the world today.",
@@ -59692,7 +59886,10 @@
             "loop_onset": 201,
             "loop_period": 17,
             "topic": 0.6666666666666666,
-            "topic_span": 170
+            "topic_span": 170,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 165
           }
         ]
       },
@@ -59711,7 +59908,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 247
+            "topic_span": 247,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " has a strong center of gravity and is capable of generating all the forces necessary to support the body.\nThe heart is a complex system that requires two different forms:\n1. The heart\u2019s pumping action, which in turn produces alternating electrical currents \u2013 the heart\u2019s pumping action (in electrical currents) and the heart\u2019s pumping action (in electrical currents).\nThe heart is made up of six chambers; the heart chambers are each a unique combination of the two chambers. Each chamber has a unique mechanical mechanism that allows the electrical current to flow through the heart.\nThe heart also pumps blood through the heart to transport the blood from the lungs to the brain.\n2. The heart\u2019s pumping action, which is a combination of electrical currents, is a key factor in the heart\u2019s pumping action.\nThe heart receives an electrical impulse that is activated by the blood, and the heart contracts to generate electrical energy \u2013 the electrical energy that drives the electrical activity of the heart.\nThis energy is then pumped to the heart to pump blood to the muscles of the heart.\nThe heart is an amazing system. It is made up of two chambers, one of the heart\u2019s pumping action (in electrical currents) and one",
@@ -59724,7 +59924,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 244
+            "topic_span": 244,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " pumps oxygen and nutrients through the bloodstream to the body. The heart is primarily responsible for pumping blood into the lungs and filtering out carbon dioxide, the main greenhouse gas produced by the human body.\nThe kidneys, the muscles, and the liver are the organs that need the most energy. However, there are also other parts of the body that play a key role in regulating blood flow. Blood pressure and cholesterol levels are regulated by the heart.\nThe heart is a complex network of arteries that supply oxygen and nutrients to our body, the cells in the heart. The heart\u2019s main function is to pump blood to the lungs to supply oxygen and nutrients to the body.\nThe heart also provides oxygen, blood to the brain and the rest of the body. It pumps oxygen throughout the body, helping to keep the blood flowing throughout the body.\nThe heart is a complex network of arteries that supply oxygen and nutrients to the body, such as the heart, lungs, and blood vessels.\nThe heart\u2019s main function is to pump blood to the lungs, where it is used to deliver oxygen and nutrients to the body\u2019s cells. The heart also pumps oxygen and nutrients to the lungs, where they are used to deliver oxygen and nutrients to the muscles,",
@@ -59737,7 +59940,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 234
+            "topic_span": 234,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " enables the muscles to contract and contract with each heartbeat. The heart is designed to pump the blood, oxygen, and nutrients from the air.\nThe heart is the primary organ that helps keep the heart healthy. It is important for healthy heart function because it helps prevent the buildup of harmful toxins and toxins in the blood. Heart disease is the most common cause of premature death in the United States. Most people die from heart disease, but it can be prevented with good heart health habits.\nIn order for the heart to function properly, it needs the right blood vessels. The blood vessels in the heart need to work harder to keep the heart beating and to keep blood flowing, so the heart beats faster. The heart muscle cells need to contract to pump the blood, which is then pumped through the arteries to the brain. When the heart contracts, the blood flows into the brain, which is responsible for producing the electrical signals that signal the heart to pump the blood. The heart also needs to work harder to keep the blood flowing.\nThe heart needs to be able to pump blood from the lungs to the rest of the body. The heart also needs to work harder to keep the blood flowing. The heart needs to work harder to keep blood flowing, so it needs to work harder",
@@ -59750,7 +59956,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 241
+            "topic_span": 241,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " allows blood to flow through the lungs, and it pumps blood into the lungs.\n- The heart pumps the blood into the lungs to supply oxygen to the body.\n- The heart pumps blood to the muscles and organs of the body. Oxygen is used for the breathing process and to deliver oxygen to the body.\n- The heart pumps blood to the lungs for oxygenation.\n- The heart pumps blood to the lungs.\nThe heart pumps blood to the muscles and organs of the body. The heart pumps blood to the muscles and organs of the body.\nThe heart is a muscular organ that pumps blood to the muscles and organs of the body.\nThe heart pumps blood to the muscles and organs of the body.\nThe heart is a muscular organ that pumps blood to the muscles and organs of the body.\nThe heart is a muscular organ that pumps blood to the muscles and organs of the body.\nThe heart pumps the blood to the muscles and organs of the body.\nThe heart pumps blood out of the lungs.\nThe heart pumps blood to the muscles and organs of the body.\nThe heart pumps blood to the muscles and organs of the body.\nThe heart pumps blood to the muscles and organs of the body.\nThe heart pumps",
@@ -59763,7 +59972,10 @@
             "loop_onset": 209,
             "loop_period": 14,
             "topic": 0.75,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 169
           }
         ]
       },
@@ -59782,7 +59994,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Amazon River, and is the source of the rivers and the river's major river. The river is divided into three zones. The central and southern region, which is characterised by the highest concentration of river water, is the upper-most region of the Amazon, which is characterised by a high-elevation and low-lying area.\nThe Amazon river flows through the Amazon River and reaches a maximum of 2,500 metres (3,300 ft) in the Amazon River. This is a major river basin, and is the second largest river basin. In the Amazon, the river reaches a maximum of 2,200 metres (3,200 ft) in the eastern part of the Amazon basin, and reaches an average depth of 5 metres (4.1 ft) in the western part of the Amazon basin.\nThe Amazon River is the longest river in the world, and is the longest river in the world. It flows in about 1,500 metres (5,300 ft) in the eastern part of the Amazon River, and reaches an average depth of 7,500 metres (5,000 ft) in the western part of the Amazon.\nThe river carries the largest river in the world, but is also the longest river in the world,",
@@ -59795,7 +60010,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Amazon River. The river is a tributary of the Amazon River that was previously the source of the Amazon River. The Amazon River carries water through the Amazon River that passes through the Amazon River and through its tributaries.\nThe Amazon River is considered the world\u2019s largest river, and has the largest average life span of any country in the world. It is the fourth-largest river in the world and the seventh-largest in the world.\n\u201cThe Amazon River\u201d is the second longest river in the world, and it\u2019s the second longest from the world\u2019s longest to the longest, in terms of length, and it\u2019s the longest flowing river in the world.\nThe Amazon River is the longest river in the world and has the longest life span of any country in the world.\nThe Amazon River is the longest water in the world and has the largest average life span of any country in the world.\nThe Amazon River is a tributary of the Amazon River, which is the longest river in the world. It is the longest river in the world and has the longest life span of any country in the world.\nThe Amazon River is the longest river in the world and is the longest",
@@ -59808,7 +60026,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 249
+            "topic_span": 249,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a narrow river at its foot, a waterway that runs a narrow way.\nThe river is a source of water for millions of people around the world.\nThe waterway lies just south of the river's edge.\nA river is an artificial flow, a river that flows through a narrow, narrow channel and is often seen in the form of a street in the middle of a city.\nThe river is a source of drinking water for many people across the world.\nThe river flows through a narrow, narrow channel, which is often seen as a river, and is often seen in the form of a street.\nThe river was designed originally as a bridge between the Mediterranean and Western seas.\nThe river is one of the most important navigational waterways in the Mediterranean.\nThe river is a navigational waterway, which flows through a narrow and narrow channel and is often seen in the form of a street.\nThe river's flow, which is also known as the Nile River, runs through a narrow, narrow channel, known as the \"bow of the Nile\", which is the longest river in the world.\nThe river is also a popular destination for boat-racing, boat-racing, and other recreational activities.\nThe river offers",
@@ -59821,7 +60042,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a tributary of the Missouri River. The stream is fed by a river, which flows into the Pacific Ocean. The Colorado River flows through the Arkansas River, where the Colorado River, which flows into the Missouri River, flows into Utah.\nThe Colorado River flows through the Missouri River, with a peak on the west side of the river. This river flows through the Colorado River from Denver to Colorado Springs. The Colorado River flows through the Colorado River, reaching the Colorado River at the mouth of the Missouri River. It flows through the Colorado River, passing through Utah.\nThe Colorado River flows in a tributary of the Missouri River, where it flows into the Colorado River. The Colorado River flows through the Colorado River, passing through the Colorado River, passing through Utah.\nThe Colorado River flows through the Colorado River, passing through Utah. The Colorado River flows through the Colorado River, passing through Colorado Springs, and reaching the Colorado River at the mouth of the Colorado River.\nThe Colorado River flows through the Colorado River, passing through Utah. The Colorado River flows through the Colorado River, passing through Utah. The Colorado River flows through the Colorado River, passing through Utah.\nThe Colorado River flows through the Colorado River, passing through Utah. The Colorado River flows",
@@ -59834,7 +60058,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 185
           }
         ]
       },
@@ -59853,7 +60080,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a number that gives a number. For example, a prime number is the number of integers in an integer that is prime.\nThe prime number is the number of integers that have a prime number. In mathematics, prime numbers are numbers that have prime numbers that are prime numbers.\nPrime numbers are the number of numbers that can be added to a number or a base number or other numbers that are prime numbers.\nPrime numbers are numbers that have a prime number. For example, if a number is divisible by 6, the number of prime numbers will be 1.\nPrime numbers are numbers that have a prime number. Examples of prime numbers are integers, prime numbers, and integers.\nIf a number is divisible by 6, the prime number is divisible by 6. For example, if a number is divisible by 6, the number of prime numbers is 6.\nPrime numbers are numbers that have a prime number. Examples of prime numbers include integers, prime numbers, and integers.\nA prime number is a prime number that has a prime number. For example, if a number is 9, the prime number is 9.\nPrime numbers are numbers that have a prime number. For example, if the number is 12, the prime number is 6",
@@ -59866,7 +60096,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a number that is prime numbers. Thus the prime numbers are called prime numbers because they have the lowest common denominator of any prime number.\nTo calculate prime numbers, you multiply the number by the largest common denominator. If you do this, the number will be divisible by the largest common denominator. For example, multiply 8 to the divisor by 6 and multiply it by 3.\nA prime number is a number that is divisible by itself. It is a prime number because it is divisible by itself. For example, 10 is divisible by 2 and 9 is divisible by 2.\nThe prime number is the sum of the smallest common denominators of any number. The prime number is the largest number that has no remainder. The prime number is the sum of the smallest common divisor of any number.\nThe number that you have in your home is called the prime number. For instance, the number 9 is divisible by 3.\nPrime Numbers in Math\nPrime numbers can be used to solve complex numbers, including integers, decimals, and even whole numbers. They are easy to use and can be easily understood by anyone who works with them. The prime numbers in math are written in a clear and understandable way",
@@ -59879,7 +60112,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 246
+            "topic_span": 246,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a number which is a constant, i.e. a constant, which is a number which is equal to the number that is given by the prime number.\nA prime number is a finite number which is a number which is a constant. The prime number is a number which is a constant which the prime number is.\nAn example of a prime number is given by:\n- 6 = 7\n- 9 = 8\n- 12 = 7\n- 9 = 8\n- 10 = 9\n- 11 = 9\n- 12 = 9\n- 13 = 8\n- 14 = 9\n- 15 = 9",
@@ -59892,7 +60128,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 72
+            "topic_span": 72,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " an integer that contains a prime number.\n- The number of integers in the prime numbers\n- The number of integers\n- A prime number is a collection of numbers that contains a prime number.\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers",
@@ -59905,7 +60144,10 @@
             "loop_onset": 40,
             "loop_period": 10,
             "topic": 0.6666666666666666,
-            "topic_span": 130
+            "topic_span": 130,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 1
           }
         ]
       },
@@ -59924,7 +60166,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 120
+            "topic_span": 120,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " climate and the ability of people to adapt to new climate conditions.\nIn addition to extreme weather, climate change is also a serious threat to the natural climate system and to vulnerable populations. Climate change has the potential to disrupt migration patterns in many parts of the world, including Asia, Africa and South America.\nClimate change also has negative impacts on health and development, such as increased cancer risks and increased mortality rates in Europe and Asia.\nClimate change can also have negative impacts on health and development. For example, climate change may cause economic loss in vulnerable regions, such as the UK, which is expected to double by 2050.\nClimate change is also a serious threat to the natural world. For example, the effects of climate change are likely to be severe, including increased flooding and erosion.\nClimate change also has many negative impacts on development and public health. For example, changes in the climate in Asia and Africa could lead to increased vulnerability to severe natural weather events, such as flooding.\nClimate change can also have negative impacts on the health of individuals and communities. For example, it can increase the odds of heart attacks by increasing the risk of stroke and heart attacks by 90%, and can also cause premature death by 30%.\nClimate change has also negative impacts on people",
@@ -59937,7 +60182,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Earth's climate.\nThe effects of climate change are more uncertain than many people think. It is hard to imagine a future where the consequences of climate change are so uncertain.\nClimate change is changing climate at a faster rate than any other aspect of the climate change process. It is a complex, multifactorial process.\nThis is a long-term, complex process that requires long-term planning and action.\nThe changes that occur in climate change are more difficult than the changes that occur in other aspects of the climate system.\nThe change is the product of a complex combination of factors. These factors include climate change, the change in the past, and local climate change.\nThe climate change process is complex and complex. It is complex and complex.\nClimate change is a complex process that involves many factors. It is a complex process that requires a complex combination of factors.\nClimate change is the result of complex factors. It is a complex process that requires long-term planning and action.\nClimate change refers to changes in the Earth's climate, such as changes in the Earth's climate, changes in the Earth's climate, and changes in the Earth's climate.\nClimate change is a complex and complex process that requires a complex combination of factors",
@@ -59950,7 +60198,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.8333333333333334,
-            "topic_span": 243
+            "topic_span": 243,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " temperature and precipitation, which are often accompanied by extreme weather events, such as hurricanes and flooding.\nUnderstanding Climate Change and its Impact on Climate\nClimate change has affected the climate and how it impacts climate change. Climate change is also a major concern for individuals who rely on fossil fuels and natural gas to power their homes.\nClimate change has already affected the temperature, water levels, and the amount of precipitation that has been captured and stored in the rivers and streams, and the amount of water that has been captured and stored to power our homes.\nClimate change has also caused changes in precipitation patterns, such as the increased frequency of extreme weather events.\nClimate change has also impacted the way we use energy and water. Climate change affects how energy is used, how it is used, and how it is distributed across the globe.\nClimate change has also affected the way we approach our climate change understanding. Climate change is a complex phenomenon, and it can be complex and interdependent.\nClimate change has also affected the way that we use energy, water, and other resources. Climate change is also affecting how we use energy, water, and other resources.\nClimate change is already affecting the way we use energy, water, and other resources. For example, the use of",
@@ -59963,7 +60214,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 235
+            "topic_span": 235,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Earth\u2019s climate, but not to the impacts of climate change.\nAs the climate crisis shifts, the likelihood of the event happening outside the planet\u2019s boundaries is projected to increase. As the climate warms, the risk of the event going up is predicted to increase.\nThe report noted that many of the world\u2019s most vulnerable countries are facing a rapid increase in extreme weather events.\n\u201cWe\u2019ve seen the greatest increase in extreme weather events, such as tornadoes, floods and drought events, in the past decade,\u201d said Dr. Peter Zuckerman, the Director of the National Oceanic and Atmospheric Administration\u2019s Climate Change Adaptation and Mitigation Institute.\n\u201cWe need to make these predictions more precise,\u201d said Zuckerman.\nDr. Zuckerman said the report\u2019s findings indicate that in the coming decades, most of the world\u2019s developing countries will have to adapt to the climate crisis.\n\u201cThe United States will be a net importer, but if this is not possible, we\u2019ll be taking action to keep the world safe from the effects of climate change,\u201d said Dr. Zuckerman.\n\u201cThe",
@@ -59976,7 +60230,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 242
+            "topic_span": 242,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59995,7 +60252,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 137
+            "topic_span": 137,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to boil it. If you can\u2019t boil the bread, you will need to boil it.\nTo make bread, you will need to boil the rice bowl. This will remove the rice from the bowl and allow it to stand still.\nHow long can this food stay in the fridge?\nOnce you have boiled the rice bowl, you can add some sugar and vinegar.\nThe sugar will stay in the bowl for about 4 to 5 minutes, until the rice is completely dissolved. The sugar will remain in the rice bowl for 3 to 5 minutes.\nHow long can it stay in the fridge?\nThe number of days it can stay in the fridge for up to 3 days depends on the quality of the food and the type of food you are eating. Most people will go to the refrigerator for up to 4 hours. However, some people can go to the fridge for up to 5 hours.\nCan I eat bread without an oven?\nIt is possible to eat bread without an oven, but it is not an ideal food for everyone. With an oven, you can usually find out where you are going or how many you need to cook.\nHow long can it stay in the fridge?\nThe fridge will last until it is empty.\n",
@@ -60008,7 +60268,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 232
+            "topic_span": 232,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to be able to make the bread in the oven or the oven.\n- Place the dish into a cup. You can pour the bread in the oven while it\u2019s still hot.\n- Turn the oven clock back on.\n- After you\u2019ve finished the baking, you may need to leave it overnight.\n- Use the oven to work the bread.\n- You can also make the bread with the food.\n- It can be done in the oven or the oven.\n- You can also make the bread in the oven.\n- After you\u2019ve done the baking, you can put the bread in the oven.\n- You can also make the bread with the food.\n- The bread is made with the bread.\n- The bread is then cooked.\n- You can make the bread from the food.\n- You can also make the bread.\n- You can also make the bread from the food.\n- You can make the bread bread by using the oven.\n- You can also make the bread.\n- You can also make the bread using the food.\n- You can also make the bread with the food.\n- You can also make the bread by using the food.\n",
@@ -60021,7 +60284,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to cut down on the flour to make more flour. The next two to three days will be spent adding flour to the bread, and then the next week you will be baking bread.\nTo bake bread in a dish, you will need a flour, which is made out of flour and sugar, and the flour will make dough for you.\nAfter a few days, you will need to add flour to the bread, and the next day you will add flour to the loaf.\nThere is no need to do anything. It is just a matter of time before you need to bake bread.\nYou can bake bread by making the bread in a bowl, or by using a small amount of flour.\nYou can bake bread using the same flour recipe as you do in the kitchen.\nBefore you can bake bread, you will need to make the bread.\nThe bread will be made out of flour and sugar, and the flour will be made out of flour.\nThe bread will be made out of flour, and the bread will be made out of flour.\nYou will need to add flour to the bread, and the first two days.\nYou can make bread from a piece of bread, which is made out of flour.\nThe bread will be",
@@ -60034,7 +60300,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to bake at least two hours prior to serving. In general, however, you should use a small amount of baking soda and 1/2 teaspoon of baking soda per week.\n- Make a small pot of flour with the spoon and fork.\n- Bake at 350 degrees F.\n- Bake at 350 degrees F.\n- Bake at 350 degrees F.\n- Bake at 350 degrees F.\nThe next time you can have a little baking soda, think again!\n- If you have a recipe for bread, you can make it in the microwave.\n- You can also bake bread with a spoon and fork.\n- If you can find the recipe you want to bake, you can make the bread in the microwave.\n- If you can find the recipe you want to bake, you can use a table spoon and fork.\n- If you can find the recipe you want to bake, you can also bake a bread.\n- If you can find the recipe you want to bake, you can also use a spoon and fork.\n- If you can find the recipe you want to bake for a few minutes, you can also bake a large pot of bread.\n- You can also bake a bowl of bread.\n- If you can",
@@ -60047,7 +60316,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -60066,7 +60338,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 98
+            "topic_span": 98,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " his plays, the works of Shakespeare, and his plays. Shakespeare wrote thousands of plays, many of which were also plays.\nWilliam Shakespeare's plays are a significant part of the playwright's repertoire. One of Shakespeare's most famous plays is The Tempest. Shakespeare developed the first English language play, The Tempest, in the 16th century. Since Shakespeare's time, he has written many plays, including Romeo and Juliet, and plays in Shakespeare's play, The Tempest.\nWilliam Shakespeare's plays are popular because of their plot. They are also popular because of their plot. They are written in the 16th century, and Shakespeare wrote many plays.\nWilliam Shakespeare's plays are popular because they are a significant part of the playwright's repertoire. They are important because they have a rich history and are a significant part of the playwright's repertoire.\nWilliam Shakespeare's plays are not limited to the plays of Shakespeare. They are also important because they have a wide and varied audience.\nWilliam Shakespeare's plays are popular because of their plot. They are very important because they have a rich history and are a significant part of the playwright's repertoire. They are a significant part of the playwright's repertoire.\nWilliam Shakespeare's plays are important because they have a",
@@ -60079,7 +60354,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " The Tempest. Shakespeare wrote many plays, including the plays of Shakespeare and Shakespeare's comedies, including the play of William Shakespeare.\nWilliam Shakespeare: The Poems of William. William Shakespeare's The Tempest is a play written by William Shakespeare that tells the story of the play's life, from his early days as a young man to the age of seven. The play is considered a masterpiece, and many critics have speculated about its tragic development from the perspective of the playwright and actor alike. The play was written in the context of Shakespeare's life and plays, and the events that led to the play's death.\nWilliam Shakespeare: The Tempest\nWilliam Shakespeare's play was written in the context of Shakespeare's life and plays, and the events that led to it are considered a masterpiece. William Shakespeare's famous tragedy The Tempest is a play written by William Shakespeare that tells the tragic story of the tragic death of a young man. The play was written in the context of Shakespeare's life and plays, and the events that led to the play's death were considered a masterpiece. William Shakespeare is considered one of the greatest dramatists of the entire play, and his works have been considered a masterpiece.\nWilliam Shakespeare: The Tempest\nWilliam Shakespeare's play, \"The Tempest",
@@ -60092,7 +60370,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Shakespeare's Hamlet and the Merchant of Venice. Shakespeare was born in Stratford, England, in 1514, and his love affairs brought him to the attention of his contemporaries, notably Shakespeare and Samuel Lanfranco, who had been the subject of his plays. Shakespeare wrote more than half of his plays, including Hamlet and the Tempest, his most famous sonnets, and others, along with many of his many other plays.\nAlthough the title was later changed to Hamlet, the character names were not given to the title until the 19th century. Hamlet\u2019s play was not originally published until the 1920s. It was first published in the New York Times in 1929, and was published as a four-piece play by Shakespeare. It was written at the time of Shakespeare\u2019s death in 1526.\nHamlet and the Tempest\nHamlet\u2019s play was written in the late 1600s, when he was accused of being a \u201cmad man\u201d and was hanged for his crimes. He was accused of running for office and having two children, a son and a daughter. Hamlet was a nobleman, and he was the son of the wealthy king, King Hamlet, and a daughter of the king.",
@@ -60105,7 +60386,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.16666666666666666,
-            "topic_span": 161
+            "topic_span": 161,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Romeo and Juliet, and the English language, as well as many Shakespeare plays. Shakespeare's use of the word \"play\" in his plays was not in his own right until the playwright Henry V wrote his plays in Shakespeare's time.",
@@ -60118,7 +60402,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 45
+            "topic_span": 45,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -60137,7 +60424,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 175
+            "topic_span": 175,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the mid-1960s, where the researchers were able to gather information on the internet and make recommendations on what to do with the information they gathered.\nThe results of the research were published in the journal \u201cTechnology\u201d.\nSome of the most important findings of the project were:\n- The use of a smartphone to control the internet use was a new research tool, called the \u201cInternet of Things.\u201d\n- The Internet of things was used to gather information about the internet and to inform people about how to use it.\n- The Internet of things was used to store information about the internet and to access information about the world.\n- The researchers used the Internet of Things to create a new website for the Internet of things.\nThe Internet of things is a huge and growing research project that has taken the world on a global scale. It has taken the form of a project that has been done in a number of countries.\nThe Internet of Things is the result of a series of research projects. The research project is the first of its kind that is being conducted in a number of countries.\nThe research is done by the Internet of Things:\n- The Internet of things (IP) is the most important research tool in the Internet",
@@ -60150,7 +60440,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the 1980s and was funded by the Bill & Melinda Gates Foundation. The project was funded in part by the Department of Defense and the Department of Energy.\nThe project was started on March 11, 1986 and was funded by the Office of Naval Research.\nThe project was started in 1990 and started in 1990 with the development of a new satellite system, which is called \"E.ONT.\" The new satellite is known as E.ONT, and is equipped with the latest and most advanced software and hardware.\nThe main purpose of the project is to test the satellite system and monitor the weather conditions in the area. The system is designed to be operated by a satellite service provider and run in a controlled manner.\nThe satellite is designed for use by the Department of Energy, as a service to a commercial or military base, for which it is designed and built.\nThe satellite is designed to support the development of military bases in the region, and to maintain the availability of resources.\nThe satellite is designed to be operated by a commercial service provider and run as a service to a commercial base.\nThe government of Japan has long been interested in the development of space technology and its impact on the world economy.\nIn 1997, the Japanese government decided that",
@@ -60163,7 +60456,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 231
+            "topic_span": 231,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the early 1990\u2019s, and the internet was the first web-based service that would take over a broad spectrum of applications and services. The internet helped develop the world of networking and the internet became the first internet service that could connect people to the internet. Today, the internet is the second-largest and fastest-growing technology in the world.\nThere are some of the reasons why the internet is so powerful. The internet has made it possible to connect people anywhere and anytime. It has made it possible to connect new people and businesses to the internet. It has made it possible to connect people to the internet without the need for a computer. The internet is a great medium for people to connect and connect with the internet. It is also a great way for people to connect with the internet.\nThe internet has also made it possible for people to connect and share information and ideas. It has made it possible for people to connect with other people on the same virtual or virtual world. The internet has helped make the internet a powerful and exciting space for people to connect and share their ideas and ideas.\nOne of the reasons why the internet is so powerful is that it has made it possible for people to connect with the internet without the need for a computer. The internet",
@@ -60176,7 +60472,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the late 1960s and early 1970s that allowed the internet to grow. Most major U.S. cities and universities were based in the US. Some developed in the USA and some in Canada. The internet continued to grow as a result of the growth of the internet.\nThe internet started to become a major factor in the world. It was the first internet application that enabled the internet to be integrated. It was based in the United States. The internet was used for the purpose of gaining information and information that could be used to create new things. The internet was used to increase the efficiency of the internet in a number of ways. It was also used to create websites, websites, and websites.\nThe internet started to become a major factor in the world today. The internet began to become a major factor in the world today. It was used to create new websites, websites, and websites. The internet became a major factor in the world today.\nThe internet started to become a major factor in the world today. It was used to create new websites, websites, and websites. The internet started to become a major factor in the world today. The internet became a major factor in the world today. The internet became a major factor in the world today. The internet",
@@ -60189,7 +60488,10 @@
             "loop_onset": 224,
             "loop_period": 11,
             "topic": 0.5,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -60208,7 +60510,10 @@
             "loop_onset": 206,
             "loop_period": 11,
             "topic": 0.5,
-            "topic_span": 203
+            "topic_span": 203,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 172
           },
           {
             "text": " the price of the goods and services increases.\nA rise in price is caused by a fall in the price of goods and services by a rise in price.\nThe economy is a unit of measurement.\nA change in the price of goods and services is a general trend that happens when the quantity of goods and services increases.\nGrowth in money\nGrowth in money is caused by a rise in the price of goods and services.\nA decrease in the price of goods and services is a change in the price of the goods and services.\nThe price of goods and services is the price of the goods and services and the price of the goods and services.\nThe money supply is the supply of the goods and services and the supply of the goods and services are the supply of the goods and services.\nThe value of money is the money supply.\nThe price of goods and services is the price of the goods and services and the price of the goods and services is the price of the goods and services.\nThe price of goods and services is the price of the goods and services and the price of the goods and services is the price of the goods and services and the price of the goods and services.\nThe price of the goods and services is the",
@@ -60221,7 +60526,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 158
           },
           {
             "text": " inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is higher than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which an inflation rate is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of",
@@ -60234,7 +60542,10 @@
             "loop_onset": 212,
             "loop_period": 19,
             "topic": 0.5,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 0
           },
           {
             "text": " inflation is lower and the inflation rate is higher, and the economy is in the grip of inflation.\nGone are the days when unemployment was highest and inflation quickly began to rise.\nNow, this is just one of the biggest shocks of the year, which is when inflation rises above the pre-pandemic level.\nBut this isn\u2019t the only thing that causes inflation.\nSo, let\u2019s take a look at three things that make inflation higher than inflation.\n1. The inflation rate\nIf inflation is high, it means that the economy is in a recession. If inflation is high, people have low rates of unemployment.\nSo, inflation is the result of a combination of factors, including inflation, inflation, unemployment, and inflation.\nAlso, inflation is the result of a combination of factors.\n2. The rate of unemployment\nThere are some factors that make inflation higher than inflation.\nFor example, the rate of unemployment in the UK is higher than inflation in the EU.\nAnd, for more information about inflation, click here.\nInflation is the most important factor that causes inflation.\nThe reason being inflation is higher than inflation.\n3. The unemployment rate\nThe unemployment rate is the most important",
@@ -60247,7 +60558,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 241
+            "topic_span": 241,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " there is a rise in the prices of goods and services.\nThe following are the basic types of inflation:\n- Interest rates are the most commonly used form of inflation.\n- Interest rates are the most commonly used form of inflation.\n- Interest rates are the most commonly used form of prices.\n- Interest rates are used in many countries since the 1950s.\n- Interest rate is the most commonly used form of inflation.\n- Interest rates are used in most of the world\u2019s countries.\n- Interest rates are used in money supply and in inflation.\n- Interest rates are used in money supply and in inflation.\n- Interest rates are used in both inflation and inflation.\n- Interest rate is the most commonly used form of inflation.\n- Interest rates are used in money supply and in inflation.\n- Interest rates are used in most of the world\u2019s countries.\n- Interest rates are used in many countries since the 1950s.\n- Interest rates are used in currency markets to determine the value of commodities.\n- Interest rates are used in both inflation and inflation.\n- Interest rates are used in inflation and inflation.",
@@ -60260,7 +60574,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 236
+            "topic_span": 236,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       }

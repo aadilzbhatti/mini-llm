@@ -58826,6 +58826,23 @@
     "draws": 5,
     "summary": {
       "n": 100,
+      "degenerate": 36,
+      "degenerate_rate": 0.36,
+      "degenerate_ci95": [
+        0.273,
+        0.458
+      ],
+      "rep4_ge": {
+        "0.3": 59,
+        "0.5": 35,
+        "0.7": 10
+      },
+      "near_loops": 29,
+      "near_loop_ci95": [
+        0.21,
+        0.385
+      ],
+      "near_loop_onset_median": 115.0,
       "rep4": 0.356,
       "rep4_p90": 0.672,
       "rep4_mean": 0.373,
@@ -58859,7 +58876,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 244
+            "topic_span": 244,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " begins in the plant cell.\nThe process of photosynthesis is the process by which the plants and animals use energy from the sunlight to produce energy.\nThe plant cell consists of a nucleus which is attached to the inside of the body.\nThe plant cell consists of a nucleus which is attached to the outside of the body.\nThe plant cell consists of a nucleus which is attached to the outside of the body.\nA plant cell comprises a nucleus which is attached to the inside of the body.\nThe plant cell is made up of a nucleus which is attached to the outside of the body.\nThe plant cell consists of a nucleus which is attached to the outside of the body.\nThe plant cell consists of a nucleus which is attached to the outside of the body.\nA plant cell consists of a nucleus which is attached to the outside of the body.\nThe plant cell consists of a nucleus which is attached to the outside of the body.\nThe plant cell consists of a nucleus which is attached to the outside of the body.\nThe plant cell consists of a nucleus which is attached to the outside of the body.\nThe plant cell consists of a nucleus which is attached to the outside of the body.\nThis is the main cell of the plant",
@@ -58872,7 +58892,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 11
+            "topic_span": 11,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 87
           },
           {
             "text": " occurs after the plant leaves it to produce ATP. When the plant leaves the glucose, the plant reacts with the glucose, and so does the plant's reaction to the glucose, the plant's reaction is like that:\nThe enzyme in the plant is called glycolytic acid. It's a fatty acid that is formed when the plant's sugar is broken down to produce energy. It is a fatty acid that is broken down by a process called lipogenesis. Lipogenesis is a process where the plant's sugar is broken down and the plant's sugar is absorbed by the plant's tissues.\nThis process happens when the plant's sugar is broken down by a process called glycolysis. To make glucose, the plant breaks it down, and the plant's sugar is absorbed by the plant's tissues. The plant's sugar is then absorbed by the plant's tissues.\nThe cell's reaction to the glucose is called photosynthesis and the plant's reaction is called photosynthesis. The plant's reactions to the glucose are called photosynthesis, and the plant's reaction to the glucose is called photosynthesis.\nPhotosynthesis is a process where the plant's sugar is absorbed by the plant's tissues. Photosynthesis is a process where the plant's sugar is absorbed by the",
@@ -58885,7 +58908,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 243
+            "topic_span": 243,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " takes place in the cell respiration. The process occurs in the mitochondria, which store energy in the nucleus.\nThe process involves the transfer of energy from one cell to another. The mitochondria produce energy, and the electrons, which are used in the process, can be seen by the light they emit.\nThe process of photovoltaics is a process that uses photons from the sun to generate electricity. The light that is produced by the photovoltaic cells is converted to solar energy.\nThe process involves the transfer of energy from one part of the solar cell to another. The energy is used to produce electricity.\nThe process involves the transfer of energy from one part of the solar cell to another. The energy that is used to produce electricity is used to make electricity.\nThe process of photovoltaics is a process that uses photons from the sun to produce electricity.\nSolar energy is the energy produced by solar cells.\nThe process of photovoltaic cell is a process that uses photons from the sun to produce electricity. Photovoltaics is a process used to convert the energy from one part of the solar cell to another.\nThere are many different types of photovoltaic cells, and each has its",
@@ -58898,7 +58924,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 247
+            "topic_span": 247,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " involves the breaking down of a larger molecule into smaller components.\nThe word \"cell\" is derived from the Greek word \"cella\" and was used to describe the organisms that live in the ground. It is also used in the Greek word \"gene\", which means \"skeleton\", and \"bacteria\" in the Greek word \"bacteria\".\nIt is believed that the life of a plant was influenced by the way that plants evolved. The plant evolved from an ancestor of a plant-eating plant-eating ancestor.\nIn the past, many scientists have studied the structure of plants and discovered new ways to explain their evolutionary history. This includes the ability to sense the structure of the plant's cells.\nIt is believed that these structures are adaptations to the changing environment of the plant. This is because the plant has evolved to adapt to the environment and to thrive in a particular environment.\nThis is also one of the reasons why plants are known to be herbivores. The plant has a very large surface area and is able to use light energy to grow. Because of this, plants are commonly used for heating and cooling.\nIt is believed that the plant has evolved into a form of plant-eating. This can be achieved by introducing seeds into the",
@@ -58911,7 +58940,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -58930,7 +58962,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 236
+            "topic_span": 236,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " was born on November 18, 1905, in Munich, Germany.\nHe received his bachelor's degree from the University of Munich in 1911 and the doctorate from the University of Paris in 1913. He is best known for his work on the electric field, which he believed to have made a measurable contribution to the theory of relativity.\nIn 1911, Albert Einstein was awarded the Nobel Prize for Physics.\nIn 1931, Albert Einstein was awarded the Nobel Prize for Physics. In 1936, he was awarded the Nobel Prize for Physics.\n- Albert Einstein: Life, Work, and Life, 1945-2000\n- Albert Einstein: Life, Work, and Life\n- Albert Einstein: Life, Work, and Life, 1946-2000\n- Albert Einstein: Life, Work, and Life\n- Albert Einstein: Life, Work, and Life, 1945-2000\n- Albert Einstein: Life, Work, and Life. 1945-2000\n- Albert Einstein: Life, Work, and Life - 1955-2000\n- Albert Einstein: Life, Work, and Life, 1945-2000\n- Albert Einstein: Life, Work, and Life\n- Albert Einstein: Life, Work, and Life, 1945-2000\n- Albert Einstein: Life, Work, and Life\n",
@@ -58943,7 +58978,10 @@
             "loop_onset": 203,
             "loop_period": 26,
             "topic": 0.3333333333333333,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 142
           },
           {
             "text": " believed that the universe could be made from a mixture of atoms. He believed that, while it was impossible to create a single atom, the only way to create it was through a simple process of dissolving matter. In the next chapter, Einstein discussed the possibility that the universe could be made by atomic particles.\n- The discovery of the neutron star and its companion companion, the neutron star (the neutron star)\n- The discovery of the neutron star and its companion companion, the neutron star\n- The discovery of the neutron star and its companion companion, the neutron star\n- The discovery of the neutron star and its companion companion, the neutron star\n- The discovery of the neutron star and its companion companion, the neutron star\n- The discovery of the neutron star and its companion companion, the neutron star\n- The discovery of the neutron star and its companion companion, the neutron star\n- The discovery of the neutron star and its companion companion, the neutron star\n- The discovery of the neutron star and its companion companion, the neutron star\n- The neutron star and its companion companion, the neutron star\n- The neutron star and its companion companion, the neutron star\n- The neutron star and its companion companion, the neutron star\n- The neutron star and",
@@ -58956,7 +58994,10 @@
             "loop_onset": 201,
             "loop_period": 13,
             "topic": 0.0,
-            "topic_span": 49
+            "topic_span": 49,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 56
           },
           {
             "text": " became one of the foremost scientists of his time. He was particularly interested in the concept of atomic energy and the idea of a theory of gravity. He was also a member of the European Academy of Sciences which was founded in 1891.\nIn 1886, Einstein was elected president of the Academy of Science which was established in Berlin. He was also a member of the European Academy of Sciences which was formed in 1889. His name was changed to Einstein to Albert Einstein by the German physicist Friedrich Albert Einstein.\nA Brief History about Einstein\nThe Facts About Einstein\n- Einstein\u2019s birthday is celebrated every year on March 22, 2020.\n- The Einstein Day Parade is held in the city of Basel in Switzerland.\n- The Einstein Memorial is located in the city of Basel.\n- It is a day to remember all the people who helped Einstein.\n- The world\u2019s largest city is located in the city of Zurich.\n- The Einstein Memorial is located in the city of Berlin.\n- The Einstein Memorial is located on the grounds of the Berlin Memorial.\n- The Berlin Wall is the largest city on Earth.\n- The Einstein Memorial is located in the city of Munich.\n- The Einstein Memorial is located at the intersection of the",
@@ -58969,7 +59010,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.16666666666666666,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " became the first person to understand the laws of quantum mechanics, which he called quantum mechanics. He was also the first person to observe the behavior of quantum particles, which he called quantum-mechanical interactions.\nAlbert Einstein (1858-1934) was born in Germany, in 1904. The youngest child of a Polish-born physicist, Albert Einstein, and his wife, Marie-Monique, the child was a German physicist and a German physicist. Einstein, though, had a difficult time with chemistry, and his mother was a chemist in high school. Einstein was educated at the University of Zurich in 1891 and went on to work with physicists in Berlin, the first of which was in Paris. He was the first to study quantum mechanics, and he began to study the behaviour of quantum particles. He became interested in the way elements in atoms work, and he also began to study the interactions between energy and matter.\nIn 1892, Einstein was elected to the Royal Academy of Sciences in Paris. He was elected to the Academy of Sciences and the Academy of Sciences in Geneva, Switzerland. When the Academy was formed in 1892, he was elected to the Academy of Sciences. He was awarded the Nobel Prize in Physiology, and his family name was Nicholas",
@@ -58982,7 +59026,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59001,7 +59048,10 @@
             "loop_onset": 50,
             "loop_period": 15,
             "topic": 1.0,
-            "topic_span": 251
+            "topic_span": 251,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 34
           },
           {
             "text": " symbol N.\nChemical formula: N2O2\nThe number of elements in a compound is a function of the number of elements present in the molecule. The number of elements in a chemical compound is called its physical symbol.\nIn chemical equations, an equation that is the same as the equation above will be an equation.\nIn chemical equations, an equation is an equation where the number of elements in an element is a function of the number of elements in a chemical compound.\nIn chemical equations, an equation that is the same as the equation above is an equation.\nThe number of elements in a chemical compound is a function of the number of elements in a chemical compound.\nIn chemical equations, an equation is the number of elements in a compound. The number of elements in an element is a function of the number of elements in a chemical compound.\nChemistry \u2013 Definition, Examples\nChemistry is a science that deals with the study of matter. It is the study of matter. It is a process that is used to understand the nature of the universe and how matter is formed.\nChemistry is a science that deals with the study of matter. It is the study of matter in various forms. There are many types of chemistry.\nChem",
@@ -59014,7 +59064,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " symbol Oxy-G. Oxygen molecules are the most abundant chemical elements in nature. Oxygen atoms are the building blocks of most chemical reactions.\nWhat are the characteristics of Oxygen?\nProteins Oxygen is the chemical element with symbol Oxy-G. Oxygen molecules are the building blocks of many chemical reactions.\nHow is Oxygen made?\nThe main characteristics of Oxygen are its chemical makeup (oxygen can be found in all living things), its chemical composition (oxygen can be found in every living thing), its chemical structure (oxygen can be found in most living things), its chemical composition, its color (oxygen can be found in all living things), and its chemical structure.\nHow is Oxygen made?\nThe chemical makeup of Oxygen is different. Oxygen is made of many elements: oxygen, carbon dioxide, hydrogen, oxygen, hydrogen, and carbon dioxide. Oxygen is made of three main elements: nitrogen, oxygen, and carbon. The chemical composition of Oxygen is mainly nitrogen.\nWhat are the four types of Oxygen?\nThe four major types of Oxygen are Oxygen, Hydrogen, Oxygen, and Carbon. Oxygen is the most abundant chemical element in the Earth\u2019s",
@@ -59027,7 +59080,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the symbol \"L\" and a symbol \"K\" in the middle.\nIn the U.S., the word \"xygen\" is used to refer to the substance that contains oxygen.\n- Oxygen is a chemical element with the symbol \"O\" and a symbol \"O\" in the middle of the word \"L\".\n- To give a short explanation of the word \"ox\" in the context of the word \"l\" as well as the context in which the word \"l\" was used.\n- Oxygen is a chemical element with the symbol \"O\" and a symbol \"K.\"\n- Oxygen has four basic atomic structure groups, two atomic number, two atomic number, and three atomic number.\n- The word \"O\" in the middle of the word \"O\" is used in the context of the word \"O\" in the context of the word \"l\".\n- A chemical element with the symbol \"O\" and a symbol \"K\" in the middle of the word \"O\".\n- The word \"O\" in the middle of the word \"O\" is used in the context of the word \"l\" in the context of the word \"L\".\n- This word is used in the context",
@@ -59040,7 +59096,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 190
+            "topic_span": 190,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " symbol Oxygen. In the process of heating, the molecule moves in the opposite direction, creating an electric current and a temperature that is stable.\nIn the process of heating, the molecules of oxygen move in a pattern of movement that is called the electron spin. The electron spin is a chemical process that is repeated and is done by the atom.\nThe electron spin is a chemical process that happens when a molecule of oxygen is heated with a force that pulls electrons out of the atom.\nThe electron spin is the process of heating molecules of oxygen with a force that pulls electrons out of the atom. The atom spins around the other atoms of oxygen, creating an electric current.\nThe electron spin is a chemical process that happens when a molecule of oxygen is heated with a force that pulls electrons out of the atom.\nThe electron spin is the chemical process that happens when a molecule of oxygen is heated with a force that pulls electrons out of the atom.\nThe electron spin is a chemical process that occurs when a molecule of oxygen is heated with a force that pulls electrons out of the atom.\nThe electron spin is a chemical process that occurs when a molecule of oxygen is heated with an electric current that pulls electrons out of the atom.\nThe electron spin is the chemical",
@@ -59053,7 +59112,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59072,7 +59134,10 @@
             "loop_onset": 117,
             "loop_period": 22,
             "topic": 0.0,
-            "topic_span": 98
+            "topic_span": 98,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 97
           },
           {
             "text": " create a 3D model of a robot. The lesson will include a detailed lesson plan. Students will be encouraged to build a 3D model of a 3D model of a robot.\nA 3D model of a 3D model of a robot is illustrated below.\n|In this lesson, students will learn how to create a 3D model of a robot using the built-in 3D printing process to create three-dimensional components.\n|This lesson will introduce the use of 3D printing to build a 3D model of a robot.\n|This lesson will introduce the use of 3D printing in an effective way.\n|This lesson will introduce the use of 3D printing to create a 3D model of a robot.\n|This lesson will introduce the use of 3D printing to create a 3D model of a robot.\n|This lesson will introduce the use of 3D printing to create 3D models of a robot.\n|This lesson will introduce the use of 3D printing to create a 3D model of a robot.\n|This lesson will introduce the use of 3D printing to create a 3D model of a robot.\n|This lesson will introduce the use of 3D printing to create a 3D model of",
@@ -59085,7 +59150,10 @@
             "loop_onset": 189,
             "loop_period": 22,
             "topic": 0.3333333333333333,
-            "topic_span": 241
+            "topic_span": 241,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 102
           },
           {
             "text": " make a simple and effective tool to help you make a good, quick and effective use of Microsoft word. Google Docs is also an excellent tool to make sure you have a great Microsoft Word document.\n1. Microsoft Word Format\nClick here to see a complete list of Microsoft Word documents.\n2. Microsoft Word Format\nClick here to see a complete list of Microsoft Word documents.\n3. Microsoft Word 2016\nClick here to see the Office Word 2016\nClick here to see the Office Word 2016\nClick here to see the Office Word 2016\nClick here to see the Office Word 2016\nClick here to see the Office Word 2016\nClick here to see the Office Word 2016\nClick here to see the Office Word 2016",
@@ -59098,7 +59166,10 @@
             "loop_onset": 82,
             "loop_period": 9,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 59
           },
           {
             "text": " use a calculator (or similar, older version) to solve two simple equations.\n4 Views 6 Downloads\n- Activities & Projects",
@@ -59111,7 +59182,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " read and write the text in a variety of ways. What is the difference between a \u201cword\u201d and a \u201cword\u201d?",
@@ -59124,7 +59198,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59143,7 +59220,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 4
+            "topic_span": 4,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": "\u0e14\u0e2d\u0e19\u0e31\u0e01\u0e19\u0e27\u0e34\u0e01\u0e14\u0e32\u0e32\n- \u0e31\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e30\u0e19\n- \u0e23\u0e07\u0e2d\u0e31\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e0a\u0e31\u0e1b\u0e31\u0e19\u0e31\u0e19\u0e31\u0e01\u0e19\u0e31\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e34\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e19\u0e31\u0e19\u0e31\u0e01\u0e19\u0e31\u0e19\u0e31\u0e19\u0e31\u0e30\u0e19\u0e31\u0e01\u0e19\u0e31\u0e01\u0e19\u0e31\u0e19\u0e31\u0e01",
@@ -59156,7 +59236,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 19
           },
           {
             "text": "__________ can help to reduce stress levels\n- __________ can help to improve cognitive function\n- __________ can help to improve cognitive function\n- __________ can help to calm people down and stress levels\n- __________ can help to reduce anxiety and stress\n- __________ can help to reduce stress levels\nThis short video will help you find out how to build a strength and conditioning program that works for you and how to improve your strength and conditioning program goals.\nDo you have any questions?\nClick the button below to get started and click the \"Find Out\" button.",
@@ -59169,7 +59252,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": "_________ can be used as a mood booster.\n- _________ can be used as a stress reliever.\n- _________ can be used to prevent panic attacks.\n- _________ can be used to reduce pain and tension.\n- _________ can be used as a stress reliever.\n- _________ can be used as a stress reliever.\n- _________ can be used to reduce stress.\n- _________ can be used as an anxiety reliever.\n- ___________ can be used to prevent panic attacks.\n- _________ can be used to reduce stress.\n- _________ can be used to help deal with anxiety.\n- _________ can be used to reduce stress.\n- _________ can be used to reduce anxiety.\n- ___________ can be used to relieve anxiety.\n- ___________ can be used to help with anxiety.\n- ___________ can be used to reduce stress.\n- ___________ can be used to treat anxiety.\n- __________ can be used to treat anxiety.\n- ___________ can be used to treat anxiety.\n- ___________ can be used to treat anxiety.\n- ___________ can be",
@@ -59182,7 +59268,10 @@
             "loop_onset": 218,
             "loop_period": 12,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 162
           },
           {
             "text": "__________ It reduces stress and anxiety, and the benefits of exercise outweigh the risks associated with excessive exercise.\n- __________ It reduces stress and anxiety, and the benefits of exercise are similar to those of exercise.\n- __________ It reduces stress, anxiety, and stress, and the benefits of exercise are similar to those of exercise.\n- __________ It reduces stress and anxiety, and the benefits of exercise are similar to those of exercise.\n- __________ It reduces stress and anxiety, and the benefits of exercise are similar to those of exercise.\n- __________ It reduces sleep problems, and the benefits of exercise are similar to those of exercise.\n- __________ It reduces stress and anxiety, and the benefits of exercise are similar to those of exercise.\n- __________ It benefits the immune system, and the benefits of exercise are similar to those of exercise.\n- __________ It reduces stress, anxiety, and the benefits of exercise.\n- __________ It reduces anxiety, anxiety, and stress, and the benefits of exercise are similar to those of exercise.\n- __________ It is a good exercise, and the benefits of exercise are similar to those of exercise.\n- __________ It",
@@ -59195,7 +59284,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 249
+            "topic_span": 249,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59214,7 +59306,10 @@
             "loop_onset": 138,
             "loop_period": 13,
             "topic": 0.6666666666666666,
-            "topic_span": 249
+            "topic_span": 249,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 121
           },
           {
             "text": " Determine the slope of the quadratic equation.\n2. Define the term using the formulas.\n3. Draw a line.\n4. Determine the slope of the line.\n5. Draw a line.\n6. Draw a line.\n7. Draw a line.\n8. Define the terms.\n9. Draw a line.\n10. Draw a line.\n11. Draw a line.\n12. Define the terms.\n13. Draw a line.\n14. Draw a line.\n15. Define the terms.\n16. Draw the terms.\n17. Draw a line.\n18. Define the terms.\n19. Draw the line.\n20. Draw a line.\n21. Define the term.\n22. Draw the line.\n23. Define the term.\n24. Define the term.\n25. Define the term.\n26. Define the term.\n27. Define the term.\n28. Define the term.\n29. Define the term.\n30. Define the term.\n31. Define the terms.\n32. Define the terms.\n33. Define",
@@ -59227,7 +59322,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 10
+            "topic_span": 10,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Determine the equation of the quadratic\n2. Calculate the equation of the quadratic\nwhere the equation of the quadratic is\n3. Multiply equation of\nthe given equation of the quadratic using\n4. Find the equation of the quadratic using\n5. Find the equation of the quadratic\n6. Find the equation of the quadratic using\n7. Calculute the quadratic equation of the quadratic\nfrom the given equation of the quadratic using\n8. In the given equation, find the equation of the quadratic\nusing the given equation of the quadratic using\n9. Solve the given equation of the quadratic using\n10. Finally, find the equation of the quadratic using\n11. Find the equation of the quadratic using\n12. The given equation of the quadratic using\n13. The given equation of the quadratic using\n14. In the given equation of the quadratic using\n15. Find the equation of the quadratic using\n16. The given equation of the quadratic using\n17. The given equation of the quadratic using\n18. The given equation",
@@ -59240,7 +59338,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Identify the type of triangle you want to solve.\n2. Identifying the type of triangle you want to solve.\n3. Identifying the types of triangle you want to solve.\n4. Identifying the type of triangle you want to solve.\n5. Identifying the type of triangle you want to solve.\n6. Identifying the type of triangle you want to solve.\n7. Identifying the type of triangle you want to solve.\n8. Identifying the type of triangle you want to solve.\n9. Identifying the type of triangle you want to solve.\n10. Identifying the type of triangle you want to solve.\n11. Identifying the type of triangle you want to solve.\n12. Identifying the type of triangle you want to solve.\n13. Identifying the type of triangle you want to solve.\n14. Identifying the type of triangle you want to solve.\n15. Identifying the type of triangle you want to solve.\n16. Identifying the type of triangle you want to solve.\n17. Identifying the type of triangle you want to solve.\n18. Identifying the type of triangle you want to solve.\n19. Identifying the type",
@@ -59253,7 +59354,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 27
           },
           {
             "text": " Determine the value of the vector in the range from 0 to infinity.\n2. Calculate the number of vectors in the range from 0 to infinity.\n3. Calculate the number of edges to be drawn when drawing a rectangle.\n4. The number of edges to be drawn when drawing a rectangle.\n5. Draw the length of the diagonal of the rectangle in the range from 0 to infinity.\n6. The length of the diagonal of the rectangle in the range from 0 to infinity.\n7. The number of edges to be drawn when drawing a rectangle.\n8. The number of edges to be drawn when drawing a rectangle at any given distance.\n9. The number of edges drawn when drawing a rectangle.\n10. The number of edges drawn when drawing a rectangle in the range from 0 to infinity.\n11. The number of edges drawn when drawing a rectangle.\n12. The number of edges drawn when drawing a rectangle.\n13. The number of edges drawn when drawing a rectangle.\n14. The number of edges drawn when drawing a rectangle.\n15. The number of edges drawn when drawing a rectangle.\n16. The number of edges drawn when drawing a rectangle.\n17. The number of edges drawn",
@@ -59266,7 +59370,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 167
           }
         ]
       },
@@ -59285,7 +59392,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 137
           },
           {
             "text": " medical care that doctors use. They include medical imaging, diagnostic imaging, and x-rays.\nMedical imaging involves the use of x-rays and computer vision to visualize the body, lungs, and other organs. Imaging can help doctors see the location of tumors, organs, and other parts of the body.\nMedical imaging involves the use of high-definition cameras, computer vision, and computer vision to analyze images. It can help doctors see abnormalities in the body, such as kidney stones, liver disease, and other diseases.\nMedical imaging is another way to diagnose and treat diseases or conditions. It involves the use of special imaging devices called x-rays to examine the body, organs, and other parts of the body. These imaging systems help doctors diagnose and treat diseases and conditions that affect the body.\nMedical imaging is also a valuable tool for doctors to see the health of the body, such as the heart, lungs, and other organs. If you have a heart or kidney, you may need a medical imaging.\nMedical imaging is a way to diagnose and treat health conditions. It can help doctors diagnose and treat illnesses, injuries, and other health issues. It can also help identify medical conditions that may be affecting the body.\nMedical imaging is a way to",
@@ -59298,7 +59408,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " computer games. The first is called game-based games, wherein players can play the computer games on the computer. Some of the games are as follows:\n- Game-based games are games that use computer games to simulate real-world situations. The game is a game where players can interact with the computer and solve problems.\n- Computer-based games are games where players can interact with computers and solve problems. The game is a game where players can interact with computers and solve problems.\n- Game-based games are games where players can interact with computers and solve problems. The game is a game where players can interact with computer systems and solve problems.\n- Computer-based games are games that simulate real-world situations using computer technology. The game is a game where players can interact with computers and solve problems. The game is a game where players can interact with computers and solve problems.\n- Computer-based games are games where players can interact with computers and solve problems. The game is a game where players can interact with computer systems and solve problems. The game is a game where players can interact with computer systems and solve problems.\n- Computer-based games are games that simulate real-world situations using computer technology. The game is a game where players",
@@ -59311,7 +59424,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " computer virus: A) virus B, B) virus C, D) virus D, E) virus D and E.\nThese two types of viruses are the most common among all viruses. They are classified by their similarities and their differences. The similarities and differences between them are not as well known as they have been used in many other diseases.\nThere are three main types of viruses that are responsible for causing illness and diseases. They are: B, C, and D. The two main types of viruses are virus X and virus Y. The different types of viruses are: A) viruses B \u2013 virus C \u2013 virus D \u2013 virus D \u2013 virus C \u2013 virus D \u2013 virus\nTo understand the different types of viruses, we will look at some of the most common viruses. Viruses are classified by their similarities and differences. The most common is a virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus X virus\nAs this virus is very dangerous, it can lead to many diseases",
@@ -59324,7 +59440,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 74
+            "topic_span": 74,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 145
           },
           {
             "text": " water vapor condensing systems in the United States.\n- Condensing systems release vapor gases into the atmosphere through a mixture of gases and vapour molecules. These gases are then either vaporized or evaporated.\n- Condensing systems release gas or vapour into the atmosphere through a series of chemical reactions. Examples include nitrogen dioxide (NO2), water vapor (SO2), hydrogen sulfide (H2S), and sulfur dioxide (SO2).\n- Condensing systems release gas and vapour into the atmosphere through a series of chemical reactions. Examples include carbon monoxide (CO), nitrogen dioxide (NO2), and sulfur dioxide (SO2). Examples include nitrogen dioxide (NO2), sulfur dioxide (SO2), and sulfur dioxide (SO2).\n- Condensing systems release gas and vapour into the atmosphere through a series of chemical reactions. Examples include nitrogen dioxide (NO2), sulfur dioxide (SO2), sulfur dioxide (SO2), and sulfur dioxide (SO2). Examples include nitrogen dioxide (NO2), sulfur dioxide (SO2), sulfur dioxide (SO2), and sulfur dioxide (SO3).\n- Condensing systems release gas and vapour into the atmosphere through a series of chemical reactions. Examples include nitrogen dioxide (NO2), sulfur",
@@ -59337,7 +59456,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59356,7 +59478,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 248
+            "topic_span": 248,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " would have been a costly affair for the state.\nThe treaty, signed in 1921, was a major step in the fight for the abolition of slavery. It meant that many slaves could not be reared off of their families and that most had to be freed, or enslaved, or forced to be freed.\nThe United States was also a country that was divided in two, and the two states that were separated did not share a common history.\nThe U.S. was a country that was divided by two: the United States of America, which was split into two, and the United States of America, which was split into two: the United States of America and the Soviet Union.\nThe U.S. was split into two: the Soviet Union and the Soviet Union. The Soviet Union had a communist government that was split into two: the Soviet Union and the Soviet Union.\nThe Soviet Union had a communist government which was divided into two: the Soviet Union and the Soviet Union.\nThe Soviet Union was split into two: the Soviet Union and the Soviet Union.\nThe Soviet Union was divided into two: the Soviet Union and the Soviet Union.\nThe Soviet Union was split into two: the Soviet Union and the Soviet Union.\nThe Soviet",
@@ -59369,7 +59494,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 15
+            "topic_span": 15,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 166
           },
           {
             "text": " was not signed until after the war ended. It was signed on June 1, 1919, with the assistance of the American Revolutionary War soldier, Samuel Adams.\nIn 1920, the Treaty of Paris was signed in Paris on June 28, 1921.\nThe Treaty of Paris was a treaty signed by the American Revolutionary War soldier, the Revolutionary War soldier, the American Revolutionary War soldier, and the American Revolutionary War soldier.\nThe Treaty of Paris was signed on June 28, 1921, with the assistance of George Washington, the first President of the United States, and George Clinton, the first President of the United States.\nThe Treaty of Paris was signed in Paris on June 28, 1921 with the help of George Washington, who was the first President of the United States, and George Washington, whom the President had done previously in office, and George Clinton, who was the first President of the United States.\nIn 1921, Congress passed the United States War of Independence, which was signed by President Abraham Lincoln and the Senate.\nThe Treaty of Paris was signed November 1, 1919, with the help of George Washington and the delegates to the United States.\nThe Treaty of Paris was signed on June 28, 1919, with the help of George Washington, the first President of the",
@@ -59382,7 +59510,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 238
+            "topic_span": 238,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " was not until 1919 that the agreement entered into force. The treaty of Paris was signed on 15 July 1919, but the treaty of Paris is not ratified in any way.\nIn 1919, the Treaty of Paris was signed on the first day of the 19th century, as the Treaty of Paris was signed on the first day of the 19th century. The Treaty of Paris was signed on the second day of the 19th century, and the Treaty of Paris was signed on the first day of the 19th century.\nThe Treaty of Paris is the first treaty that is signed on the first day of the 19th century. The treaty, signed in 1889, was signed on the first day of the 19th century, as the Treaty of Paris was signed in 1919. The Treaty of Paris was signed on the first day of the 19th century, as the Treaty of Paris was signed on the first day of the 19th century, and the Treaty of Paris was signed on the second day of the 19th century.\nThe Treaty of Paris was signed on the first day of the 19th century, and the Treaty of Paris was signed on the second day of the 19th century. The Treaty of Paris was signed in 1919, and the Treaty of Paris was signed on",
@@ -59395,7 +59526,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " became known as \u201cThe Treaty of Paris and the Treaty of Paris\u201d in which \u201cthe French people are the people of the world.\u201d\nThe Treaty of Paris was signed in 1919, and the Treaty of Paris was signed in 1919, and the French people came together in 1919 and 1920. This treaty gave a set of rules for the construction of cities in the world that were in the process of being built.\nThe Treaty of Paris was signed in 1919, and the Treaty of Paris was signed in 1919. In 1919, the Treaty of Paris was signed, and the Treaty of Paris was signed in 1919.\nThe Treaty of Paris was signed in 1919, and the Treaty of Paris was signed in 1919. It was signed in 1919, and the Treaty of Paris was signed in 1919.\nThe Treaty of Paris was signed in 1919. The Treaty of Paris was signed in 1919, and the Treaty of Paris was signed in 1919.\nThe Treaty of Paris was signed in 1919, and the Treaty of Paris was signed in 1919.\nThe Treaty of Paris was signed in 1919, and the Treaty of Paris was signed in 1919.\nThe Treaty of Paris was signed in 1919, and the Treaty of Paris was signed in 1919.\nThe Treaty of",
@@ -59408,7 +59542,10 @@
             "loop_onset": 174,
             "loop_period": 20,
             "topic": 1.0,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 81
           }
         ]
       },
@@ -59427,7 +59564,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 214
+            "topic_span": 214,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Journal of Infectious Diseases in the journal, the use of high-tech technology for treating infection in the developing world is still in its early stages, with efforts now being carried out throughout the world. This is due to the fact that the use of technology has expanded, but it is still a major focus of research and development. However, it is still a long way from the current use of technology, and research is still ongoing.\nThe future of healthcare\nThe ability of healthcare is a crucial component of modern healthcare. The use of technology is likely to continue to expand, but it is expected to continue to improve and expand in the coming years. This will be a crucial step towards more effective and effective healthcare.\nAccording to a study published in the Journal of Infectious Diseases, the use of high-tech technology in healthcare could potentially lead to significant improvements in the treatment of infections, including the prevention of infections. This could be achieved through the use of technology that is less invasive and less invasive. It is expected that healthcare will continue to expand and expand, but it is expected that the use of technology will play a significant role in the development of new technologies and strategies for managing infections.\nThe future of healthcare\nThe use of technology in healthcare is expected to",
@@ -59440,7 +59580,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 151
+            "topic_span": 151,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the journal Nutrients International, some experts suggest that the plant may have a beneficial effect on the growth.\nResearchers from the University of Illinois at Chicago, the University of Illinois at Chicago, and the University of Texas at Austin have studied the effects of vitamin K on the growth of the plant. They looked at the response of the plant to the presence of vitamin K, and found that the plant might have a beneficial effect on the growth of the plant.\nIt is also interesting to note that the plant is not only a food source for plants, but also a source of energy for the entire ecosystem. The plant, which is also found in the ground, is a source of energy that helps to maintain a healthy balance of the ecosystem. It also serves as a fuel for the carbon-rich soil.\nThe plant is also known for the health benefits it provides by supplying oxygen and nutrients to the plant. It also is a source of energy for the brain and nervous system, which helps to regulate the heart rate and breathing.\nThe plant, which is also found in the ground, has a high bioavailability and is a food source of nutrients. The plant is also a source of energy for the body, and also a source of energy for the brain and nervous system.",
@@ -59453,7 +59596,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " The British Medical Journal, in 2002, men who were treated for a stroke reported higher rates of heart attacks, compared to women who were treated for a stroke.\nThe team found that women who had used a pacemaker during pregnancy had a lower heart attack rate than those who were treated for a stroke.\n\"The findings are an important addition to the evidence base for prevention and treatment of cardiovascular disease and stroke, and also a strong evidence base for the long-term treatment of cardiovascular disease,\" said Paul D. DePens, MD, lead author of the study and the study's lead author.\nThe researchers analyzed data from a total of 6,827 women with a stroke in France in the period from 1996 to 2003.\n\"We found that women who were treated for a stroke had a higher odds of heart attack and heart attack, compared to those who were treated with a pacemaker,\" said DePens.\nThe researchers found that stroke risk was higher in women treated for a stroke.\nThe researchers found that a stroke risk of up to 72 percent was greater in women treated for a stroke than in men.\n\"This finding is an important step toward preventing cardiovascular disease and stroke in women,\" said DePens.\nThe researchers examined data from",
@@ -59466,7 +59612,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 117
+            "topic_span": 117,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the journal Science, the levels of protein and fat in the blood were more similar to those in subjects with normal blood cholesterol levels.\nThe researchers also found that the higher levels of protein in the blood were more likely to affect the heart and blood pressure, as well as the blood pressure in the lower group. The scientists also found that the level of protein in the blood was higher in those with a normal blood cholesterol level.\n\"We can see that the level of protein in the blood is higher in people with normal cholesterol levels because of a certain genetic risk,\" said Dr. Robert E. Winton, a cardiologist and professor of medicine at the University of Georgia Medical Center in Atlanta.\nThe study was published in the journal Molecular Cell.\nSource: The Journal of Clinical Endocrinology and Metabolism, DOI: 10.1038/s41567-022-0286-8",
@@ -59479,7 +59628,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 144
+            "topic_span": 144,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59498,7 +59650,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 21
+            "topic_span": 21,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " over 300 feet, and rises to an altitude of about 500 feet. It is the second-largest mountain in the world in terms of surface area. Over 1,300 feet, the highest peak is Mount Everest. The highest point in the world is Mount Everest, at 3,000 feet. It is the highest mountain on the Earth, and the highest mountain on the planet. Mount Elgon is the highest mountain in the world, and it is the highest mountain on the planet. It is the second-highest mountain on the planet, and it is the third-highest mountain on the planet.\nIn 2016, Elgon was ranked the top number of the highest mountains on the planet. It is the second-highest mountain on the planet, and it is the ninth highest mountain on the planet. It is the eighth-highest mountain on the planet, and it is the second-highest mountain on the planet. The mountain is a very highland on the planet, and it is home to a number of rock-forming mountains, such as the Sierra Nevada mountain range and the Colorado Mountain Range.\nThe mountain range is the highest mountain on the planet, and it is the second-highest mountain on the planet. It is the third-highest mountain on the planet,",
@@ -59511,7 +59666,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 4,000 feet, and runs down the slopes. The altitude of the mountain is about 15,000 feet. A distance of about 2,700 feet is known as a mountain range of about 300 feet. The mountain range is a long country and the highest mountain in the world. The terrain is flat, and in the north it is flat. The mountains are divided into three main groups: the mountains are the mountains which are separated by a thick ice sheet, and are separated by an ice sheet. The ice sheets are formed by the ice sheets which are joined together by the ice sheets. The ice sheets are not broken off by the sea, and the ice sheets are formed by the ice sheets.\nThe mountains form the highest mountain in the world, which is the highest mountain in the world. The mountains are formed by the ice sheet and the ice sheet. The mountains form the highest mountain in the world, which is located in the southern hemisphere on the east side of the world. The mountains form the highest mountain in the world. The mountains are formed by the ice, which is made up of ice and ice. The mountains are formed by the ice sheets which are formed by the ice sheets. The ice is formed by the ice sheets, which are formed by the",
@@ -59524,7 +59682,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 228
+            "topic_span": 228,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 4,000 feet and rises to about 800 feet in the central part of the mountain range. The mountain is about 3,000 feet high and rises to 8,000 feet above sea level. The mountain is 4,300 feet high and rises to about 9,200 feet above sea level.\nThe mountain has a large population of sheep and goats and is the world's largest animal. The mountain is surrounded by a large ice-filled crater, which can weigh up to 2,000 pounds. The mountain is about 1,500 feet from the sea and rises to about 800 feet above sea level. The glacier is about 3,000 feet thick and rises to about 1,000 feet above sea level.\nThe mountain is part of the United Nations' World Meteorological Organization (WMO). There is a wide range of scientific and technical aspects to the mountain, covering more than 10,000 square kilometers and covering more than 12,000 square miles.\nThe International Organization for Standardization (ISO) is a multiautake agency that provides technical assistance to the International Organization for Standardization (ISO) and its agencies. The organization has a membership of 3,000 organizations, with a total membership of about 100,000.\nThe International Organization for Standardization (",
@@ -59537,7 +59698,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 173
+            "topic_span": 173,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " 1,000 feet in the eastern Himalayas. The mountain peaks are well-preserved, and are considered as one of the most prominent mountain peaks in Asia.\nThe mountain range is also known as the \u201cmountain of the mountain\u201d. A large plateau is the highest mountain in the world, but the mountain is very sparsely inhabited. The mountain is famous for its impressive mountain range, but the mountain\u2019s rugged terrain can be found in the north-east of India, where it is the highest mountain in the world.\nThe mountain is an important source of water for agriculture, and it has been a source of food for centuries. The mountain is also a popular destination for pilgrims and locals, as it offers a variety of activities to go.\nThe mountain range is also known for its unique character, and its famous mountain range is one of the most famous in the world. The mountain is also known for its impressive mountain range, and its location makes it one of the world\u2019s most popular attractions.\nThe mountain is also known for its unique cultural and historical significance, and its culture is influenced by various cultures and traditions that have influenced its various regions.\nThe mountain is also considered as a sacred mountain, and its significance",
@@ -59550,7 +59714,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59569,7 +59736,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.7777777777777778,
-            "topic_span": 227
+            "topic_span": 227,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " were:\n- At least three students from the first semester (from the first semester to the last semester) who had taken the course in organic chemistry, who had spent some time preparing for the final examination in organic chemistry.\n- They were:\n- At least three students from the second semester that had completed the final examination in organic chemistry.\n- At least three of the first two students (from the first semester) who had completed the final examination in organic chemistry.\n- Those who had taken the course in organic chemistry.\n- Those students who had graduated from the second semester (from the first semester to the last semester) who had completed the final examination in organic chemistry.\n- Those students who had taken the course in organic chemistry (from the first semester to the last semester) who had completed the final examination in organic chemistry.\n- Those students who had taken the course in organic chemistry.\n- Those who had completed the final examination in organic chemistry.\nThese are just a few examples of the many students who have spent the entire semester preparing for the final examination in organic chemistry.\n1. Classrooms of all three organic chemistry classes were set up as a way to organize and organize the class materials.\n2. Classroom classes were to",
@@ -59582,7 +59752,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 244
+            "topic_span": 244,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " are:\n- A scientist who was previously a professor at the University of Connecticut.\n- A chemical engineer who was also a chemistry professor.\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry and other subjects.\n- A chemistry student who has spent the entire semester preparing for the final examination in organic chemistry.\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry student who is a chemistry teacher.\n- A chemistry instructor who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.\nThe students who have worked in organic chemistry are:\n- A biologist who teaches biology.\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.\nThese students are:\n- A scientist who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.\nThe students who have worked in organic chemistry are:\n- A chemistry teacher who teaches chemistry courses.\n- A chemistry teacher who teaches chemistry courses.",
@@ -59595,7 +59768,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 115
           },
           {
             "text": " would be required to take the final exam in the semester, but this is not optional\n1. The students who have spent the entire semester preparing for the final exam in organic chemistry will be required to take the final exam in the semester, but this is optional, and it will be optional.\n2. The students who have spent the entire semester preparing for the final exam in organic chemistry will be required to take the final exam in the semester, but this is optional.\n3. Students who have spent the entire semester preparing for the final exam in organic chemistry will be required to take the final exam in the semester in organic chemistry.\n4. Students who have spent the entire semester preparing for the final exam in organic chemistry will be required to take the final exam in the semester in organic chemistry.\n5. The students who have spent the entire semester preparing for the final exam in organic chemistry will be required to take the final exam in organic chemistry, and this is optional.\nA good way to make sure that the students will be prepared for the final exam in organic chemistry is to start by doing the final exam in organic chemistry.\nStudents who have spent the entire semester preparing for the final exam in organic chemistry will be required to take the final exam in organic chemistry",
@@ -59608,7 +59784,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.8888888888888888,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " will receive a certificate.\nThe students who completed the final examination in organic chemistry will be given an A-level Chemistry certificate.\n- All students who have completed the final exam in organic chemistry will be given a certificate of completion.\n- All students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n- All students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n- All students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n- The students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\nStudents who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n- All students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n- All students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n- All students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n- All students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n- All students who have completed the final exam in organic chemistry will receive A-level Chemistry certificate.\n",
@@ -59621,7 +59800,10 @@
             "loop_onset": 133,
             "loop_period": 21,
             "topic": 0.4444444444444444,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 20
           }
         ]
       },
@@ -59640,7 +59822,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 115
           },
           {
             "text": " the French government began to declare independence from the French monarchy. The French monarchy, which was established in France, was the most powerful force of the French monarchy. The French monarchy was weakened during the French Revolution and had to be replaced by the British monarchy. The French monarchy was also weakened by the French Revolution of 1789-1789.\nThe French Revolution was a period of decline and upheaval in France during the 17th and 18th centuries. The French Revolution in 1804 brought a revival of French culture and the creation of the French monarchy. The French Revolution was a period of decline and upheaval, and the French Revolution was a period of social unrest and political unrest.\nIn 1811 the French Parliament passed a law on the monarchy, which forbade the French to vote in the French parliament. The French Revolution was the longest and longest political revolution in the history of the world. It was a period of extreme social upheaval, and the French Revolution was a period of decline and upheaval.\nThe French Revolution was a period of decline and upheaval in France during the 18th century. It was a period of social unrest and political unrest, and the French Revolution was a period of social unrest and social unrest. The French Revolution was a period of social unrest and social unrest,",
@@ -59653,7 +59838,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 246
+            "topic_span": 246,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the French army commanded the French army in the French army and fought against the French. The French army was defeated in the Battle of Waterloo, and the French army was defeated at the Battle of Waterloo. In the Battle of Waterloo, the French army captured the French army on May 10, 1789.\nThe French army was organized on October 7, 1789, by the French army at its peak. The British army was composed of eight soldiers, plus 10,000 men, and the French Army was composed of a total of 24,000 soldiers and more than 1,000 men.\nThe French army was organized on October 31, 1789, and consisted of approximately 500 men and 1,000 men. The French army was composed of about 300 men and 2,500 men, plus 10,000 men and 2,000 men. The French army consisted of 1,000 men and 2,000 men. The French army consisted of a total of 3,500 men and 4,000 men, and consisted of approximately 6,000 men, of which 8,000 were wounded and 1,000 were wounded.\nAfter the French and Indian War, the French army was organized on October 31, 1789. The French army consisted of 3,800 men and 1",
@@ -59666,7 +59854,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 247
+            "topic_span": 247,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a young French revolutionary, Jean-Jacques Rousseau, called himself one of the founders of the French Revolution. He had been a French philosopher, a scientist, and a philosopher in the French Revolution. He was a great admirer of the revolutionaries, and his work was a great influence on the French Revolution.\nJean-Jacques Rousseau, on the other hand, was a great admirer of the French Revolution, and his work was a great influence on French society. He was known for his revolutionary actions, which led to the French Revolution. In 1789, he was elected to the French Academy of Sciences, and was one of the founders of the French Revolution.\nHe was also a great admirer of the French Revolution, and his works were a great influence on French society. He was a great admirer of the French Revolution, and his work was a great influence on French society. He was a great admirer of the Revolution, and his work was a great influence on French society.\nJean-Jacques Rousseau was a great admirer of the French Revolution, and his work was a great influence on French society. He was a great admirer of the French Revolution, and his work was a great influence on French society, and his",
@@ -59679,7 +59870,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " French troops seized and seized Paris. The French Revolution was the first to be completed. The revolution was led by Jean-Baptiste de Montfort, a French nobleman who was elected president of France in 1790. He was the second-largest French president.\nThe Treaty of Paris was signed in Paris in 1789, but the French government did not agree to it. However, the French monarch who had a majority in the House of Commons of the French parliament did not agree to the treaty.\nThe treaty was signed in Paris on 1 July 1789, and the Treaty of Paris was signed on 1 January 1789, as the French government had declared that the French government would be happy to intervene in the French Revolution.\nThe Treaty of Paris was signed in Paris on 1 January 1789, and the Treaty of Paris was signed on 1 September 1789.\nThe Treaty of Versailles was signed on 4 December 1789, and the Treaty of Paris was signed on 1 September 1789. The treaty was signed in Paris on 1 August 1789, but not on 1 August.\nFrench troops seized Paris, but the French government did not agree to the treaty. The Treaty of Paris was signed on 1 September 1789, and the Treaty of Paris",
@@ -59692,7 +59886,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 231
+            "topic_span": 231,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59711,7 +59908,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 201
+            "topic_span": 201,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " has a strong center of gravity and is capable of generating all the forces necessary to support it.\nThe heart is a small organ that pumps oxygen, nutrients, and other vital nutrients to the body. It is important for the heart to work as it pumps water through the blood and through the lymphatic system.\nHemodynamic and cardiovascular responses\nIt is important for the heart to work as it pumps oxygen and nutrients to the body. This is essential for the heart to function properly. The heart pumps oxygen and nutrients to the lungs and the blood to the brain.\nThe heart has an internal pump that pumps blood through the blood vessels and pumps oxygen and nutrients to the tissues. It pumps blood to the brain, muscles, and other organs to the brain.\nThe heart pumps blood through the blood vessels and pumps oxygen and nutrients to the brain.\nThe heart pumps oxygen and nutrients to the blood and the brain. It pumps these proteins and other vital nutrients to the heart muscles to the brain.\nThe heart pumps oxygen and nutrients to the brain and other organs to the brain. The heart pumps oxygen and nutrients to the blood and the brain. It pumps blood to the brain to the brain.\nThe heart pumps blood to the brain by pumping blood and the brain to",
@@ -59724,7 +59924,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 244
+            "topic_span": 244,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " pumps oxygen and nutrients through the bloodstream to the body. The heart is primarily designed to pump the oxygen through the bloodstream. However, not all heart disease is caused by the same underlying condition.\nOther common conditions that can cause heart disease include high cholesterol levels, high blood pressure, high cholesterol levels, and cholesterol levels that can be a source of pain and inflammation.\nWhat Does Heart Disease Look Like\nWhile heart disease is generally considered a silent disease, it can be a life-threatening condition. It can affect your heart, lungs, and blood vessels. It can also affect your heart, leading to a heart attack and other symptoms.\nWhat Is Heart Disease in a Normal Heart\nPeople with heart disease often experience a variety of symptoms, such as chest pain, shortness of breath, heart palpitations, and chest pain. These symptoms can be a symptom of a heart attack or a heart attack.\nHowever, not everyone experiences heart disease. Some symptoms may include:\n- Aching, burning in the chest, and/or difficulty breathing\n- A racing heart\n- Shortness of breath\n- Pain or discomfort in the chest\nIf you experience any of these symptoms, it\u2019s important to seek medical attention immediately.\nWhat Is High Blood",
@@ -59737,7 +59940,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 217
+            "topic_span": 217,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " enables the muscles to contract and contract with each heartbeat. The heart is designed to pump the blood, oxygen, and nutrients from the bloodstream to all parts of the body.\nThe heart is the largest organ in the body, and it stores the energy it needs to function properly. The heart's main function is to keep the body moving and carry the blood to all parts of the body.",
@@ -59750,7 +59956,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 58
+            "topic_span": 58,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " allows blood to flow through the lungs, and it pumps blood into the lungs.\n- The heart pumps the blood into the lungs to supply oxygen to the body.\n- The heart pumps blood to the muscles and organs of the body.\n- The heart pumps blood to the muscles and organs of the body.\n- The heart pumps blood to the lungs.\n- The heart pumps blood through the lungs to the lungs.\n- The heart pumps blood to the kidneys to excrete excess water from the blood.\nThe heart is a muscle that pumps blood through the lungs, and it pumps the blood back into the organs of the body.\nThe heart is also a muscle that pumps blood through the body.\nThe heart also pumps blood through the body to the lungs.\nThe lungs pump the blood out of the lungs and into the bloodstream.\nThe lungs are the lungs\u2019 main body parts.\nThe lungs are the lungs\u2019 main body parts.\nThe lungs are the lungs\u2019 main body parts.\nThe lungs are the lungs\u2019 primary body parts.\nThe lungs are the lungs\u2019 main part.\nThe lungs are the lungs\u2019 primary body parts.\nThe lungs are the lungs\u2019 main body parts.\n",
@@ -59763,7 +59972,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 147
+            "topic_span": 147,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 152
           }
         ]
       },
@@ -59782,7 +59994,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Amazon River delta to the east of the United States and the western United States.\nThe West Brazilian Amazon River is a major river that flows into the Amazon River from Peru. It is the second largest river in the world, and the last to enter the Amazon River. It is located in the western part of the Amazon River and occupies the western part of the Amazon Basin.\nThe Amazon River flows through the Amazon river and reaches the western part of the Amazon River. It is located about 30 km from the United States border, and is the second largest river in the world, after the Amazon River.\nThe Amazon River is a major river in North America, flowing from Alaska up to the Canadian border. It is the second longest river in the world, and it is the longest river in the world. It has a length of 22 km and is the longest river in the world. The Amazon River is the longest river in the world.\nThe Amazon River is the longest river in the world, flowing through the Amazon River. It is the longest river in the world, and it is the longest river in the world. It is the longest river in the world, and it carries the largest river in the world.\nThe Amazon River is a major river in the",
@@ -59795,7 +60010,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 254
+            "topic_span": 254,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Amazon River. The river is a tributary of the Amazon River that was previously the source of the Amazon River. The Amazon River carries water from the Amazon River to the Amazon River through the Amazon River.\nThe Amazon River is the longest river in the world. It runs through the Amazon River and reaches the highest point of the Amazon River. The river also flows in the Amazon River, which is the longest river in the world. The river is also the largest river in the world.\nThe Amazon River is an ancient river that is not only the longest river in the world, but also the longest river in the world. The river is also the longest river in the world, and it is the longest river in the world.\nThe Amazon River is considered the longest river in the world. It is the longest river in the world. The river was named after the river god of the Amazon River. The river is also considered the longest river in the world.\nThe Amazon River is a river that runs through the Amazon River. It is a large river with a diameter of about 6 km. It is a major river in the world. The longest river in the world.\nThe Amazon River is the longest river in the world. It is the longest river",
@@ -59808,7 +60026,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a narrow river at its foot, a waterway that runs a narrow way. It's one of the most sensitive rivers in the world. It's the perfect place to see it's waterways.\nAt its heart is the Amazon River, an incredibly beautiful, flowing river that's perfect for exploring and exploring. It's also the perfect place for a group of friends and family to explore. Many people like to play games and watch the river take on a new life.\nBut the Amazon River is not only a beautiful place, but also a beautiful site of nature. The river is always there to help you and to your family.\nWe at the Amazon River Conservancy have some great ideas for activities for kids and adults to do with the river! You can find a lot of pictures, videos, and other educational activities here.",
@@ -59821,7 +60042,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 150
+            "topic_span": 150,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a tributary of the Great Lakes. The water is diverted into a river called Eurynica, which flows through the Amazon River.\nThe Eurynica flows through the Amazon River and the Great Lakes. It joins the Great Lakes by the Rio Grande, the Great Lakes by the Rio Grande, and the Rio Grande by the Rio Grande. The river flows through a tributary of the Great Lakes.\nThe Great Lakes are the only major source of water for the United States. The Great Lakes are formed by the Rio Grande, which flows into the Great Lakes in the west in the west and the Great Lakes in the west. The Great Lakes are part of the United States, Canada, the United Kingdom, and France.\nThe Great Lakes have many features that contribute to the economy of the United States. The Great Lakes are a natural barrier between the Atlantic Ocean and the Great Lakes. The Great Lakes are particularly susceptible to climate change. The Great Lakes are home to some of the world's largest lakes, including the Great Lakes.\nThe Great Lakes are the largest lake in the United States, which can reach over 3.6 million square feet. The Great Lakes and the Great Lakes are home to many lakes, including the Great Lakes, including the",
@@ -59834,7 +60058,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 113
+            "topic_span": 113,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59853,7 +60080,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 117
+            "topic_span": 117,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 189
           },
           {
             "text": " a number that gives a number. For example, a prime number is the number of integers in an integer, such as a 2 or a 6.\nIn mathematics, a prime number is a number that gives a number that can be used to represent numbers. For example, a prime number is the number of integers in a number.\nIn mathematics, a prime number is a number that gives a numerical value. For example, a prime number is a number that includes numbers that are not integers.\nIn mathematics, a prime number is a number that gives a numerical value. For example, a 2-digit number is a number that includes numbers that are not integers.\nIn mathematics, a prime number is a number that can be used to represent numbers. For example, a prime number is a number that can be used to represent numbers.\nIn mathematics, a prime number is a number that contains a numerical value. For example, 10, 15, and 20 are prime numbers.\nIn mathematics, a prime number is a number that contains numerical values, such as a prime number. For example, a 2-digit number is a number that contains all numbers that are not integers.\nIn mathematics, a prime number is a numerical number that contains a numerical value",
@@ -59866,7 +60096,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 1.0,
-            "topic_span": 251
+            "topic_span": 251,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " a prime number, which numbers are prime numbers.\nA prime number is a number that is divisible by a certain number.\nA prime number is an integer that has a given prime number.\nPrime numbers are numbers that are divisible by a certain number of times.\nPrime numbers are numbers that are not divisible by a certain number of times.\nPrime numbers are numbers that are divisible by a certain number of times.\nPrime numbers are numbers that are divisible by a certain number of times.\nPrime numbers are numbers that are divisible by a certain number of times.\nPrime numbers are numbers that have a given prime number.\nPrime numbers are numbers that have a given prime number number.\nPrime Numbers are numbers that have a given prime number.\nPrime numbers are numbers that have a given prime number number.\nPrime numbers are numbers that have a given prime number number.\nPrime numbers are numbers that have a given prime number number number.\nPrime Numbers are numbers that have a given prime number number number.\nPrime numbers are numbers that have a given prime number number number.\nPrime numbers are numbers that have a given prime number number number number number number number number number number number number number number number number number number number number",
@@ -59879,7 +60112,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.6666666666666666,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 109
           },
           {
             "text": " a number which is a constant, i.e. a constant, which is a number which is equal to the number that is given by the given given number. This type of prime numbers is called prime factorization and is considered to be an abstract concept.\nIn mathematics, prime factors are a subset of the real numbers. In mathematics, prime factors can be expressed as:\n- A = 0\n- A = 0\n- A = 1\n- A = 1\n- A = 0\n- A = 0\n- A = 0\n- A = 0\n- A = 2\n- A = 1\n- A = 2\n- A = 1\n- A = 2\n- A = 4\n- A = 4\n- A = 4\n- A = 4\n- A = 5\n- A = 6\n- A = 7\n- A = 8\n- A = 8\n- A = 8\n- A = 8\n- A = 2\n- A = 10\n- A = 12\n- A = 12\n- A = 12\n- A = 13\n- A = 13\n- A = 14\n- A = 9\n- A = 9\n- A = 9\n- A = 10",
@@ -59892,7 +60128,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 70
+            "topic_span": 70,
+            "degenerate": false,
+            "near_loop": true,
+            "degen_onset": 160
           },
           {
             "text": " an integer that contains a prime number.\n- The number of integers in the prime numbers\n- The number of integers\n- A prime number is a collection of numbers that contains a prime number.\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers\n- The number of integers in the prime numbers",
@@ -59905,7 +60144,10 @@
             "loop_onset": 40,
             "loop_period": 10,
             "topic": 0.6666666666666666,
-            "topic_span": 130
+            "topic_span": 130,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 1
           }
         ]
       },
@@ -59924,7 +60166,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 216
+            "topic_span": 216,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " climate and the ability of people to adapt to new climate conditions.\nIn addition to extreme weather, climate change is also a serious threat to the natural climate system and to vulnerable populations. Climate change has the potential to disrupt migration patterns in many parts of the world, including Asia, Africa and South America.\nClimate change also has negative impacts on health and development, such as increased risk of cardiovascular disease, increases in mortality from infectious diseases, and reduction in the availability of quality health care.\nClimate change also affects food production and distribution, as well as the natural environment. Adaptation to climate change requires adaptation to the changing climate. Research has shown that climate change can have detrimental effects on food production and distribution.\nThe impacts of climate change on agricultural production and consumption are complex and multifaceted. Agriculture and climate change may have negative impacts on public health, food security, and the environment, but they are also important.\nThe effects of climate change on food production are multifaceted and multifaceted. The impacts of climate change on food production and distribution are multifaceted. Food production and distribution are affected by climate change, while food production and distribution are affected by climate change.\nEffects of climate change on the food supply and distribution include changes in water quality",
@@ -59937,7 +60182,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Earth's climate.\nThe effects of climate change are more uncertain than other natural phenomena. It has been estimated that climate change will increase the global average temperatures by more than 40 degrees Celsius over the last 30 years and that the planet will become increasingly warmer by 2060. The world's average temperature will rise by about a third over the next decade. As a result, many of the current global temperatures will be warmer than the average for decades.\nThis year, the IPCC has predicted that the Earth will be warmer by a third over the next decade. The increase in the average temperature of the Earth's surface is expected to increase the temperature of the Earth's surface by a third. That means that the planet will be warmer by a third over the next century. The increase in the average temperature of the Earth's surface will be about a third over the next decade.\nThe Intergovernmental Panel on Climate Change (IPCC) is a group of independent agencies that is responsible for the science and policy of the United Nations. The Commission has been responsible for the protection of human rights, including the protection of children, and the protection of human rights, including the protection of the environment. The Commission also monitors the damage caused by human activities, including the destruction of property and human",
@@ -59950,7 +60198,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 183
+            "topic_span": 183,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " temperature and precipitation, which are often accompanied by extreme weather events, such as hurricanes and flooding.\nUnderstanding Climate Change: The Facts\nClimate change is a concern for many people worldwide. It is a global problem, and more particularly a global concern of climate change.\nWhat are the different types of Climate Change?\nThe six major types of Climate Change are as follows:\n- Climate change: It refers to the changes in the climate system, which is influenced by human activities, including global warming.\n- Climate change: It refers to the changes in the Earth\u2019s climate system, which is influenced by human activity.\n- Climate change: It refers to the changes in the Earth\u2019s climate system, which are influenced by human activities.\n- Climate change: It refers to the changes in the Earth\u2019s climate system, which is influenced by human activities, including global warming.\n- Climate change: It refers to the changes in the Earth\u2019s climate system, which is influenced by human activities.\n- Climate change: It refers to changes in the Earth\u2019s climate system, which is influenced by human activities, including global warming.\n- Climate change: It refers to the changes in the Earth\u2019s climate system",
@@ -59963,7 +60214,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 255
+            "topic_span": 255,
+            "degenerate": true,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the Earth\u2019s climate, including the rise in atmospheric CO2, which causes sea levels to rise, and the changes in the ocean\u2019s chemistry and weather patterns.\nClimate change is a natural phenomenon that has been influencing the entire Earth\u2019s climate, including changes in the air, water, and land. The changing climate affects the entire Earth, including the oceans, the atmosphere, and the ocean, impacting many areas of our lives.\nWeather and Climate Change\nClimate change is a natural phenomenon that affects the Earth\u2019s climate, including the changes in the ocean, sea level, and climate. This is because the Earth\u2019s temperature fluctuates, which can affect the climate in different ways.\nThe temperature of the ocean affects ocean circulation, which is the circulation of water over long distances. The ocean\u2019s temperature affects all of the Earth\u2019s movements and ecosystems, including the ocean\u2019s temperature.\nThe ocean\u2019s climate is influenced by the human body\u2019s temperature, which affects the climate in different ways. For example, the ocean\u2019s temperature can affect the ocean\u2019s temperature, specifically, the subtropical ocean, which affects the ocean\u2019s temperature and the ocean",
@@ -59976,7 +60230,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 215
+            "topic_span": 215,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -59995,7 +60252,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 91
+            "topic_span": 91,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to boil it. When the bread is in the oven, it will begin to cook.\nDo not boil the bread until it is cooked. The oven will still be warm. But the pan is not that hard. Once the bread is cooked, it will be a little bit hot.\nWhen the bread is cooked, it will be a little bit more than you expect. This will allow you to cook everything that you want.\nWhen the bread is cooked, the pan will begin to cook.\nWhen the bread is cooked, the pan is not hot. The pan will be too hot. The pan will be too hot.\nIf you are using a stove, it is not hot.\nWhen you are using a stove, it is necessary to use a table and a side.\nIf you are using a stove, it is best to use a stove with a front cover.\nHow to use a stove\nHow to use a stove\nTo start using a stove, you will need to know the following:\n- What is the first thing that you want to do?\n- How many pieces of food or other food you need to cook?\n- What are the ingredients of the food that you want to cook?\n- What are the ingredients",
@@ -60008,7 +60268,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 232
+            "topic_span": 232,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to be able to break the bread down into its parts. This will keep the bread from melting into a mushy, mushy, or mushy texture while it\u2019s still soft.\nTo make bread, you will need to make sure the bread is made of the right type of flour. This will also make sure that the bread is made from the right type of flour.\nWhen you are making bread, it is important to make sure that the bread is made with the right amount of flour. This will help to avoid any impurities or make it hard to bake and bake.\nHowever, if you are using a gluten-free bread, you can still make your bread using the correct type of flour. This will help to make sure that the bread is not as soft as it was before.\nWhat is gluten-free bread?\nCeiling is a type of bread that is made from wheat flour. This is a type of bread that is made using the correct type of flour.\nThis type of bread is made from the right type of flour. This type of bread is made from the right type of flour. This type of bread is made from the right type of flour and can be made with the correct type of flour.\nOnce",
@@ -60021,7 +60284,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 235
+            "topic_span": 235,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " to cut down on the flour to make more flour. If you do not have enough flour, you can add the flour to make more flour.\nYou can make a baking knife or a crumb of flour.\nYou can make a simple knife, which is made out of a mix of flour, salt and water. You can also make a bread knife, which is made out of a mixture of flour and water.\nYou can make a knife, which is made out of a mixture of flour, salt and water. You can also make a crumb of bread.\nYou can make a simple knife with a little butter, which is made out of a mixture of flour and water.\nYou can make a simple knife with a little flour and salt. You can also make a bread knife using a mixture of flour and water.\nYou can make a simple knife with a bit of butter, which is made out of a mixture of flour and water. You can make a bread knife with a bit of butter, which is made out of a mixture of flour and water. You can make a bread knife, which is made out of a mixture of flour and water. You can make a bread knife with a bit of butter, which is made out of a mixture",
@@ -60034,7 +60300,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 242
+            "topic_span": 242,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 172
           },
           {
             "text": " to bake at home or give them a small amount of baking powder. When you bake, you can start baking with a little bit of baking powder or a small amount of baking powder.\nWhen you bake bread, you will need to add some baking powder or a few baking powder. You will need to add some baking powder, but you will be able to use a small amount of baking powder.\nIf you are using a small amount of baking powder, you will need to cut out some baking powder in the center of the oven. You can use a small amount of baking powder or a small amount of baking powder to make a delicious loaf loaf with a little baking powder or a few baking powder.\nIn addition to baking, you should also add some baking powder or a small amount of baking powder to make a loaf bread. You will need to add some baking powder or a small amount of baking powder to make a bread.\nTo bake bread, you will need to add some baking powder or a small amount of baking powder to make a loaf bread. You will need to add some baking powder or a small amount of baking powder to make a loaf bread.\nWhen you bake bread, you will need to add some baking powder or a small amount of baking powder to",
@@ -60047,7 +60316,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 243
+            "topic_span": 243,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -60066,7 +60338,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 251
+            "topic_span": 251,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " his plays, the works of Shakespeare, and his plays. Shakespeare wrote thousands of plays, many of which were also plays.\nWilliam Shakespeare's plays are a part of Shakespeare's play. Here are some of the most famous plays in English history:\n- \"I'm a man,\" Shakespeare said.\n- \"I'm a man,\" he said.\n- \"I'm a man.\"\n- \"I'm a man.\"\n- \"I'm a man,\" he said.\n- \"I'm a man.\"\n- \"I'm a man,\" he said.\n- \"I'm a man,\" he said.\n- \"I'm a man,\" he said.\n- \"We are going to go down this hill on the hills. I'm going to go down the hill on the hills.\"\n- \"We're going down the hill on the hills.\"\n- \"I'm a man,\" he said.\n- \"I'm a man,\" he said.\n- \"I'm a man,\" he said.\n- \"I'm a man,\" he said.\n- \"I'm a man,\" she said.\n- \"I'm a man,\" he said.\n- \"I'm a man,\" he said",
@@ -60079,7 +60354,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 59
+            "topic_span": 59,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 154
           },
           {
             "text": " The Old Lady Macbeth, The Tempest, The Tempest, and Shakespeare's Tempest. Shakespeare, and the other plays of Shakespeare, were written long before his death at age thirty-three. The play is also considered to be the first of Shakespeare's plays, but it is not his fault.\nThe play is written on the basis of Shakespeare's play, The Tempest. The play, written in the late 16th century, tells of Shakespeare's love of the English language. He is known for his love of Shakespeare and for his love of the English language. The play is written on a large scale, with several plays written by Shakespeare. The play is best known for its Shakespearean play, The Tempest, and the playwright's love of English language, but it is also considered to be Shakespeare's love of Shakespeare's literary language, as well. The play is well known for its Shakespearean and English language.\nThe play is also known for its Shakespearean writing. The playwright, Richard Burton, wrote a play for Shakespeare in 1601. Burton was the son of William Burton and his wife Anne Burton. Burton was a devout Catholic and wrote about the love of his mother, Mary I. Burton was educated at Cambridge and he spent four years in England",
@@ -60092,7 +60370,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 234
+            "topic_span": 234,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Shakespeare's Hamlet and the play of William Shakespeare. Shakespeare was an Englishman, his first wife, a poet and his love of the city life and his father's passion for his wife and children. He was a writer, his wife, and a great lover. Shakespeare wrote more than 500 plays, most of them in English. He was an English writer, a poet, a writer, and a poet.\nIn Shakespeare's time, Shakespeare was a man of many talents. His most famous plays were comedies, comedies, and comedies. He was the only poet to be credited with writing many plays, including Shakespeare's comedy Hamlet. His comedy Hamlet and the tragedy Hamlet and the tragedy Hamlet are both classic works of Shakespeare's time. In this essay, I will be focusing on the history of Shakespeare.\n1. Hamlet and the play Hamlet is a play by William Shakespeare. It is a play written by William Shakespeare, and is regarded as one of the best plays of the twentieth century. It is written by William Shakespeare and is about a man who has a love for Shakespeare. The play is considered to be one of Shakespeare's most popular comedies, and is seen as one of the greatest tragedies of all time. Shakespeare",
@@ -60105,7 +60386,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 256
+            "topic_span": 256,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " Romeo and Juliet, and the English playwrights such as Lord Richard and William Shakespeare. Shakespeare wrote a lot of plays, including Romeo and Juliet, in his time, that were performed either in the English language or in Shakespeare's language.",
@@ -60118,7 +60402,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.3333333333333333,
-            "topic_span": 45
+            "topic_span": 45,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -60137,7 +60424,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 245
+            "topic_span": 245,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the mid-1960s, and the internet became a tool for both researchers and historians to examine the past and present. They were able to discover the history of the internet and its evolution in history. The internet has provided a fascinating insight into the world of science while also providing a glimpse into the past.\nThe use of the internet has become popular in the past few years, and there is a lot of research and study to be done. For example, researchers have found that the internet has changed the way we view the world. The internet has opened up new avenues for research and learning, and the internet has also opened up new avenues for research and discovery. The internet has also provided a new way to explore and study the world, and the internet has paved the way for new technologies and technologies.\nThe internet has also played a significant role in the development of the internet. The internet has revolutionized the way people live and work, and the internet has transformed how we live and learn. The internet has provided a powerful tool to study and study the past, and the internet has provided a new way for people to study and study the past.\nThe internet has also played a significant role in the development of the internet. The internet has made a significant impact in the",
@@ -60150,7 +60440,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 249
+            "topic_span": 249,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the 1980s and was funded by the Bill & Melinda Gates Foundation. The project was funded in part by the Department of Defense and the Department of Energy. The project was successful and was implemented in response to the new energy crisis.\nThe project received funding from the Department of Energy, the National Energy Board, the Atomic Energy Commission, the Nuclear Regulatory Commission, and the National Science Foundation. The project was funded by the Department of Defense and the Department of Energy. The project was funded by the Department of Energy and supported by the National Science Foundation. The project was funded in part by the National Science Foundation. The project was funded and funded by the Department of Energy and was implemented in response to the nuclear crisis.\nThe project was approved by the Department of Energy and was run by the Department of Energy. The project was approved by the Department of Energy and was implemented on-site by the Department of Energy. The project was approved by the Department of Energy and was implemented in response to the nuclear crisis in response to the nuclear crisis.\nThe project was approved by the Department of Energy and was implemented in response to the nuclear crisis in response to the nuclear crisis in response to the nuclear crisis in response to the nuclear crisis in response to the nuclear crisis in response to the",
@@ -60163,7 +60456,10 @@
             "loop_onset": 222,
             "loop_period": 6,
             "topic": 0.25,
-            "topic_span": 212
+            "topic_span": 212,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 176
           },
           {
             "text": " the early 20th century, but it has since become a valuable source of information for scientists today.\nThe internet has also seen a resurgence in the amount of research that has been done on the world's most basic needs. The internet has helped to bring in a whole new world of knowledge, but many people still wonder about its importance.\nIn the past, the internet has been considered a great tool to help with research and development, but today it has become a way for researchers and scientists to access information that is not always available.\nThere are many benefits of using the internet to support research and development. It has also become a source of information for researchers and the public in general.\nFor example, the Internet has helped researchers in many fields to gain access to information in ways that are not easily accessible to the general public.\nIt has also helped scientists to understand the needs of people in different parts of the world.\nIt has helped to keep researchers up-to-date and help fund research projects that benefit people in many different parts of the world.\nBut it is not just the internet that has helped scientists to discover new information about the world around them.\nIt has also helped to create a new kind of knowledge for scientists to research.\nThe",
@@ -60176,7 +60472,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.75,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the late 1960s, but the effort was hampered by the early 1950s. The U.S. government began to invest in the internet in the early 1960s but the U.S. government was still able to fund it. The internet was a new era and this was the era when it was the first web presence using the internet. Although the internet was being used in the first decades of the 20th century, the internet was never used as a new tool for the internet. The internet was first used to access news, information, and pictures. It was not until the late 1960s that the internet became a means of communication and collaboration.\nIt\u2019s a big part of the internet. The internet was born out of the idea that the internet was a tool for sharing information and information. This was the first time it was used to access information on the internet. The internet was used to connect people and keep them connected. It was also used to connect people to a variety of media such as radio, television, and newspapers. The internet was used to connect people using the internet. For a long time, the internet was used to connect people with other people. The internet was used to connect people to different websites and websites. The internet was used to",
@@ -60189,7 +60488,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.25,
-            "topic_span": 253
+            "topic_span": 253,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           }
         ]
       },
@@ -60208,7 +60510,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 252
+            "topic_span": 252,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the price of the goods and services increases.\nA rise in price is caused by a rise in the price of goods and services to a higher level than before.\nA rise in the price of goods and services affects the quality of life.\nA rise in the price of goods and services affects the quality of life.\nThe price of a good affects the quality of life.\nThe price of money is one of the most important factors to consider when selecting an investment.",
@@ -60221,7 +60526,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is higher than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which an inflation rate is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of two.\n- The inflation rate is the rate at which inflation is more than a factor of",
@@ -60234,7 +60542,10 @@
             "loop_onset": 212,
             "loop_period": 19,
             "topic": 0.5,
-            "topic_span": 250
+            "topic_span": 250,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 0
           },
           {
             "text": " inflation is lower and the inflation rate is higher, and the economy is in a recession, and the rate of inflation is lower. The unemployment rate is higher in the economy and the economy is in recession.\nThe unemployment rate is the main economic indicator for the economy and it is calculated as the number of workers in the economy. The unemployment rate is calculated as the number of workers in the economy.\nSo, the unemployment rate is the amount of labor that is employed.\nThe unemployment rate was calculated as the number of employees in the economy. It is calculated as the number of workers in the economy.\nInflation is often said to be the number of people in the economy. The unemployment rate is the number of people unemployed in the economy.\nInflation is a measure of inflation that is calculated by the following formula:\n|1||(1)||2||(1)||3|\n|1||(1)||2||(1)||3|\n|1||(1)||4||(1)||5|\n|1||(1)||5||(1)||7|\n|1||(1)||6||(2)||1|\n|1||(2)||8",
@@ -60247,7 +60558,10 @@
             "loop_onset": null,
             "loop_period": null,
             "topic": 0.5,
-            "topic_span": 159
+            "topic_span": 159,
+            "degenerate": false,
+            "near_loop": false,
+            "degen_onset": null
           },
           {
             "text": " the price of a good rises\nin the same proportion as the price of a good, and a\nprice difference of the same proportion as the price of a good.\nThis is called a deflationary period.\nThis is called a deflationary period.\nThe economy is in recessionary period.\nSince it is in recessionary period, both the price\nof a good and the price of a good will fall.\nWhen prices fall, the price of a good will fall.\nThe price of a good will fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a good and price of a good fall.\nWhen price of a",
@@ -60260,7 +60574,10 @@
             "loop_onset": 106,
             "loop_period": 13,
             "topic": 0.0,
-            "topic_span": 0
+            "topic_span": 0,
+            "degenerate": true,
+            "near_loop": true,
+            "degen_onset": 75
           }
         ]
       }

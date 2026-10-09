@@ -1,6 +1,6 @@
 # Training run report: data640k-e768h12l8-160k-lr3e-4-rope-fused-cont30k-rlr5e-5
 
-Run `20261009-011729-2472dd1-data640k-e768h12l8-160k-lr3e-4-rope-fused-cont30k-rlr5e-5` · checkpoint `modal_data640k-e768h12l8-160k-lr3e-4-rope-fused-cont30k-rlr5e-5_steps30000_seed42.pt` · generated 2026-10-09 14:43 UTC. A decoder-only Transformer language model (GPT-2 tokenizer, 50,257 tokens) trained from scratch; every number below is from the project's fixed evaluation harness, identical across models. Lower loss is better; the glossary at the end defines each metric.
+Run `20261009-011729-2472dd1-data640k-e768h12l8-160k-lr3e-4-rope-fused-cont30k-rlr5e-5` · checkpoint `modal_data640k-e768h12l8-160k-lr3e-4-rope-fused-cont30k-rlr5e-5_steps30000_seed42.pt` · generated 2026-10-09 17:21 UTC. A decoder-only Transformer language model (GPT-2 tokenizer, 50,257 tokens) trained from scratch; every number below is from the project's fixed evaluation harness, identical across models. Lower loss is better; the glossary at the end defines each metric.
 
 ## Headline
 
@@ -8,8 +8,11 @@ Run `20261009-011729-2472dd1-data640k-e768h12l8-160k-lr3e-4-rope-fused-cont30k-r
 |---|---|
 | full_val@1024 (nats) | 3.3239 |
 | fixed-target L(c=1024) | 3.2410 |
-| rep4 median (generation) | 0.356 |
-| loops | 14/100 (95% CI [0.085, 0.221]) |
+| degenerate (exact loop or rep4 ≥ 0.5) | 36/100 (95% CI [0.273, 0.458]) |
+| rep4 median / mean / p90 | 0.356 / 0.373 / 0.672 |
+| samples with rep4 ≥ 0.3 / 0.5 / 0.7 | 59 / 35 / 10 |
+| near-loops (median onset) | 29/100 (token 115) |
+| exact loops | 14/100 (95% CI [0.085, 0.221]) |
 | topic held | 43% |
 | final eval train / val loss | 3.2084 / 3.3329 |
 | cost | $4.84 (billed) |
@@ -115,9 +118,9 @@ Run `20261009-011729-2472dd1-data640k-e768h12l8-160k-lr3e-4-rope-fused-cont30k-r
 
 20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw
 
-| rep4 median / p90 | loops (95% CI) | first loop at (median) | distinct-2 / -4 | topic held | topic span (median) | EOS | mean tokens |
-|---|---|---|---|---|---|---|---|
-| 0.356 / 0.672 | 14/100 [0.085, 0.221] | 156.0 | 0.469 / 0.627 | 43% | 233.0 | 10 | 240.68 |
+| degenerate (95% CI) | rep4 median / p90 | rep4 ≥0.3 / 0.5 / 0.7 | near-loops (onset) | exact loops (95% CI) | first loop at (median) | distinct-2 / -4 | topic held | topic span (median) | EOS | mean tokens |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 36/100 [0.273, 0.458] | 0.356 / 0.672 | 59 / 35 / 10 | 29/100 (token 115) | 14/100 [0.085, 0.221] | 156.0 | 0.469 / 0.627 | 43% | 233.0 | 10 | 240.68 |
 
 ### Inference (Mac, single sequence)
 
@@ -127,16 +130,16 @@ prefill at full context 96.24 ms · decode 19.1 tokens/s · 0.526 GB · medians 
 
 Sorted by full_val; same harness, validation set, prompts and seeds for every row.
 
-| model | full_val@1024 | L(c=1024) | rep4 median | loops | topic held | retrieval@256 | retrieval@496 |
-|---|---|---|---|---|---|---|---|
-| **this run** · data640k · d768-L8 · 95.3M · T1024 · 190K steps | 3.3239 | 3.2410 | 0.356 | 14/100 | 43% | 96% | 68% |
-| data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.3310 | 3.2497 | 0.257 | 16/100 | 46% | 98% | 73% |
-| data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps | 3.4038 | 3.3347 | 0.342 | 11/100 | 36% | 96% | 70% |
-| data320k · d512-L4 · 38.4M · T1024 · 80K steps | 3.6622 | 3.6010 | 0.411 | 19/100 | 37% | 69% | 49% |
-| data320k · d512-L4 · 38.9M · T1024 · 80K steps | 3.7476 | 3.6854 | 0.496 | 26/100 | 31% | 55% | 41% |
-| data160k · d512-L4 · 38.9M · T1024 · 40K steps | 3.8919 | 3.8151 | 0.436 | 17/100 | 30% | 41% | 30% |
-| data320k · d512-L4 · 38.9M · T1024 · 40K steps | 3.9376 | 3.8792 | 0.423 | 17/100 | 33% | 24% | 19% |
-| data160k · d256-L4 · 16.3M · T1024 · 40K steps | 4.1141 | 4.0407 | 0.538 | 26/100 | 25% | 63% | 48% |
+| model | full_val@1024 | L(c=1024) | degenerate | rep4 median | exact loops | topic held | retrieval@256 | retrieval@496 |
+|---|---|---|---|---|---|---|---|---|
+| **this run** · data640k · d768-L8 · 95.3M · T1024 · 190K steps | 3.3239 | 3.2410 | 36/100 | 0.356 | 14/100 | 43% | 96% | 68% |
+| data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.3310 | 3.2497 | 33/100 | 0.257 | 16/100 | 46% | 98% | 73% |
+| data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps | 3.4038 | 3.3347 | 28/100 | 0.342 | 11/100 | 36% | 96% | 70% |
+| data320k · d512-L4 · 38.4M · T1024 · 80K steps | 3.6622 | 3.6010 | 48/100 | 0.411 | 19/100 | 37% | 69% | 49% |
+| data320k · d512-L4 · 38.9M · T1024 · 80K steps | 3.7476 | 3.6854 | 51/100 | 0.496 | 26/100 | 31% | 55% | 41% |
+| data160k · d512-L4 · 38.9M · T1024 · 40K steps | 3.8919 | 3.8151 | 46/100 | 0.436 | 17/100 | 30% | 41% | 30% |
+| data320k · d512-L4 · 38.9M · T1024 · 40K steps | 3.9376 | 3.8792 | 43/100 | 0.423 | 17/100 | 33% | 24% | 19% |
+| data160k · d256-L4 · 16.3M · T1024 · 40K steps | 4.1141 | 4.0407 | 59/100 | 0.538 | 26/100 | 25% | 63% | 48% |
 
 ## Dataset: data640k
 
@@ -188,8 +191,10 @@ At the 327.68M-token budget (B8 × T1024 × 40K) this is ~0.52 passes, against
 | L(c) | Fixed-target context curve: loss on the same 8,000 target tokens given exactly c tokens of history. Comparable across models at equal c. |
 | cb@W | Context benefit: loss with the real preceding W/2 tokens vs. a prefix from a different document, on identical windows. Nats of help from relevant context (± standard error). |
 | retrieval@d | Forced choice among 10 candidates (chance 10%): can the model pick the token that appeared d tokens earlier? Tests using information far back in context. |
-| rep4 | Share of repeated 4-grams in a generated sample (0 = no repetition). Median over 100 samples. |
-| loops | Samples (of 100) that fall into a verbatim repetition loop, with its 95% CI. |
+| degenerate | Samples (of 100) that end in an exact loop OR have rep4 >= 0.5, with its 95% CI. The headline repetition number: exact loops alone miss repetition that never settles into a verbatim cycle. |
+| rep4 | Share of repeated 4-grams in a generated sample (0 = no repetition). Median over 100 samples; also counted at >= 0.3 / 0.5 / 0.7. |
+| near-loops | Samples whose tail repeats: from some token on, every 64-token window has rep4 >= 0.5. Onset = where that tail starts (median). |
+| exact loops | Samples (of 100) that end in a verbatim repeating cycle of at least 32 tokens, with its 95% CI. A strict subset of the degenerate samples. |
 | topic held | Share of samples still mentioning the prompt's subject near the end of the 256-token generation. |
 | distinct-2 / -4 | Distinct bigrams / 4-grams over total, a diversity measure. |
 | generation protocol | 20 frozen prompts x 5 seeds, 256 new tokens, temperature 0.7, top-k 40, stop at EOS; identical for every model. |
@@ -198,7 +203,7 @@ At the 327.68M-token budget (B8 × T1024 × 40K) this is ~0.52 passes, against
 
 ### definition: “Photosynthesis is a process that”
 
-**draw 1** · rep4 0.482 · no loop · topic held
+**draw 1** · rep4 0.482 · not degenerate · topic held
 
 ```text
 Photosynthesis is a process that enables photosynthesis to occur in a plant cell. Plants and leaf chloroplasts are the main source of chlorophyll. Photosynthesis is a process that occurs in a plant cell that uses chlorophyll. Most photosynthesis is done by photosynthesis. Plants rely on the chemical reaction of photosynthesis and respiration. Photosynthesis is a process that involves photosynthesis. Photosynthesis is a process that occurs in a plant cell that uses photosynthesis.
@@ -206,7 +211,7 @@ Photosynthesis is an important process in the photosynthesis process. Photosynth
 Photosynthesis is a process that occurs in plants and other organisms. Photosynthesis is the process by which plants and other organisms convert light energy from the sun into light energy. Photosynthesis is the process by which plants and other organisms convert light energy from the sun into energy. Photosynthesis is a process in which plants and other organisms convert light
 ```
 
-**draw 2** · rep4 0.711 · no loop · topic lost
+**draw 2** · rep4 0.711 · **DEGENERATE** · near-loop from token 87 · topic lost
 
 ```text
 Photosynthesis is a process that begins in the plant cell.
@@ -226,7 +231,7 @@ The plant cell consists of a nucleus which is attached to the outside of the bod
 This is the main cell of the plant
 ```
 
-**draw 3** · rep4 0.312 · no loop · topic held
+**draw 3** · rep4 0.312 · not degenerate · topic held
 
 ```text
 Photosynthesis is a process that occurs after the plant leaves it to produce ATP. When the plant leaves the glucose, the plant reacts with the glucose, and so does the plant's reaction to the glucose, the plant's reaction is like that:
@@ -236,7 +241,7 @@ The cell's reaction to the glucose is called photosynthesis and the plant's reac
 Photosynthesis is a process where the plant's sugar is absorbed by the plant's tissues. Photosynthesis is a process where the plant's sugar is absorbed by the
 ```
 
-**draw 4** · rep4 0.324 · no loop · topic held
+**draw 4** · rep4 0.324 · not degenerate · topic held
 
 ```text
 Photosynthesis is a process that takes place in the cell respiration. The process occurs in the mitochondria, which store energy in the nucleus.
@@ -250,7 +255,7 @@ The process of photovoltaic cell is a process that uses photons from the sun to 
 There are many different types of photovoltaic cells, and each has its
 ```
 
-**draw 5** · rep4 0.04 · no loop · topic lost
+**draw 5** · rep4 0.04 · not degenerate · topic lost
 
 ```text
 Photosynthesis is a process that involves the breaking down of a larger molecule into smaller components.
@@ -264,7 +269,7 @@ It is believed that the plant has evolved into a form of plant-eating. This can 
 
 ### biography: “Albert Einstein was a German-born theoretical physicist who”
 
-**draw 1** · rep4 0.273 · no loop · topic held
+**draw 1** · rep4 0.273 · not degenerate · topic held
 
 ```text
 Albert Einstein was a German-born theoretical physicist who demonstrated the quantum field as a discrete, observable phenomenon. His contributions to science and mathematics were instrumental in shaping his theories and his method of scientific discovery.
@@ -273,7 +278,7 @@ In the 1920s, Einstein began to work on the theory of relativity. He believed th
 In 1925, Einstein published his first paper on electromagnetism, which concluded that the electric field had a definite and measurable and measurable and measurable relationship with the electric field. In 1925, Einstein published his work on the theory of relativity, which he believed that the electric field had a definite and measurable and measurable and measurable and
 ```
 
-**draw 2** · rep4 0.518 · loops · topic held
+**draw 2** · rep4 0.518 · **DEGENERATE** · exact loop from token 203 · topic held
 
 ```text
 Albert Einstein was a German-born theoretical physicist who was born on November 18, 1905, in Munich, Germany.
@@ -294,7 +299,7 @@ In 1931, Albert Einstein was awarded the Nobel Prize for Physics. In 1936, he wa
 
 ```
 
-**draw 3** · rep4 0.66 · loops · topic lost
+**draw 3** · rep4 0.66 · **DEGENERATE** · exact loop from token 201 · topic lost
 
 ```text
 Albert Einstein was a German-born theoretical physicist who believed that the universe could be made from a mixture of atoms. He believed that, while it was impossible to create a single atom, the only way to create it was through a simple process of dissolving matter. In the next chapter, Einstein discussed the possibility that the universe could be made by atomic particles.
@@ -313,7 +318,7 @@ Albert Einstein was a German-born theoretical physicist who believed that the un
 - The neutron star and
 ```
 
-**draw 4** · rep4 0.194 · no loop · topic held
+**draw 4** · rep4 0.194 · not degenerate · topic held
 
 ```text
 Albert Einstein was a German-born theoretical physicist who became one of the foremost scientists of his time. He was particularly interested in the concept of atomic energy and the idea of a theory of gravity. He was also a member of the European Academy of Sciences which was founded in 1891.
@@ -332,7 +337,7 @@ The Facts About Einstein
 - The Einstein Memorial is located at the intersection of the
 ```
 
-**draw 5** · rep4 0.051 · no loop · topic held
+**draw 5** · rep4 0.051 · not degenerate · topic held
 
 ```text
 Albert Einstein was a German-born theoretical physicist who became the first person to understand the laws of quantum mechanics, which he called quantum mechanics. He was also the first person to observe the behavior of quantum particles, which he called quantum-mechanical interactions.
@@ -342,7 +347,7 @@ In 1892, Einstein was elected to the Royal Academy of Sciences in Paris. He was 
 
 ### science_explainer: “Oxygen is a chemical element with”
 
-**draw 1** · rep4 0.869 · loops · topic held
+**draw 1** · rep4 0.869 · **DEGENERATE** · exact loop from token 50 · topic held
 
 ```text
 Oxygen is a chemical element with the symbol Oxygen.
@@ -365,7 +370,7 @@ The element has the symbol Oxygen, which is the symbol O.
 - O Oxygen is a chemical element with the symbol Oxy
 ```
 
-**draw 2** · rep4 0.407 · no loop · topic held
+**draw 2** · rep4 0.407 · not degenerate · topic held
 
 ```text
 Oxygen is a chemical element with symbol N.
@@ -382,7 +387,7 @@ Chemistry is a science that deals with the study of matter. It is the study of m
 Chem
 ```
 
-**draw 3** · rep4 0.198 · no loop · topic held
+**draw 3** · rep4 0.198 · not degenerate · topic held
 
 ```text
 Oxygen is a chemical element with symbol Oxy-G. Oxygen molecules are the most abundant chemical elements in nature. Oxygen atoms are the building blocks of most chemical reactions.
@@ -396,7 +401,7 @@ What are the four types of Oxygen?
 The four major types of Oxygen are Oxygen, Hydrogen, Oxygen, and Carbon. Oxygen is the most abundant chemical element in the Earth’s
 ```
 
-**draw 4** · rep4 0.411 · no loop · topic held
+**draw 4** · rep4 0.411 · not degenerate · topic held
 
 ```text
 Oxygen is a chemical element with the symbol "L" and a symbol "K" in the middle.
@@ -411,7 +416,7 @@ In the U.S., the word "xygen" is used to refer to the substance that contains ox
 - This word is used in the context
 ```
 
-**draw 5** · rep4 0.506 · no loop · topic held
+**draw 5** · rep4 0.506 · **DEGENERATE** · topic held
 
 ```text
 Oxygen is a chemical element with symbol Oxygen. In the process of heating, the molecule moves in the opposite direction, creating an electric current and a temperature that is stable.
@@ -427,7 +432,7 @@ The electron spin is the chemical
 
 ### instructional: “In this lesson, students will learn how to”
 
-**draw 1** · rep4 0.66 · loops · topic lost
+**draw 1** · rep4 0.66 · **DEGENERATE** · exact loop from token 117 · topic lost
 
 ```text
 In this lesson, students will learn how to make a good impression on your class and how to use the vocabulary we use at all times.
@@ -436,7 +441,7 @@ In this lesson, students will learn how to create and use the word “d” in a 
 In this lesson, students will learn about the word “d” which is a different word in the word “d” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the “n” is a different word in the word “n” that means “the
 ```
 
-**draw 2** · rep4 0.621 · loops · topic held
+**draw 2** · rep4 0.621 · **DEGENERATE** · exact loop from token 189 · topic held
 
 ```text
 In this lesson, students will learn how to create a 3D model of a robot. The lesson will include a detailed lesson plan. Students will be encouraged to build a 3D model of a 3D model of a robot.
@@ -452,7 +457,7 @@ A 3D model of a 3D model of a robot is illustrated below.
 |This lesson will introduce the use of 3D printing to create a 3D model of
 ```
 
-**draw 3** · rep4 0.486 · loops · topic lost · ended at EOS
+**draw 3** · rep4 0.486 · **DEGENERATE** · exact loop from token 82 · topic lost · ended at EOS
 
 ```text
 In this lesson, students will learn how to make a simple and effective tool to help you make a good, quick and effective use of Microsoft word. Google Docs is also an excellent tool to make sure you have a great Microsoft Word document.
@@ -470,7 +475,7 @@ Click here to see the Office Word 2016
 Click here to see the Office Word 2016
 ```
 
-**draw 4** · rep4 0.0 · no loop · topic lost · ended at EOS
+**draw 4** · rep4 0.0 · not degenerate · topic lost · ended at EOS
 
 ```text
 In this lesson, students will learn how to use a calculator (or similar, older version) to solve two simple equations.
@@ -478,7 +483,7 @@ In this lesson, students will learn how to use a calculator (or similar, older v
 - Activities & Projects
 ```
 
-**draw 5** · rep4 0.111 · no loop · topic lost · ended at EOS
+**draw 5** · rep4 0.111 · not degenerate · topic lost · ended at EOS
 
 ```text
 In this lesson, students will learn how to read and write the text in a variety of ways. What is the difference between a “word” and a “word”?
@@ -487,7 +492,7 @@ In this lesson, students will learn how to read and write the text in a variety 
 ### bullet_list: “There are several benefits to regular exercise:
 - ”
 
-**draw 1** · rep4 0.534 · no loop · topic lost
+**draw 1** · rep4 0.534 · **DEGENERATE** · topic lost
 
 ```text
 There are several benefits to regular exercise:
@@ -509,7 +514,7 @@ There are several benefits to regular exercise:
 
 ```
 
-**draw 2** · rep4 0.771 · no loop · topic lost
+**draw 2** · rep4 0.771 · **DEGENERATE** · near-loop from token 19 · topic lost
 
 ```text
 There are several benefits to regular exercise:
@@ -518,7 +523,7 @@ There are several benefits to regular exercise:
 - รงอันักนักนักนักนันักนักนักนัชัปันันักนันักนักนักนักนินักนักนักนักนักนักนันันักนันันัะนักนักนันัก
 ```
 
-**draw 3** · rep4 0.3 · no loop · topic lost · ended at EOS
+**draw 3** · rep4 0.3 · not degenerate · topic lost · ended at EOS
 
 ```text
 There are several benefits to regular exercise:
@@ -533,7 +538,7 @@ Do you have any questions?
 Click the button below to get started and click the "Find Out" button.
 ```
 
-**draw 4** · rep4 0.723 · loops · topic lost
+**draw 4** · rep4 0.723 · **DEGENERATE** · exact loop from token 218 · topic lost
 
 ```text
 There are several benefits to regular exercise:
@@ -560,7 +565,7 @@ There are several benefits to regular exercise:
 - ___________ can be
 ```
 
-**draw 5** · rep4 0.747 · no loop · topic held
+**draw 5** · rep4 0.747 · **DEGENERATE** · topic held
 
 ```text
 There are several benefits to regular exercise:
@@ -581,7 +586,7 @@ There are several benefits to regular exercise:
 ### numbered_list: “To solve a quadratic equation, follow these steps:
 1.”
 
-**draw 1** · rep4 0.731 · loops · topic held
+**draw 1** · rep4 0.731 · **DEGENERATE** · exact loop from token 138 · topic held
 
 ```text
 To solve a quadratic equation, follow these steps:
@@ -592,7 +597,7 @@ To solve a quadratic equation, follow these steps:
 5. Step 5: Calculate the area of the right side of the triangle that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that is the quadratic equation as the base for the square that
 ```
 
-**draw 2** · rep4 0.368 · no loop · topic lost
+**draw 2** · rep4 0.368 · not degenerate · topic lost
 
 ```text
 To solve a quadratic equation, follow these steps:
@@ -631,7 +636,7 @@ To solve a quadratic equation, follow these steps:
 33. Define
 ```
 
-**draw 3** · rep4 0.502 · no loop · topic held
+**draw 3** · rep4 0.502 · **DEGENERATE** · topic held
 
 ```text
 To solve a quadratic equation, follow these steps:
@@ -659,7 +664,7 @@ using the given equation of the quadratic using
 18. The given equation
 ```
 
-**draw 4** · rep4 0.652 · no loop · topic held
+**draw 4** · rep4 0.652 · **DEGENERATE** · near-loop from token 27 · topic held
 
 ```text
 To solve a quadratic equation, follow these steps:
@@ -684,7 +689,7 @@ To solve a quadratic equation, follow these steps:
 19. Identifying the type
 ```
 
-**draw 5** · rep4 0.53 · no loop · topic lost
+**draw 5** · rep4 0.53 · **DEGENERATE** · near-loop from token 167 · topic lost
 
 ```text
 To solve a quadratic equation, follow these steps:
@@ -709,7 +714,7 @@ To solve a quadratic equation, follow these steps:
 
 ### enumeration: “There are three main types of”
 
-**draw 1** · rep4 0.573 · no loop · topic lost
+**draw 1** · rep4 0.573 · **DEGENERATE** · near-loop from token 137 · topic lost
 
 ```text
 There are three main types of the garter. The first is the type of garter that is used for the
@@ -745,7 +750,7 @@ b. The slot is the
 The slot
 ```
 
-**draw 2** · rep4 0.166 · no loop · topic lost
+**draw 2** · rep4 0.166 · not degenerate · topic lost
 
 ```text
 There are three main types of medical care that doctors use. They include medical imaging, diagnostic imaging, and x-rays.
@@ -757,7 +762,7 @@ Medical imaging is a way to diagnose and treat health conditions. It can help do
 Medical imaging is a way to
 ```
 
-**draw 3** · rep4 0.632 · no loop · topic lost
+**draw 3** · rep4 0.632 · **DEGENERATE** · topic lost
 
 ```text
 There are three main types of computer games. The first is called game-based games, wherein players can play the computer games on the computer. Some of the games are as follows:
@@ -769,7 +774,7 @@ There are three main types of computer games. The first is called game-based gam
 - Computer-based games are games that simulate real-world situations using computer technology. The game is a game where players
 ```
 
-**draw 4** · rep4 0.308 · no loop · topic lost
+**draw 4** · rep4 0.308 · not degenerate · near-loop from token 145 · topic lost
 
 ```text
 There are three main types of computer virus: A) virus B, B) virus C, D) virus D, E) virus D and E.
@@ -779,7 +784,7 @@ To understand the different types of viruses, we will look at some of the most c
 As this virus is very dangerous, it can lead to many diseases
 ```
 
-**draw 5** · rep4 0.557 · no loop · topic lost
+**draw 5** · rep4 0.557 · **DEGENERATE** · topic lost
 
 ```text
 There are three main types of water vapor condensing systems in the United States.
@@ -792,7 +797,7 @@ There are three main types of water vapor condensing systems in the United State
 
 ### long_dependency: “Although the treaty was signed in 1919, it”
 
-**draw 1** · rep4 0.32 · no loop · topic held
+**draw 1** · rep4 0.32 · not degenerate · topic held
 
 ```text
 Although the treaty was signed in 1919, it was repealed in the year 1919.
@@ -807,7 +812,7 @@ The war of the Three Kingdoms was fought on 4 August 1919, and was fought on 1 J
 The Treaty of Paris was signed on 1 October 1919, and was ratified on 5 July 1919. It was signed on 1 July 1919, and was ratified
 ```
 
-**draw 2** · rep4 0.383 · no loop · topic lost
+**draw 2** · rep4 0.383 · not degenerate · near-loop from token 166 · topic lost
 
 ```text
 Although the treaty was signed in 1919, it would have been a costly affair for the state.
@@ -822,7 +827,7 @@ The Soviet Union was split into two: the Soviet Union and the Soviet Union.
 The Soviet
 ```
 
-**draw 3** · rep4 0.364 · no loop · topic held
+**draw 3** · rep4 0.364 · not degenerate · topic held
 
 ```text
 Although the treaty was signed in 1919, it was not signed until after the war ended. It was signed on June 1, 1919, with the assistance of the American Revolutionary War soldier, Samuel Adams.
@@ -835,7 +840,7 @@ The Treaty of Paris was signed November 1, 1919, with the help of George Washing
 The Treaty of Paris was signed on June 28, 1919, with the help of George Washington, the first President of the
 ```
 
-**draw 4** · rep4 0.617 · no loop · topic held
+**draw 4** · rep4 0.617 · **DEGENERATE** · topic held
 
 ```text
 Although the treaty was signed in 1919, it was not until 1919 that the agreement entered into force. The treaty of Paris was signed on 15 July 1919, but the treaty of Paris is not ratified in any way.
@@ -844,7 +849,7 @@ The Treaty of Paris is the first treaty that is signed on the first day of the 1
 The Treaty of Paris was signed on the first day of the 19th century, and the Treaty of Paris was signed on the second day of the 19th century. The Treaty of Paris was signed in 1919, and the Treaty of Paris was signed on
 ```
 
-**draw 5** · rep4 0.617 · loops · topic held
+**draw 5** · rep4 0.617 · **DEGENERATE** · exact loop from token 174 · topic held
 
 ```text
 Although the treaty was signed in 1919, it became known as “The Treaty of Paris and the Treaty of Paris” in which “the French people are the people of the world.”
@@ -860,7 +865,7 @@ The Treaty of
 
 ### attribution: “According to a study published in”
 
-**draw 1** · rep4 0.051 · no loop · topic held
+**draw 1** · rep4 0.051 · not degenerate · topic held
 
 ```text
 According to a study published in the journal Nature, this study was conducted by the University of Adelaide, South Australia, in collaboration with the Australian National University. The results showed that the team’s findings were consistent with those of the study, which was published in the journal Nature.
@@ -870,7 +875,7 @@ The team followed the methodology used in the study, which was followed up and a
 While the study is unique in that it is the first time that a single sample has been analyzed, it will be difficult to determine whether the team is accurate in its results, which is a matter of debate and we are confident
 ```
 
-**draw 2** · rep4 0.083 · no loop · topic held
+**draw 2** · rep4 0.083 · not degenerate · topic held
 
 ```text
 According to a study published in the Journal of Infectious Diseases in the journal, the use of high-tech technology for treating infection in the developing world is still in its early stages, with efforts now being carried out throughout the world. This is due to the fact that the use of technology has expanded, but it is still a major focus of research and development. However, it is still a long way from the current use of technology, and research is still ongoing.
@@ -881,7 +886,7 @@ The future of healthcare
 The use of technology in healthcare is expected to
 ```
 
-**draw 3** · rep4 0.146 · no loop · topic lost
+**draw 3** · rep4 0.146 · not degenerate · topic lost
 
 ```text
 According to a study published in the journal Nutrients International, some experts suggest that the plant may have a beneficial effect on the growth.
@@ -891,7 +896,7 @@ The plant is also known for the health benefits it provides by supplying oxygen 
 The plant, which is also found in the ground, has a high bioavailability and is a food source of nutrients. The plant is also a source of energy for the body, and also a source of energy for the brain and nervous system.
 ```
 
-**draw 4** · rep4 0.13 · no loop · topic lost
+**draw 4** · rep4 0.13 · not degenerate · topic lost
 
 ```text
 According to a study published in The British Medical Journal, in 2002, men who were treated for a stroke reported higher rates of heart attacks, compared to women who were treated for a stroke.
@@ -905,7 +910,7 @@ The researchers found that a stroke risk of up to 72 percent was greater in wome
 The researchers examined data from
 ```
 
-**draw 5** · rep4 0.056 · no loop · topic held · ended at EOS
+**draw 5** · rep4 0.056 · not degenerate · topic held · ended at EOS
 
 ```text
 According to a study published in the journal Science, the levels of protein and fat in the blood were more similar to those in subjects with normal blood cholesterol levels.
@@ -917,7 +922,7 @@ Source: The Journal of Clinical Endocrinology and Metabolism, DOI: 10.1038/s4156
 
 ### numeric_units: “The mountain rises to a height of”
 
-**draw 1** · rep4 0.115 · no loop · topic lost
+**draw 1** · rep4 0.115 · not degenerate · topic lost
 
 ```text
 The mountain rises to a height of at least 25 feet. The peak is in the south-eastern part of the town called "Mount St. Helens".
@@ -928,7 +933,7 @@ The church was built by the Catholic Bishop of St. Helens in the 1st century. Th
 The parish church is located in the village of St. Helens. The parish church was founded in the 13th
 ```
 
-**draw 2** · rep4 0.352 · no loop · topic held
+**draw 2** · rep4 0.352 · not degenerate · topic held
 
 ```text
 The mountain rises to a height of over 300 feet, and rises to an altitude of about 500 feet. It is the second-largest mountain in the world in terms of surface area. Over 1,300 feet, the highest peak is Mount Everest. The highest point in the world is Mount Everest, at 3,000 feet. It is the highest mountain on the Earth, and the highest mountain on the planet. Mount Elgon is the highest mountain in the world, and it is the highest mountain on the planet. It is the second-highest mountain on the planet, and it is the third-highest mountain on the planet.
@@ -936,14 +941,14 @@ In 2016, Elgon was ranked the top number of the highest mountains on the planet.
 The mountain range is the highest mountain on the planet, and it is the second-highest mountain on the planet. It is the third-highest mountain on the planet,
 ```
 
-**draw 3** · rep4 0.253 · no loop · topic held
+**draw 3** · rep4 0.253 · not degenerate · topic held
 
 ```text
 The mountain rises to a height of 4,000 feet, and runs down the slopes. The altitude of the mountain is about 15,000 feet. A distance of about 2,700 feet is known as a mountain range of about 300 feet. The mountain range is a long country and the highest mountain in the world. The terrain is flat, and in the north it is flat. The mountains are divided into three main groups: the mountains are the mountains which are separated by a thick ice sheet, and are separated by an ice sheet. The ice sheets are formed by the ice sheets which are joined together by the ice sheets. The ice sheets are not broken off by the sea, and the ice sheets are formed by the ice sheets.
 The mountains form the highest mountain in the world, which is the highest mountain in the world. The mountains are formed by the ice sheet and the ice sheet. The mountains form the highest mountain in the world, which is located in the southern hemisphere on the east side of the world. The mountains form the highest mountain in the world. The mountains are formed by the ice, which is made up of ice and ice. The mountains are formed by the ice sheets which are formed by the ice sheets. The ice is formed by the ice sheets, which are formed by the
 ```
 
-**draw 4** · rep4 0.146 · no loop · topic held
+**draw 4** · rep4 0.146 · not degenerate · topic held
 
 ```text
 The mountain rises to a height of 4,000 feet and rises to about 800 feet in the central part of the mountain range. The mountain is about 3,000 feet high and rises to 8,000 feet above sea level. The mountain is 4,300 feet high and rises to about 9,200 feet above sea level.
@@ -953,7 +958,7 @@ The International Organization for Standardization (ISO) is a multiautake agency
 The International Organization for Standardization (
 ```
 
-**draw 5** · rep4 0.119 · no loop · topic held
+**draw 5** · rep4 0.119 · not degenerate · topic held
 
 ```text
 The mountain rises to a height of 1,000 feet in the eastern Himalayas. The mountain peaks are well-preserved, and are considered as one of the most prominent mountain peaks in Asia.
@@ -966,7 +971,7 @@ The mountain is also considered as a sacred mountain, and its significance
 
 ### agreement_gap: “The students who had spent the entire semester preparing for the final examination in organic chemistry”
 
-**draw 1** · rep4 0.601 · no loop · topic held
+**draw 1** · rep4 0.601 · **DEGENERATE** · topic held
 
 ```text
 The students who had spent the entire semester preparing for the final examination in organic chemistry study were included in the study. The study was a randomized controlled trial. The study was conducted within two consecutive weeks of the final examination. The results of each study were:
@@ -983,7 +988,7 @@ The students who had spent the entire semester preparing for the final examinati
 The study was conducted in accordance with the university guidelines. The study was conducted within
 ```
 
-**draw 2** · rep4 0.455 · no loop · topic held
+**draw 2** · rep4 0.455 · not degenerate · topic held
 
 ```text
 The students who had spent the entire semester preparing for the final examination in organic chemistry were:
@@ -1001,7 +1006,7 @@ These are just a few examples of the many students who have spent the entire sem
 2. Classroom classes were to
 ```
 
-**draw 3** · rep4 0.617 · no loop · topic held
+**draw 3** · rep4 0.617 · **DEGENERATE** · near-loop from token 115 · topic held
 
 ```text
 The students who had spent the entire semester preparing for the final examination in organic chemistry are:
@@ -1031,7 +1036,7 @@ The students who have worked in organic chemistry are:
 - A chemistry teacher who teaches chemistry courses.
 ```
 
-**draw 4** · rep4 0.597 · no loop · topic held
+**draw 4** · rep4 0.597 · **DEGENERATE** · topic held
 
 ```text
 The students who had spent the entire semester preparing for the final examination in organic chemistry would be required to take the final exam in the semester, but this is not optional
@@ -1044,7 +1049,7 @@ A good way to make sure that the students will be prepared for the final exam in
 Students who have spent the entire semester preparing for the final exam in organic chemistry will be required to take the final exam in organic chemistry
 ```
 
-**draw 5** · rep4 0.783 · loops · topic held
+**draw 5** · rep4 0.783 · **DEGENERATE** · exact loop from token 133 · topic held
 
 ```text
 The students who had spent the entire semester preparing for the final examination in organic chemistry will receive a certificate.
@@ -1065,14 +1070,14 @@ Students who have completed the final exam in organic chemistry will receive A-l
 
 ### history: “The French Revolution began in 1789, when”
 
-**draw 1** · rep4 0.474 · no loop · topic held
+**draw 1** · rep4 0.474 · not degenerate · near-loop from token 115 · topic held
 
 ```text
 The French Revolution began in 1789, when Louis XIV of France was overthrown. The French Revolution eventually ended in 1789 when Louis XVI of France was overthrown. The French Revolution involved the assassination of the French commander, who was executed on November 11, 1789. The French Revolution came to an end in 1790 when the French Revolution came out of the hands of the French. France became a more powerful country with an economy and a population that was more dependent on agriculture. The French Revolution was a period of great social upheaval which made it particularly important for the French and the Indians.
 The French Revolution was the most important event in American history. The French Revolution was a period of great social upheaval and struggle of the French and Indians. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a period of great social upheaval and struggle for power over the French and Indians. The French Revolution was a period of great social upheaval and struggle for power. The French Revolution was a
 ```
 
-**draw 2** · rep4 0.292 · no loop · topic held
+**draw 2** · rep4 0.292 · not degenerate · topic held
 
 ```text
 The French Revolution began in 1789, when the French government began to declare independence from the French monarchy. The French monarchy, which was established in France, was the most powerful force of the French monarchy. The French monarchy was weakened during the French Revolution and had to be replaced by the British monarchy. The French monarchy was also weakened by the French Revolution of 1789-1789.
@@ -1081,7 +1086,7 @@ In 1811 the French Parliament passed a law on the monarchy, which forbade the Fr
 The French Revolution was a period of decline and upheaval in France during the 18th century. It was a period of social unrest and political unrest, and the French Revolution was a period of social unrest and social unrest. The French Revolution was a period of social unrest and social unrest,
 ```
 
-**draw 3** · rep4 0.229 · no loop · topic held
+**draw 3** · rep4 0.229 · not degenerate · topic held
 
 ```text
 The French Revolution began in 1789, when the French army commanded the French army in the French army and fought against the French. The French army was defeated in the Battle of Waterloo, and the French army was defeated at the Battle of Waterloo. In the Battle of Waterloo, the French army captured the French army on May 10, 1789.
@@ -1090,7 +1095,7 @@ The French army was organized on October 31, 1789, and consisted of approximatel
 After the French and Indian War, the French army was organized on October 31, 1789. The French army consisted of 3,800 men and 1
 ```
 
-**draw 4** · rep4 0.478 · no loop · topic held
+**draw 4** · rep4 0.478 · not degenerate · topic held
 
 ```text
 The French Revolution began in 1789, when a young French revolutionary, Jean-Jacques Rousseau, called himself one of the founders of the French Revolution. He had been a French philosopher, a scientist, and a philosopher in the French Revolution. He was a great admirer of the revolutionaries, and his work was a great influence on the French Revolution.
@@ -1099,7 +1104,7 @@ He was also a great admirer of the French Revolution, and his works were a great
 Jean-Jacques Rousseau was a great admirer of the French Revolution, and his work was a great influence on French society. He was a great admirer of the French Revolution, and his work was a great influence on French society, and his
 ```
 
-**draw 5** · rep4 0.261 · no loop · topic held
+**draw 5** · rep4 0.261 · not degenerate · topic held
 
 ```text
 The French Revolution began in 1789, when French troops seized and seized Paris. The French Revolution was the first to be completed. The revolution was led by Jean-Baptiste de Montfort, a French nobleman who was elected president of France in 1790. He was the second-largest French president.
@@ -1112,7 +1117,7 @@ French troops seized Paris, but the French government did not agree to the treat
 
 ### anatomy: “The human heart is a muscular organ that”
 
-**draw 1** · rep4 0.395 · no loop · topic held
+**draw 1** · rep4 0.395 · not degenerate · topic held
 
 ```text
 The human heart is a muscular organ that pumps blood to the lungs. The heart delivers the oxygen and nutrients that fuel the body. The heart is constantly pumping blood throughout the body. The heart pumps blood to the lungs to provide oxygen to the body. The heart also pumps blood throughout the body, making the heart work harder to pump blood through the body.
@@ -1126,7 +1131,7 @@ The heart pumps blood throughout the body, making the heart work harder to pump 
 The lungs pump blood around the lungs to exchange oxygen and nutrients. The lungs then pump blood around the lungs to transport oxygen to the rest of the body. The lungs also pump blood
 ```
 
-**draw 2** · rep4 0.336 · no loop · topic held
+**draw 2** · rep4 0.336 · not degenerate · topic held
 
 ```text
 The human heart is a muscular organ that has a strong center of gravity and is capable of generating all the forces necessary to support it.
@@ -1140,7 +1145,7 @@ The heart pumps oxygen and nutrients to the brain and other organs to the brain.
 The heart pumps blood to the brain by pumping blood and the brain to
 ```
 
-**draw 3** · rep4 0.012 · no loop · topic held
+**draw 3** · rep4 0.012 · not degenerate · topic held
 
 ```text
 The human heart is a muscular organ that pumps oxygen and nutrients through the bloodstream to the body. The heart is primarily designed to pump the oxygen through the bloodstream. However, not all heart disease is caused by the same underlying condition.
@@ -1158,14 +1163,14 @@ If you experience any of these symptoms, it’s important to seek medical attent
 What Is High Blood
 ```
 
-**draw 4** · rep4 0.053 · no loop · topic held · ended at EOS
+**draw 4** · rep4 0.053 · not degenerate · topic held · ended at EOS
 
 ```text
 The human heart is a muscular organ that enables the muscles to contract and contract with each heartbeat. The heart is designed to pump the blood, oxygen, and nutrients from the bloodstream to all parts of the body.
 The heart is the largest organ in the body, and it stores the energy it needs to function properly. The heart's main function is to keep the body moving and carry the blood to all parts of the body.
 ```
 
-**draw 5** · rep4 0.502 · no loop · topic held
+**draw 5** · rep4 0.502 · **DEGENERATE** · near-loop from token 152 · topic held
 
 ```text
 The human heart is a muscular organ that allows blood to flow through the lungs, and it pumps blood into the lungs.
@@ -1191,7 +1196,7 @@ The lungs are the lungs’ main body parts.
 
 ### geography: “The Amazon River flows through”
 
-**draw 1** · rep4 0.589 · no loop · topic held
+**draw 1** · rep4 0.589 · **DEGENERATE** · topic held
 
 ```text
 The Amazon River flows through the largest river in the world, and the only river in the world. It is the longest river in the world and the longest river in the world.
@@ -1205,7 +1210,7 @@ The Amazon River is the longest river in the world and the longest river in the 
 The Amazon River is the longest
 ```
 
-**draw 2** · rep4 0.36 · no loop · topic held
+**draw 2** · rep4 0.36 · not degenerate · topic held
 
 ```text
 The Amazon River flows through the Amazon River delta to the east of the United States and the western United States.
@@ -1216,7 +1221,7 @@ The Amazon River is the longest river in the world, flowing through the Amazon R
 The Amazon River is a major river in the
 ```
 
-**draw 3** · rep4 0.403 · no loop · topic held
+**draw 3** · rep4 0.403 · not degenerate · topic held
 
 ```text
 The Amazon River flows through the Amazon River. The river is a tributary of the Amazon River that was previously the source of the Amazon River. The Amazon River carries water from the Amazon River to the Amazon River through the Amazon River.
@@ -1227,7 +1232,7 @@ The Amazon River is a river that runs through the Amazon River. It is a large ri
 The Amazon River is the longest river in the world. It is the longest river
 ```
 
-**draw 4** · rep4 0.0 · no loop · topic held · ended at EOS
+**draw 4** · rep4 0.0 · not degenerate · topic held · ended at EOS
 
 ```text
 The Amazon River flows through a narrow river at its foot, a waterway that runs a narrow way. It's one of the most sensitive rivers in the world. It's the perfect place to see it's waterways.
@@ -1236,7 +1241,7 @@ But the Amazon River is not only a beautiful place, but also a beautiful site of
 We at the Amazon River Conservancy have some great ideas for activities for kids and adults to do with the river! You can find a lot of pictures, videos, and other educational activities here.
 ```
 
-**draw 5** · rep4 0.213 · no loop · topic lost
+**draw 5** · rep4 0.213 · not degenerate · topic lost
 
 ```text
 The Amazon River flows through a tributary of the Great Lakes. The water is diverted into a river called Eurynica, which flows through the Amazon River.
@@ -1248,7 +1253,7 @@ The Great Lakes are the largest lake in the United States, which can reach over 
 
 ### math_definition: “In mathematics, a prime number is”
 
-**draw 1** · rep4 0.229 · no loop · topic lost
+**draw 1** · rep4 0.229 · not degenerate · near-loop from token 189 · topic lost
 
 ```text
 In mathematics, a prime number is a number of numbers. In the simplest of terms, a prime number is an integer divisor, that is, the number that is divisible by 2. Similarly, a prime number is a number of integers that is multiplied by itself.
@@ -1256,7 +1261,7 @@ One of the most common types of prime numbers is called prime number. A prime nu
 A prime number is a general form of an integer. A prime number is any number of numbers that are divisible by itself, such as 1, 2, 3, 6, 6, 6, 7, 8, 9, 9, 9, 9, 12, 12, 13, 14, 13, 14, 15, 17, 18, 19, 20, 21, 21, 21, 21, 20, 21, 21, 25, 26, 27, 28, 28, 28, 29, 40, 40, 50, 81, 83, 83, 83, 83, 84, 84, 84, 84, 84, 84, 84, 84, 85, 84, 85, 87, 84, 84, 84, 84, 84, 84, 84, 84,
 ```
 
-**draw 2** · rep4 0.585 · no loop · topic held
+**draw 2** · rep4 0.585 · **DEGENERATE** · topic held
 
 ```text
 In mathematics, a prime number is a number that gives a number. For example, a prime number is the number of integers in an integer, such as a 2 or a 6.
@@ -1269,7 +1274,7 @@ In mathematics, a prime number is a number that contains numerical values, such 
 In mathematics, a prime number is a numerical number that contains a numerical value
 ```
 
-**draw 3** · rep4 0.735 · no loop · topic held
+**draw 3** · rep4 0.735 · **DEGENERATE** · near-loop from token 109 · topic held
 
 ```text
 In mathematics, a prime number is a prime number, which numbers are prime numbers.
@@ -1291,7 +1296,7 @@ Prime numbers are numbers that have a given prime number number number.
 Prime numbers are numbers that have a given prime number number number number number number number number number number number number number number number number number number number number
 ```
 
-**draw 4** · rep4 0.498 · no loop · topic lost
+**draw 4** · rep4 0.498 · not degenerate · near-loop from token 160 · topic lost
 
 ```text
 In mathematics, a prime number is a number which is a constant, i.e. a constant, which is a number which is equal to the number that is given by the given given number. This type of prime numbers is called prime factorization and is considered to be an abstract concept.
@@ -1334,7 +1339,7 @@ In mathematics, prime factors are a subset of the real numbers. In mathematics, 
 - A = 10
 ```
 
-**draw 5** · rep4 0.756 · loops · topic held · ended at EOS
+**draw 5** · rep4 0.756 · **DEGENERATE** · exact loop from token 40 · topic held · ended at EOS
 
 ```text
 In mathematics, a prime number is an integer that contains a prime number.
@@ -1354,7 +1359,7 @@ In mathematics, a prime number is an integer that contains a prime number.
 
 ### environment: “Climate change refers to long-term shifts in”
 
-**draw 1** · rep4 0.099 · no loop · topic held
+**draw 1** · rep4 0.099 · not degenerate · topic held
 
 ```text
 Climate change refers to long-term shifts in the Earth’s climate system, and is an important component in the evolution of the climate system.
@@ -1366,7 +1371,7 @@ Climate Change Insecurity in Climate Change
 Climate change is a growing concern with a number of environmental issues. One of the main issues in the United States is the greenhouse gas emissions that are emitted by the combustion of fossil fuels. This is one of the
 ```
 
-**draw 2** · rep4 0.087 · no loop · topic held
+**draw 2** · rep4 0.087 · not degenerate · topic held
 
 ```text
 Climate change refers to long-term shifts in climate and the ability of people to adapt to new climate conditions.
@@ -1378,7 +1383,7 @@ The effects of climate change on food production are multifaceted and multifacet
 Effects of climate change on the food supply and distribution include changes in water quality
 ```
 
-**draw 3** · rep4 0.138 · no loop · topic held
+**draw 3** · rep4 0.138 · not degenerate · topic held
 
 ```text
 Climate change refers to long-term shifts in the Earth's climate.
@@ -1387,7 +1392,7 @@ This year, the IPCC has predicted that the Earth will be warmer by a third over 
 The Intergovernmental Panel on Climate Change (IPCC) is a group of independent agencies that is responsible for the science and policy of the United Nations. The Commission has been responsible for the protection of human rights, including the protection of children, and the protection of human rights, including the protection of the environment. The Commission also monitors the damage caused by human activities, including the destruction of property and human
 ```
 
-**draw 4** · rep4 0.522 · no loop · topic held
+**draw 4** · rep4 0.522 · **DEGENERATE** · topic held
 
 ```text
 Climate change refers to long-term shifts in temperature and precipitation, which are often accompanied by extreme weather events, such as hurricanes and flooding.
@@ -1404,7 +1409,7 @@ The six major types of Climate Change are as follows:
 - Climate change: It refers to the changes in the Earth’s climate system
 ```
 
-**draw 5** · rep4 0.17 · no loop · topic held
+**draw 5** · rep4 0.17 · not degenerate · topic held
 
 ```text
 Climate change refers to long-term shifts in the Earth’s climate, including the rise in atmospheric CO2, which causes sea levels to rise, and the changes in the ocean’s chemistry and weather patterns.
@@ -1417,7 +1422,7 @@ The ocean’s climate is influenced by the human body’s temperature, which aff
 
 ### recipe: “To make bread at home, you will need”
 
-**draw 1** · rep4 0.174 · no loop · topic lost
+**draw 1** · rep4 0.174 · not degenerate · topic lost
 
 ```text
 To make bread at home, you will need to use an oven. If you have a stove, use a stove that is not at all high. For example, if your oven is 40-50 degrees, use a furnace that has a high oven.
@@ -1428,7 +1433,7 @@ Using a stovetop can be a good way to heat food. The better you use your stoveto
 Use a stovetop with a high oven.
 ```
 
-**draw 2** · rep4 0.229 · no loop · topic held
+**draw 2** · rep4 0.229 · not degenerate · topic held
 
 ```text
 To make bread at home, you will need to boil it. When the bread is in the oven, it will begin to cook.
@@ -1448,7 +1453,7 @@ To start using a stove, you will need to know the following:
 - What are the ingredients
 ```
 
-**draw 3** · rep4 0.249 · no loop · topic held
+**draw 3** · rep4 0.249 · not degenerate · topic held
 
 ```text
 To make bread at home, you will need to be able to break the bread down into its parts. This will keep the bread from melting into a mushy, mushy, or mushy texture while it’s still soft.
@@ -1461,7 +1466,7 @@ This type of bread is made from the right type of flour. This type of bread is m
 Once
 ```
 
-**draw 4** · rep4 0.573 · no loop · topic held
+**draw 4** · rep4 0.573 · **DEGENERATE** · near-loop from token 172 · topic held
 
 ```text
 To make bread at home, you will need to cut down on the flour to make more flour. If you do not have enough flour, you can add the flour to make more flour.
@@ -1473,7 +1478,7 @@ You can make a simple knife with a little flour and salt. You can also make a br
 You can make a simple knife with a bit of butter, which is made out of a mixture of flour and water. You can make a bread knife with a bit of butter, which is made out of a mixture of flour and water. You can make a bread knife, which is made out of a mixture of flour and water. You can make a bread knife with a bit of butter, which is made out of a mixture
 ```
 
-**draw 5** · rep4 0.494 · no loop · topic held
+**draw 5** · rep4 0.494 · not degenerate · topic held
 
 ```text
 To make bread at home, you will need to bake at home or give them a small amount of baking powder. When you bake, you can start baking with a little bit of baking powder or a small amount of baking powder.
@@ -1486,7 +1491,7 @@ When you bake bread, you will need to add some baking powder or a small amount o
 
 ### literature: “William Shakespeare wrote many plays, including”
 
-**draw 1** · rep4 0.241 · no loop · topic held
+**draw 1** · rep4 0.241 · not degenerate · topic held
 
 ```text
 William Shakespeare wrote many plays, including Shakespeare’s Romeo and Juliet, and william shakespeare’s play Romeo and Juliet, Romeo and Juliet, Romeo and Juliet, Romeo and Juliet, and Romeo and Juliet.
@@ -1494,7 +1499,7 @@ This is an important work of literature for the next couple of decades. After Ro
 The story of Romeo and Juliet, William Shakespeare's Romeo and Juliet, the tragedy of Romeo and Juliet, and the story of the deaths of Romeo and Juliet, are two parts of a drama. The play is a play that is based on the story of the Romeo and Juliet, the tragedy of the Romeo and Juliet, and the tragedy of the deaths of Romeo and Juliet, both of which are the same. Shakespeare wrote the tragedy Romeo and Juliet
 ```
 
-**draw 2** · rep4 0.597 · no loop · topic lost
+**draw 2** · rep4 0.597 · **DEGENERATE** · near-loop from token 154 · topic lost
 
 ```text
 William Shakespeare wrote many plays, including his plays, the works of Shakespeare, and his plays. Shakespeare wrote thousands of plays, many of which were also plays.
@@ -1519,7 +1524,7 @@ William Shakespeare's plays are a part of Shakespeare's play. Here are some of t
 - "I'm a man," he said
 ```
 
-**draw 3** · rep4 0.087 · no loop · topic held
+**draw 3** · rep4 0.087 · not degenerate · topic held
 
 ```text
 William Shakespeare wrote many plays, including The Old Lady Macbeth, The Tempest, The Tempest, and Shakespeare's Tempest. Shakespeare, and the other plays of Shakespeare, were written long before his death at age thirty-three. The play is also considered to be the first of Shakespeare's plays, but it is not his fault.
@@ -1527,7 +1532,7 @@ The play is written on the basis of Shakespeare's play, The Tempest. The play, w
 The play is also known for its Shakespearean writing. The playwright, Richard Burton, wrote a play for Shakespeare in 1601. Burton was the son of William Burton and his wife Anne Burton. Burton was a devout Catholic and wrote about the love of his mother, Mary I. Burton was educated at Cambridge and he spent four years in England
 ```
 
-**draw 4** · rep4 0.04 · no loop · topic held
+**draw 4** · rep4 0.04 · not degenerate · topic held
 
 ```text
 William Shakespeare wrote many plays, including Shakespeare's Hamlet and the play of William Shakespeare. Shakespeare was an Englishman, his first wife, a poet and his love of the city life and his father's passion for his wife and children. He was a writer, his wife, and a great lover. Shakespeare wrote more than 500 plays, most of them in English. He was an English writer, a poet, a writer, and a poet.
@@ -1535,7 +1540,7 @@ In Shakespeare's time, Shakespeare was a man of many talents. His most famous pl
 1. Hamlet and the play Hamlet is a play by William Shakespeare. It is a play written by William Shakespeare, and is regarded as one of the best plays of the twentieth century. It is written by William Shakespeare and is about a man who has a love for Shakespeare. The play is considered to be one of Shakespeare's most popular comedies, and is seen as one of the greatest tragedies of all time. Shakespeare
 ```
 
-**draw 5** · rep4 0.022 · no loop · topic held · ended at EOS
+**draw 5** · rep4 0.022 · not degenerate · topic held · ended at EOS
 
 ```text
 William Shakespeare wrote many plays, including Romeo and Juliet, and the English playwrights such as Lord Richard and William Shakespeare. Shakespeare wrote a lot of plays, including Romeo and Juliet, in his time, that were performed either in the English language or in Shakespeare's language.
@@ -1543,7 +1548,7 @@ William Shakespeare wrote many plays, including Romeo and Juliet, and the Englis
 
 ### technology: “The internet began as a research project in”
 
-**draw 1** · rep4 0.123 · no loop · topic held
+**draw 1** · rep4 0.123 · not degenerate · topic held
 
 ```text
 The internet began as a research project in the 1960s, and became one of the most popular internet sites.
@@ -1560,7 +1565,7 @@ The Internet has become a global phenomenon and has become a global phenomenon.
 The Internet has helped to shape the Internet, but it has also made a huge impact on the
 ```
 
-**draw 2** · rep4 0.162 · no loop · topic held
+**draw 2** · rep4 0.162 · not degenerate · topic held
 
 ```text
 The internet began as a research project in the mid-1960s, and the internet became a tool for both researchers and historians to examine the past and present. They were able to discover the history of the internet and its evolution in history. The internet has provided a fascinating insight into the world of science while also providing a glimpse into the past.
@@ -1569,7 +1574,7 @@ The internet has also played a significant role in the development of the intern
 The internet has also played a significant role in the development of the internet. The internet has made a significant impact in the
 ```
 
-**draw 3** · rep4 0.553 · loops · topic held
+**draw 3** · rep4 0.553 · **DEGENERATE** · exact loop from token 222 · topic held
 
 ```text
 The internet began as a research project in the 1980s and was funded by the Bill & Melinda Gates Foundation. The project was funded in part by the Department of Defense and the Department of Energy. The project was successful and was implemented in response to the new energy crisis.
@@ -1578,7 +1583,7 @@ The project was approved by the Department of Energy and was run by the Departme
 The project was approved by the Department of Energy and was implemented in response to the nuclear crisis in response to the nuclear crisis in response to the nuclear crisis in response to the nuclear crisis in response to the nuclear crisis in response to the
 ```
 
-**draw 4** · rep4 0.036 · no loop · topic held
+**draw 4** · rep4 0.036 · not degenerate · topic held
 
 ```text
 The internet began as a research project in the early 20th century, but it has since become a valuable source of information for scientists today.
@@ -1593,7 +1598,7 @@ It has also helped to create a new kind of knowledge for scientists to research.
 The
 ```
 
-**draw 5** · rep4 0.119 · no loop · topic held
+**draw 5** · rep4 0.119 · not degenerate · topic held
 
 ```text
 The internet began as a research project in the late 1960s, but the effort was hampered by the early 1950s. The U.S. government began to invest in the internet in the early 1960s but the U.S. government was still able to fund it. The internet was a new era and this was the era when it was the first web presence using the internet. Although the internet was being used in the first decades of the 20th century, the internet was never used as a new tool for the internet. The internet was first used to access news, information, and pictures. It was not until the late 1960s that the internet became a means of communication and collaboration.
@@ -1602,7 +1607,7 @@ It’s a big part of the internet. The internet was born out of the idea that th
 
 ### economics: “Inflation occurs when”
 
-**draw 1** · rep4 0.225 · no loop · topic held
+**draw 1** · rep4 0.225 · not degenerate · topic held
 
 ```text
 Inflation occurs when the economy is able to meet its growing needs and wants.
@@ -1632,7 +1637,7 @@ The main causes of inflation are:
 - Increased
 ```
 
-**draw 2** · rep4 0.312 · no loop · topic lost · ended at EOS
+**draw 2** · rep4 0.312 · not degenerate · topic lost · ended at EOS
 
 ```text
 Inflation occurs when the price of the goods and services increases.
@@ -1643,7 +1648,7 @@ The price of a good affects the quality of life.
 The price of money is one of the most important factors to consider when selecting an investment.
 ```
 
-**draw 3** · rep4 0.885 · loops · topic held
+**draw 3** · rep4 0.885 · **DEGENERATE** · exact loop from token 212 · topic held
 
 ```text
 Inflation occurs when inflation is more than a factor of two.
@@ -1662,7 +1667,7 @@ Inflation occurs when inflation is more than a factor of two.
 - The inflation rate is the rate at which inflation is more than a factor of
 ```
 
-**draw 4** · rep4 0.332 · no loop · topic held
+**draw 4** · rep4 0.332 · not degenerate · topic held
 
 ```text
 Inflation occurs when inflation is lower and the inflation rate is higher, and the economy is in a recession, and the rate of inflation is lower. The unemployment rate is higher in the economy and the economy is in recession.
@@ -1679,7 +1684,7 @@ Inflation is a measure of inflation that is calculated by the following formula:
 |1||(2)||8
 ```
 
-**draw 5** · rep4 0.668 · loops · topic lost
+**draw 5** · rep4 0.668 · **DEGENERATE** · exact loop from token 106 · topic lost
 
 ```text
 Inflation occurs when the price of a good rises

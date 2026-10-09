@@ -4,48 +4,48 @@ Every evaluated model on the same 20 prompts × 5 draws, 256 new tokens, T=0.7, 
 
 ## Models
 
-|  | model | val@ctx | rep4 median / p90 | loops (95% CI) | first loop at | distinct-2 / -4 | topic held | topic span | EOS |
-|---|---|---|---|---|---|---|---|---|---|
-| M1 | data80k · d256-L4 · 16.1M · T128 · 15K steps | 4.4679 | 0.239 / 0.589 | 4/100 (2%–10%) | token 185 | 0.502 / 0.722 | 25% | 146 tokens | 5/100 |
-| M2 | data160k · d256-L4 · 16.1M · T128 · 40K steps | 4.2601 | 0.283 / 0.617 | 5/100 (2%–11%) | token 216 | 0.475 / 0.683 | 28% | 187 tokens | 4/100 |
-| M3 | data80k · d256-L4 · 16.1M · T256 · 15K steps | 4.4990 | 0.271 / 0.570 | 10/100 (6%–17%) | token 181 | 0.472 / 0.690 | 23% | 142 tokens | 4/100 |
-| M4 | data160k · d256-L4 · 16.1M · T256 · 40K steps | 4.1774 | 0.324 / 0.651 | 7/100 (3%–14%) | token 180 | 0.452 / 0.644 | 30% | 232 tokens | 5/100 |
-| M5 | data160k · d256-L4 · 16.2M · T512 · 40K steps | 4.1550 | 0.348 / 0.700 | 5/100 (2%–11%) | token 201 | 0.412 / 0.606 | 26% | 164 tokens | 7/100 |
-| M6 | data160k · d256-L4 · 16.3M · T1024 · 40K steps | 4.1141 | 0.538 / 0.856 | 26/100 (18%–35%) | token 191 | 0.310 / 0.464 | 25% | 119 tokens | 3/100 |
-| M7 | data320k · d512-L4 · 38.9M · T1024 · 40K steps | 3.9376 | 0.423 / 0.780 | 17/100 (11%–26%) | token 183 | 0.387 / 0.553 | 33% | 237 tokens | 9/100 |
-| M8 | data160k · d512-L4 · 38.9M · T1024 · 40K steps | 3.8919 | 0.436 / 0.748 | 17/100 (11%–26%) | token 180 | 0.402 / 0.566 | 30% | 180 tokens | 13/100 |
-| M9 | data320k · d512-L4 · 38.9M · T1024 · 80K steps | 3.7476 | 0.496 / 0.795 | 26/100 (18%–35%) | token 156 | 0.381 / 0.529 | 31% | 204 tokens | 7/100 |
-| M10 | data320k · d512-L4 · 38.4M · T1024 · 80K steps | 3.6622 | 0.411 / 0.752 | 19/100 (12%–28%) | token 200 | 0.412 / 0.573 | 37% | 246 tokens | 6/100 |
-| M11 | data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.4038 | 0.342 / 0.690 | 11/100 (6%–19%) | token 195 | 0.443 / 0.619 | 36% | 236 tokens | 6/100 |
-| M12 | data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.3310 | 0.257 / 0.661 | 16/100 (10%–24%) | token 191 | 0.494 / 0.669 | 46% | 241 tokens | 14/100 |
-| M13 | data640k · d768-L8 · 95.3M · T1024 · 190K steps | 3.3239 | 0.356 / 0.672 | 14/100 (8%–22%) | token 156 | 0.469 / 0.627 | 43% | 233 tokens | 10/100 |
+|  | model | val@ctx | degenerate (95% CI) | rep4 median / p90 | rep4 ≥0.3 / ≥0.5 / ≥0.7 | near-loops (onset) | exact loops (95% CI) | first loop at | distinct-2 / -4 | topic held | topic span | EOS |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| M1 | data80k · d256-L4 · 16.1M · T128 · 15K steps | 4.4679 | **19/100** (12%–28%) | 0.239 / 0.589 | 36 / 17 / 6 | 18 (token 154) | 4/100 (2%–10%) | token 185 | 0.502 / 0.722 | 25% | 146 tokens | 5/100 |
+| M2 | data160k · d256-L4 · 16.1M · T128 · 40K steps | 4.2601 | **25/100** (18%–34%) | 0.283 / 0.617 | 42 / 23 / 5 | 15 (token 128) | 5/100 (2%–11%) | token 216 | 0.475 / 0.683 | 28% | 187 tokens | 4/100 |
+| M3 | data80k · d256-L4 · 16.1M · T256 · 15K steps | 4.4990 | **19/100** (12%–28%) | 0.271 / 0.570 | 44 / 17 / 9 | 24 (token 128) | 10/100 (6%–17%) | token 181 | 0.472 / 0.690 | 23% | 142 tokens | 4/100 |
+| M4 | data160k · d256-L4 · 16.1M · T256 · 40K steps | 4.1774 | **24/100** (17%–33%) | 0.324 / 0.651 | 54 / 22 / 9 | 24 (token 129) | 7/100 (3%–14%) | token 180 | 0.452 / 0.644 | 30% | 232 tokens | 5/100 |
+| M5 | data160k · d256-L4 · 16.2M · T512 · 40K steps | 4.1550 | **33/100** (25%–43%) | 0.348 / 0.700 | 57 / 32 / 12 | 39 (token 135) | 5/100 (2%–11%) | token 201 | 0.412 / 0.606 | 26% | 164 tokens | 7/100 |
+| M6 | data160k · d256-L4 · 16.3M · T1024 · 40K steps | 4.1141 | **59/100** (49%–68%) | 0.538 / 0.856 | 83 / 54 / 23 | 55 (token 99) | 26/100 (18%–35%) | token 191 | 0.310 / 0.464 | 25% | 119 tokens | 3/100 |
+| M7 | data320k · d512-L4 · 38.9M · T1024 · 40K steps | 3.9376 | **43/100** (34%–53%) | 0.423 / 0.780 | 71 / 40 / 15 | 38 (token 102) | 17/100 (11%–26%) | token 183 | 0.387 / 0.553 | 33% | 237 tokens | 9/100 |
+| M8 | data160k · d512-L4 · 38.9M · T1024 · 40K steps | 3.8919 | **46/100** (37%–56%) | 0.436 / 0.748 | 68 / 43 / 18 | 39 (token 114) | 17/100 (11%–26%) | token 180 | 0.402 / 0.566 | 30% | 180 tokens | 13/100 |
+| M9 | data320k · d512-L4 · 38.9M · T1024 · 80K steps | 3.7476 | **51/100** (41%–61%) | 0.496 / 0.795 | 67 / 50 / 23 | 50 (token 96) | 26/100 (18%–35%) | token 156 | 0.381 / 0.529 | 31% | 204 tokens | 7/100 |
+| M10 | data320k · d512-L4 · 38.4M · T1024 · 80K steps | 3.6622 | **48/100** (38%–58%) | 0.411 / 0.752 | 66 / 42 / 18 | 47 (token 104) | 19/100 (12%–28%) | token 200 | 0.412 / 0.573 | 37% | 246 tokens | 6/100 |
+| M11 | data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps | 3.4038 | **28/100** (20%–38%) | 0.342 / 0.690 | 58 / 25 / 10 | 28 (token 145) | 11/100 (6%–19%) | token 195 | 0.443 / 0.619 | 36% | 236 tokens | 6/100 |
+| M12 | data640k · d768-L8 · 95.3M · T1024 · 160K steps | 3.3310 | **33/100** (25%–43%) | 0.257 / 0.661 | 46 / 28 / 10 | 22 (token 110) | 16/100 (10%–24%) | token 191 | 0.494 / 0.669 | 46% | 241 tokens | 14/100 |
+| M13 | data640k · d768-L8 · 95.3M · T1024 · 190K steps | 3.3239 | **36/100** (27%–46%) | 0.356 / 0.672 | 59 / 35 / 10 | 29 (token 115) | 14/100 (8%–22%) | token 156 | 0.469 / 0.627 | 43% | 233 tokens | 10/100 |
 
 ## rep4 by prompt
 
-Median over draws; (n) = draws that end in an exact loop.
+Median over draws; (n) = degenerate draws (exact loop or rep4 ≥ 0.5).
 
 | prompt | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | M12 | M13 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| definition | 0.27 | 0.17 | 0.29 (1) | 0.37 (1) | 0.52 | 0.53 (3) | 0.36 (1) | 0.42 (1) | 0.76 (4) | 0.33 (1) | 0.49 (2) | 0.64 (2) | 0.32 |
-| biography | 0.38 (1) | 0.32 (1) | 0.20 | 0.14 | 0.16 | 0.15 (1) | 0.24 | 0.13 (1) | 0.27 | 0.41 (1) | 0.27 | 0.15 | 0.27 (2) |
-| science_explainer | 0.53 (2) | 0.31 (1) | 0.32 (1) | 0.43 | 0.60 | 0.44 (1) | 0.42 (1) | 0.44 | 0.70 (3) | 0.26 | 0.35 | 0.39 | 0.41 (1) |
-| instructional | 0.25 | 0.29 | 0.41 (1) | 0.44 | 0.31 | 0.66 (1) | 0.55 (1) | 0.68 | 0.62 (2) | 0.41 | 0.41 | 0.52 (2) | 0.49 (3) |
-| bullet_list | 0.67 | 0.62 | 0.82 (2) | 0.92 (1) | 0.86 (2) | 0.91 (2) | 0.96 (4) | 0.71 (2) | 0.61 (2) | 0.66 (2) | 0.55 (1) | 0.78 (1) | 0.72 (1) |
-| numbered_list | 0.56 | 0.55 (1) | 0.56 (1) | 0.57 (1) | 0.68 | 0.67 (1) | 0.64 (1) | 0.68 (1) | 0.70 (2) | 0.56 (1) | 0.55 | 0.54 | 0.53 (1) |
-| enumeration | 0.59 | 0.71 (1) | 0.32 (1) | 0.39 | 0.56 | 0.66 (2) | 0.73 (2) | 0.28 (2) | 0.88 (2) | 0.57 (2) | 0.73 (2) | 0.38 (2) | 0.56 |
-| long_dependency | 0.30 | 0.32 (1) | 0.35 | 0.49 (1) | 0.19 | 0.63 (1) | 0.41 (1) | 0.36 | 0.27 | 0.37 (1) | 0.25 (2) | 0.22 (1) | 0.38 (1) |
-| attribution | 0.10 | 0.18 | 0.10 | 0.25 | 0.35 (1) | 0.48 (2) | 0.28 (1) | 0.22 | 0.27 | 0.40 | 0.15 | 0.09 | 0.08 |
-| numeric_units | 0.15 | 0.29 | 0.40 | 0.28 (1) | 0.70 | 0.74 (1) | 0.47 | 0.52 | 0.62 (2) | 0.41 (1) | 0.29 | 0.25 | 0.15 |
-| agreement_gap | 0.27 | 0.17 | 0.15 | 0.27 | 0.22 | 0.37 | 0.42 | 0.49 (1) | 0.28 (1) | 0.68 (3) | 0.23 | 0.21 (2) | 0.60 (1) |
-| history | 0.11 | 0.15 | 0.22 | 0.31 | 0.27 | 0.41 | 0.14 (1) | 0.31 | 0.28 | 0.27 | 0.32 | 0.27 (1) | 0.29 |
-| anatomy | 0.19 | 0.52 | 0.27 | 0.26 | 0.13 | 0.68 | 0.45 | 0.19 (1) | 0.46 (1) | 0.32 (1) | 0.31 (1) | 0.17 (1) | 0.34 |
-| geography | 0.25 | 0.27 | 0.25 (1) | 0.47 | 0.44 (1) | 0.41 | 0.21 | 0.38 (1) | 0.52 (1) | 0.51 | 0.48 | 0.35 | 0.36 |
-| math_definition | 0.28 | 0.45 | 0.36 (1) | 0.41 (1) | 0.30 (1) | 0.50 (1) | 0.53 (1) | 0.53 (3) | 0.61 (2) | 0.74 (3) | 0.49 (1) | 0.38 (1) | 0.58 (1) |
-| environment | 0.07 | 0.14 | 0.12 | 0.10 | 0.28 | 0.53 (3) | 0.23 | 0.51 (1) | 0.19 | 0.20 (1) | 0.37 (1) | 0.10 | 0.14 |
-| recipe | 0.13 | 0.22 | 0.23 (1) | 0.27 (1) | 0.14 | 0.58 (1) | 0.50 (1) | 0.18 (1) | 0.53 (1) | 0.38 | 0.30 (1) | 0.22 | 0.25 |
-| literature | 0.30 (1) | 0.16 | 0.24 | 0.17 | 0.21 | 0.47 (1) | 0.37 | 0.53 (1) | 0.21 | 0.22 | 0.22 | 0.07 | 0.09 |
-| technology | 0.09 | 0.13 | 0.12 | 0.12 | 0.23 | 0.45 (2) | 0.41 (1) | 0.17 | 0.13 (1) | 0.14 (1) | 0.27 | 0.11 (1) | 0.12 (1) |
-| economics | 0.24 | 0.25 | 0.13 | 0.35 | 0.45 | 0.64 (3) | 0.47 (1) | 0.47 (1) | 0.52 (2) | 0.66 (1) | 0.26 | 0.55 (2) | 0.33 (2) |
+| definition | 0.27 | 0.17 | 0.29 (1) | 0.37 (2) | 0.52 (3) | 0.53 (3) | 0.36 (2) | 0.42 (2) | 0.76 (4) | 0.33 (3) | 0.49 (3) | 0.64 (3) | 0.32 (1) |
+| biography | 0.38 (1) | 0.32 (1) | 0.20 (1) | 0.14 | 0.16 | 0.15 (1) | 0.24 | 0.13 (2) | 0.27 | 0.41 (2) | 0.27 (1) | 0.15 | 0.27 (2) |
+| science_explainer | 0.53 (4) | 0.31 (2) | 0.32 (1) | 0.43 (2) | 0.60 (4) | 0.44 (2) | 0.42 (2) | 0.44 (2) | 0.70 (5) | 0.26 (1) | 0.35 (1) | 0.39 (2) | 0.41 (2) |
+| instructional | 0.25 | 0.29 (2) | 0.41 (1) | 0.44 (1) | 0.31 | 0.66 (3) | 0.55 (3) | 0.68 (3) | 0.62 (3) | 0.41 (2) | 0.41 (1) | 0.52 (4) | 0.49 (3) |
+| bullet_list | 0.67 (4) | 0.62 (3) | 0.82 (4) | 0.92 (4) | 0.86 (5) | 0.91 (5) | 0.96 (5) | 0.71 (4) | 0.61 (3) | 0.66 (5) | 0.55 (4) | 0.78 (4) | 0.72 (4) |
+| numbered_list | 0.56 (4) | 0.55 (5) | 0.56 (4) | 0.57 (4) | 0.68 (4) | 0.67 (5) | 0.64 (4) | 0.68 (5) | 0.70 (5) | 0.56 (5) | 0.55 (4) | 0.54 (4) | 0.53 (4) |
+| enumeration | 0.59 (3) | 0.71 (3) | 0.32 (1) | 0.39 (1) | 0.56 (3) | 0.66 (3) | 0.73 (3) | 0.28 (2) | 0.88 (5) | 0.57 (3) | 0.73 (4) | 0.38 (2) | 0.56 (3) |
+| long_dependency | 0.30 | 0.32 (1) | 0.35 | 0.49 (3) | 0.19 | 0.63 (5) | 0.41 (2) | 0.36 (2) | 0.27 (1) | 0.37 (2) | 0.25 (2) | 0.22 (1) | 0.38 (2) |
+| attribution | 0.10 | 0.18 | 0.10 | 0.25 (1) | 0.35 (2) | 0.48 (3) | 0.28 (2) | 0.22 (1) | 0.27 | 0.40 (2) | 0.15 (1) | 0.09 | 0.08 |
+| numeric_units | 0.15 | 0.29 (2) | 0.40 (1) | 0.28 (1) | 0.70 (5) | 0.74 (3) | 0.47 (2) | 0.52 (3) | 0.62 (5) | 0.41 (2) | 0.29 | 0.25 (1) | 0.15 |
+| agreement_gap | 0.27 | 0.17 | 0.15 | 0.27 | 0.22 | 0.37 | 0.42 (2) | 0.49 (2) | 0.28 (1) | 0.68 (4) | 0.23 | 0.21 (3) | 0.60 (4) |
+| history | 0.11 | 0.15 | 0.22 | 0.31 | 0.27 | 0.41 (2) | 0.14 (1) | 0.31 (1) | 0.28 | 0.27 | 0.32 (1) | 0.27 (1) | 0.29 |
+| anatomy | 0.19 (1) | 0.52 (3) | 0.27 | 0.26 | 0.13 | 0.68 (5) | 0.45 (1) | 0.19 (2) | 0.46 (3) | 0.32 (1) | 0.31 (1) | 0.17 (1) | 0.34 (1) |
+| geography | 0.25 | 0.27 | 0.25 (1) | 0.47 (2) | 0.44 (1) | 0.41 (2) | 0.21 | 0.38 (1) | 0.52 (3) | 0.51 (3) | 0.48 | 0.35 (1) | 0.36 (1) |
+| math_definition | 0.28 | 0.45 (2) | 0.36 (2) | 0.41 (2) | 0.30 (2) | 0.50 (2) | 0.53 (4) | 0.53 (4) | 0.61 (3) | 0.74 (5) | 0.49 (2) | 0.38 (1) | 0.58 (3) |
+| environment | 0.07 | 0.14 (1) | 0.12 | 0.10 | 0.28 (1) | 0.53 (4) | 0.23 (1) | 0.51 (3) | 0.19 (1) | 0.20 (1) | 0.37 (1) | 0.10 | 0.14 (1) |
+| recipe | 0.13 | 0.22 | 0.23 (1) | 0.27 (1) | 0.14 (1) | 0.58 (4) | 0.50 (3) | 0.18 (2) | 0.53 (3) | 0.38 (2) | 0.30 (2) | 0.22 | 0.25 (1) |
+| literature | 0.30 (2) | 0.16 | 0.24 (1) | 0.17 | 0.21 (1) | 0.47 (1) | 0.37 (1) | 0.53 (3) | 0.21 (2) | 0.22 | 0.22 | 0.07 | 0.09 (1) |
+| technology | 0.09 | 0.13 | 0.12 | 0.12 | 0.23 | 0.45 (2) | 0.41 (2) | 0.17 | 0.13 (1) | 0.14 (1) | 0.27 | 0.11 (1) | 0.12 (1) |
+| economics | 0.24 | 0.25 | 0.13 | 0.35 | 0.45 (1) | 0.64 (4) | 0.47 (3) | 0.47 (2) | 0.52 (3) | 0.66 (4) | 0.26 | 0.55 (4) | 0.33 (2) |
 
 ## Reading set
 
@@ -124,7 +124,7 @@ How can you keep your earth healthy?
 - You can
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.522 · topic 0%, last mention at token 0
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.522 · near-loop from token 147 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Photosynthesis is a process that we use as a way to produce better quality of life.
@@ -146,7 +146,7 @@ A. The hydrogen molecule is the largest form of hydrogen.
 A. The hydrogen molecule is the most active form of hydrogen, but it is not a very active form
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.854 · loops from token 83 (period 6) · topic 0%, last mention at token 0
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.854 · loops from token 83 (period 6) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Photosynthesis is a process that we can take for granted to a better future.
@@ -192,7 +192,7 @@ In the future, scientists will be able to explore the future
 - Science of the
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.356 · loops from token 214 (period 13) · topic 0%, last mention at token 0
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.356 · loops from token 214 (period 13) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Photosynthesis is a process that we can explore with its advantages. It is the most important type of plant which comes with its benefits.
@@ -214,7 +214,7 @@ The characteristics of plants that are used to grow plants are:
 - They
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.625 · topic 0%, last mention at token 0
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.625 · near-loop from token 114 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Photosynthesis is a process that we use as a process to convert energy from the food into energy.
@@ -244,7 +244,7 @@ How long can I harvest seeds from the garden?
 You can harvest seeds that are longer than the average day. You can harvest seeds that are shorter than the average day. You can harvest seeds that are shorter than the average day. You
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.545 · topic 100%, last mention at token 255
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.545 · near-loop from token 106 · **degenerate** · topic 100%, last mention at token 255
 
 ```
 Photosynthesis is a process that we use to make organic food. It is the most important part of the process.
@@ -264,7 +264,7 @@ In the process of photosynthesis, carbon breaks down the carbon into elements.
 - When photosynthesis is involved in the process of photosynthesis, photosynthesis is the process of photosynthesis
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.336 · topic 0%, last mention at token 0
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.336 · topic 0%, last mention at token 0
 
 ```
 Photosynthesis is a process that we use as a way to slow down the production of chlorophyll.
@@ -277,7 +277,7 @@ The process of reducing water to produce chlorophyll is called chlorophyll produ
 The process of reducing water to produce chlorophyll is called chlorophyll production. The process of reducing water to produce chlorophy
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.818 · loops from token 107 (period 18) · topic 100%, last mention at token 255
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.818 · loops from token 107 (period 18) · **degenerate** · topic 100%, last mention at token 255
 
 ```
 Photosynthesis is a process that enables photosynthesis to occur in a plant cell.
@@ -310,7 +310,7 @@ Photosynthesis is a process that occurs in plants and other organisms. Photosynt
 
 prompt: 'Albert Einstein was a German-born theoretical physicist who'
 
-**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.364 · topic 17%, last mention at token 182
+**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.364 · near-loop from token 124 · topic 17%, last mention at token 182
 
 ```
 Albert Einstein was a German-born theoretical physicist who was not in charge of his own position, he would have succeeded in a long time to see Einstein. He was a physicist and astronomer and physicist. He was the physicist and physicist. He was the best of his fellow mathematicians. He was the first mathematician, philosopher, philosopher and philosopher. He was the father of the scientist who was the first physicist to produce a quantum, or physicist. He was one of his most interested mathematicians, and his scientists used his classical works. It was a scientist, a scientist, mathematician, astronomer and scientist. He could use the theoretical theory of physics, physics, astronomy, chemistry, physics, chemistry, chemistry, astronomy, science, physics, astronomy, astronomy, astronomy, science, astronomy, astronomy, astronomy, astronomy, science, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy and astronomy. He worked extensively on the idea of science, physics, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy. He was also studying astronomy and astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy, astronomy.
@@ -326,7 +326,7 @@ He was born in charge of two years of age, and was born in charge of one year of
 He was born
 ```
 
-**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.466 · topic 0%, last mention at token 8
+**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.466 · near-loop from token 166 · topic 0%, last mention at token 8
 
 ```
 Albert Einstein was a German-born theoretical physicist who was not in his position. The physicist, then, “The Universe of Life's Life” and “The Universe of Life” and “The Universe of Life” and “The Universe of Life” (Sart).
@@ -341,7 +341,7 @@ The universe is a sphere of life. It orbits Earth, our universe, our universe, o
 Albert Einstein was a German-born theoretical physicist who was not in favor of his own position, but his own position in science was not to be a good and bad thing. He was also a mathematician and philosopher. He was also a physicist at the University of California, Berkeley, and a chemist. He was born to the Max Planck Institute in New York, USA in 1983. He was a professor of physics at Stanford, while he was a student with a passion for physics. He was a scientist at the University of California. He was a scientist at the University of California. He was a professor of physics at the University of California in California. He was a scientist at the University of California. He was a scientist for the first time because he was the first person to study physics. He was the first person to be a scientist at Harvard. He was a scientist at the University of California, Berkeley. He was a scientist at the University of California. He was a scientist at the University of California, Berkeley. He was a scientist at the University of California, Berkeley. He was a physicist at the University of California, Berkeley. He was a scientist at the University of California and the first person to be a scientist at the University of California. He was first to be a scientist at the University of California. He
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.261 · topic 0%, last mention at token 25
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.261 · near-loop from token 174 · topic 0%, last mention at token 25
 
 ```
 Albert Einstein was a German-born theoretical physicist who was not in his position. The physicist was born in the university of Physics at the University of Cambridge. He was a physicist and a scientist who had been interested in his own work.
@@ -405,7 +405,7 @@ The Albert Einstein Institute – the first Einstein-born scientist to ever beco
 Albert Einstein’s first two years of Einstein’s second, and Albert Einstein’s second, were born in 1962. Einstein was one of the only three scientists to ever become Einstein’s first. Einstein’s first, but Einstein’s first, and Albert Einstein’s second only, was born in 1959. Albert Einstein’s first year of teaching was only the first Einstein to ever become Einstein’s second. Albert Einstein’s first year of teaching was only a year after Albert Einstein’s first three years of teaching, when he became Albert Einstein’
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.324 · topic 17%, last mention at token 133
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.324 · topic 17%, last mention at token 133
 
 ```
 Albert Einstein was a German-born theoretical physicist who was not afraid of the laws of physics, but would become a physicist after the discovery of the universe. Einstein was a naturalist. He made his famous observations about the universe and how it came about. Einstein later published his famous observations on the Universe and Einstein wrote, “I think you must be prepared to be a scientist.”
@@ -445,7 +445,7 @@ In 1925, Einstein published his first paper on electromagnetism, which concluded
 
 prompt: 'Oxygen is a chemical element with'
 
-**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.53 · topic 67%, last mention at token 256
+**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.53 · **degenerate** · topic 67%, last mention at token 256
 
 ```
 Oxygen is a chemical element with the same properties. The oxidation of the oxidation of the oxidation element has a negative charge. The oxidation element is a chemical element which is a chemical element. The oxidation element is a solid charge, but the oxidation process is the oxidation element. The oxidation element is a positive charge. The oxidation element is formed by the oxidation element. The oxidation element is the oxidation element. The oxidation element is a positive charge.
@@ -462,7 +462,7 @@ Al(s) is a chemical element that is made from the chemical element.
 Al(s) is an chemical element that is derived from the chemical element in a chemical element
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.538 · topic 67%, last mention at token 256
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.538 · **degenerate** · topic 67%, last mention at token 256
 
 ```
 Oxygen is a chemical element with a charge of 1.2, a chemical element containing a chemical element, a chemical element of a compound, a compound or molecule of a compound, or a compound, which is a compound called an atomic element.
@@ -523,7 +523,7 @@ Energy is a power source for electricity.
 Energy
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.597 · topic 0%, last mention at token 13
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.597 · near-loop from token 166 · **degenerate** · topic 0%, last mention at token 13
 
 ```
 Oxygen is a chemical element with a charge of an oxidizing agent. It is a chemical element with a charge of an oxidizer. The charge is to take charge of an oxidizing agent.
@@ -561,7 +561,7 @@ The particle size of the particle size is different from the standard size of pa
 The particle size of particles can be larger than the standard size of particles, and is the size
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.617 · loops from token 183 (period 36) · topic 67%, last mention at token 255
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.617 · loops from token 183 (period 36) · **degenerate** · topic 67%, last mention at token 255
 
 ```
 Oxygen is a chemical element with a chemical element. The name for a chemical element is a chemical element, which produces an element, which produces an element in its properties.
@@ -574,7 +574,7 @@ Chemicals are the chemical elements that produce an element which is an element 
 Types of chemical elements, the chemical element, and the chemical elements, the chemical element, the chemical elements, the chemical elements, the chemical element, the chemical elements, the chemical element, the chemical elements, the chemical elements, the chemical elements, the chemical element, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical element, the chemical elements, the chemical elements, the chemical elements, the chemical elements, the chemical elements,
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.668 · topic 0%, last mention at token 0
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.668 · near-loop from token 118 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Oxygen is a chemical element with a strong affinity for the membrane molecules. It is known as anhydride.
@@ -603,7 +603,7 @@ To calculate Voil, you need to multiply Voil.
 To
 ```
 
-**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.607 · topic 0%, last mention at token 0
+**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.607 · near-loop from token 169 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Oxygen is a chemical element with a charge of an atomization.
@@ -630,13 +630,13 @@ In the early days of solar energy, there were only about 4,000 solar cells in th
 The first solar cell was the first solar cell, which was used in the
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.711 · topic 0%, last mention at token 57
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.711 · near-loop from token 118 · **degenerate** · topic 0%, last mention at token 57
 
 ```
 Oxygen is a chemical element with a charge of 1.2, a charge of 4, and a charge of 2. The molecule is a hydromorphic molecule with a base charge of 1.3, a charge of 2.0, and a charge of 1.4. The molecule is a chemical element with a charge of 2.0, a charge of 2.0, and a charge of 2.0. The molecule is a gas with a base charge of 3.0, and a charge of 3.0. The molecule is a gas with a base charge of 3.0, and a charge of 2.0. The molecules are a gas with a base charge of 2.0, and a charge of 3.0. The molecule is a gas with a base charge of 3.0, and a charge of 3.0. The molecule is a gas with a base charge of 3.0, and a charge of 3.0, and a charge of 3.0. The molecule is a gas with a base charge of 3.0, and a charge of 3.0. The molecules are a gas with a base charge of 3.0, and a charge of 3.0. A gas with a base charge of 3.0, and a charge
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 56 tokens · EOS · rep4 0.528 · topic 100%, last mention at token 54
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 56 tokens · EOS · rep4 0.528 · **degenerate** · topic 100%, last mention at token 54
 
 ```
 Oxygen is a chemical element with the symbol Oxygen.
@@ -645,7 +645,7 @@ Oxygen is a chemical element with the symbol Oxygen.
 The element has the symbol Oxygen. The symbol Oxygen is a chemical element with the symbol Oxygen.
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.869 · loops from token 50 (period 15) · topic 100%, last mention at token 251
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.869 · loops from token 50 (period 15) · **degenerate** · topic 100%, last mention at token 251
 
 ```
 Oxygen is a chemical element with the symbol Oxygen.
@@ -688,7 +688,7 @@ Students will read the lesson and make the lesson a fun and fun lesson.
 Students will use
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.747 · topic 0%, last mention at token 6
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.747 · near-loop from token 2 · **degenerate** · topic 0%, last mention at token 6
 
 ```
 In this lesson, students will learn how to make a positive contribution to students and will also enjoy a more positive contribution.
@@ -788,7 +788,7 @@ It is a very important learning process for children.
 Why are we making a
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.668 · topic 67%, last mention at token 239
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.668 · **degenerate** · topic 67%, last mention at token 239
 
 ```
 In this lesson, students will learn how to make a positive contribution to students.
@@ -827,7 +827,7 @@ One of the key benefits of positive and negative feedback for students is the ab
 Another benefit of positive and
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.68 · topic 33%, last mention at token 251
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.68 · near-loop from token 166 · **degenerate** · topic 33%, last mention at token 251
 
 ```
 In this lesson, students will learn how to make a positive change in your classroom and how to use it.
@@ -881,7 +881,7 @@ Students will also be able to use the concept of learning to help them to become
 Teachers are interested in helping students to develop their learning by using advanced technology and learning to learn. It
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.474 · topic 0%, last mention at token 6
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.474 · near-loop from token 149 · topic 0%, last mention at token 6
 
 ```
 In this lesson, students will learn how to make a good case for students to write a letter to the editor.
@@ -907,7 +907,7 @@ Students will review the case to create a case based on the case. The lesson wil
 In the end, students will be able to solve their own case.
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.66 · loops from token 117 (period 22) · topic 0%, last mention at token 98
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.66 · loops from token 117 (period 22) · **degenerate** · topic 0%, last mention at token 98
 
 ```
 In this lesson, students will learn how to make a good impression on your class and how to use the vocabulary we use at all times.
@@ -928,7 +928,7 @@ There are several benefits to regular exercise:
 - _____________ – If you have a hard time in the year, you should be aware that the medication is so important to you to make sure you are working as a whole for your exercise.
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.621 · topic 0%, last mention at token 0
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.621 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are several benefits to regular exercise:
@@ -960,7 +960,7 @@ What is the difference between movement and division?
 - The difference between movement and division is the difference between displacement and division.
 ```
 
-**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.842 · topic 0%, last mention at token 0
+**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.842 · near-loop from token 0 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are several benefits to regular exercise:
@@ -1044,7 +1044,7 @@ t "
 " to "
 ```
 
-**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.921 · topic 33%, last mention at token 253
+**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.921 · near-loop from token 0 · **degenerate** · topic 33%, last mention at token 253
 
 ```
 There are several benefits to regular exercise:
@@ -1083,7 +1083,7 @@ There are several benefits to regular exercise:
 - 
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.858 · loops from token 169 (period 15) · topic 0%, last mention at token 0
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.858 · loops from token 169 (period 15) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are several benefits to regular exercise:
@@ -1107,7 +1107,7 @@ There are several benefits to regular exercise:
 - ________
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.696 · topic 0%, last mention at token 0
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.696 · near-loop from token 100 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are several benefits to regular exercise:
@@ -1131,7 +1131,7 @@ There are several benefits to regular exercise:
 - _____________ to help the baby to sleep better.
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.984 · loops from token 0 (period 4) · topic 0%, last mention at token 0
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.984 · loops from token 0 (period 4) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are several benefits to regular exercise:
@@ -1177,7 +1177,7 @@ The best time to exercise is to exercise. You can always follow the recommended 
 - Lifestyle changes: High
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.589 · topic 33%, last mention at token 180
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.589 · near-loop from token 181 · **degenerate** · topic 33%, last mention at token 180
 
 ```
 There are several benefits to regular exercise:
@@ -1212,7 +1212,7 @@ It’s important to remember that exercise is only about one hour long. It’s n
 - 3
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.755 · topic 33%, last mention at token 244
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.755 · near-loop from token 42 · **degenerate** · topic 33%, last mention at token 244
 
 ```
 There are several benefits to regular exercise:
@@ -1250,7 +1250,7 @@ It can help to reduce the risk of stroke. Exercise improves blood circulation an
 Exercise can help
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.534 · topic 0%, last mention at token 4
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.534 · **degenerate** · topic 0%, last mention at token 4
 
 ```
 There are several benefits to regular exercise:
@@ -1276,7 +1276,7 @@ There are several benefits to regular exercise:
 
 prompt: 'To solve a quadratic equation, follow these steps:\n1.'
 
-**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.711 · topic 33%, last mention at token 249
+**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.711 · near-loop from token 0 · **degenerate** · topic 33%, last mention at token 249
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1311,7 +1311,7 @@ To solve a quadratic equation, follow these steps:
 17.
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.549 · topic 67%, last mention at token 246
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.549 · **degenerate** · topic 67%, last mention at token 246
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1325,7 +1325,7 @@ The Quadratic equation can be added to the quadratic equation.
 The quadratic formula can be added and used as the
 ```
 
-**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.949 · loops from token 82 (period 4) · topic 0%, last mention at token 2
+**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.949 · loops from token 82 (period 4) · **degenerate** · topic 0%, last mention at token 2
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1363,7 +1363,7 @@ To solve a quadratic equation, follow these steps:
 - How many times have you ever wanted to
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.498 · topic 100%, last mention at token 158
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.498 · near-loop from token 177 · topic 100%, last mention at token 158
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1393,7 +1393,7 @@ Step: Second, select:
 Step: First
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.672 · topic 0%, last mention at token 0
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.672 · near-loop from token 180 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1416,14 +1416,14 @@ Step-by-Step:
 Step-
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.945 · loops from token 174 (period 29) · topic 0%, last mention at token 0
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.945 · loops from token 174 (period 29) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 To solve a quadratic equation, follow these steps:
 1. Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide To Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide Guide to Step-by-Step Guide to Step-by-Step Guide to Step-by-Step Guide to Step
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.743 · loops from token 215 (period 16) · topic 33%, last mention at token 253
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.743 · loops from token 215 (period 16) · **degenerate** · topic 33%, last mention at token 253
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1445,7 +1445,7 @@ To solve a quadratic equation, follow these steps:
 15. Step-by-step equation: Step-
 ```
 
-**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.538 · topic 67%, last mention at token 248
+**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.538 · **degenerate** · topic 67%, last mention at token 248
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1469,7 +1469,7 @@ The main points of the quadratic equation is the area of the quadratic equation.
 5. What are the major
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.735 · topic 67%, last mention at token 246
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.735 · near-loop from token 179 · **degenerate** · topic 67%, last mention at token 246
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1493,14 +1493,14 @@ To solve a quadratic equation, follow these steps:
 6. Step-by-step:
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.787 · topic 0%, last mention at token 0
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.787 · near-loop from token 33 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 To solve a quadratic equation, follow these steps:
 1. Step 1: Step 1: Step 2: Step 3: Step 4: Step 4: Step 5: Step 5: Step 6: Step 7: Step 8: Step 8: Step 9: Step 10: Step 11: Step 11: Step 12: Step 12: Step 13: Step 13: Step 13: Step 13: Step 14: Step 14: Step 14: Step 15: Step 1: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 14: Step 15: Step
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.561 · topic 0%, last mention at token 0
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.561 · near-loop from token 82 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1524,7 +1524,7 @@ To solve a quadratic equation, follow these steps:
 18. Find the area of the circle in which
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.731 · loops from token 138 (period 13) · topic 67%, last mention at token 249
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.731 · loops from token 138 (period 13) · **degenerate** · topic 67%, last mention at token 249
 
 ```
 To solve a quadratic equation, follow these steps:
@@ -1539,7 +1539,7 @@ To solve a quadratic equation, follow these steps:
 
 prompt: 'There are three main types of'
 
-**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.771 · topic 0%, last mention at token 0
+**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.771 · near-loop from token 0 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are three main types of the most common types of the two types of the two are:
@@ -1601,7 +1601,7 @@ If any paper or paper works from a paper or paper, then it is printed.
 
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.759 · loops from token 128 (period 7) · topic 0%, last mention at token 0
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.759 · loops from token 128 (period 7) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are three main types of the most common types of the human body.
@@ -1613,7 +1613,7 @@ There are three main types of the most common types of the human body.
 - The “labor” is called the “labor” – “labor” or “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “labor” – “
 ```
 
-**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.901 · loops from token 127 (period 4) · topic 0%, last mention at token 0
+**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.901 · loops from token 127 (period 4) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are three main types of the history
@@ -1647,7 +1647,7 @@ There are three main types of the most common types of the first one.
 - When the second is to be a strong enemy, in a strong direction,
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.719 · topic 100%, last mention at token 241
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.719 · near-loop from token 60 · **degenerate** · topic 100%, last mention at token 241
 
 ```
 There are three main types of the most common types of the two are:
@@ -1678,7 +1678,7 @@ There are three main types of the most common types of the two are:
 -
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.913 · loops from token 17 (period 5) · topic 0%, last mention at token 0
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.913 · loops from token 17 (period 5) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are three main types of cell membrane
@@ -1743,7 +1743,7 @@ There are three main types of the most
 - 5-4-4-5-4-5-5-7-7-8-6-6-4-5-8-5-9-7-8-6-6-7-7-7-7-7-6-8-7-7-8-8-7-7-7-7-7-8-9-8-1-8-7--10-7-4-8-9--7-9-8-6-8-7--1-4--6-8--6-8--6-1-6-6-8--8-8-9--8-7-9--9-6--2--8--8-8-8--8-8--9--8-
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.735 · loops from token 221 (period 13) · topic 0%, last mention at token 0
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.735 · loops from token 221 (period 13) · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are three main types of the process
@@ -1757,7 +1757,7 @@ The production of the product is the same as the product.
 The production of the product
 ```
 
-**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.514 · topic 100%, last mention at token 245
+**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.514 · **degenerate** · topic 100%, last mention at token 245
 
 ```
 There are three main types of the most popular types of the human body: the girdle, the head and the head, and the jaw. These three types of the human body are called the girdle.
@@ -1794,7 +1794,7 @@ There are many kinds of data type. For example, data type is used to make statem
 Data type is used to make statements and statements. It can be used to make statements
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.684 · topic 100%, last mention at token 246
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.684 · near-loop from token 135 · **degenerate** · topic 100%, last mention at token 246
 
 ```
 There are three main types of the BMR. BMR is the single most common type of BMR.
@@ -1817,7 +1817,7 @@ BMR is classified into three major types.
 BMR is classified into two
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.759 · loops from token 213 (period 15) · topic 0%, last mention at token 6
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.759 · loops from token 213 (period 15) · **degenerate** · topic 0%, last mention at token 6
 
 ```
 There are three main types of the process
@@ -1842,7 +1842,7 @@ Fourthary Process: The process of converting raw materials into finished product
 Fourthary Process: The process of converting raw materials into finished products.
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.573 · topic 0%, last mention at token 0
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.573 · near-loop from token 137 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 There are three main types of the garter. The first is the type of garter that is used for the
@@ -1891,7 +1891,7 @@ The United States Constitution is governed by the United States and the United S
 The United States Constitution is a constitutional monarchy on the United States, including the United States and the United States Constitution. The United States Constitution is part of the Constitution, the United States, and the United States. The Constitution is the main principle for all nations, and is not the United States Constitution. The United States Constitution is the first Amendment. The Constitution is the only United States Senate, a constitutional state in the United States. It is
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.375 · loops from token 216 (period 19) · topic 0%, last mention at token 88
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.375 · loops from token 216 (period 19) · **degenerate** · topic 0%, last mention at token 88
 
 ```
 Although the treaty was signed in 1919, it was repealed in the United States.
@@ -1934,7 +1934,7 @@ The treaty is signed in 1939 by the United States and continues to support the t
 The treaty is signed in 1939. It was signed in 1939 by the United States. It is ratified in 1937 by the United States. It is signed in 1937 by the United States and the United States. The treaty is signed in 1939 by the United States. The treaty is signed in 1937 by the United States. The treaty is signed in 1939 by the United States. It is signed in 1939 by the United States. The treaty was signed in 1939 by the United States. It is signed in 1945 by the United States. This treaty is signed
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.387 · topic 50%, last mention at token 253
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.387 · near-loop from token 173 · topic 50%, last mention at token 253
 
 ```
 Although the treaty was signed in 1919, it was repealed before the Parliament repealed the Constitution.
@@ -1959,7 +1959,7 @@ The Constitution was ratified in December 1919.
 The Constitution was signed in December 1919
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.609 · topic 50%, last mention at token 246
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.609 · **degenerate** · topic 50%, last mention at token 246
 
 ```
 Although the treaty was signed in 1919, it was a declaration of the treaty signed by the British Parliament. This was the result of the treaty.
@@ -1970,7 +1970,7 @@ The British Parliament was signed by the British Parliament in 1919. The British
 In 1919, the British Parliament was signed by the British Parliament on December 12, 1919.
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.585 · topic 100%, last mention at token 253
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.585 · **degenerate** · topic 100%, last mention at token 253
 
 ```
 Although the treaty was signed in 1919, it was decided that the treaty was signed by the British Parliament. This was the result of the treaty.
@@ -1982,7 +1982,7 @@ The treaty was signed by Parliament. The treaty was signed by Parliament in Janu
 The treaty was signed by Parliament, and has signed by Parliament and approved by Parliament. The agreement was signed by Parliament, and signed by Parliament. The treaty was signed by Parliament and signed by Parliament. The treaty was signed by Parliament and
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.553 · topic 100%, last mention at token 244
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.553 · **degenerate** · topic 100%, last mention at token 244
 
 ```
 Although the treaty was signed in 1919, it was signed into law by the British Government.
@@ -2016,7 +2016,7 @@ The United States was once in the middle of the 20th century when the United Sta
 Today, the United States is a free-running federal government, which has been a popular choice for both the state and federal governments.
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.506 · topic 0%, last mention at token 0
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.506 · near-loop from token 177 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Although the treaty was signed in 1919, it was still a joint project between the Indian and British forces. This was the result of the ongoing war between India and the British.
@@ -2024,7 +2024,7 @@ The India War of 1812–17
 The Battle of Britain was a series of battles between British and British forces. British troops were sent to war with Britain, and British troops were deployed to the British. The British were sent to British troops. Britain was defeated by British forces. British troops were sent to Britain for the British. The British were sent to Britain. British troops and British troops were sent to Britain. Britain was part of Parliament. British forces were sent to England. British troops were sent to Britain. British troops were sent to Britain. British troops were sent to Britain. British troops were sent on. British troops were sent to Britain. British troops were sent to Britain. British troops were sent to Britain and England. British troops were sent to British troops. Britain was sent to Britain. British troops were sent to Britain and England. British troops were sent to Britain. British soldiers were sent to England and England. British troops were sent to Britain. British troops were sent to Britain. British soldiers were sent to England. British soldiers were sent to England and England. British troops were sent to England. British soldiers were sent to England
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.241 · topic 100%, last mention at token 253
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.241 · topic 100%, last mention at token 253
 
 ```
 Although the treaty was signed in 1919, it was still a law that protected both sides.
@@ -2037,7 +2037,7 @@ The first treaty was signed by the first 193 states on September 21, 1922, and t
 The treaty was signed by all 193 states on October 9, 1929, and the first treaty was ratified by all 193 states in the United States on October 31, 1925. The treaty was signed by all 193
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.704 · loops from token 221 (period 8) · topic 100%, last mention at token 255
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.704 · loops from token 221 (period 8) · **degenerate** · topic 100%, last mention at token 255
 
 ```
 Although the treaty was signed in 1919, it was repealed in the year 1919.
@@ -2144,7 +2144,7 @@ The journal Nature Medicine is the journal Nature Medicine.
 Dr. John D. Schafer is a coauthor of Science and Medicine in the journal Nature Medicine's journal Nature Medicine.
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.32 · topic 0%, last mention at token 108
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.32 · near-loop from token 184 · topic 0%, last mention at token 108
 
 ```
 According to a study published in the journal Nature, this study was conducted by the National Institutes of Health and Human Services (NIP), which was conducted by the National Institutes of Health in Bethesda, Maryland.
@@ -2156,7 +2156,7 @@ The group also included the group's group's group's group, and the group's group
 The group's group was the group which was the group's group's group's group, and the group's group's group was the group's group's group's group's
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.522 · topic 0%, last mention at token 0
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.522 · near-loop from token 113 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 According to a study published in the journal Nature Medicine, this paper describes a case of a disease that can be caused by a number of factors. These include:
@@ -2171,7 +2171,7 @@ According to a study published in the journal Nature Medicine, this paper descri
 These research findings highlight the importance of genetics and environmental factors, such as genetic factors, such as genetic factors, such as genetic factors, such as genetic
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.755 · topic 0%, last mention at token 0
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.755 · near-loop from token 21 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 According to a study published in the Journal of Medicine.
@@ -2207,7 +2207,7 @@ According to a study published in the journal Nature Communications, this study 
 - The student was divided into two groups according to
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 247 tokens · EOS · rep4 0.148 · topic 100%, last mention at token 240
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 247 tokens · EOS · rep4 0.148 · topic 100%, last mention at token 240
 
 ```
 According to a study published in the Journal of Biological Sciences, the researchers found that the levels of glucose in the blood are higher in people who are overweight or obese.
@@ -2259,7 +2259,7 @@ The mountains were inhabited by the Himalayas and the mountains. The valleys are
 The mountains and mountains are also covered
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.581 · topic 33%, last mention at token 256
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.581 · **degenerate** · topic 33%, last mention at token 256
 
 ```
 The mountain rises to a height of 80.2 feet. The mountain is an ideal place to climb. The mountain is called the mountain, and the mountain is called the mountain. In the mountain, the mountain is called the mountain.
@@ -2290,7 +2290,7 @@ The city’s city has a city of a city, a city, a city, and a city, a city, a ci
 The mountain rises to a height of 80 feet and is one of the most beautiful mountains in the southern United States. It is one of the most beautiful mountains in the southwestern United States. The mountain is an amazing mountain of beauty.
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.542 · topic 33%, last mention at token 246
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.542 · near-loop from token 181 · **degenerate** · topic 33%, last mention at token 246
 
 ```
 The mountain rises to a height of around 1,00.
@@ -2300,7 +2300,7 @@ The mountain ranges are about 3,000 times. The mountain ranges are about 6,500 t
 The mountain ranges are about 500 times per year. The mountain ranges are about 1,500 times per year. The mountain ranges are about 3,500 times per year. The mountain ranges are about 1,600 times per year.
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.897 · loops from token 189 (period 24) · topic 67%, last mention at token 255
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.897 · loops from token 189 (period 24) · **degenerate** · topic 67%, last mention at token 255
 
 ```
 The mountain rises to a height of 10.2 feet.
@@ -2326,7 +2326,7 @@ The mountain rises to a height of 10.2 feet.
 - The mountain rises at the top of the mountain.
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 212 tokens · EOS · rep4 0.641 · topic 33%, last mention at token 210
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 212 tokens · EOS · rep4 0.641 · near-loop from token 49 · **degenerate** · topic 33%, last mention at token 210
 
 ```
 The mountain rises to a height of 10.2 feet.
@@ -2360,7 +2360,7 @@ The mountain rises to a height of 10.2 feet.
 The most beautiful mountains of the world, the most impressive mountain ranges of the mountains, are the mountains of the city. The mountain is an amazing place of paradise. The mountains are a testament to the beauty and beauty of the city. The mountain is a paradise that is rich in vitamins, minerals, and antioxidants.
 ```
 
-**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.672 · topic 33%, last mention at token 253
+**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.672 · near-loop from token 66 · **degenerate** · topic 33%, last mention at token 253
 
 ```
 The mountain rises to a height of 3.2 feet.
@@ -2376,7 +2376,7 @@ The mountain ranges are the mountain ranges. The mountain ranges are the mountai
 The mountain ranges are the mountain ranges. The mountain ranges are the mountain ranges. Mountain ranges are the
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.391 · topic 33%, last mention at token 254
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.391 · near-loop from token 178 · topic 33%, last mention at token 254
 
 ```
 The mountain rises to a height of 10,000 feet.
@@ -2395,7 +2395,7 @@ The mountain is the highest mountain in Russia.
 The mountain is the highest mountain in Russia
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.431 · topic 33%, last mention at token 248
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.431 · topic 33%, last mention at token 248
 
 ```
 The mountain rises to a height of 3.2 metres. The peak is in the south-west of the country, and it is said that the highest mountain is Mt. Kilimanjaro. The mountain is famous for its large amounts of limestone and limestone. The mountain is called the mountain “the mountain” because it is the highest mountain in the world. The mountain is also known as the mountain “the mountain” because of its sheer white sands and high mountain ranges.
@@ -2403,7 +2403,7 @@ The mountain is named after the hill that rises to a height of 4 metres. The mou
 The mountain is also famous for its huge amounts of limestone and limestone. The mountain is famous for its large amounts of limestone
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.292 · topic 33%, last mention at token 254
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.292 · near-loop from token 186 · topic 33%, last mention at token 254
 
 ```
 The mountain rises to a height of 10,000 feet. The peak is in the south-eastern part of the mountain range of the Russian Federation.
@@ -2536,7 +2536,7 @@ The students who had spent the entire semester preparing for the final examinati
 -
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.609 · topic 11%, last mention at token 255
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.609 · near-loop from token 133 · **degenerate** · topic 11%, last mention at token 255
 
 ```
 The students who had spent the entire semester preparing for the final examination in organic chemistry, were at the beginning of a comprehensive review and a final examination inorganic chemistry.
@@ -2558,7 +2558,7 @@ What is the difference between the two groups of students?
 Which group of students is
 ```
 
-**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.285 · topic 11%, last mention at token 240
+**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.285 · near-loop from token 178 · topic 11%, last mention at token 240
 
 ```
 The students who had spent the entire semester preparing for the final examination in organic chemistry, I have worked throughout the semester to review and prepare for the final exam in organic chemistry. I have worked with the students in the semester and I have worked with the students in the semester to create a well-organized and reproducible Chemistry lab.
@@ -2576,14 +2576,14 @@ The following are the ideas of the rubric:
 
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.478 · loops from token 206 (period 9) · topic 22%, last mention at token 254
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.478 · loops from token 206 (period 9) · **degenerate** · topic 22%, last mention at token 254
 
 ```
 The students who had spent the entire semester preparing for the final examination in organic chemistry classes were at the beginning of the semester. The second semester was in the second semester. The students were invited to go outside the semester because they were not allowed to finish class in the semester. The students were then given a copy of the results of the course and the final exam. The students were then given a copy of the results from the class. The students were given a copy of the results. The students were given two copies of the results, one containing the results of the previous exam. The third and final exam was in the final exam. The third was in the final exam. The results were given a copy of the results of the course. The conclusion of the final exam is that there were no final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam.
 The students were asked to write a paper on the assignment of their homework. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was in the final exam. The final exam was
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.107 · topic 22%, last mention at token 242
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.107 · topic 22%, last mention at token 242
 
 ```
 The students who had spent the entire semester preparing for the final examination in organic chemistry, I have to admit, I have been quite a bit nervous. I have never been nervous about the preparation of the final exam. I have never been nervous about the final preparation. The students were very well prepared and they were very friendly and helpful. I will definitely use them again in my future exams.
@@ -2592,7 +2592,7 @@ I love the idea of using my skills in a healthy way and I am looking forward to 
 This is my first year teaching chemistry or chemistry, so I am very excited to start teaching chemistry with my students. I can see myself in the classroom and in the classroom. I am very motivated and excited to be teaching chemistry. I love the idea of giving students the right to learn and to practice. I am very excited about the idea of giving students the right to learn and practice. The way I look at it is
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.83 · loops from token 156 (period 49) · topic 33%, last mention at token 255
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.83 · loops from token 156 (period 49) · **degenerate** · topic 33%, last mention at token 255
 
 ```
 The students who had spent the entire semester preparing for the final examination in organic chemistry study were the students who were not part of the organic chemistry study.
@@ -2604,7 +2604,7 @@ The students who were not part of the organic chemistry study were the students 
 The students who were not part of the organic chemistry study were the students who were not part of the organic chemistry study. The students who
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.601 · topic 78%, last mention at token 227
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.601 · **degenerate** · topic 78%, last mention at token 227
 
 ```
 The students who had spent the entire semester preparing for the final examination in organic chemistry study were included in the study. The study was a randomized controlled trial. The study was conducted within two consecutive weeks of the final examination. The results of each study were:
@@ -2695,7 +2695,7 @@ In 1789, the French Revolution began in 1791, one of the largest French and the 
 The French Revolution came in 1792, when the French Revolution took a second, but the French Revolution continued: the French Revolution began in 1794, when the French
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.597 · loops from token 215 (period 6) · topic 67%, last mention at token 254
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.597 · loops from token 215 (period 6) · **degenerate** · topic 67%, last mention at token 254
 
 ```
 The French Revolution began in 1789, when the French Revolution began in 1789. The movement was eventually fought in the French Revolution.
@@ -2704,7 +2704,7 @@ The French Revolution was a major part of the French Revolution. The French Revo
 The French Revolution was a period of peace between France and France in 1789. The French Revolution was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France did not fall in the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France was the French Revolution. France
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.656 · topic 0%, last mention at token 0
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.656 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 The French Revolution began in 1789, when Louis XIV granted the Emperor the Great. The first Emperor of France was the first Emperor. The second Emperor of France was the third Emperor of France. The third Emperor was the third of the first Emperor of France. In 1811, Charles II of France was the first Emperor in France. The second Emperor was the first Emperor of France. The third Emperor was the second Emperor of France. The first Emperor of France was the first Emperor of France. This Emperor was the first Emperor of France. The third Emperor of France was the first Emperor of France. This was the third Emperor of France. The first Emperor was the third Emperor of France.
@@ -2732,7 +2732,7 @@ French Revolution took place on the 13th of April 1799, when Napoleon’s French
 Napoleon’s victory was won by French forces and the French had a lasting impact on the French. The French were defeated by French forces led by French forces led by French forces led by French forces. France’s defeat in 1799 led to the victory of Napoleon’s second-hand French. The French were defeated by French forces led by French forces led by French
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.142 · topic 67%, last mention at token 160
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.142 · topic 67%, last mention at token 160
 
 ```
 The French Revolution began in 1789, when Louis XIV of France defeated the British. The victory was a result of the Revolution' rule of France, which eventually led to the construction of the French Revolution.
@@ -2753,7 +2753,7 @@ The French Revolution was a series of revolutions that began in 1789. The French
 The French Revolution was a series of revolutions that started in 1789 and ended in 1817. The French Revolution was a period of great political and military power that lasted from 1789-1817. The French Revolution was a period of great political and military power in the French people and the people. The
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.474 · topic 67%, last mention at token 254
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.474 · near-loop from token 115 · topic 67%, last mention at token 254
 
 ```
 The French Revolution began in 1789, when Louis XIV of France was overthrown. The French Revolution eventually ended in 1789 when Louis XVI of France was overthrown. The French Revolution involved the assassination of the French commander, who was executed on November 11, 1789. The French Revolution came to an end in 1790 when the French Revolution came out of the hands of the French. France became a more powerful country with an economy and a population that was more dependent on agriculture. The French Revolution was a period of great social upheaval which made it particularly important for the French and the Indians.
@@ -2776,7 +2776,7 @@ A blood pressure on the body should also be taken through the body’s blood. Th
 The body’s ability to move freely to the body requires oxygen, oxygen, and oxygen. The body’s ability to move freely within a body’s water supply is a key aspect of maintaining a healthy body’s blood through
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.617 · topic 50%, last mention at token 188
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.617 · near-loop from token 177 · **degenerate** · topic 50%, last mention at token 188
 
 ```
 The human heart is a muscular organ that is located in a region where blood flow is pumped to the heart.
@@ -2804,7 +2804,7 @@ The central nervous system is the central nervous system, the central nervous sy
 The human heart is a muscular organ that works in two organs, brain, and heart. The body’s body’s metabolism is constantly advancing rapidly, and also the body’s ability to move through, and in a way that is often the body’s body’s ability to function properly and efficiently. The body’s ability to function effectively and effectively at the same time is called the ‘brain’. The brain’s ability to function is the ‘brain’. This is the brain’s ability to function is the “brain”. The brain’s capacity to function is in the brain that is connected to an internal nerve that is connected to the body. The brain’s ability to function is more than the brain’s physical ability to function. The brain’s ability to function is also more advanced in the brain than the other brain’s ability to function. It is the brain’s ability to function as well as function. The brain is also called neurodegeneration. The brain gets more and more brain-like. The brain has to be able to develop it as a result of the brain’s ability to function in the brain. The brain also produces an
 ```
 
-**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.403 · topic 50%, last mention at token 248
+**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.403 · near-loop from token 133 · topic 50%, last mention at token 248
 
 ```
 The human heart is a muscular organ that is a natural part of the body. The human heart cannot be replaced by the heart, the heart is constantly and free from the heart. The heart is also a natural part of the body’s capacity to fight the beating of the heart. A small part of the body is called the heart which is the core of the heart.
@@ -2824,7 +2824,7 @@ Heart disease causes heart disease.
 Heart disease is the most common cause of heart disease. The heart is called heart disease. This type of heart disease is a chronic condition which can lead to heart disease and also affects many people. It is also known as
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.735 · topic 25%, last mention at token 250
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.735 · near-loop from token 66 · **degenerate** · topic 25%, last mention at token 250
 
 ```
 The human heart is a muscular organ that is a natural organ that receives blood from the blood to the blood.
@@ -2843,7 +2843,7 @@ The organ responsible for the functioning of the body is responsible for the fun
 The organ responsible for the functioning of the
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.767 · topic 25%, last mention at token 254
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.767 · near-loop from token 18 · **degenerate** · topic 25%, last mention at token 254
 
 ```
 The human heart is a muscular organ that is a natural organ that receives blood from the blood. The blood is located in the heart tissue, and it is located in the heart. The blood is located in the heart tissue, where the blood is located. The blood is situated in the heart of the heart. The blood is located in the heart. The blood is located in the heart. The blood is located in the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. This artery is located in the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. A blood clot is located in the heart of the heart. The blood is located in the heart of the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood is located in the heart of the heart. The blood carries blood from the heart. The blood is located in the heart of the heart of the heart. The
@@ -2859,7 +2859,7 @@ The human body is responsible for the release of the hormones and the body’s a
 
 ```
 
-**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.538 · topic 25%, last mention at token 254
+**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.538 · **degenerate** · topic 25%, last mention at token 254
 
 ```
 The human heart is a muscular organ that is a natural organ that receives blood from the heart. The heart is located in the heart tissue, and it is part of the heart that functions normally in the heart.
@@ -2870,7 +2870,7 @@ A heart is the heart that connects to the heart. The heart works by attaching th
 The heart is responsible for supplying the heart with oxygen to the heart by sending it to the heart, and the heart is responsible for supplying the heart with oxygen to the heart. The heart is responsible
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.794 · loops from token 181 (period 3) · topic 25%, last mention at token 254
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.794 · loops from token 181 (period 3) · **degenerate** · topic 25%, last mention at token 254
 
 ```
 The human heart is a muscular organ that carries a heart-shaped blood supply to the heart. The heart is located in the heart of the heart.
@@ -2883,7 +2883,7 @@ The heart is located in the heart of the heart of the heart of the heart. The he
 The heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the heart of the
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.368 · topic 50%, last mention at token 245
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.368 · topic 50%, last mention at token 245
 
 ```
 The human heart is a muscular organ that is a natural part of the body. The human heart cannot function properly because of its ability to produce and release oxygen.
@@ -2986,7 +2986,7 @@ Water is used for water as a water source.
 What is water used
 ```
 
-**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.759 · topic 75%, last mention at token 256
+**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.759 · near-loop from token 158 · **degenerate** · topic 75%, last mention at token 256
 
 ```
 The Amazon River flows through the river to the north.
@@ -2997,7 +2997,7 @@ The river flows through the river flows through the river. The river flows throu
 The river flows through the river flows through the river, the river flows through the river, and the river flows through the river. The river flows through the river is part of the river. The river flows through the river flows through the river flows through the river. The river flows through the river, the river flows through the river, the river. The river flows through the river flows through the river, the river flows through the river
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.498 · topic 25%, last mention at token 255
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.498 · near-loop from token 119 · topic 25%, last mention at token 255
 
 ```
 The Amazon River flows through the river to the shoreline of the river. It is a very dangerous city that is no exception in the country. The river is also a natural water source for river banks. The lakes are not the most dangerous source of water.
@@ -3005,7 +3005,7 @@ The river is located in the river and is the main river in the river. The river 
 The river is the main river that is the main river. The river is the main river. The river is the main river. The river is the main river. The river is the main river, where the river is the main river. The river is the main river. The river is the main river. The river is the main river and is the main river. The river is the main river and, when the river is the main river, the river is the main river.
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.664 · topic 75%, last mention at token 255
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.664 · near-loop from token 96 · **degenerate** · topic 75%, last mention at token 255
 
 ```
 The Amazon River flows through the river to the east and to the west. It is a very dangerous city that is called the river. The river flows through the river is the water flowing over river.
@@ -3026,7 +3026,7 @@ The river has a rich and rich water source that has a rich and rich water source
 
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.399 · loops from token 220 (period 5) · topic 0%, last mention at token 4
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.399 · loops from token 220 (period 5) · **degenerate** · topic 0%, last mention at token 4
 
 ```
 The Amazon River flows through the Pacific Ocean through the Caribbean Sea.
@@ -3034,14 +3034,14 @@ The Pacific Ocean is a hotspot that is expected to reach 5,000 feet of oceanic s
 Another great example of oceanic oceanic oceanic oceanic oceanic oceanic oceanic oceanic oceanic oceanic oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of oceanic a type of ocean
 ```
 
-**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.905 · loops from token 172 (period 7) · topic 0%, last mention at token 9
+**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.905 · loops from token 172 (period 7) · **degenerate** · topic 0%, last mention at token 9
 
 ```
 The Amazon River flows through the Gulf of Mexico.
 The main river in Mexico is the S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.B. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A. and S.L.A
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.759 · topic 50%, last mention at token 254
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.759 · near-loop from token 82 · **degenerate** · topic 50%, last mention at token 254
 
 ```
 The Amazon River flows through the river to the River Thames, where the river flows into the river. The river is called Ganga, and the river is called Sanga, and the river is called the Ganga.
@@ -3052,7 +3052,7 @@ The river flows into the river, and flows into the river, and flows into the riv
 The river flows into the river, and flows into the river, and flows into the river, and flows into the river. The river flows into the river. The river flows into the river, and flows into the river, and flows into the
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.482 · topic 75%, last mention at token 255
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.482 · near-loop from token 150 · topic 75%, last mention at token 255
 
 ```
 The Amazon River flows through the river to the mountains.
@@ -3081,7 +3081,7 @@ The Gama River flows through the Gama River and passes through the Gama River. T
 The river passes through the Gama River, which crosses the Gama River. The river passes through
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.589 · topic 100%, last mention at token 253
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.589 · **degenerate** · topic 100%, last mention at token 253
 
 ```
 The Amazon River flows through the largest river in the world, and the only river in the world. It is the longest river in the world and the longest river in the world.
@@ -3121,7 +3121,7 @@ There are two types of energy:
 
 ```
 
-**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.577 · topic 33%, last mention at token 218
+**M2 · data160k · d256-L4 · 16.1M · T128 · 40K steps** · 256 tokens · rep4 0.577 · **degenerate** · topic 33%, last mention at token 218
 
 ```
 In mathematics, a prime number is equivalent to more than 1000, the value of an integer in an integer (or decimal) is equal to 1000, but the value is equal to 100.
@@ -3137,14 +3137,14 @@ If we multiply the value of a decimal in a decimal, we need to multiply the valu
 - If we multiply the
 ```
 
-**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.569 · topic 0%, last mention at token 0
+**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.569 · near-loop from token 125 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 In mathematics, a prime number is not the same as the same as the other, and the whole is the same as the same. It is that the very same is the same as the same as the other is the same. In the same way, the two is the same as the same as the same. The two is the same as the two is the same, and the two is the same as the same, the same as the same as the two are the same.
 In fact, when the two is the same, the sum of the sum of the divinity is the same as the two is the same. The two will, in the sum, the sum, the one is the same. The sum of the sum, the sum of the concave, the sum of the sum, and the sum, the sum of the permutations, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum with the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum, the sum of the sum
 ```
 
-**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.526 · topic 0%, last mention at token 0
+**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.526 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 In mathematics, a prime number is called the first word in the human body. The next word is the first word in the universe. It is known as the first word in the universe. It is known as the third word in the universe.
@@ -3154,7 +3154,7 @@ The third word is the second word in the universe. The second word is called the
 - The fifth word is the fifth word. It is the fourth word. It is the fifth word. It is the fifth word. It is the fifth word. It is the sixth word. It is the fifth word. It
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.209 · topic 67%, last mention at token 255
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.209 · near-loop from token 186 · topic 67%, last mention at token 255
 
 ```
 In mathematics, a prime number is not the same as in the human race. Therefore, in theory, students use a formula to study the way that mathematics is developed. This means that mathematics can be used by students to study and study the way in which mathematics is taught.
@@ -3172,7 +3172,7 @@ To see the number with the number with the number.
 To see the number with the number with the number with the number with the number of numbers,
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.719 · topic 0%, last mention at token 0
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.719 · near-loop from token 36 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 In mathematics, a prime number is not the same. They can also be used to solve the problem, however, to solve the problem, and that the problem is solved with the problem.
@@ -3183,7 +3183,7 @@ The problem is solved with the problem solving. It is solved with the problem.
 The problem is solved with the problem. It is solved with the problem solved with the problem. It is solved with the problem solving. It is solved with the problem solving. It is solved with the problem solved with the problem solving. It is solved with the problem solving. It is solved with the problem solved with the problem solved with the problem solved. It is solved with the problem solving. It is solved with the problem solving. It is solved with the problem solved by the problem solved with the problem solved. It is solved with the problem solving. It is solved with the problem solving. It is solved
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.261 · topic 33%, last mention at token 240
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.261 · near-loop from token 190 · topic 33%, last mention at token 240
 
 ```
 In mathematics, a prime number is needed in order to make it a viable alternative to the mathematics theory. The mathematics argument is that the mathematics theory is not very straightforward but it is one more appealing to mathematical problem.
@@ -3202,7 +3202,7 @@ In mathematics, a prime number is not the same as the corresponding point value.
 In mathematics, we have to calculate the formula. In mathematics, the sum of the equation is equal to the area of the equation. Now, the formula is equal to the area of the equation, in the formula, the relationship between the number of the equation. Therefore, the formula is equal to the area of the equation. Now, then, we have to calculate the area of the equation. Now, let’s assume that a given area of the equation is equal to the area of the equation. Now, let’s assume that the area of the equation is equal to the area of the equation, and then we have to calculate the area of the equation. Now, we have to multiply the area of the equation by a point. Now, in this case, we have to multiply the area of the equation by a point value.
 ```
 
-**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.349 · topic 0%, last mention at token 110
+**M9 · data320k · d512-L4 · 38.9M · T1024 · 80K steps** · 256 tokens · rep4 0.349 · near-loop from token 172 · topic 0%, last mention at token 110
 
 ```
 In mathematics, a prime number is the number of years of mathematics, or the number of years of mathematics.
@@ -3213,7 +3213,7 @@ There are different languages, such as the "N" (the "N" (the "N").
 The two most popular languages are the Italian, German, and Spanish. The second is the "N" (the "N" (the "N" (the "N") (the "N") (the "N") (the "N") (the "N") (the "N") (the "n" (the "N") (the "N") (the "N
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.715 · loops from token 122 (period 10) · topic 33%, last mention at token 254
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.715 · loops from token 122 (period 10) · **degenerate** · topic 33%, last mention at token 254
 
 ```
 In mathematics, a prime number is called the number of bits, the number of bits and the number of bits is called the number of bits. A prime number is called the number of bits, the number of bits, the number of bits, the number of bits and the number of bits.
@@ -3238,7 +3238,7 @@ The twelve integers are the number of bits.
 The twelve integers are the number of bits
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.364 · topic 33%, last mention at token 256
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.364 · topic 33%, last mention at token 256
 
 ```
 In mathematics, a prime number is the number of years in which the value of an integer in an area is measured.
@@ -3261,7 +3261,7 @@ In mathematics, a prime number is a number whose prime factors are positive inte
 A prime number is a number whose prime factors
 ```
 
-**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.229 · topic 0%, last mention at token 117
+**M13 · data640k · d768-L8 · 95.3M · T1024 · 190K steps** · 256 tokens · rep4 0.229 · near-loop from token 189 · topic 0%, last mention at token 117
 
 ```
 In mathematics, a prime number is a number of numbers. In the simplest of terms, a prime number is an integer divisor, that is, the number that is divisible by 2. Similarly, a prime number is a number of integers that is multiplied by itself.
@@ -3331,7 +3331,7 @@ The first national census of the U.S. population is estimated to be 1.5.2 millio
 The second national census of
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.526 · topic 0%, last mention at token 0
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.526 · near-loop from token 185 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Climate change refers to long-term shifts in the development and development of a variety of processes and processes that will transform the development of the model.
@@ -3358,7 +3358,7 @@ The use of computers and other computers has also led to the development of new 
 The use of computer and other computer technologies has also led to the development of new computer
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.817 · topic 0%, last mention at token 0
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.817 · near-loop from token 20 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Climate change refers to long-term shifts in the timing and intensity of a response to a stimulus. The response is called the “stress-stress.” In response to a stimulus, the response is called the “fight.” The response is called the “fight.”
@@ -3391,7 +3391,7 @@ Climate change impacts are not just a direct result of climate change but also a
 Climate change has a huge impact
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.47 · loops from token 196 (period 17) · topic 17%, last mention at token 193
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.47 · loops from token 196 (period 17) · **degenerate** · topic 17%, last mention at token 193
 
 ```
 Climate change refers to long-term shifts in the climate change response, but in response to climate change, it is a short-term shift in the climate system as well as the climate change response. In the climate system, the carbon dioxide equivalent of CO2, with its greenhouse gases, comes from the sun. This warming is a result of changes in the atmospheric environment, and the heat of the atmosphere is a result of changes in the atmospheric environment.
@@ -3494,7 +3494,7 @@ a. How to store a pizza with a pizza?
 
 ```
 
-**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.676 · loops from token 180 (period 36) · topic 75%, last mention at token 253
+**M4 · data160k · d256-L4 · 16.1M · T256 · 40K steps** · 256 tokens · rep4 0.676 · loops from token 180 (period 36) · **degenerate** · topic 75%, last mention at token 253
 
 ```
 To make bread at home, you will need to buy bread every year and choose the right one.
@@ -3540,7 +3540,7 @@ The bread is also an added sugar in the fridge. It is a whole lot.
 If you have the bread in
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.625 · topic 25%, last mention at token 253
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.625 · **degenerate** · topic 25%, last mention at token 253
 
 ```
 To make bread at home, you will need to buy or sell something that will be a good start.
@@ -3558,7 +3558,7 @@ You will need to buy a new product which will be an ideal start of the product w
 You will need to buy a
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.502 · topic 75%, last mention at token 248
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.502 · **degenerate** · topic 75%, last mention at token 248
 
 ```
 To make bread at home, you will need to buy or sell something that will benefit you.
@@ -3603,7 +3603,7 @@ What are the best foods for a meal?
 The best foods for a meal are bread, yogurt, kimchi, and other foods. You will also need to include plenty of vegetables, fruits, and whole grains in your meals. You will also need to make sure that you have the right foods
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.688 · topic 0%, last mention at token 57
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.688 · near-loop from token 47 · **degenerate** · topic 0%, last mention at token 57
 
 ```
 To make bread at home, you will need to use the same basic formula:
@@ -3652,7 +3652,7 @@ To make bread at home, you will need to use the same basic formula:
 1
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.688 · topic 25%, last mention at token 244
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.688 · near-loop from token 172 · **degenerate** · topic 25%, last mention at token 244
 
 ```
 To make bread at home, you will need to buy the bread directly from a local bakery, the owner must provide the bread to the family, the kitchen manager, who will give the bread to the family, the cook, and the family members. The bread comes in a rectangular shape and is made from the same materials as bread. The bread is made from the same materials as bread.
@@ -3692,7 +3692,7 @@ Use a stovetop with a high oven.
 
 prompt: 'William Shakespeare wrote many plays, including'
 
-**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.652 · topic 0%, last mention at token 0
+**M1 · data80k · d256-L4 · 16.1M · T128 · 15K steps** · 256 tokens · rep4 0.652 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 William Shakespeare wrote many plays, including the creation of his own work in the story of the play. The story of the play, the story of the play, the play, the play, the play, the play, the play, play, play, play, play, play, play, play, play, play, play, play, play, play, play, play and play in the play.
@@ -3709,7 +3709,7 @@ The book is an important reference to Shakespeare’s plays and is not a referen
 The play’s plays are the most important and important for play, and the play is played on a specific level. In any case, such play is not a minor part of the play, as it helps the play to understand
 ```
 
-**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.518 · topic 0%, last mention at token 0
+**M3 · data80k · d256-L4 · 16.1M · T256 · 15K steps** · 256 tokens · rep4 0.518 · near-loop from token 88 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 William Shakespeare wrote many plays, including the poetry of his own work. In addition, the poem explores the history of the poem, and by contrast to the fact that he was the first man to be the father of the lady, who was the poet of the play. Thus, the story will be seen in his life, but the poem will be the last man of his father and the man of a certain man who was the mother of an oxal, and the great man of the man of the man of the people of the king of the king of the kingdom is now the king of the king of the king of the king of the king. In both cases, this is the man who is the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king of the king was king of the king of the king of
@@ -3752,7 +3752,7 @@ The King, a King of England, was the king of England, while the King of England,
 The king's father was a king of England, and his father, a king of England, was the king of England, and his father, and his father. It was a king of England and his brother, and his son, and his son, Queen and queen, and his son. The king, who was a king, was a king of England, and his father
 ```
 
-**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.534 · topic 33%, last mention at token 256
+**M8 · data160k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.534 · near-loop from token 129 · **degenerate** · topic 33%, last mention at token 256
 
 ```
 William Shakespeare wrote many plays, including Henry II and Henry II, in Shakespeare's play, to the extent of which Shakespeare's plays are considered.
@@ -3801,7 +3801,7 @@ The main themes in the play are:
 - The playwright plays a significant role in the play
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.348 · topic 0%, last mention at token 115
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.348 · near-loop from token 175 · topic 0%, last mention at token 115
 
 ```
 William Shakespeare wrote many plays, including Henry II and Henry II, in the late nineteenth century, when his son, Henry, was a pupil. He was the son of Henry II, who was the son of Henry II, to Henry II and Henry III. He was the son of Henry I. After Henry III, Henry II was the son of Henry II, and Henry II and Henry II were both King Henry I and Henry III.
@@ -3809,7 +3809,7 @@ Henry II, Henry II, Henry II
 Henry II was a professor of English at the University of Cambridge and an English teacher at the University of Oxford. He wrote two articles on the history of the world. In both cases Henry III was a man who lived in a large town in the middle of England, and Henry II was a man who was a great boy and he was a man who was a great boy. Henry died in the middle of his death in the mid-nineteenth century. Henry III was a man who lived in the middle of his death as a man who was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy and he was a great boy. Henry II was a
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.194 · topic 50%, last mention at token 249
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.194 · topic 50%, last mention at token 249
 
 ```
 William Shakespeare wrote many plays, including “The Last of the Fables.” Shakespeare wrote the play which, in his most memorable plays, was written on the same day as “The Last of the Fables.” Shakespeare wrote of the play “The Last of the Fables,” which was written before his death at the end of his life and was in the form of a long poem that had been written by a man named G. Wells.
@@ -3915,7 +3915,7 @@ The internet was a long and complex system of communication, and it was a branch
 In the past, the Internet became the first Internet to be connected to the Internet. The Internet was a one-party that was connected to the Internet. The Internet was a one-party that was connected to the Internet and was connected to the Internet. The Internet was a private and it was a network that was connected to the Internet. The Internet was a private and it was a private and it was a digital social trade that was not connected to the Internet.
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.553 · topic 25%, last mention at token 255
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.553 · near-loop from token 84 · **degenerate** · topic 25%, last mention at token 255
 
 ```
 The internet began as a research project in the United States.
@@ -3958,7 +3958,7 @@ The article has been written in the United States and is a complete summary of t
 The article has been published in the United States and is generally written in the United States and is usually written in the United States. It is a complete summary of the article, and is generally written in the United States and is commonly used as a summary
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.352 · topic 0%, last mention at token 105
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.352 · topic 0%, last mention at token 105
 
 ```
 The internet began as a research project in 1993. The project was launched in 2011 by the American Institute of Orthopaedic Surgeons. The project was funded by the American College of Orthopaedic Surgeons.
@@ -4056,7 +4056,7 @@ The inflation rate can vary depending on the inflation rate and the CPI. The inf
 The inflation rate is: $40,000,000,000. The inflation rate is about $50,000. The inflation rate will vary
 ```
 
-**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.569 · topic 0%, last mention at token 0
+**M5 · data160k · d256-L4 · 16.2M · T512 · 40K steps** · 256 tokens · rep4 0.569 · **degenerate** · topic 0%, last mention at token 0
 
 ```
 Inflation occurs when the player is traveling from a distance to a distance and a steady forward and then the player moves to a distance, and the player moves to a distance, while the player moves to a distance and the player moves to a distance. The player moves from a distance of two to a distance to an object, and the player moves to a distance, and the player moves to a distance, while the player moves to a distance, and the player moves to a distance.
@@ -4066,7 +4066,7 @@ The player moves to a distance
 The player moves to a distance of two to one at the same distance, and the player moves to a distance, and the player moves to a distance, so the player moves to a distance, and the player
 ```
 
-**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.644 · topic 50%, last mention at token 256
+**M6 · data160k · d256-L4 · 16.3M · T1024 · 40K steps** · 256 tokens · rep4 0.644 · near-loop from token 155 · **degenerate** · topic 50%, last mention at token 256
 
 ```
 Inflation occurs when the inflation rate is not as high as the inflation rate is not as high as the recession rate is not as high as the inflation rate is considered.
@@ -4086,7 +4086,7 @@ The inflation rate is the lowest, the inflation rate is the lowest, the inflatio
 The inflation rate is the lowest and the inflation
 ```
 
-**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.466 · loops from token 217 (period 4) · topic 50%, last mention at token 135
+**M7 · data320k · d512-L4 · 38.9M · T1024 · 40K steps** · 256 tokens · rep4 0.466 · loops from token 217 (period 4) · **degenerate** · topic 50%, last mention at token 135
 
 ```
 Inflation occurs when a person is a person who is a person and not a person has a personality who is a person because of a person’s behavior.
@@ -4125,7 +4125,7 @@ A player can lose money from a business, or a player loses money from a business
 A player loses a certain amount of money, and the player will lose their money because of the value of the game. The player has to keep the game
 ```
 
-**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.589 · loops from token 214 (period 4) · topic 50%, last mention at token 256
+**M10 · data320k · d512-L4 · 38.4M · T1024 · 80K steps** · 256 tokens · rep4 0.589 · loops from token 214 (period 4) · **degenerate** · topic 50%, last mention at token 256
 
 ```
 Inflation occurs when the inflation rate is not as high or low and the inflation rate is not as high. This is because the inflation rate is very low and the inflation rate is low. This is because inflation is not high because inflation is low. Therefore the inflation rate is low and the inflation rate is high.
@@ -4133,7 +4133,7 @@ The inflation rate also differs from inflation in that inflation is not high. Th
 The inflation rate is not high and the inflation rate is low. The inflation rate is not high but the inflation rate is low. This is because inflation is low because inflation is low because inflation is low. This is because inflation is high because inflation is high because inflation is low. This is because inflation is lower because inflation is low because inflation can be low. This is because inflation is low because inflation is low because inflation is low because inflation is high because inflation has low inflation. This is because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation is low because inflation
 ```
 
-**M11 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.257 · topic 0%, last mention at token 0
+**M11 · data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.257 · topic 0%, last mention at token 0
 
 ```
 Inflation occurs when the economy is in recession.
@@ -4170,7 +4170,7 @@ When you are looking for an investment in U.S. infrastructure, consider the foll
 - The U.
 ```
 
-**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.494 · loops from token 206 (period 11) · topic 50%, last mention at token 203
+**M12 · data640k · d768-L8 · 95.3M · T1024 · 160K steps** · 256 tokens · rep4 0.494 · loops from token 206 (period 11) · **degenerate** · topic 50%, last mention at token 203
 
 ```
 Inflation occurs when the economy is able to meet its growing needs and the size of the economy.

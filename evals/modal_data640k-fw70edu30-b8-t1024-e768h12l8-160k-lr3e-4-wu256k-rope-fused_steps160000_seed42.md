@@ -1,4 +1,4 @@
-# Evals: data640k · d768-L8 · 95.3M · T1024 · 160K steps
+# Evals: data640k-fw70edu30 · d768-L8 · 95.3M · T1024 · 160K steps
 
 - checkpoint: modal_data640k-fw70edu30-b8-t1024-e768h12l8-160k-lr3e-4-wu256k-rope-fused_steps160000_seed42
 - config: {'vocab_size': 50257, 'block_size': 1024, 'n_embd': 768, 'n_head': 12, 'n_layer': 8, 'dropout': 0.0, 'use_rope_embeddings': True, 'fused_attention': True}
@@ -86,32 +86,32 @@ Forced choice among 10 single-token words (chance 10%), 400 trials per distance,
 
 20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw. The samples themselves: this run's Samples button, or evals/samples.md next to every other model.
 
-| rep4 median / p90 | loops (95% CI) | first loop at | distinct-2 / -4 | topic held | topic span | EOS |
-|---|---|---|---|---|---|---|
-| 0.342 / 0.690 | 11/100 (6%–19%) | token 195 | 0.443 / 0.619 | 36% | 236 tokens | 6/100 |
+| degenerate (95% CI) | rep4 median / p90 | rep4 ≥0.3 / ≥0.5 / ≥0.7 | near-loops (onset) | exact loops (95% CI) | first loop at | distinct-2 / -4 | topic held | topic span | EOS |
+|---|---|---|---|---|---|---|---|---|---|
+| **28/100** (20%–38%) | 0.342 / 0.690 | 58 / 25 / 10 | 28 (token 145) | 11/100 (6%–19%) | token 195 | 0.443 / 0.619 | 36% | 236 tokens | 6/100 |
 
-| prompt | rep4 median | loops | topic span (median) |
-|---|---|---|---|
-| definition | 0.49 | 2/5 | 248 |
-| biography | 0.27 | 0/5 | 186 |
-| science_explainer | 0.35 | 0/5 | 70 |
-| instructional | 0.41 | 0/5 | 78 |
-| bullet_list | 0.55 | 1/5 | 118 |
-| numbered_list | 0.55 | 0/5 | 253 |
-| enumeration | 0.73 | 2/5 | 0 |
-| long_dependency | 0.25 | 2/5 | 239 |
-| attribution | 0.15 | 0/5 | 0 |
-| numeric_units | 0.29 | 0/5 | 248 |
-| agreement_gap | 0.23 | 0/5 | 207 |
-| history | 0.32 | 0/5 | 253 |
-| anatomy | 0.31 | 1/5 | 255 |
-| geography | 0.48 | 0/5 | 255 |
-| math_definition | 0.49 | 1/5 | 252 |
-| environment | 0.37 | 1/5 | 221 |
-| recipe | 0.30 | 1/5 | 195 |
-| literature | 0.22 | 0/5 | 231 |
-| technology | 0.27 | 0/5 | 105 |
-| economics | 0.26 | 0/5 | 247 |
+| prompt | rep4 median | degenerate | exact loops | topic span (median) |
+|---|---|---|---|---|
+| definition | 0.49 | 3/5 | 2/5 | 248 |
+| biography | 0.27 | 1/5 | 0/5 | 186 |
+| science_explainer | 0.35 | 1/5 | 0/5 | 70 |
+| instructional | 0.41 | 1/5 | 0/5 | 78 |
+| bullet_list | 0.55 | 4/5 | 1/5 | 118 |
+| numbered_list | 0.55 | 4/5 | 0/5 | 253 |
+| enumeration | 0.73 | 4/5 | 2/5 | 0 |
+| long_dependency | 0.25 | 2/5 | 2/5 | 239 |
+| attribution | 0.15 | 1/5 | 0/5 | 0 |
+| numeric_units | 0.29 | 0/5 | 0/5 | 248 |
+| agreement_gap | 0.23 | 0/5 | 0/5 | 207 |
+| history | 0.32 | 1/5 | 0/5 | 253 |
+| anatomy | 0.31 | 1/5 | 1/5 | 255 |
+| geography | 0.48 | 0/5 | 0/5 | 255 |
+| math_definition | 0.49 | 2/5 | 1/5 | 252 |
+| environment | 0.37 | 1/5 | 1/5 | 221 |
+| recipe | 0.30 | 2/5 | 1/5 | 195 |
+| literature | 0.22 | 0/5 | 0/5 | 231 |
+| technology | 0.27 | 0/5 | 0/5 | 105 |
+| economics | 0.26 | 0/5 | 0/5 | 247 |
 
 ## Training systems (recorded by the run)
 

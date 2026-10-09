@@ -86,32 +86,32 @@ Forced choice among 10 single-token words (chance 10%), 400 trials per distance,
 
 20 prompts x 5 draws, 256 new tokens, T=0.7, top-k 40, stop at EOS, seeds 20260929 + 1000*prompt + draw. The samples themselves: this run's Samples button, or evals/samples.md next to every other model.
 
-| rep4 median / p90 | loops (95% CI) | first loop at | distinct-2 / -4 | topic held | topic span | EOS |
-|---|---|---|---|---|---|---|
-| 0.356 / 0.672 | 14/100 (8%–22%) | token 156 | 0.469 / 0.627 | 43% | 233 tokens | 10/100 |
+| degenerate (95% CI) | rep4 median / p90 | rep4 ≥0.3 / ≥0.5 / ≥0.7 | near-loops (onset) | exact loops (95% CI) | first loop at | distinct-2 / -4 | topic held | topic span | EOS |
+|---|---|---|---|---|---|---|---|---|---|
+| **36/100** (27%–46%) | 0.356 / 0.672 | 59 / 35 / 10 | 29 (token 115) | 14/100 (8%–22%) | token 156 | 0.469 / 0.627 | 43% | 233 tokens | 10/100 |
 
-| prompt | rep4 median | loops | topic span (median) |
-|---|---|---|---|
-| definition | 0.32 | 0/5 | 243 |
-| biography | 0.27 | 2/5 | 248 |
-| science_explainer | 0.41 | 1/5 | 251 |
-| instructional | 0.49 | 3/5 | 0 |
-| bullet_list | 0.72 | 1/5 | 0 |
-| numbered_list | 0.53 | 1/5 | 248 |
-| enumeration | 0.56 | 0/5 | 0 |
-| long_dependency | 0.38 | 1/5 | 248 |
-| attribution | 0.08 | 0/5 | 144 |
-| numeric_units | 0.15 | 0/5 | 228 |
-| agreement_gap | 0.60 | 1/5 | 253 |
-| history | 0.29 | 0/5 | 247 |
-| anatomy | 0.34 | 0/5 | 201 |
-| geography | 0.36 | 0/5 | 253 |
-| math_definition | 0.58 | 1/5 | 130 |
-| environment | 0.14 | 0/5 | 216 |
-| recipe | 0.25 | 0/5 | 235 |
-| literature | 0.09 | 0/5 | 234 |
-| technology | 0.12 | 1/5 | 249 |
-| economics | 0.33 | 2/5 | 159 |
+| prompt | rep4 median | degenerate | exact loops | topic span (median) |
+|---|---|---|---|---|
+| definition | 0.32 | 1/5 | 0/5 | 243 |
+| biography | 0.27 | 2/5 | 2/5 | 248 |
+| science_explainer | 0.41 | 2/5 | 1/5 | 251 |
+| instructional | 0.49 | 3/5 | 3/5 | 0 |
+| bullet_list | 0.72 | 4/5 | 1/5 | 0 |
+| numbered_list | 0.53 | 4/5 | 1/5 | 248 |
+| enumeration | 0.56 | 3/5 | 0/5 | 0 |
+| long_dependency | 0.38 | 2/5 | 1/5 | 248 |
+| attribution | 0.08 | 0/5 | 0/5 | 144 |
+| numeric_units | 0.15 | 0/5 | 0/5 | 228 |
+| agreement_gap | 0.60 | 4/5 | 1/5 | 253 |
+| history | 0.29 | 0/5 | 0/5 | 247 |
+| anatomy | 0.34 | 1/5 | 0/5 | 201 |
+| geography | 0.36 | 1/5 | 0/5 | 253 |
+| math_definition | 0.58 | 3/5 | 1/5 | 130 |
+| environment | 0.14 | 1/5 | 0/5 | 216 |
+| recipe | 0.25 | 1/5 | 0/5 | 235 |
+| literature | 0.09 | 1/5 | 0/5 | 234 |
+| technology | 0.12 | 1/5 | 1/5 | 249 |
+| economics | 0.33 | 2/5 | 2/5 | 159 |
 
 ## Training systems (recorded by the run)
 
