@@ -37,9 +37,11 @@ not a size knob -- --val-examples controls the actual count.
 
 import argparse
 import hashlib
+import json
 import os
 import sys
 from collections.abc import Iterable, Iterator
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, cast
 
@@ -241,6 +243,176 @@ def prepare(
     return paths["train"], paths["val"]
 
 
+# --- mixtures: several sources in fixed token proportions ----------------------
+
+
+@dataclass
+class MixSource:
+    """One dataset in a mixture: `--mix DATASET[:CONFIG]=FRACTION`."""
+
+    dataset: str
+    config: str | None
+    fraction: float
+
+    @property
+    def label(self) -> str:
+        return f"{self.dataset}:{self.config}" if self.config else self.dataset
+
+    @classmethod
+    def parse(cls, spec: str) -> "MixSource":
+        name, sep, frac = spec.rpartition("=")
+        if not sep or not name:
+            raise ValueError(f"--mix wants DATASET[:CONFIG]=FRACTION, got {spec!r}")
+        dataset, _, config = name.partition(":")
+        try:
+            fraction = float(frac)
+        except ValueError:
+            raise ValueError(f"--mix fraction must be a number, got {frac!r} in {spec!r}") from None
+        if not 0 < fraction <= 1:
+            raise ValueError(f"--mix fraction must be in (0, 1], got {fraction} in {spec!r}")
+        return cls(dataset, config or None, fraction)
+
+
+def token_quotas(total: int, fractions: list[float]) -> list[int]:
+    """Split `total` tokens by `fractions` (which must sum to 1); the rounding remainder goes to the last."""
+    if abs(sum(fractions) - 1) > 1e-6:
+        raise ValueError(f"--mix fractions must sum to 1, got {sum(fractions)}")
+    quotas = [int(total * f) for f in fractions[:-1]]
+    return quotas + [total - sum(quotas)]
+
+
+class _MixedSide:
+    """One side (train or val) of a mixture: one EOS-separated token stream, filled from several sources,
+    with each source's tokens counted. The stream is flushed whenever the source changes, so every
+    tokenized batch belongs to one source and the per-source counts are exact (at flush granularity)."""
+
+    def __init__(self, tokenizer: PreTrainedTokenizerBase, quotas: list[int], batch_size: int):
+        self.stream = TokenStream(tokenizer, batch_size)
+        self.quotas = quotas
+        self.tokens = [0] * len(quotas)
+        self.docs = [0] * len(quotas)
+        self.current: int | None = None
+
+    def _count(self, before: int) -> None:
+        if self.current is not None:
+            self.tokens[self.current] += self.stream.num_tokens - before
+
+    def add(self, source: int, text: str) -> None:
+        if source != self.current:
+            before = self.stream.num_tokens
+            self.stream.flush()
+            self._count(before)
+            self.current = source
+        before = self.stream.num_tokens
+        self.stream.add(text)
+        self._count(before)
+        self.docs[source] += 1
+
+    def finish(self) -> torch.Tensor:
+        before = self.stream.num_tokens
+        self.stream.flush()
+        self._count(before)
+        return self.stream.tensor()
+
+    def full(self, source: int) -> bool:
+        return self.tokens[source] >= self.quotas[source]
+
+    def progress(self, source: int) -> float:
+        return self.tokens[source] / self.quotas[source] if self.quotas[source] else 1.0
+
+
+def prepare_mix(
+    sources: list[MixSource],
+    num_tokens: int,
+    val_num_tokens: int,
+    split: str = DEFAULT_SPLIT,
+    text_field: str = DEFAULT_TEXT_FIELD,
+    val_pool_fraction: float = DEFAULT_VAL_POOL_FRACTION,
+    seed: int = 0,
+    out_dir: str | Path = DEFAULT_OUT_DIR,
+    tokenizer_name: str = "gpt2",
+    progress_every: int = 50_000,
+) -> tuple[Path, Path, dict]:
+    """Like prepare(), from several datasets in fixed TOKEN proportions (documents differ in length between
+    sources, so document proportions would not hold the token budget).
+
+    Each source is streamed exactly as prepare() streams a single one (same seed, shuffle and content-hash
+    train/val rule), so its rows are a prefix of what prepare() would take from it alone. Rows are drawn
+    from whichever source is furthest behind its train quota, so the token file interleaves the sources
+    in ~batch-sized runs and any prefix of it holds roughly the mixture. A source stops contributing to a
+    side once that side's quota is met; each side may overshoot its quota by up to one tokenized batch
+    (train) or one document (val, tokenized one at a time so its small quota is met exactly).
+
+    Writes train.pt, val.pt (this mixture's own val) and mix.json (per-source docs and tokens) to out_dir.
+    """
+    tokenizer = get_tokenizer(tokenizer_name)
+    fractions = [src.fraction for src in sources]
+    train = _MixedSide(tokenizer, token_quotas(num_tokens, fractions), TOKENIZE_BATCH)
+    val = _MixedSide(tokenizer, token_quotas(val_num_tokens, fractions), 1)
+    streams = [
+        iter_split(
+            src.dataset,
+            src.config,  # type: ignore[arg-type]
+            split,
+            text_field,
+            num_examples=10**12,  # unbounded: quotas here are in tokens, checked below
+            val_examples=10**12,
+            val_pool_fraction=val_pool_fraction,
+            seed=seed,
+        )
+        for src in sources
+    ]
+    next_progress = progress_every
+    while True:
+        open_ = [i for i in range(len(sources)) if not (train.full(i) and val.full(i))]
+        if not open_:
+            break
+        # the source furthest behind on train (val fills early: it's a tiny fraction of the stream)
+        i = min(open_, key=lambda j: (train.progress(j), j))
+        try:
+            side, row = next(streams[i])
+        except StopIteration:
+            raise RuntimeError(f"{sources[i].label} ran out before its token quotas were met") from None
+        target = train if side == "train" else val
+        if not target.full(i):
+            target.add(i, cast(str, row[text_field]))
+        if progress_every and sum(train.docs) >= next_progress:
+            next_progress += progress_every
+            done = ", ".join(f"{s.label} {train.tokens[j]:,}/{train.quotas[j]:,}" for j, s in enumerate(sources))
+            print(f"train {sum(train.docs):,} docs; tokens {done}", flush=True)
+
+    out_dir = Path(out_dir)
+    paths = {"train": out_dir / "train.pt", "val": out_dir / "val.pt"}
+    stats = {
+        "sources": [
+            {
+                "dataset": s.dataset,
+                "config": s.config,
+                "fraction": s.fraction,
+                **{
+                    f"{name}_{k}": getattr(side, attr)[j]
+                    for name, side in (("train", train), ("val", val))
+                    for k, attr in (("quota", "quotas"), ("tokens", "tokens"), ("docs", "docs"))
+                },
+            }
+            for j, s in enumerate(sources)
+        ],
+        "seed": seed,
+        "split": split,
+        "val_pool_fraction": val_pool_fraction,
+        "tokenizer": tokenizer_name,
+    }
+    for name, side in (("val", val), ("train", train)):
+        tokens = side.finish()
+        stats[f"{name}_tokens"] = int(tokens.numel())
+        save_tokens(tokens, paths[name])
+        del tokens
+    for src in stats["sources"]:
+        src["train_share"] = src["train_tokens"] / stats["train_tokens"]
+    (out_dir / "mix.json").write_text(json.dumps(stats, indent=2) + "\n")
+    return paths["train"], paths["val"], stats
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         description="Pull a HF dataset, tokenize a deterministic subset, and save fixed train/val token files."
@@ -274,6 +446,17 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=0, help="Shuffle seed; fixes the scan order deterministically.")
     p.add_argument("--out-dir", default=str(DEFAULT_OUT_DIR))
     p.add_argument("--tokenizer", default="gpt2")
+    p.add_argument(
+        "--mix",
+        action="append",
+        metavar="DATASET[:CONFIG]=FRACTION",
+        help="Build a mixture instead of one dataset: repeat per source, fractions of TOKENS summing to 1, "
+        "e.g. --mix HuggingFaceFW/fineweb:sample-10BT=0.7 --mix HuggingFaceTB/smollm-corpus:fineweb-edu-dedup=0.3. "
+        "Sized by --num-tokens / --val-num-tokens; --dataset, --config, --num-examples and --val-examples are "
+        "ignored.",
+    )
+    p.add_argument("--num-tokens", type=int, default=None, help="With --mix: train tokens in total.")
+    p.add_argument("--val-num-tokens", type=int, default=None, help="With --mix: val tokens in total.")
     return p
 
 
@@ -283,6 +466,33 @@ def parse_args(argv: list[str] | None = None):
 
 def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
+    if args.mix:
+        if args.num_tokens is None or args.val_num_tokens is None:
+            raise SystemExit("--mix needs --num-tokens and --val-num-tokens")
+        if len(args.mix) < 2:
+            raise SystemExit("--mix needs at least two sources")
+        train_path, val_path, stats = prepare_mix(
+            [MixSource.parse(spec) for spec in args.mix],
+            num_tokens=args.num_tokens,
+            val_num_tokens=args.val_num_tokens,
+            split=args.split,
+            text_field=args.text_field,
+            val_pool_fraction=args.val_pool_fraction,
+            seed=args.seed,
+            out_dir=args.out_dir,
+            tokenizer_name=args.tokenizer,
+        )
+        for src in stats["sources"]:
+            print(
+                f"{src['dataset']}:{src['config']}: train {src['train_docs']:,} docs, {src['train_tokens']:,} tokens "
+                f"({src['train_share']:.1%}); val {src['val_docs']:,} docs, {src['val_tokens']:,} tokens"
+            )
+        print(
+            f"Saved train tokens to {train_path}\nSaved val tokens to {val_path}\nWrote {Path(args.out_dir) / 'mix.json'}"
+        )
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(0)  # see below: the streaming backend can leave a thread that blocks normal exit
     train_path, val_path = prepare(
         dataset=args.dataset,
         config=args.config,
