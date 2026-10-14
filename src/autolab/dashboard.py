@@ -668,66 +668,47 @@ def api_research() -> JSONResponse:
 
 @app.get("/api/labs")
 def api_labs() -> JSONResponse:
-    """labs.infer (and later labs): status, budget, programs. Read-only."""
-    from labs.infer import lab
+    """Every lab (src/labs/): status, programs, activity. Read-only."""
+    from labs import core, daemon
 
-    progs = lab.programs()
-    st = lab.load_lab()
-    daemon = _json(lab.STATE / "daemon.json")
     try:
-        c = lab.cfg()
+        daily = core.labs_cfg().get("labs", {}).get("daily_usd")
     except OSError:
-        c = {}
-    nb = []
-    try:
-        nb = [json.loads(x) for x in (lab.STATE / "notebook.jsonl").read_text().splitlines()[-60:] if x.strip()][::-1]
-    except OSError:
-        pass
-    rows = [{"id": p.id, "parent": p.parent_id, "status": p.status, "stage": p.stage, "by": p.created_by,
-             "created": p.created_at, "rationale": p.rationale, "reason": p.reason, "x_p0": p.scores.get("x_p0"),
-             "vs": p.scores.get("vs"), "speedup": p.scores.get("speedup"), "per_scenario": p.scores.get("per_scenario"),
-             "instruction": p.scores.get("instruction"),
-             "quality": {k: (p.scores.get("quality") or {}).get(k) for k in ("delta_loss", "top1_agreement", "peak_bytes")}}
-            for p in reversed(progs.values())]
-    inc = progs.get(st.get("incumbent") or "")
-    return JSONResponse({"infer": {"incumbent": st.get("incumbent"), "history": st.get("history", []),
-                                   "speed": inc.scores.get("speed") if inc else None,
-                                   "p0_speed": progs["p0"].scores.get("speed") if "p0" in progs else None,
-                                   "blocked": lab.blocked() if progs else None, "daemon": daemon,
-                                   "spend_24h": round(lab.spend_24h(), 2), "daily_usd": c.get("daily_usd"),
-                                   "checkpoint": c.get("checkpoint"), "rows": rows, "notebook": nb},
-                         "hold": lab.control().get("hold")})
+        daily = None
+    return JSONResponse({"labs": [lab.view() for lab in daemon.all_labs()], "hold": core.control().get("hold"),
+                         "spend_24h": round(core.spend_24h(), 2), "daily_usd": daily,
+                         "daemon": _json(core.LABS_STATE / "daemon.json")})
 
 
-@app.get("/api/labs/infer/program/{pid}")
-def api_lab_program(pid: str) -> JSONResponse:
+@app.get("/api/labs/{name}/program/{pid}")
+def api_lab_program(name: str, pid: str) -> JSONResponse:
     import difflib
+    from dataclasses import asdict
 
-    from labs.infer import lab
+    from labs import daemon
 
-    progs = lab.programs()
+    lab = next((x for x in daemon.all_labs() if x.name == name), None)
+    progs = lab.programs() if lab else {}
     if pid not in progs:
         raise HTTPException(404, "no such program")
     p = progs[pid]
     parent = progs.get(p.parent_id or "")
-    diff = "".join(difflib.unified_diff(parent.code.splitlines(True), p.code.splitlines(True), f"{parent.id}/engine.py",
-                                        f"{p.id}/engine.py")) if parent else p.code
-    from dataclasses import asdict
-
-    return JSONResponse({"program": {k: v for k, v in asdict(p).items() if k != "code"}, "diff": diff})
+    diff = "".join(difflib.unified_diff(parent.code.splitlines(True), p.code.splitlines(True),
+                                        f"{parent.id}/{lab.file_name}", f"{p.id}/{lab.file_name}")) if parent else p.code
+    return JSONResponse({"program": {k: v for k, v in asdict(p).items() if k != "code"}, "diff": diff,
+                         "file_name": lab.file_name})
 
 
 @app.post("/api/labs")
 async def api_labs_control(request: Request) -> JSONResponse:
     if request.headers.get("x-autolab") != "1":
         raise HTTPException(403, "missing X-Autolab header")
-    from labs.infer import lab
+    from labs import core
 
     action = (await request.json()).get("action")
     if action not in ("pause", "unpause"):
         raise HTTPException(400, "action must be pause or unpause")
-    lab.set_hold(action == "pause", "dashboard")
-    lab.note("held" if action == "pause" else "released", by="dashboard")
+    core.set_hold(action == "pause", "dashboard")
     return JSONResponse({"ok": True, "message": "labs paused" if action == "pause" else "labs resumed"})
 
 

@@ -7,7 +7,7 @@
   <key>ProgramArguments</key>
   <array>
     <string>/opt/homebrew/bin/uv</string><string>run</string><string>--project</string><string>/Users/aadil/dev/wiki-llm-autolab</string>
-    <string>labs</string><string>infer</string><string>daemon</string>
+    <string>labs</string><string>daemon</string>
   </array>
   <key>WorkingDirectory</key><string>/Users/aadil/dev/wiki-llm-autolab</string>
   <key>EnvironmentVariables</key>

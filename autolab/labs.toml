@@ -22,3 +22,17 @@ max_scenario_regression = 0.10   # no scenario may run below 0.90x the incumbent
 quality_timeout_s = 900
 bench_timeout_s = 1800
 max_code_bytes = 40000
+
+[decode]
+generator = "e768h12l8-rope-95m.pt"     # under autolab/data/labs/infer/: the same 95M as labs.infer
+judge = "judge-fw70edu30-95m.pt"        # under autolab/data/labs/decode/: the owner's 95M on the 70/30 FineWeb/Edu mix
+val = "val.pt"                          # autolab/data/labs/infer/val.pt: prompts are val documents' first 32 tokens
+min_tokens = 64            # a sample that stops at EOS sooner counts as degenerate
+screen_n = 100             # paired prompts in the screen ...
+full_n = 300               # ... and in the full stage (pooled with the screen)
+min_gain = 0.02            # accept at a >= 2-point drop in the degenerate rate ...
+accept_z = 2.0             # ... at >= 2 standard errors (paired)
+max_judge_excess = 0.0     # judge loss on generated text <= judge loss on real text + this
+max_topic_drop = 0.03      # topic retention >= the incumbent's - this
+max_sampler_ms = 2.0       # sampler time per token
+val_timeout_s = 2400

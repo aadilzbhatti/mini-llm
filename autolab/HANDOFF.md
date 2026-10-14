@@ -29,19 +29,25 @@ the "Decision log" at the bottom.
 
 ### Labs (since 2026-10-14)
 
-- `src/labs/`: autolab's loop copied onto other problems, to learn what a generic core would be before extracting
-  one (owner: "do 1, then 2, then 3"). Order: **1. labs.infer** (inference speed, built), 2. decoding vs degeneration,
-  3. a classic AlphaEvolve benchmark as calibration against OpenEvolve/ShinkaEvolve; extract the shared core after 2.
-- **labs.infer** evolves a whole `engine.py` (API in `src/labs/infer/seed_engine.py`) for the owner's 95M RoPE
-  checkpoint (weights-only copy in `autolab/data/labs/infer/`), locally on the mini's GPU. Fixed harness
-  (`labs/infer/harness.py`) vs a vendored fp32 reference (`labs/infer/reference.py`, owner's model_fused.py @ 9a75239).
-  Cascade: static → quality (teacher-forced loss within +0.005 nats of the reference, top-1 ≥ 0.97, generate()
-  checked against the engine's own logits) → bench → confirm, interleaved and paired against the incumbent
-  (order effect ~2.4%/round; ~1% per alternated pair). Accept: ≥ 1.02x geomean and mean − 2 SE > 0, no scenario
-  below 0.90x. Settings: `autolab/labs.toml`. State: `autolab/state/labs/` (infer/programs, notebook, daemon.json).
-- Service `com.aadil.autolab-labs` (plist in `autolab/launchd/`, ProcessType Standard), separate from the autolab
-  daemon. Pause: dashboard Labs tab or `uv run labs infer pause|unpause`. Yields to the owner's local training runs.
-- Claude budget: **$10/day for all labs together** (`[labs] daily_usd`), separate from autolab's (owner, 2026-10-14).
+- `src/labs/`: autolab's loop on other problems (owner: "do 1, then 2, then 3"). **labs.core** is the shared loop,
+  extracted once the second lab existed: programs (one whole file each), the static check, incumbent, Claude
+  proposals, the $10/day budget for all labs (`[labs] daily_usd`, separate from autolab's), pause, and the subprocess
+  harness call. A lab supplies its seed file, task text, init() and its stages after static. **labs.daemon** runs
+  every lab's cycle in one process (service `com.aadil.autolab-labs`, ProcessType Standard), so GPU stages never
+  overlap. Settings: `autolab/labs.toml`. State: `autolab/state/labs/<lab>/`. Pause: dashboard Labs tab or
+  `uv run labs pause|unpause`. Both labs yield to the owner's local training runs.
+- **labs.infer** (1): evolves `engine.py` for the owner's 95M RoPE checkpoint (weights-only copy in
+  `autolab/data/labs/infer/`) on the mini's GPU. Fixed harness vs a vendored fp32 reference (`labs/infer/reference.py`,
+  model_fused.py @ 9a75239). Cascade: quality (teacher-forced loss ≤ +0.005 nats vs the reference, top-1 ≥ 0.97,
+  generate() checked against the engine's own logits) → bench → confirm, interleaved and paired against the incumbent
+  (order effect ~2.4%/round; ~1% per alternated pair). Accept: ≥ 1.02x geomean, mean − 2 SE > 0, no scenario < 0.90x.
+- **labs.decode** (2): evolves `sampler.py` (the decoding strategy) of the same model to cut the owner's headline
+  "degenerate" rate (scoring vendored from the owner's samples.py @ fdec5b7, not yet on origin). Paired on identical
+  draws vs the incumbent over fresh 32-token val-document prompts (100 screen + 300 full). Guards against gaming:
+  judge loss (the owner's 95M fw70edu30 checkpoint) on generated text ≤ its loss on the real continuation; topic
+  retention ≥ incumbent − 0.03; EOS before 64 tokens counts as degenerate; ≤ 2 ms/token. The owner's 20×5 protocol
+  is a holdout (p0: 28/100). First real proposal (a DRY penalty) cut degeneration 23% → 5% but failed the topic guard.
+- Next: (3) a classic AlphaEvolve benchmark as a calibration run against OpenEvolve/ShinkaEvolve, built on labs.core.
 - Tests: `tests_labs/` (not under `tests/`, which runs against every autolab candidate). Run both:
   `AUTOLAB_FORCE_CPU=1 uv run pytest tests tests_labs -q`.
 
@@ -827,3 +833,7 @@ Build this first; everything else hill-climbs on it.
   tell where the seams go). A geometric-mean fitness let a trial fp16 engine trade prefill (0.72x) for decode
   (1.6-1.8x), so no scenario may fall below 0.90x the incumbent (`max_scenario_regression`, a default the owner may
   change). The trial run's state was discarded; production starts from p0.
+- 2026-10-14: labs.core extracted from labs.infer when labs.decode was built (two shapes: a deterministic-quality
+  speed benchmark and a stochastic text-quality metric). One daemon for all labs instead of a GPU lock between two.
+  labs.decode's guards are relative to real text and to the incumbent, not absolute thresholds: the first proposal
+  showed why (a repetition penalty that also bans re-using the prompt's words "wins" on degeneration).

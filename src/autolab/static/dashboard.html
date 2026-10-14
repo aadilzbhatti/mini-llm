@@ -970,54 +970,56 @@ async function postLabs(body, confirmText) {
   try { await fetch(BASE + "api/labs", {method: "POST", headers: {"Content-Type": "application/json", "X-Autolab": "1"}, body: JSON.stringify(body)}); } catch (e) {}
   refreshLabs();
 }
-async function openLabProgram(id) {
+async function openLabProgram(lab, id) {
   const dlg = document.getElementById("detail"), body = document.getElementById("detailBody");
-  document.getElementById("detailTitle").textContent = "labs.infer " + id;
+  document.getElementById("detailTitle").textContent = `labs.${lab} ${id}`;
   body.replaceChildren(h("p", {class: "muted"}, "loading…"));
   if (!dlg.open) dlg.showModal();
-  const r = await (await fetch(BASE + "api/labs/infer/program/" + encodeURIComponent(id))).json();
+  const r = await (await fetch(BASE + "api/labs/" + encodeURIComponent(lab) + "/program/" + encodeURIComponent(id))).json();
   const P = r.program; body.replaceChildren();
   body.append(h("div", {class: "card"}, h("h3", {}, progStatus(P), " ", h("span", {class: "muted"}, `parent ${P.parent_id || "–"} · by ${P.created_by} · ${fmt.time(P.created_at)}`)),
     h("p", {}, P.rationale || "(no rationale)"), P.expected ? h("p", {class: "muted"}, "Expected: " + P.expected) : null, P.reason ? h("p", {class: "ink2"}, P.reason) : null));
   body.append(h("div", {class: "card"}, h("h3", {}, "Cascade"), P.stages.map(s => h("div", {style: "padding:6px 0;border-bottom:1px solid var(--grid)"},
     statusEl(s.ok ? "good" : "critical", s.stage), h("span", {class: "muted"}, "  " + fmt.time(s.at) + "  "), s.detail))));
-  body.append(h("div", {class: "card"}, h("h3", {}, "engine.py vs parent"), h("pre", {}, r.diff || "(no change)")));
+  body.append(h("div", {class: "card"}, h("h3", {}, `${r.file_name} vs parent`), h("pre", {}, r.diff || "(no change)")));
+}
+function labSection(L) {
+  const sec = h("div", {style: "margin-top:18px"});
+  const inc = L.rows.find(r => r.id === L.incumbent);
+  sec.append(h("h2", {}, `labs.${L.name} — ${L.title}`),
+    h("p", {class: "ink2", style: "margin:-4px 0 8px"}, L.about),
+    h("div", {style: "margin-bottom:8px"}, L.blocked ? statusEl("serious", "waiting: " + L.blocked) : statusEl("good", L.incumbent ? "running" : "starting")));
+  if (L.tiles.length) sec.append(h("div", {class: "tiles"}, L.tiles.map(t => tile(t.label, t.value, t.sub))));
+  sec.append(h("div", {class: "card scroll", style: "margin-top:10px"}, h("table", {},
+    h("thead", {}, h("tr", {}, ["", "status", "measurements", "idea"].map(t => h("th", {}, t)))),
+    h("tbody", {}, L.rows.length ? L.rows.map(r => h("tr", {class: "click", onclick: () => openLabProgram(L.name, r.id)},
+      h("td", {}, h("strong", {}, r.id), r.parent ? h("div", {class: "muted", style: "font-size:12px"}, "from " + r.parent) : null),
+      h("td", {}, progStatus(r), r.status === "queued" ? h("div", {class: "muted", style: "font-size:12px"}, r.stage) : null),
+      h("td", {style: "font-size:12px;max-width:380px"}, r.summary || "–"),
+      h("td", {style: "max-width:480px"}, (r.rationale || "").slice(0, 170) + ((r.rationale || "").length > 170 ? "…" : ""),
+        r.reason && r.status !== "accepted" ? h("div", {class: "muted", style: "font-size:12px"}, r.reason.slice(0, 200)) : null))) :
+      h("tr", {}, h("td", {colspan: 4, class: "muted"}, "no programs yet"))))));
+  if (L.notebook.length) sec.append(h("details", {style: "margin-top:8px"}, h("summary", {class: "muted"}, "Activity"),
+    h("div", {class: "card feed"}, L.notebook.map(e => h("div", {}, h("span", {class: "t"}, fmt.time(e.at)),
+      `${e.event}${e.program ? " " + e.program : ""}${e.status ? ": " + e.status : ""}` +
+      (e.reason ? " — " + e.reason.slice(0, 160) : e.rationale ? " — " + e.rationale.slice(0, 160) : e.error ? " — " + e.error : ""))))));
+  return sec;
 }
 async function refreshLabs() {
   const el = document.getElementById("labs");
   let R;
   try { R = await (await fetch(BASE + "api/labs", {cache: "no-store"})).json(); } catch (e) { return; }
   el.replaceChildren();
-  const I = R.infer, inc = I.rows.find(r => r.id === I.incumbent);
   el.append(h("div", {class: "card"}, h("h3", {}, "How labs work"),
-    h("p", {class: "ink2", style: "margin:4px 0"}, "Autolab's loop on other problems, run locally on this Mac. labs.infer evolves the inference engine (engine.py) of a fixed checkpoint (" + (I.checkpoint || "?") +
-      ") for speed: Claude proposes an edit, a static check and a quality gate (teacher-forced loss vs the fp32 reference) screen it, then it is benchmarked interleaved against the incumbent and accepted when it is clearly faster with no scenario regressing."),
+    h("p", {class: "ink2", style: "margin:4px 0"}, "Autolab's loop on other problems, run locally on this Mac by one daemon that takes turns between labs. Each lab evolves one file against a fixed harness: Claude proposes an edit, cheap checks screen it, then it is measured paired against the lab's incumbent and accepted only when it is clearly better with its guards intact."),
     h("div", {style: "display:flex;gap:10px;align-items:center;flex-wrap:wrap"},
-      R.hold ? statusEl("warning", `paused by ${R.hold.by} since ${fmt.time(R.hold.at)}`) : I.blocked ? statusEl("serious", "waiting: " + I.blocked) : statusEl("good", "running"),
-      h("span", {class: "muted"}, `Claude spend ${fmt.usd(I.spend_24h)} of ${fmt.usd(I.daily_usd)} in 24 h (all labs)`),
+      R.hold ? statusEl("warning", `paused by ${R.hold.by} since ${fmt.time(R.hold.at)}`) : statusEl("good", "running"),
+      h("span", {class: "muted"}, `Claude spend ${fmt.usd(R.spend_24h)} of ${fmt.usd(R.daily_usd)} in 24 h (all labs)`),
       h("button", {class: "btn", style: "margin-left:auto", onclick: () => R.hold ? postLabs({action: "unpause"}, "Resume the labs?") :
-        postLabs({action: "pause"}, "Pause the labs? The program being measured finishes its current stage; nothing new starts.")}, R.hold ? "▶ Resume labs" : "⏸ Pause labs"))));
-  if (I.daemon && I.daemon.last_error) el.append(h("div", {class: "card", style: "border-color:var(--critical)"}, statusEl("critical", "last cycle failed"), " ", I.daemon.last_error.error));
-  const sc = I.speed ? Object.keys(I.speed) : [];
-  el.append(h("div", {class: "tiles"},
-    tile("Incumbent", I.incumbent || "–", inc && inc.x_p0 ? `${inc.x_p0.toFixed(2)}× the seed engine` : ""),
-    ...sc.map(k => tile(k.replace("_", " "), I.speed[k] >= 100 ? I.speed[k].toFixed(0) + "/s" : (1000 / I.speed[k]).toFixed(1) + " ms",
-      I.p0_speed ? `seed ${I.p0_speed[k] >= 100 ? I.p0_speed[k].toFixed(0) + "/s" : (1000 / I.p0_speed[k]).toFixed(1) + " ms"}` : ""))));
-  el.append(h("h2", {}, "Programs"), h("div", {class: "card scroll"}, h("table", {},
-    h("thead", {}, h("tr", {}, ["", "status", "× seed", "vs", "per scenario", "Δ loss", "top-1", "idea"].map(t => h("th", {}, t)))),
-    h("tbody", {}, I.rows.map(r => h("tr", {class: "click", onclick: () => openLabProgram(r.id)},
-      h("td", {}, h("strong", {}, r.id), r.parent ? h("div", {class: "muted", style: "font-size:12px"}, "from " + r.parent) : null),
-      h("td", {}, progStatus(r), r.status === "queued" ? h("div", {class: "muted", style: "font-size:12px"}, r.stage) : null),
-      h("td", {class: "num"}, r.x_p0 ? r.x_p0.toFixed(2) : "–"),
-      h("td", {class: "num"}, r.speedup && r.vs ? `${r.speedup.toFixed(3)}× ${r.vs}` : "–"),
-      h("td", {style: "font-size:12px"}, r.per_scenario ? Object.entries(r.per_scenario).map(([k, v]) => `${k.replace("decode_", "d").replace("prefill_", "p")} ${v.toFixed(2)}`).join(" · ") : ""),
-      h("td", {class: "num"}, r.quality && r.quality.delta_loss != null ? r.quality.delta_loss.toFixed(4) : "–"),
-      h("td", {class: "num"}, r.quality && r.quality.top1_agreement != null ? r.quality.top1_agreement.toFixed(3) : "–"),
-      h("td", {style: "max-width:520px"}, (r.rationale || "").slice(0, 170) + ((r.rationale || "").length > 170 ? "…" : ""),
-        r.reason && r.status !== "accepted" ? h("div", {class: "muted", style: "font-size:12px"}, r.reason.slice(0, 200)) : null)))))));
-  if (I.notebook.length) el.append(h("h2", {}, "Activity"), h("div", {class: "card feed"}, I.notebook.map(e =>
-    h("div", {}, h("span", {class: "t"}, fmt.time(e.at)), `${e.event}${e.program ? " " + e.program : ""}${e.status ? ": " + e.status : ""}` +
-      (e.reason ? " — " + e.reason.slice(0, 160) : e.rationale ? " — " + e.rationale.slice(0, 160) : e.error ? " — " + e.error : "")))));
+        postLabs({action: "pause"}, "Pause the labs? The stage being measured finishes; nothing new starts.")}, R.hold ? "▶ Resume labs" : "⏸ Pause labs"))));
+  const errs = Object.entries((R.daemon && R.daemon.labs) || {}).filter(([, v]) => v && v.error);
+  for (const [k, v] of errs) el.append(h("div", {class: "card", style: "border-color:var(--critical)"}, statusEl("critical", `labs.${k}: last cycle failed`), " ", v.error));
+  for (const L of R.labs) el.append(labSection(L));
 }
 
 async function refreshLive() {
