@@ -845,3 +845,8 @@ Build this first; everything else hill-climbs on it.
 - 2026-10-14: labs.pack (circle packing n=26) hit 2.635977 on its first proposal, above AlphaEvolve's published
   2.63586; the proposer knows the literature value. Treated as a finding (the benchmark is saturated for current
   proposers), not a win; the run is capped at 20 programs so it doesn't spend the shared labs budget.
+- 2026-10-14: labs.decode p1 (DRY-style penalty + temperature that rises with recent repetition + EOS masked for the
+  first 64 tokens) took the owner's 20x5 holdout from 28/100 degenerate to 0/100, topic retention up (0.415 → 0.476),
+  judge loss 1.29 → 1.79 (real text 3.35). The EOS mask answers the lab's early-stop rule; it departs from the owner's
+  stop-at-EOS protocol. With the incumbent at 0% nothing more can be accepted, so the lab stops proposing at
+  `[decode] saturated_rate` (0.5%) instead of spending the shared budget.

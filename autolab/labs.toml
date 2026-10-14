@@ -35,6 +35,7 @@ accept_z = 2.0             # ... at >= 2 standard errors (paired)
 max_judge_excess = 0.0     # judge loss on generated text <= judge loss on real text + this
 max_topic_drop = 0.03      # topic retention >= the incumbent's - this
 max_sampler_ms = 2.0       # sampler time per token
+saturated_rate = 0.005     # stop proposing once the incumbent degenerates this rarely (nothing left to accept)
 val_timeout_s = 2400
 
 [pack]

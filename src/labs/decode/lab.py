@@ -164,6 +164,14 @@ teaches something."""
         return {"rate": mean(cd), "inc_rate": mean(idg), "drop": drop, "se": se, "z": drop / se if se else 0.0,
                 "judge": judge, "human": human, "topic": topic, "inc_topic": inc_topic, "n": n, "guard": guard}
 
+    def exhausted(self) -> str | None:
+        """Nothing can be accepted once the incumbent's rate is at the floor: stop spending on proposals."""
+        inc = self.programs().get(self.load_lab().get("incumbent") or "")
+        rate = inc.scores.get("rate") if inc else None
+        floor = self.cfg().get("saturated_rate", 0.005)
+        return (f"saturated: {inc.id} degenerates {rate:.1%} of the time (<= {floor:.1%}); nothing left to cut on "
+                "this metric") if rate is not None and rate <= floor else None
+
     # --- prompt and views -------------------------------------------------------------------------------------------
 
     def fitness(self, p: Program) -> float | None:

@@ -79,3 +79,10 @@ def test_harness_pairs_draws_and_scores(tiny):  # noqa: F811
     bad.write_text(GOOD.replace("return int(torch.multinomial(probs, 1, generator=generator))", "return -1"))
     r = run(tiny, "labs.decode.harness", "val", *common, "--sampler", str(bad), "--n", "2", "--seed", "5")
     assert not r["ok"] and "not a token id" in r["error"]
+
+
+def test_saturated_metric_stops_proposals(lab, monkeypatch):
+    stub(lab, monkeypatch, cand=mixed(0), inc=mixed(3))
+    run_to_done(lab, core.Program("p1", "p0", GOOD + "\n# better\n"))
+    assert lab.exhausted().startswith("saturated: p1 degenerates 0.0%")
+    assert lab.cycle(log=lambda m: None)["waiting"].startswith("saturated")
