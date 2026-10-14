@@ -27,6 +27,24 @@ the "Decision log" at the bottom.
   `autolab/state/evolve/<session>/` (session.json + programs/), `autolab/notebook.jsonl` (every event).
 - Training runs on Modal (app `autolab-train`, volumes `autolab-runs` / `autolab-data`), 1x L4 per run.
 
+### Labs (since 2026-10-14)
+
+- `src/labs/`: autolab's loop copied onto other problems, to learn what a generic core would be before extracting
+  one (owner: "do 1, then 2, then 3"). Order: **1. labs.infer** (inference speed, built), 2. decoding vs degeneration,
+  3. a classic AlphaEvolve benchmark as calibration against OpenEvolve/ShinkaEvolve; extract the shared core after 2.
+- **labs.infer** evolves a whole `engine.py` (API in `src/labs/infer/seed_engine.py`) for the owner's 95M RoPE
+  checkpoint (weights-only copy in `autolab/data/labs/infer/`), locally on the mini's GPU. Fixed harness
+  (`labs/infer/harness.py`) vs a vendored fp32 reference (`labs/infer/reference.py`, owner's model_fused.py @ 9a75239).
+  Cascade: static → quality (teacher-forced loss within +0.005 nats of the reference, top-1 ≥ 0.97, generate()
+  checked against the engine's own logits) → bench → confirm, interleaved and paired against the incumbent
+  (order effect ~2.4%/round; ~1% per alternated pair). Accept: ≥ 1.02x geomean and mean − 2 SE > 0, no scenario
+  below 0.90x. Settings: `autolab/labs.toml`. State: `autolab/state/labs/` (infer/programs, notebook, daemon.json).
+- Service `com.aadil.autolab-labs` (plist in `autolab/launchd/`, ProcessType Standard), separate from the autolab
+  daemon. Pause: dashboard Labs tab or `uv run labs infer pause|unpause`. Yields to the owner's local training runs.
+- Claude budget: **$10/day for all labs together** (`[labs] daily_usd`), separate from autolab's (owner, 2026-10-14).
+- Tests: `tests_labs/` (not under `tests/`, which runs against every autolab candidate). Run both:
+  `AUTOLAB_FORCE_CPU=1 uv run pytest tests tests_labs -q`.
+
 ### Search state
 
 - Milestones M1–M8 are built, plus (2026-09-29…10-01): regime-scoped rejection memory and near-miss retests
@@ -804,3 +822,8 @@ Build this first; everything else hill-climbs on it.
   builds or ladder. Runs already on Modal keep training; on resume the cascade judges whatever finished meanwhile.
   It's separate from `autolab stop` (proposals only; in-flight programs keep advancing) and from the automatic
   usage-limit pause (`paused_until`). Notebook events `held` / `released`.
+- 2026-10-14 (owner: try the loop on other problems, "do 1, then 2, then 3"; budget $10/day for labs; fp16/bf16
+  allowed behind a quality gate): labs.infer built by copying, not abstracting, autolab's loop (one consumer can't
+  tell where the seams go). A geometric-mean fitness let a trial fp16 engine trade prefill (0.72x) for decode
+  (1.6-1.8x), so no scenario may fall below 0.90x the incumbent (`max_scenario_regression`, a default the owner may
+  change). The trial run's state was discarded; production starts from p0.

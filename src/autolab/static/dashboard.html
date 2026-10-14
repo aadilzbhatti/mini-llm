@@ -149,6 +149,7 @@ a { color: var(--s1); }
     <button role="tab" data-tab="lineage">Lineage</button>
     <button role="tab" data-tab="frontier">Frontier</button>
     <button role="tab" data-tab="research">Research</button>
+    <button role="tab" data-tab="labs">Labs</button>
     <button role="tab" data-tab="experiments">Experiments</button>
     <button role="tab" data-tab="runs">Runs</button>
     <button role="tab" data-tab="notebook">Notebook</button>
@@ -163,6 +164,7 @@ a { color: var(--s1); }
   <section id="lineage" hidden></section>
   <section id="frontier" hidden></section>
   <section id="research" hidden></section>
+  <section id="labs" hidden></section>
   <section id="experiments" hidden></section>
   <section id="runs" hidden></section>
   <section id="notebook" hidden></section>
@@ -963,6 +965,61 @@ async function refreshResearch() {
       `done: ${(e.added || []).join(", ") || "no new cards"} · ${fmt.usd(e.cost_usd)} — ${e.summary || ""}`))));
 }
 
+async function postLabs(body, confirmText) {
+  if (confirmText && !confirm(confirmText)) return;
+  try { await fetch(BASE + "api/labs", {method: "POST", headers: {"Content-Type": "application/json", "X-Autolab": "1"}, body: JSON.stringify(body)}); } catch (e) {}
+  refreshLabs();
+}
+async function openLabProgram(id) {
+  const dlg = document.getElementById("detail"), body = document.getElementById("detailBody");
+  document.getElementById("detailTitle").textContent = "labs.infer " + id;
+  body.replaceChildren(h("p", {class: "muted"}, "loading…"));
+  if (!dlg.open) dlg.showModal();
+  const r = await (await fetch(BASE + "api/labs/infer/program/" + encodeURIComponent(id))).json();
+  const P = r.program; body.replaceChildren();
+  body.append(h("div", {class: "card"}, h("h3", {}, progStatus(P), " ", h("span", {class: "muted"}, `parent ${P.parent_id || "–"} · by ${P.created_by} · ${fmt.time(P.created_at)}`)),
+    h("p", {}, P.rationale || "(no rationale)"), P.expected ? h("p", {class: "muted"}, "Expected: " + P.expected) : null, P.reason ? h("p", {class: "ink2"}, P.reason) : null));
+  body.append(h("div", {class: "card"}, h("h3", {}, "Cascade"), P.stages.map(s => h("div", {style: "padding:6px 0;border-bottom:1px solid var(--grid)"},
+    statusEl(s.ok ? "good" : "critical", s.stage), h("span", {class: "muted"}, "  " + fmt.time(s.at) + "  "), s.detail))));
+  body.append(h("div", {class: "card"}, h("h3", {}, "engine.py vs parent"), h("pre", {}, r.diff || "(no change)")));
+}
+async function refreshLabs() {
+  const el = document.getElementById("labs");
+  let R;
+  try { R = await (await fetch(BASE + "api/labs", {cache: "no-store"})).json(); } catch (e) { return; }
+  el.replaceChildren();
+  const I = R.infer, inc = I.rows.find(r => r.id === I.incumbent);
+  el.append(h("div", {class: "card"}, h("h3", {}, "How labs work"),
+    h("p", {class: "ink2", style: "margin:4px 0"}, "Autolab's loop on other problems, run locally on this Mac. labs.infer evolves the inference engine (engine.py) of a fixed checkpoint (" + (I.checkpoint || "?") +
+      ") for speed: Claude proposes an edit, a static check and a quality gate (teacher-forced loss vs the fp32 reference) screen it, then it is benchmarked interleaved against the incumbent and accepted when it is clearly faster with no scenario regressing."),
+    h("div", {style: "display:flex;gap:10px;align-items:center;flex-wrap:wrap"},
+      R.hold ? statusEl("warning", `paused by ${R.hold.by} since ${fmt.time(R.hold.at)}`) : I.blocked ? statusEl("serious", "waiting: " + I.blocked) : statusEl("good", "running"),
+      h("span", {class: "muted"}, `Claude spend ${fmt.usd(I.spend_24h)} of ${fmt.usd(I.daily_usd)} in 24 h (all labs)`),
+      h("button", {class: "btn", style: "margin-left:auto", onclick: () => R.hold ? postLabs({action: "unpause"}, "Resume the labs?") :
+        postLabs({action: "pause"}, "Pause the labs? The program being measured finishes its current stage; nothing new starts.")}, R.hold ? "▶ Resume labs" : "⏸ Pause labs"))));
+  if (I.daemon && I.daemon.last_error) el.append(h("div", {class: "card", style: "border-color:var(--critical)"}, statusEl("critical", "last cycle failed"), " ", I.daemon.last_error.error));
+  const sc = I.speed ? Object.keys(I.speed) : [];
+  el.append(h("div", {class: "tiles"},
+    tile("Incumbent", I.incumbent || "–", inc && inc.x_p0 ? `${inc.x_p0.toFixed(2)}× the seed engine` : ""),
+    ...sc.map(k => tile(k.replace("_", " "), I.speed[k] >= 100 ? I.speed[k].toFixed(0) + "/s" : (1000 / I.speed[k]).toFixed(1) + " ms",
+      I.p0_speed ? `seed ${I.p0_speed[k] >= 100 ? I.p0_speed[k].toFixed(0) + "/s" : (1000 / I.p0_speed[k]).toFixed(1) + " ms"}` : ""))));
+  el.append(h("h2", {}, "Programs"), h("div", {class: "card scroll"}, h("table", {},
+    h("thead", {}, h("tr", {}, ["", "status", "× seed", "vs", "per scenario", "Δ loss", "top-1", "idea"].map(t => h("th", {}, t)))),
+    h("tbody", {}, I.rows.map(r => h("tr", {class: "click", onclick: () => openLabProgram(r.id)},
+      h("td", {}, h("strong", {}, r.id), r.parent ? h("div", {class: "muted", style: "font-size:12px"}, "from " + r.parent) : null),
+      h("td", {}, progStatus(r), r.status === "queued" ? h("div", {class: "muted", style: "font-size:12px"}, r.stage) : null),
+      h("td", {class: "num"}, r.x_p0 ? r.x_p0.toFixed(2) : "–"),
+      h("td", {class: "num"}, r.speedup && r.vs ? `${r.speedup.toFixed(3)}× ${r.vs}` : "–"),
+      h("td", {style: "font-size:12px"}, r.per_scenario ? Object.entries(r.per_scenario).map(([k, v]) => `${k.replace("decode_", "d").replace("prefill_", "p")} ${v.toFixed(2)}`).join(" · ") : ""),
+      h("td", {class: "num"}, r.quality && r.quality.delta_loss != null ? r.quality.delta_loss.toFixed(4) : "–"),
+      h("td", {class: "num"}, r.quality && r.quality.top1_agreement != null ? r.quality.top1_agreement.toFixed(3) : "–"),
+      h("td", {style: "max-width:520px"}, (r.rationale || "").slice(0, 170) + ((r.rationale || "").length > 170 ? "…" : ""),
+        r.reason && r.status !== "accepted" ? h("div", {class: "muted", style: "font-size:12px"}, r.reason.slice(0, 200)) : null)))))));
+  if (I.notebook.length) el.append(h("h2", {}, "Activity"), h("div", {class: "card feed"}, I.notebook.map(e =>
+    h("div", {}, h("span", {class: "t"}, fmt.time(e.at)), `${e.event}${e.program ? " " + e.program : ""}${e.status ? ": " + e.status : ""}` +
+      (e.reason ? " — " + e.reason.slice(0, 160) : e.rationale ? " — " + e.rationale.slice(0, 160) : e.error ? " — " + e.error : "")))));
+}
+
 async function refreshLive() {
   try {
     const r = await fetch(BASE + "api/live", {cache: "no-store"});
@@ -1014,6 +1071,7 @@ async function refresh() {
 function showTab(name) {
   if (name === "live") refreshLive();
   if (name === "research") refreshResearch();
+  if (name === "labs") refreshLabs();
   if (name === "frontier") refreshFrontier();
   if (name === "lineage") refreshLineage();
   for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", b.dataset.tab === name);
@@ -1024,9 +1082,10 @@ document.getElementById("tabs").addEventListener("click", e => { if (e.target.da
 document.getElementById("detailClose").addEventListener("click", () => document.getElementById("detail").close());
 let initial = location.hash.slice(1);
 if (!initial) { try { initial = localStorage.getItem("autolab.tab") || ""; } catch (e) {} }
-showTab(["live", "overview", "programs", "lineage", "frontier", "research", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
+showTab(["live", "overview", "programs", "lineage", "frontier", "research", "labs", "notebook", "experiments", "runs", "decisions", "settings"].includes(initial) ? initial : "live");
 let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 200); });
 setInterval(() => { if (!document.hidden && !document.getElementById("live").hidden && !document.getElementById("detail").open) refreshLive(); }, 10000);
+setInterval(() => { if (!document.hidden && !document.getElementById("labs").hidden && !document.getElementById("detail").open) refreshLabs(); }, 15000);
 refresh(); setInterval(() => { if (!document.hidden && !document.getElementById("detail").open) refresh(); }, 30000);
 </script>
 </body>

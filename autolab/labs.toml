@@ -1,0 +1,24 @@
+# Labs: autolab's loop on other problems (src/labs/). Read by the labs daemon every cycle.
+
+[labs]
+daily_usd = 10.0           # rolling-24h Claude budget shared by all labs, separate from autolab's (owner, 2026-10-14)
+est_call_usd = 0.3         # expected cost of one proposal; a call starts only if it fits
+
+[llm]
+claude_bin = "~/.local/bin/claude"
+model = "opus"
+timeout_s = 600
+
+[infer]
+checkpoint = "e768h12l8-rope-95m.pt"   # under autolab/data/labs/infer/: the owner's best 95M (rope, fused), weights only
+val = "val.pt"                          # autolab's frozen val tokens (the quality windows)
+max_delta_loss = 0.005     # nats over the fp32 reference, teacher-forced (fp16/bf16 allowed: owner, 2026-10-14)
+min_top1 = 0.97            # top-1 agreement with the reference's argmax
+max_mem_mult = 1.5         # peak device memory vs p0's
+bench_rounds = 12          # per bench stage (6 order-alternated pairs); confirm adds as many
+min_gain = 0.02            # accept at >= exp(0.02) = 1.02x the incumbent...
+accept_se = 2.0            # ...and mean - 2 SE > 0 over all round pairs
+max_scenario_regression = 0.10   # no scenario may run below 0.90x the incumbent (a default; owner may change)
+quality_timeout_s = 900
+bench_timeout_s = 1800
+max_code_bytes = 40000
