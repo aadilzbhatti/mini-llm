@@ -2,7 +2,7 @@
 
     labs daemon                     every lab, one process (what com.aadil.autolab-labs runs)
     labs pause | unpause            all labs
-    labs <lab> cycle | status       one lab: infer, decode
+    labs <lab> cycle | status       one lab: infer, decode, pack
 """
 
 import argparse

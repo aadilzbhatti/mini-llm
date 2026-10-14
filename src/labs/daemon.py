@@ -15,8 +15,9 @@ from labs import core
 def all_labs() -> list:
     from labs.decode.lab import LAB as decode
     from labs.infer.lab import LAB as infer
+    from labs.pack.lab import LAB as pack
 
-    return [infer, decode]
+    return [infer, decode, pack]
 
 
 def turn(log=print) -> dict:

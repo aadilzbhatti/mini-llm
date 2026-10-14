@@ -47,7 +47,12 @@ the "Decision log" at the bottom.
   judge loss (the owner's 95M fw70edu30 checkpoint) on generated text ≤ its loss on the real continuation; topic
   retention ≥ incumbent − 0.03; EOS before 64 tokens counts as degenerate; ≤ 2 ms/token. The owner's 20×5 protocol
   is a holdout (p0: 28/100). First real proposal (a DRY penalty) cut degeneration 23% → 5% but failed the topic guard.
-- Next: (3) a classic AlphaEvolve benchmark as a calibration run against OpenEvolve/ShinkaEvolve, built on labs.core.
+- **labs.pack** (3, calibration): circle packing, 26 circles in the unit square, maximize the sum of radii, the
+  benchmark AlphaEvolve (2.63586), ShinkaEvolve (2.635983) and OpenEvolve (2.6307 at a matched ~200-evaluation
+  budget, per arXiv 2605.19633) report. CPU-only (scipy), one `run` stage; the harness verifies the packing itself
+  (tolerance 1e-9). Result: the first proposal scored **2.635977** (one evaluation, 211 s), and the proposer quotes
+  the best-known value in its rationale: saturated and likely in the training data, so it can't tell loops apart.
+  Capped at 20 programs (`[pack] max_programs`). A real calibration needs a problem the proposer can't recall.
 - Tests: `tests_labs/` (not under `tests/`, which runs against every autolab candidate). Run both:
   `AUTOLAB_FORCE_CPU=1 uv run pytest tests tests_labs -q`.
 
@@ -837,3 +842,6 @@ Build this first; everything else hill-climbs on it.
   speed benchmark and a stochastic text-quality metric). One daemon for all labs instead of a GPU lock between two.
   labs.decode's guards are relative to real text and to the incumbent, not absolute thresholds: the first proposal
   showed why (a repetition penalty that also bans re-using the prompt's words "wins" on degeneration).
+- 2026-10-14: labs.pack (circle packing n=26) hit 2.635977 on its first proposal, above AlphaEvolve's published
+  2.63586; the proposer knows the literature value. Treated as a finding (the benchmark is saturated for current
+  proposers), not a win; the run is capped at 20 programs so it doesn't spend the shared labs budget.

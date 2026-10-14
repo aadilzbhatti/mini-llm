@@ -8,6 +8,7 @@ CONFIG = """[labs]\ndaily_usd = 1.0\nest_call_usd = 0.3\n[llm]\nmodel = "opus"
 min_gain = 0.02\naccept_se = 2.0\nmax_scenario_regression = 0.10
 [decode]\ngenerator = "g.pt"\njudge = "j.pt"\nval = "v.pt"\nmin_tokens = 64\nscreen_n = 4\nfull_n = 4\nmin_gain = 0.02
 accept_z = 2.0\nmax_judge_excess = 0.0\nmax_topic_drop = 0.03\nmax_sampler_ms = 2.0
+[pack]\nn = 26\ndeadline_s = 5\nmin_gain = 1e-7\ncontender_gap = 0.01\nmax_programs = 3
 """
 
 

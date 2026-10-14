@@ -36,3 +36,10 @@ max_judge_excess = 0.0     # judge loss on generated text <= judge loss on real 
 max_topic_drop = 0.03      # topic retention >= the incumbent's - this
 max_sampler_ms = 2.0       # sampler time per token
 val_timeout_s = 2400
+
+[pack]
+n = 26                     # circles in the unit square; the published benchmark
+deadline_s = 240           # per program run (killed 60 s later)
+min_gain = 1e-7            # accept above the incumbent's score + this
+contender_gap = 0.01       # valid packings this close to the incumbent stay parents
+max_programs = 20          # a finite calibration run; capped after p1 hit 2.635977 on the first proposal (saturated)

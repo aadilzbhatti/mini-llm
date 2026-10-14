@@ -281,6 +281,10 @@ class Lab:
         """The prompt's description of the problem, the contract and how candidates are judged."""
         raise NotImplementedError
 
+    def exhausted(self) -> str | None:
+        """Why this lab proposes nothing more (a finite run that's done), or None."""
+        return None
+
     def incumbent_summary(self, p: Program) -> str:
         return self.describe(p)
 
@@ -382,6 +386,8 @@ Return SEARCH/REPLACE edits against the parent (each SEARCH must match exactly o
             p = self.advance(pending[0], log=log)
             return {"advanced": p.id, "stage": p.stage, "status": p.status}
         c = self.cfg()
+        if (why := self.exhausted()):
+            return {"waiting": why}
         if spend_24h() + c.get("est_call_usd", 0.3) > c["daily_usd"]:
             return {"waiting": f"daily budget: ${spend_24h():.2f} of ${c['daily_usd']} in 24 h"}
         p = self.propose(log=log)
