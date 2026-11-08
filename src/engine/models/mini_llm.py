@@ -23,6 +23,7 @@ with `FIX (#n)` comments and cover:
   #8 generate() sets eval mode itself and restores the previous mode
 """
 
+from einops import rearrange
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -43,10 +44,8 @@ def rope_table(speeds: torch.Tensor, n: int) -> RopeAngles:
 def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.Tensor:
     """Rotate each (even, odd) pair of x's last dimension: row t by the angles in cos[t], sin[t].
     x is (B, T, head_size); cos and sin are (T, head_size / 2)."""
-    ret = torch.empty_like(x)
-    ret[..., 0::2] = x[..., 0::2] * cos - x[..., 1::2] * sin
-    ret[..., 1::2] = x[..., 0::2] * sin + x[..., 1::2] * cos
-    return ret
+    x0, x1 = rearrange(x, "... (d two) -> two ... d", two=2)
+    return rearrange(torch.stack([x0 * cos - x1 * sin, x0 * sin + x1 * cos]), "two ... d -> ... (d two)")
 
 
 class MultiHeadAttention(nn.Module):
@@ -87,6 +86,7 @@ class MultiHeadAttention(nn.Module):
     def init_weights(self):
         # The same distribution as model.py: xavier_normal_ on each head's (head_size, n_embd) q, k and
         # v weights (not on the whole stacked matrix, whose fans differ). Not the same RNG draws.
+        # returns 3 (n_head, head_size, n_embd) views of the qkv weight, then iterates over heads and q/k/v to init each.
         w = self.qkv.weight.data.view(3, self.n_head, self.head_size, -1)
         for h in range(self.n_head):
             for which in range(3):
@@ -113,7 +113,8 @@ class MultiHeadAttention(nn.Module):
         (ModelCustomTransformer.rope_angles); required when RoPE is on."""
         B, T, C = x.shape
         # (B, T, 3 * n_head * hs) -> three (B, n_head, T, hs)
-        q, k, v = self.qkv(x).view(B, T, 3, self.n_head, self.head_size).permute(2, 0, 3, 1, 4)
+        # q, k, v = self.qkv(x).view(B, T, 3, self.n_head, self.head_size).permute(2, 0, 3, 1, 4)
+        q, k, v = rearrange(self.qkv(x), "b t (three h d) -> three b h t d", three=3, h=self.n_head)
         if self.use_rope_embeddings:
             assert rope is not None, "RoPE attention needs the model's angle rows for this call's positions"
             q, k = apply_rope(q, *rope), apply_rope(k, *rope)  # (T, hs/2) broadcasts over batch and heads
@@ -147,7 +148,8 @@ class MultiHeadAttention(nn.Module):
             is_causal=1 < T == T_total,
             dropout_p=self.dropout_p if self.training else 0.0,
         )  # (B, n_head, T, hs); default scale hs**-0.5, as before
-        out = out.transpose(1, 2).reshape(B, T, self.n_head * self.head_size)  # heads in order, as torch.cat
+        # out = out.transpose(1, 2).reshape(B, T, self.n_head * self.head_size)  # heads in order, as torch.cat
+        out = rearrange(out, "b h t d -> b t (h d)")
         return self.dropout(self.proj(out))
 
     def clear_cache(self):
