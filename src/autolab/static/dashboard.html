@@ -137,7 +137,7 @@ a { color: var(--s1); }
 <body>
 <header>
   <div class="bar">
-    <a class="back" href="/" title="Back to the mini-llm control page">← Control</a>
+    <a class="back" href="../" title="Back to the mini-llm control page">← Control</a>
     <h1>autolab</h1>
     <span id="daemonBadge" class="status"></span>
     <span class="meta" id="meta">loading…</span>
@@ -179,6 +179,7 @@ a { color: var(--s1); }
 // Mounted at /autolab on the tailnet: resolve API calls against this page's own path, with or
 // without a trailing slash, so they never fall through to the owner's server at /.
 const BASE = location.pathname.endsWith("/") ? location.pathname : location.pathname + "/";
+document.querySelector("a.back").href = BASE + "../";  // the control page is one level up (/llm)
 // ---------- tiny DOM helpers (all data goes in as text nodes) ----------
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);

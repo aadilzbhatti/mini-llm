@@ -18,7 +18,7 @@ the "Decision log" at the bottom.
   (port 8766), next to the owner's `com.aadil.mini-llm-{control,modal-mirror,runner,tensorboard}`. Restart with
   `launchctl kickstart -k gui/$(id -u)/com.aadil.autolab-daemon`. Agents doing compute must be `ProcessType`
   Standard, not Background (Background throttled MPS ~7x); edit plists as text, never with PlistBuddy.
-- Dashboard: https://aadils-mac-mini.taile67486.ts.net/autolab (tailnet; `tailscale serve` on the mini). The Live
+- Dashboard: https://aadils-mac-mini.taile67486.ts.net/llm/autolab (tailnet; `tailscale serve` on the mini). The Live
   tab shows what's running, blocked/ceiling banners with one-click raises, and the pipeline.
 - **Pause:** the Live tab's "Pause autolab" button (or `uv run autolab pause` / `unpause`) freezes everything but
   collecting finished Modal runs; see the 2026-10-04 decision-log entry.

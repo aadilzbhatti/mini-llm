@@ -2,8 +2,8 @@
 
     uv run autolab dashboard --port 8766      # launchd: com.aadil.autolab-dashboard
 
-Served on the tailnet at https://<mac>.ts.net/autolab via `tailscale serve
---set-path /autolab`, beside the owner's control page at /. The page uses only
+Served on the tailnet at https://<mac>.ts.net/llm/autolab by the mini-home
+gateway (~/dev/mini-home/apps.json), under the owner's control page at /llm. The page uses only
 relative URLs, so it works under that prefix and at the root alike.
 
 Everything comes from files the daemon and backends write:
