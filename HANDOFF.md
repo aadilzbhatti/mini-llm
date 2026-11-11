@@ -25,7 +25,7 @@
 - launchd agents (~/Library/LaunchAgents): com.aadil.mini-llm-{control,modal-mirror,runner,tensorboard}, com.aadil.autolab-{daemon,dashboard}. All six were running on 2026-10-04.
   Restart one: `launchctl kickstart -k gui/$(id -u)/com.aadil.<name>`. After editing a plist: `launchctl bootout` then `launchctl bootstrap`.
 - Logs: ~/dev/wiki-llm/runner/*.log (control.log, modal-mirror.log, runner log), ~/dev/wiki-llm-autolab/autolab/state/*.log.
-- Pages via tailscale serve: https://aadils-mac-mini.taile67486.ts.net (`/` control on :8765, `/autolab` on :8766, `:8443` TensorBoard on :6006).
+- Pages: https://aadils-mac-mini.taile67486.ts.net (`/llm` control on :8765, `/llm/autolab` on :8766, `:8443` TensorBoard on :6006). `tailscale serve` publishes only the mini-home gateway (~/dev/mini-home, :8700), which proxies each path from its `apps.json` and adds the shared site bar; `/` redirects to `/home`.
 - Untracked state lives only here: data/ (data20k…data640k), checkpoints/*.pt, runs/ (status files and imported Modal runs), queue/. Modal credentials are in ~/.modal.toml.
 - GitHub works: `gh` is logged in as aadilzbhatti (keyring token, `repo` scope), and pushes from both clones authenticate. Autolab pushes `autolab-accepted` from a working copy it creates at accept time; that branch doesn't exist locally in the autolab clone, so a manual push of it fails with "src refspec does not match". That error is expected.
 

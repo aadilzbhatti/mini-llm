@@ -105,7 +105,7 @@
   <button data-tab="best">Best</button>
   <button data-tab="gen">Generate</button>
   <!-- a link, not a <button>: every nav button is wired up as a tab switcher below -->
-  <a class="navlink" href="/autolab/">Autolab ↗</a>
+  <a class="navlink" id="autolab-link" href="autolab/">Autolab ↗</a>
 </nav>
 
 <section id="live"></section>
@@ -191,10 +191,15 @@ let META = null, RUNS = [], timer = null;
 
 function tok() { try { return localStorage.getItem('mini-llm-token') || ''; } catch { return ''; } }
 let UI_VERSION = null;
+// The page is published under a sub-path (/llm on the tailnet) and at / on
+// localhost, with or without a trailing slash, so build every URL from here.
+const BASE = location.pathname.endsWith('/') ? location.pathname : location.pathname + '/';
+const U = (path) => BASE + path.replace(/^\//, '');
+document.getElementById('autolab-link').href = U('autolab/');
 async function api(path, opts = {}) {
   const headers = { 'content-type': 'application/json' };
   if (tok()) headers.authorization = 'Bearer ' + tok();
-  const r = await fetch(path, { ...opts, headers });
+  const r = await fetch(U(path), { ...opts, headers });
   const ver = r.headers.get('x-ui-version');  // the server has a newer page than this one: load it
   if (ver && UI_VERSION && ver !== UI_VERSION) { location.reload(); return new Promise(() => {}); }
   if (ver) UI_VERSION = ver;
@@ -514,7 +519,7 @@ async function cloneSweepWinner(id) {
 // The run's shareable report (mini_llm.run_report), fetched with the API token and opened as a file.
 async function openReport(id, fmt) {
   try {
-    const r = await fetch(`/api/runs/${id}/report_file?fmt=${fmt}`, { headers: tok() ? { authorization: 'Bearer ' + tok() } : {} });
+    const r = await fetch(U(`/api/runs/${id}/report_file?fmt=${fmt}`), { headers: tok() ? { authorization: 'Bearer ' + tok() } : {} });
     if (!r.ok) throw new Error(r.statusText);
     const name = (r.headers.get('content-disposition') || '').match(/filename="?([^";]+)/)?.[1] || `report.${fmt}`;
     const url = URL.createObjectURL(await r.blob());
@@ -550,7 +555,7 @@ async function showPlot(id, btn) {
   try {
     // fetch (not <img src>) so the bearer token, if any, is sent
     const headers = tok() ? { authorization: 'Bearer ' + tok() } : {};
-    const r = await fetch(`/api/runs/${id}/plot`, { headers });
+    const r = await fetch(U(`/api/runs/${id}/plot`), { headers });
     if (!r.ok) { const b = await r.json().catch(() => ({})); throw new Error(b.detail || r.statusText); }
     if (img.src) URL.revokeObjectURL(img.src);
     img.src = URL.createObjectURL(await r.blob());
